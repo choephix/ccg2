@@ -17,7 +17,6 @@ package duel.cards
 	public class CardSprite extends GameSprite
 	{
 		public var auraContainer:Sprite;
-		private var _flipped:Boolean = true;
 		
 		private var back:Image;
 		private var pad:Image;
@@ -115,16 +114,8 @@ package duel.cards
 			} 
 		}
 		
-		internal function get flipped():Boolean 
+		internal function setFlipped(value:Boolean):void 
 		{
-			return _flipped;
-		}
-		
-		internal function set flipped(value:Boolean):void 
-		{
-			if ( _flipped == value ) return;
-			_flipped = value;
-			
 			//back.visible = value;
 			game.jugglerMild.xtween( this, 0.150, { scaleX : value ? -1.0 : 1.0, scaleY : 1.0, onUpdate : whileFlipping } );
 			game.jugglerMild.xtween( back, 0.050, { alpha : 1.0 } );

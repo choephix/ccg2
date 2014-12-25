@@ -1,4 +1,5 @@
-package duel.cards {
+package duel.cards
+{
 	import chimichanga.common.display.Sprite;
 	import chimichanga.global.utils.Colors;
 	import duel.CardField;
@@ -27,9 +28,22 @@ package duel.cards {
 		// BATTLE
 		public var player:Player;
 		public var field:CardField;
-		public function get isInPlay():Boolean { return field != null; }
+		public function get isInPlay():Boolean{return field != null}
 		
-		// VISUALS
+		private var _flipped:Boolean = true;
+		public function get flipped():Boolean
+		{
+			return _flipped;
+		}
+		public function set flipped( value:Boolean ):void
+		{
+			if ( _flipped == value )
+				return;
+			_flipped = value;
+			model.setFlipped( value )
+		}
+		
+		//
 		public var model:CardSprite;
 		
 		public function initialize():void
@@ -37,10 +51,6 @@ package duel.cards {
 			model = new CardSprite();
 			model.initialize( this );
 		}
-		
-		public function get flipped():Boolean { return model.flipped; }
-		public function set flipped(value:Boolean):void { model.flipped = value; }
-	
 	}
 
 }
