@@ -77,7 +77,7 @@ package duel.gui
 				y = i == selectedIndex ? -75 : 0;
 				
 				game.jugglerStrict.removeTweens( c.sprite );
-				game.jugglerStrict.tween( c.sprite, 0.250, // .850 .250
+				game.jugglerStrict.tween( c.sprite, 0.150, // .850 .250
 					{ x: x, y: y, transition: Transitions.EASE_OUT // EASE_OUT EASE_OUT_BACK EASE_OUT_ELASTIC
 					} );
 			}

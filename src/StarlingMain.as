@@ -53,6 +53,9 @@ package {
 				g = new Game();
 				addChild( g );
 			}
+			if ( e.keyCode == Keyboard.SPACE ) {
+				g.endTurn();
+			}
 		}
 	}
 }

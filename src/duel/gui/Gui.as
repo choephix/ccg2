@@ -1,7 +1,7 @@
 package duel.gui
 {
 	import duel.GameSprite;
-	import starling.text.TextField;
+	import duel.Player;
 	
 	/**
 	 * ...
@@ -40,11 +40,15 @@ package duel.gui
 		
 		public function advanceTime( time:Number ):void
 		{
-			t1.targetValue = game.p1.lp;
-			t1.advanceTime( time );
-			
-			t2.targetValue = game.p2.lp;
-			t2.advanceTime( time );
+			updateTf( t1, game.p1, time );
+			updateTf( t2, game.p2, time );
+		}
+		
+		private function updateTf( t:AnimatedTextField, p:Player, time:Number ):void
+		{
+			t.targetValue = p.lp;
+			t.color = p == game.currentPlayer ? 0xFFEE22 : 0xF37618;
+			t.advanceTime( time );
 		}
 	}
 

@@ -15,7 +15,7 @@ package duel {
 	 */
 	public class Field extends GameEntity
 	{
-		public var container:PlayerSide;
+		public var container:TableSide;
 		public var type:FieldType;
 		public var allowedCardType:CardType;
 		public var index:uint;
@@ -26,7 +26,7 @@ package duel {
 		public var sprite:FieldSprite;
 		public var cardsContainer:CardsStackSprite;
 		
-		public function Field( container:PlayerSide, type:FieldType, cardList:CardList = null ) 
+		public function Field( container:TableSide, type:FieldType, cardList:CardList = null ) 
 		{
 			this.container = container;
 			this.type = type;
@@ -56,10 +56,17 @@ package duel {
 			c.field = this;
 			
 			cards.add( c );
-			cardsContainer.animBunch();
-			
-			//return;
-			// VISUAL
+			//cardsContainer.animBunch();
+		}
+		
+		public function removeCard( c:Card ):void 
+		{
+			cards.remove( c );
+			c.field = null;
+		}
+		
+		public function animFall( c:Card ):void 
+		{
 			var m:CardSprite = c.sprite;
 			m.scaleX = 1.3;
 			m.scaleY = 1.3;
@@ -71,16 +78,12 @@ package duel {
 			} );
 		}
 		
-		public function removeCard( c:Card ):void 
-		{
-			cards.remove( c );
-			c.field = null;
-		}
-		
 		//
 		public function get isCreatureField():Boolean 	{ return type == FieldType.CREATURE }
 		public function get isTrapField():Boolean 		{ return type == FieldType.TRAP }
 		public function get isDeckStack():Boolean 		{ return type == FieldType.DECK }
 		public function get isGraveyardStack():Boolean 	{ return type == FieldType.GRAVEYARD }
+		
+		public function get isEmpty():Boolean 	{ return cards.count == 0 }
 	}
 }

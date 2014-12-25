@@ -28,20 +28,30 @@ package duel.cards
 		// BATTLE
 		public var player:Player;
 		public var field:Field;
-		public var exhausted:Boolean;
 		public function get isInPlay():Boolean{return field != null}
 		
-		private var _flipped:Boolean = true;
-		public function get flipped():Boolean
+		private var _faceDown:Boolean = true;
+		public function get faceDown():Boolean
 		{
-			return _flipped;
+			return _faceDown;
 		}
-		public function set flipped( value:Boolean ):void
+		public function set faceDown( value:Boolean ):void
 		{
-			if ( _flipped == value )
+			if ( _faceDown == value )
 				return;
-			_flipped = value;
+			_faceDown = value;
 			sprite.setFlipped( value )
+		}
+		
+		private var _exhausted:Boolean;
+		public function get exhausted():Boolean 
+		{
+			return _exhausted;
+		}
+		public function set exhausted(value:Boolean):void 
+		{
+			_exhausted = value;
+			sprite.exhaustClock.visible = value;
 		}
 		
 		//
@@ -53,6 +63,10 @@ package duel.cards
 		{
 			sprite = new CardSprite();
 			sprite.initialize( this );
+		}
+		
+		public function onTurnEnd():void {
+			
 		}
 	}
 

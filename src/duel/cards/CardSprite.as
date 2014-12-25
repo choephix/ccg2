@@ -5,7 +5,9 @@ package duel.cards
 	import duel.cards.behaviour.CreatureCardBehaviour;
 	import duel.G;
 	import duel.GameSprite;
+	import starling.animation.IAnimatable;
 	import starling.animation.Transitions;
+	import starling.animation.Tween;
 	import starling.display.Image;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
@@ -16,9 +18,10 @@ package duel.cards
 	 * ...
 	 * @author choephix
 	 */
-	public class CardSprite extends GameSprite
+	public class CardSprite extends GameSprite implements IAnimatable
 	{
 		public var auraContainer:Sprite;
+		public var exhaustClock:Image;
 		
 		private var back:Image;
 		private var pad:Image;
@@ -29,6 +32,7 @@ package duel.cards
 		
 		///
 		private var _flippedness:Number = .0;
+		private var _flipTween:Tween;
 		
 		//
 		private var owner:Card;
@@ -36,6 +40,9 @@ package duel.cards
 		public function initialize( owner:Card ):void
 		{
 			this.owner = owner;
+			this._flipTween = new Tween( this, 0 );
+			
+			game.jugglerMild.add( this );
 			
 			// MAIN
 			pad = assets.generateImage( "card", true, false );
@@ -91,7 +98,7 @@ package duel.cards
 					tf.fontSize = 15;
 			}
 			
-			back = assets.generateImage( "card-back", false, false );
+			back = assets.generateImage( "card-back", true, false );
 			addChild( back );
 			
 			alignPivot();
@@ -102,10 +109,24 @@ package duel.cards
 			auraContainer.y = G.CARD_H * 0.5;
 			addChild( auraContainer );
 			
+			exhaustClock = assets.generateImage( "exhaustClock", false, true );
+			exhaustClock.x = G.CARD_W * 0.5;
+			exhaustClock.y = G.CARD_H * 0.5;
+			exhaustClock.visible = false;
+			addChild( exhaustClock );
+			
 			// ..
 			addEventListener( TouchEvent.TOUCH, onTouch );
 		}
 		
+		public function advanceTime(time:Number):void 
+		{
+			if ( !_flipTween.isComplete ) {
+				_flipTween.advanceTime( time );
+			}
+		}
+		
+		//
 		public function peekIn():void 
 		{
 			return;
@@ -142,19 +163,11 @@ package duel.cards
 			} 
 		}
 		
-		internal function setFlipped( value:Boolean ):void 
+		// FLIPPING
+		internal function setFlipped( faceDown:Boolean ):void 
 		{
-			//back.visible = value;
-			game.jugglerMild.xtween( this, 0.150, 
-				{
-					flippedness : value ? -1.0 : 1.0 ,
-					transition : Transitions.EASE_OUT
-				} );
-		}
-		
-		private function whileFlipping():void
-		{
-			back.visible = scaleX < 0.0;
+			_flipTween.reset( this, .150, Transitions.EASE_OUT );
+			_flipTween.animate( "flippedness", faceDown ? -1.0 : 1.0 );
 		}
 		
 		public function get flippedness():Number 

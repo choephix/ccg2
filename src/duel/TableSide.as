@@ -1,6 +1,7 @@
 package duel {
 	import adobe.utils.CustomActions;
 	import duel.cards.Card;
+	import duel.cards.CardList;
 	import duel.cards.CardSprite;
 	import duel.cards.CardType;
 	import duel.table.FieldType;
@@ -12,16 +13,18 @@ package duel {
 	 * ...
 	 * @author choephix
 	 */
-	public class PlayerSide extends GameSprite
+	public class TableSide extends GameSprite
 	{
 		public var fieldsC:Vector.<Field> = new Vector.<Field>();
 		public var fieldsT:Vector.<Field> = new Vector.<Field>();
 		public var fieldDeck:Field;
 		public var fieldGrave:Field;
 		
-		public function PlayerSide( flip:Boolean )
+		private var player:Player;
+		
+		public function TableSide( player:Player, flip:Boolean )
 		{
-			super();
+			this.player = player;
 			
 			const FIELD_SPACING_X:Number = 25;
 			const FIELD_COLUMNS:int = 4;
@@ -43,21 +46,21 @@ package duel {
 				fieldsT.push( f );
 			}
 			
-			f = generateField( FieldType.DECK, ( G.CARD_W + FIELD_SPACING_X ) * FIELD_COLUMNS, ( flip ? 1.0 : -1.0 ) * 40 );
+			f = generateField( FieldType.DECK, ( G.CARD_W + FIELD_SPACING_X ) * FIELD_COLUMNS, ( flip ? 1.0 : -1.0 ) * 40, player.deck );
 			f.cardsContainer.cardSpacing = 2;
 			fieldDeck = f;
 			
-			f = generateField( FieldType.GRAVEYARD, -( G.CARD_W + FIELD_SPACING_X ), ( flip ? 1.0 : -1.0 ) * 40 );
+			f = generateField( FieldType.GRAVEYARD, -( G.CARD_W + FIELD_SPACING_X ), ( flip ? 1.0 : -1.0 ) * 40, player.grave );
 			f.cardsContainer.cardSpacing = 3;
 			fieldGrave = f;
 			
 			alignPivot();
 		}
 		
-		private function generateField( type:FieldType, x:Number, y:Number ):Field
+		private function generateField( type:FieldType, x:Number, y:Number, cardList:CardList = null ):Field
 		{
 			var f:Field;
-			f = new Field( this, type );
+			f = new Field( this, type, cardList );
 			f.sprite.x = x;
 			f.sprite.y = y;
 			f.cardsContainer.x = f.sprite.x;
@@ -75,7 +78,7 @@ package duel {
 			}
 			
 			field.addCard( c );
-			c.flipped = flipped;
+			c.faceDown = flipped;
 		}
 		
 		public function containsField( field:Field ):Boolean {

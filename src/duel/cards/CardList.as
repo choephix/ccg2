@@ -28,6 +28,7 @@ package duel.cards {
 			if ( card.list != null ) {
 				card.list.remove( card );
 			}
+			card.list = this;
 			
 			_count++;
 			list.push( card );
