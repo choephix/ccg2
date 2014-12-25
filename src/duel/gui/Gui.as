@@ -9,14 +9,14 @@ package duel.gui
 	 */
 	public class Gui extends GameSprite
 	{
-		private var t1:TextField;
-		private var t2:TextField;
+		private var t1:AnimatedTextField;
+		private var t2:AnimatedTextField;
 		
 		public function Gui()
 		{
 			const INSET:Number = 10;
 			
-			t1 = new TextField( 0, 0, "", "Impact", 50 );
+			t1 = new AnimatedTextField( 0, 0, ( game.p1.name + ": " + AnimatedTextField.DEFAULT_MARKER ), "Impact", 50 );
 			addChild( t1 );
 			t1.x = INSET;
 			t1.width = App.W - INSET * 2.0;
@@ -26,7 +26,8 @@ package duel.gui
 			t1.vAlign = "bottom";
 			t1.touchable = false;
 			
-			t2 = new TextField( 0, 0, "", "Impact", 50 );
+			
+			t2 = new AnimatedTextField( 0, 0, ( game.p2.name + ": " + AnimatedTextField.DEFAULT_MARKER ), "Impact", 50 );
 			addChild( t2 );
 			t2.x = INSET;
 			t2.width = App.W - INSET * 2.0;
@@ -39,8 +40,11 @@ package duel.gui
 		
 		public function advanceTime( time:Number ):void
 		{
-			t1.text = game.p1.name + ": " + game.p1.lp;
-			t2.text = game.p2.name + ": " + game.p2.lp;
+			t1.targetValue = game.p1.lp;
+			t1.advanceTime( time );
+			
+			t2.targetValue = game.p2.lp;
+			t2.advanceTime( time );
 		}
 	}
 
