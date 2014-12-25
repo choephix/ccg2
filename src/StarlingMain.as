@@ -41,12 +41,18 @@ package {
 		}
 		
 		private function onLoadingAppComplete():void {
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, onkey);
+			
 			g = new Game();
 			addChild( g );
 		}
 		
 		private function onkey( e:KeyboardEvent ):void {
-		
+			if ( e.keyCode == Keyboard.ESCAPE ) {
+				g.destroy();
+				g = new Game();
+				addChild( g );
+			}
 		}
 	}
 }

@@ -95,6 +95,12 @@ package duel
 			addChild( p1hand );
 		}
 		
+		public function destroy():void 
+		{
+			Starling.juggler.remove( this );
+			removeFromParent( true );
+		}
+		
 		// INTERACTION
 		
 		public function onFieldClicked( field:CardField ):void
