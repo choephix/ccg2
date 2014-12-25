@@ -6,13 +6,11 @@ package duel.cards.behaviour
 	 */
 	public class CreatureCardBehaviour extends CardBehaviour 
 	{
+		public var attack:int;
 		
 		public function CreatureCardBehaviour() 
 		{
 			super();
-			
 		}
-		
 	}
-
 }

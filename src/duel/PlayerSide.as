@@ -44,11 +44,21 @@ package duel {
 			alignPivot();
 		}
 		
-		public function addCardTo( c:Card, field:CardField ):void
+		public function addCardTo( c:Card, field:CardField, flipped:Boolean = false ):void
 		{
 			if ( game.p1.hand.contains( c ) ) game.p1.hand.remove( c );
 			if ( game.p2.hand.contains( c ) ) game.p2.hand.remove( c );
 			
+			if ( c.field != null ) {
+				c.field.card = null;
+			}
+			
+			field.card = c;
+			c.field = field;
+			
+			c.flipped = flipped;
+			
+			// VISUAL
 			var m:CardSprite = c.model;
 			
 			addChild( m );
@@ -57,7 +67,6 @@ package duel {
 			
 			m.scaleX = 1.3;
 			m.scaleY = 1.3;
-			//m.alpha = 0;
 			game.jugglerStrict.xtween( m, 0.8, { 
 				scaleX:1.0,
 				scaleY:1.0,

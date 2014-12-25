@@ -1,6 +1,7 @@
 package duel
 {
 	import chimichanga.common.assets.AdvancedAssetManager;
+	import duel.cards.behaviour.CreatureCardBehaviour;
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
 	import duel.gui.Gui;
@@ -107,9 +108,19 @@ package duel
 		{
 			if ( selectedCard )
 			{
-				if ( canPlayHere( selectedCard, field ) )
+				//if ( selectedCard.field != null && !side1.containsField( field ) )
+				if ( selectedCard.field != null )
 				{
-					field.container.addCardTo( selectedCard, field );
+					if ( selectedCard.type.isCreature )
+						performCardAttack( selectedCard );
+				}
+				else
+				{
+					if ( canPlayHere( selectedCard, field ) )
+					{
+						var flipped:Boolean = selectedCard.type.isTrap;
+						field.container.addCardTo( selectedCard, field, flipped );
+					}
 				}
 				selectCard( null );
 			}
@@ -122,23 +133,38 @@ package duel
 		
 		public function onCardRollOver( card:Card ):void
 		{
-		
+			if ( !interactable ) return;
+			if ( card.flipped && card.player == p1 ) {
+				card.model.peekIn();
+			}
 		}
 		
 		public function onCardRollOut( card:Card ):void
 		{
-		
+			if ( !interactable ) return;
+			if ( card.flipped && card.player == p1 ) {
+				card.model.peekOut();
+			}
 		}
 		
 		private function onBgClicked():void
 		{
-			if ( p1hand.contains( selection.selectedCard.model ) )
-			{
-				p1hand.unshow( selection.selectedCard );
-			}
-			
-			selection.selectedCard = null;
+			selectCard( null );
 		}
+		
+		// GAMEPLAY
+		
+		public function performCardAttack( card:Card ):void
+		{
+			damagePlayer( card.player == p1 ? p2 : p1, CreatureCardBehaviour( card.behaviour ).attack );
+		}
+		
+		public function damagePlayer( player:Player, amount:int ):void
+		{
+			player.lp -= amount;
+		}
+		
+		//
 		
 		private function selectCard( card:Card ):void {
 			if ( selectedCard != null && p1hand.contains( selectedCard.model ) )
@@ -164,9 +190,13 @@ package duel
 			p.name = name;
 			p.lp = 60;
 			
+			var c:Card;
 			while ( p.hand.count < 12 )
 			{
-				p.hand.add( CardFactory.produceCard( 0 ) );
+				c = CardFactory.produceCard( 0 );
+				c.player = p;
+				p.hand.add( c );
+				c.flipped = false;
 			}
 			
 			return p;
@@ -190,8 +220,8 @@ package duel
 		
 		public function canPlayHere( card:Card, field:CardField ):Boolean
 		{
-			if ( !side1.contains( field ) )
-				return false;
+			//if ( !side1.contains( field ) )
+				//return false;
 			if ( field.allowedCardType != card.type )
 				return false;
 			return true;

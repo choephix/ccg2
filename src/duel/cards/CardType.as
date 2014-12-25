@@ -24,5 +24,8 @@ package duel.cards
 			if ( this == TRAP ) 		return Colors.fromRGB( 1, .3, .3+Math.random()*0.2 );
 			return 0xFFFFFF;
 		}
+		
+		public function get isCreature():Boolean { return this == CREATURE }
+		public function get isTrap():Boolean { return this == TRAP }
 	}
 }

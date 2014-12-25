@@ -26,7 +26,9 @@ package duel.cards
 			
 			if ( c.type == CardType.CREATURE )
 			{
-				c.behaviour = new CreatureCardBehaviour();
+				var b:CreatureCardBehaviour = new CreatureCardBehaviour();
+				b.attack = 10 + Math.random() * 10;
+				c.behaviour = b;
 			}
 			else
 			if ( c.type == CardType.TRAP )

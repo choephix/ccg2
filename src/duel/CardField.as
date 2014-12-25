@@ -1,4 +1,5 @@
 package duel {
+	import duel.cards.Card;
 	import duel.cards.CardType;
 	import starling.display.Image;
 	import starling.events.Touch;
@@ -13,6 +14,9 @@ package duel {
 	{
 		public var container:PlayerSide;
 		public var allowedCardType:CardType;
+		
+		// BATTLE
+		public var card:Card;
 		
 		public function CardField( container:PlayerSide, color:uint ) 
 		{

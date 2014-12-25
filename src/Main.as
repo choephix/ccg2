@@ -13,7 +13,7 @@
 	import starling.core.Starling;
 	
 	//[SWF(width="640", height="960", backgroundColor="#000000", frameRate="60")]
-	[SWF(width="1280",height="800",backgroundColor="#0",frameRate="60")]
+	[SWF(width="1280",height="860",backgroundColor="#0",frameRate="60")]
 	//[SWF(width="1280",height="720",backgroundColor="#0",frameRate="60")]
 	//[SWF( width="800",height="480",backgroundColor="#000000",frameRate="60" )]
 	//[SWF(width="400",height="240",backgroundColor="#00000",frameRate="60")]
@@ -106,8 +106,6 @@
 				viewRect.width = stage.stageWidth;
 				viewRect.height = stage.stageHeight;
 				mStage3D.context3D.configureBackBuffer( viewRect.width, viewRect.height, 0, false );
-				starling.stage.width = viewRect.width;
-				starling.stage.height = viewRect.height;
 			}
 			
 		}
