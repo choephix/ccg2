@@ -108,21 +108,23 @@ package duel
 		{
 			if ( selectedCard )
 			{
+				var c:Card = selectedCard;
+				selectCard( null );
+				
 				//if ( selectedCard.field != null && !side1.containsField( field ) )
-				if ( selectedCard.field != null )
+				if ( c.field != null )
 				{
-					if ( selectedCard.type.isCreature )
-						performCardAttack( selectedCard );
+					if ( c.type.isCreature )
+						performCardAttack( c );
 				}
 				else
 				{
-					if ( canPlayHere( selectedCard, field ) )
+					if ( canPlayHere( c, field ) )
 					{
-						var flipped:Boolean = selectedCard.behaviour.startFaceDown;
-						field.container.addCardTo( selectedCard, field, flipped );
+						var flipped:Boolean = c.behaviour.startFaceDown;
+						field.container.addCardTo( c, field, flipped );
 					}
 				}
-				selectCard( null );
 			}
 		}
 		

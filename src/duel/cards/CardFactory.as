@@ -21,7 +21,6 @@ package duel.cards
 			
 			//
 			c.id = id;
-			c.name = "Spatula #"+uid;
 			c.type = Math.random() < .67 ? CardType.CREATURE : CardType.TRAP;
 			
 			if ( c.type == CardType.CREATURE )
@@ -30,11 +29,15 @@ package duel.cards
 				b.attack = 10 + Math.random() * 10;
 				b.startFaceDown = Math.random() < .4;
 				c.behaviour = b;
+				c.name = "Creature "+uid+"";
+				//c.name = "#" + uid + " Creature";
 			}
 			else
 			if ( c.type == CardType.TRAP )
 			{
 				c.behaviour = new TrapCardBehaviour();
+				c.name = "Trap "+uid+"";
+				//c.name = "#" + uid + " Trap";
 			}
 			
 			//

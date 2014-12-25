@@ -15,31 +15,50 @@ package duel {
 	{
 		public var fieldsC:Vector.<Field> = new Vector.<Field>();
 		public var fieldsT:Vector.<Field> = new Vector.<Field>();
+		public var fieldDeck:Field;
+		public var fieldGrave:Field;
 		
 		public function PlayerSide( flip:Boolean )
 		{
 			super();
 			
+			const FIELD_SPACING_X:Number = 25;
+			const FIELD_COLUMNS:int = 4;
+			
 			var f:Field;
 			var i:int;
-			for ( i = 0; i < 4; i++ )
+			for ( i = 0; i < FIELD_COLUMNS; i++ )
 			{
 				f = new Field( this, 0x440011 );
-				addChild( f.sprite );
-				f.sprite.x = i * ( G.CARD_W + 50 );
+				f.index = i;
+				f.sprite.x = i * ( G.CARD_W + FIELD_SPACING_X );
 				f.sprite.y = ( flip ? 1.0 : -1.0 ) * 80;
 				f.allowedCardType = CardType.CREATURE;
 				fieldsC.push( f );
+				addChild( f.sprite );
 			}
-			for ( i = 0; i < 4; i++ )
+			for ( i = 0; i < FIELD_COLUMNS; i++ )
 			{
 				f = new Field( this, 0x07274B );
-				addChild( f.sprite );
+				f.index = i;
 				f.sprite.x = fieldsC[ i ].sprite.x;
 				f.sprite.y = ( flip ? -1.0 : 1.0 ) * 80;
 				f.allowedCardType = CardType.TRAP;
 				fieldsT.push( f );
+				addChild( f.sprite );
 			}
+			
+			f = new Field( this, 0x221139 );
+			f.sprite.x = ( G.CARD_W + FIELD_SPACING_X ) * FIELD_COLUMNS;
+			f.sprite.y = ( flip ? 1.0 : -1.0 ) * 40;
+			addChild( f.sprite );
+			fieldDeck = f;
+			
+			f = new Field( this, 0x222222 );
+			f.sprite.x = -( G.CARD_W + FIELD_SPACING_X );
+			f.sprite.y = ( flip ? 1.0 : -1.0 ) * 40;
+			addChild( f.sprite );
+			fieldGrave = f;
 			
 			alignPivot();
 		}

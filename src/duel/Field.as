@@ -15,6 +15,7 @@ package duel {
 	{
 		public var container:PlayerSide;
 		public var allowedCardType:CardType;
+		public var index:uint;
 		
 		// BATTLE
 		public var card:Card;

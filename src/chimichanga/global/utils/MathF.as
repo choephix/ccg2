@@ -76,6 +76,16 @@ package chimichanga.global.utils
 			return from + ratio * ( to - from );
 		}
 		
+		static public function sum( a:Array ):Number 
+		{
+			var r:Number = 0.0;
+			for ( var i:int = 0, iMax:int = a.length; i < iMax; i++ ) 
+			{
+				r += a[i];
+			}
+			return r;
+		}
+		
 		//}
 		
 		//{ 2D
