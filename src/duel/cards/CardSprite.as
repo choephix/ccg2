@@ -1,6 +1,7 @@
 package duel.cards
 {
 	import chimichanga.common.display.Sprite;
+	import chimichanga.global.utils.Colors;
 	import duel.cards.behaviour.CreatureCardBehaviour;
 	import duel.G;
 	import duel.GameSprite;
@@ -38,12 +39,34 @@ package duel.cards
 			
 			// MAIN
 			pad = assets.generateImage( "card", true, false );
-			pad.color = owner.type.color;
+			pad.color = generateColor();
 			addChild( pad );
 			
-			title = new TextField( G.CARD_W, G.CARD_H, owner.name, "Franklin Gothic", 16, 0x330011, true );
+			function generateColor():uint 
+			{
+				if ( owner.type == CardType.CREATURE )
+				{
+					return !owner.behaviour.startFaceDown
+							?
+							Colors.fromRGB( 1, .7 + Math.random() * 0.15, .4 )
+							:
+							Colors.fromRGB( 1, .5 + Math.random() * 0.10, .3 )
+							;
+				}
+				if ( owner.type == CardType.TRAP ) 		
+					//return Colors.fromRGB( 1, .3, .3+Math.random()*0.2 );
+					return Colors.fromRGB( .7+Math.random()*0.2, .4, .5+Math.random()*0.3 );
+				return 0xFFFFFF;
+			}
+			
+			
+			
+			title = new TextField( G.CARD_W, G.CARD_H, owner.name, "Calibri", 24, 0x53001B );
 			title.touchable = false;
+			title.autoScale = true;
 			title.vAlign = "top";
+			title.bold = true;
+			title.color = 0x330011;
 			addChild( title );
 			
 			tf = new TextField( G.CARD_W, G.CARD_H, "", "", 16, 0x330011 );
@@ -53,24 +76,19 @@ package duel.cards
 			switch( owner.type )
 			{
 				case CardType.CREATURE:
-					tf.text = CreatureCardBehaviour( owner.behaviour ).attack + "A";
+					tf.text = CreatureCardBehaviour( owner.behaviour ).attack + "";
 					if ( CreatureCardBehaviour( owner.behaviour ).startFaceDown )
 					{
-						tf.color = 0x771133;
+						//tf.color = 0x771133;
 					}
 					tf.fontName = "Impact";
 					tf.hAlign = "left";
-					tf.fontSize = 72;
+					tf.fontSize = 64;
 					break;
 				case CardType.TRAP:
 					tf.text = "Very important trap set here like for trapping niggas and shit...";
 					tf.fontName = "Gabriola";
 					tf.fontSize = 15;
-			}
-			
-			if ( owner.type == CardType.CREATURE ) {
-				tf.text = CreatureCardBehaviour( owner.behaviour ).attack + "x";
-				tf.fontSize = 53;
 			}
 			
 			back = assets.generateImage( "card-back", false, false );
@@ -90,7 +108,7 @@ package duel.cards
 		
 		public function peekIn():void 
 		{
-			game.jugglerMild.xtween( back, 0.500, { alpha : 0.3 } );
+			game.jugglerMild.xtween( back, 0.500, { delay : 0.500, alpha : 0.3 } );
 		}
 		
 		public function peekOut():void 

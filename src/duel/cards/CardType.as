@@ -1,6 +1,5 @@
 package duel.cards 
 {
-	import chimichanga.global.utils.Colors;
 	/**
 	 * ...
 	 * @author choephix
@@ -17,12 +16,6 @@ package duel.cards
 			if ( this == CREATURE ) 	return "{C}";
 			if ( this == TRAP ) 		return "{T}";
 			return "{?}";
-		}
-		public function get color():uint 
-		{
-			if ( this == CREATURE ) 	return Colors.fromRGB( 1, .7+Math.random()*0.2, .4 );
-			if ( this == TRAP ) 		return Colors.fromRGB( 1, .3, .3+Math.random()*0.2 );
-			return 0xFFFFFF;
 		}
 		
 		public function get isCreature():Boolean { return this == CREATURE }

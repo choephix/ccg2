@@ -128,6 +128,7 @@ package duel
 		
 		public function onCardClicked( card:Card ):void
 		{
+			//if ( card.field != null ){card.flipped = !card.flipped;return;}
 			selectCard( selectedCard == card ? null : card );
 		}
 		
