@@ -2,7 +2,7 @@ package duel.cards
 {
 	import chimichanga.common.display.Sprite;
 	import chimichanga.global.utils.Colors;
-	import duel.CardField;
+	import duel.Field;
 	import duel.cards.behaviour.CardBehaviour;
 	import duel.cards.CardData;
 	import duel.GameEntity;
@@ -27,7 +27,7 @@ package duel.cards
 		
 		// BATTLE
 		public var player:Player;
-		public var field:CardField;
+		public var field:Field;
 		public function get isInPlay():Boolean{return field != null}
 		
 		private var _flipped:Boolean = true;

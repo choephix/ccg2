@@ -104,7 +104,7 @@ package duel
 		
 		// INTERACTION
 		
-		public function onFieldClicked( field:CardField ):void
+		public function onFieldClicked( field:Field ):void
 		{
 			if ( selectedCard )
 			{
@@ -218,7 +218,7 @@ package duel
 		
 		// QUESTIONS
 		
-		public function canPlayHere( card:Card, field:CardField ):Boolean
+		public function canPlayHere( card:Card, field:Field ):Boolean
 		{
 			//if ( !side1.contains( field ) )
 				//return false;

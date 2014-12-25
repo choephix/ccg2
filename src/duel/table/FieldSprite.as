@@ -1,6 +1,8 @@
-package duel {
-	import duel.cards.Card;
-	import duel.cards.CardType;
+package duel.table 
+{
+	import duel.Field;
+	import duel.G;
+	import duel.Game;
 	import starling.display.Image;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
@@ -10,17 +12,13 @@ package duel {
 	 * ...
 	 * @author choephix
 	 */
-	public class CardField extends Image 
+	public class FieldSprite extends Image 
 	{
-		public var container:PlayerSide;
-		public var allowedCardType:CardType;
+		private var owner:Field;
 		
-		// BATTLE
-		public var card:Card;
-		
-		public function CardField( container:PlayerSide, color:uint ) 
+		public function FieldSprite( owner:Field, color:uint ) 
 		{
-			this.container = container;
+			this.owner = owner;
 			
 			super( App.assets.getTexture( "field" ) );
 			this.width = G.CARD_W;
@@ -41,8 +39,10 @@ package duel {
 			if ( t == null ) return;
 			
 			if ( t.phase == TouchPhase.ENDED ) {
-				Game.current.onFieldClicked( this );
+				Game.current.onFieldClicked( owner );
 			} 
 		}
+		
 	}
+
 }
