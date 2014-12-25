@@ -12,6 +12,7 @@ package duel
 	import starling.core.Starling;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
+	import starling.display.Quad;
 	
 	/**
 	 * ...
@@ -135,7 +136,6 @@ package duel
 		}
 		
 		// INTERACTION
-		
 		public function onFieldClicked( field:Field ):void
 		{
 			if ( selectedCard )
@@ -179,6 +179,9 @@ package duel
 			}
 			
 			if ( currentPlayer.hand.contains( card ) ) {
+				if ( canSelect( card ) ) selectCard( selectedCard == card ? null : card );
+				return;
+				
 				trace( "DISCARDO" );
 				currentPlayer.hand.remove( card );
 				currentPlayer.grave.add( card );
@@ -186,11 +189,9 @@ package duel
 				return;
 			}
 			
-			trace("?");
-			return;
-			
 			//if ( card.field != null ){card.flipped = !card.flipped;return;}
-			selectCard( selectedCard == card ? null : card );
+			if ( canSelect( card ) ) selectCard( selectedCard == card ? null : card );
+			return;
 		}
 		
 		public function onCardRollOver( card:Card ):void
@@ -231,8 +232,22 @@ package duel
 		public function performCardAttack( card:Card ):void
 		{
 			card.faceDown = false;
-			damagePlayer( card.player == p1 ? p2 : p1, CreatureCardBehaviour( card.behaviour ).attack );
-			card.exhausted = true;
+			//finishAttack(); return;
+			
+			var q:Quad = new Quad( 50, 50, 0xFF0000 );
+			card.sprite.parent.parent.addChild( q );
+			q.alpha = .50;
+			q.x = card.sprite.parent.x;
+			q.y = card.sprite.parent.y;
+			q.alignPivot();
+			jugglerStrict.tween( q, .100, { y : q.y - 400, onComplete : finishAttack } );
+			
+			function finishAttack():void {
+				q.removeFromParent( true );
+				
+				damagePlayer( card.player == p1 ? p2 : p1, CreatureCardBehaviour( card.behaviour ).attack );
+				card.exhausted = true;
+			}
 		}
 		
 		public function damagePlayer( player:Player, amount:int ):void
@@ -241,7 +256,6 @@ package duel
 		}
 		
 		//
-		
 		private function selectCard( card:Card ):void {
 			if ( selectedCard != null && p1hand.contains( selectedCard.sprite ) )
 			{
@@ -259,7 +273,6 @@ package duel
 		public function get selectedCard():Card { return selection.selectedCard }
 		
 		//
-		
 		private function generatePlayer( name:String ):Player
 		{
 			var p:Player = new Player();
@@ -296,13 +309,18 @@ package duel
 		}
 		
 		// QUESTIONS
-		
 		public function canPlayHere( card:Card, field:Field ):Boolean
 		{
 			//if ( !side1.contains( field ) )
 				//return false;
 			if ( field.allowedCardType != card.type )
 				return false;
+			return true;
+		}
+		
+		public function canSelect( card:Card ):Boolean {
+			if ( card.player != currentPlayer ) return false;
+			if ( card.exhausted ) return false;
 			return true;
 		}
 		
