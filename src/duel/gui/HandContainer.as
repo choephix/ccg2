@@ -14,6 +14,8 @@ package duel.gui
 	 */
 	public class HandContainer extends GameSprite implements IAnimatable
 	{
+		public var maxWidth:Number = 500;
+		
 		private var hand:CardList;
 		
 		public function HandContainer( hand:CardList )
@@ -34,6 +36,7 @@ package duel.gui
 		{
 			removeChildren();
 			
+			const D:Number = Math.min( maxWidth / hand.count, G.CARD_W );
 			var c:Card;
 			for ( var i:int = 0; i < hand.count; i++ )
 			{
@@ -41,7 +44,7 @@ package duel.gui
 				addChild( c.model );
 				
 				game.jugglerStrict.removeTweens( c.model );
-				game.jugglerStrict.tween( c.model, 0.250, { y: 0, x: i * ( G.CARD_W * 0.5 + 10 ) } );
+				game.jugglerStrict.tween( c.model, 0.250, { y: 0, x: i * D } );
 			}
 		}
 		

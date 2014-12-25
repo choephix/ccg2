@@ -54,6 +54,25 @@ package duel
 			bg.onClickedCallback = onBgClicked;
 			addChild( bg );
 			
+			const CHAR_SCALE:Number = 0.5;
+			const CHAR_MARGIN_Y:Number = 40;
+			
+			var char1:Image = assets.generateImage( "char1" );
+			char1.alignPivot( "right", "bottom" );
+			char1.x = App.W;
+			char1.y = App.H - CHAR_MARGIN_Y;
+			char1.scaleX = CHAR_SCALE;
+			char1.scaleY = CHAR_SCALE;
+			addChild( char1 );
+			
+			var char2:Image = assets.generateImage( "char2" );
+			char2.alignPivot( "right", "top" );
+			char2.x = 0;
+			char2.y = CHAR_MARGIN_Y;
+			char2.scaleX = -CHAR_SCALE;
+			char2.scaleY =  CHAR_SCALE;
+			addChild( char2 );
+			
 			side1 = new PlayerSide( false );
 			addChild( side1 );
 			side1.x = App.W * 0.50;
@@ -71,7 +90,7 @@ package duel
 			selection = new Selection();
 			
 			p1hand = new HandContainer( p1.hand );
-			p1hand.x = 100;
+			p1hand.x = ( App.W - p1hand.maxWidth ) * 0.5;
 			p1hand.y = App.H;
 			addChild( p1hand );
 		}
