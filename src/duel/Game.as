@@ -156,6 +156,7 @@ package duel
 		
 		public function performCardAttack( card:Card ):void
 		{
+			card.flipped = false;
 			damagePlayer( card.player == p1 ? p2 : p1, CreatureCardBehaviour( card.behaviour ).attack );
 		}
 		

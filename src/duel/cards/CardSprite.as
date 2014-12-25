@@ -4,6 +4,7 @@ package duel.cards
 	import duel.cards.behaviour.CreatureCardBehaviour;
 	import duel.G;
 	import duel.GameSprite;
+	import starling.animation.Transitions;
 	import starling.display.Image;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
@@ -24,6 +25,9 @@ package duel.cards
 		private var title:TextField;
 		
 		private var pointerOver:Boolean;
+		
+		///
+		private var _flippedness:Number = .0;
 		
 		//
 		private var owner:Card;
@@ -118,18 +122,34 @@ package duel.cards
 			} 
 		}
 		
-		internal function setFlipped(value:Boolean):void 
+		internal function setFlipped( value:Boolean ):void 
 		{
 			//back.visible = value;
-			game.jugglerMild.xtween( this, 0.150, { scaleX : value ? -1.0 : 1.0, scaleY : 1.0, onUpdate : whileFlipping } );
-			game.jugglerMild.xtween( back, 0.050, { alpha : 1.0 } );
+			game.jugglerMild.xtween( this, 0.150, 
+				{
+					flippedness : value ? -1.0 : 1.0 ,
+					transition : Transitions.EASE_OUT
+				} );
 		}
 		
 		private function whileFlipping():void
 		{
 			back.visible = scaleX < 0.0;
 		}
-	
+		
+		public function get flippedness():Number 
+		{
+			return _flippedness;
+		}
+		
+		public function set flippedness(value:Number):void 
+		{
+			if ( _flippedness == value ) return;
+			_flippedness = value;
+			scaleX = Math.abs( value );
+			back.visible = value < 0.0;
+		}
+		
 	}
 
 }
