@@ -27,6 +27,7 @@ package duel.cards {
 		// BATTLE
 		public var player:Player;
 		public var field:CardField;
+		public function get isInPlay():Boolean { return field != null; }
 		
 		// VISUALS
 		public var model:CardSprite;
