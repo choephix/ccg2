@@ -32,7 +32,7 @@ package duel
 				return;
 			}
 			
-			_selectedCard.model.auraContainer.addChild( selectionAura );
+			_selectedCard.sprite.auraContainer.addChild( selectionAura );
 			selectionAura.color = 0xCCFF00;
 		}
 	}

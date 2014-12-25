@@ -59,7 +59,7 @@ package duel {
 			c.flipped = flipped;
 			
 			// VISUAL
-			var m:CardSprite = c.model;
+			var m:CardSprite = c.sprite;
 			
 			addChild( m );
 			m.x = field.x;

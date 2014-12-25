@@ -40,16 +40,16 @@ package duel.cards
 			if ( _flipped == value )
 				return;
 			_flipped = value;
-			model.setFlipped( value )
+			sprite.setFlipped( value )
 		}
 		
 		//
-		public var model:CardSprite;
+		public var sprite:CardSprite;
 		
 		public function initialize():void
 		{
-			model = new CardSprite();
-			model.initialize( this );
+			sprite = new CardSprite();
+			sprite.initialize( this );
 		}
 	}
 

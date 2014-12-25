@@ -135,7 +135,7 @@ package duel
 		{
 			if ( !interactable ) return;
 			if ( card.flipped && card.player == p1 ) {
-				card.model.peekIn();
+				card.sprite.peekIn();
 			}
 		}
 		
@@ -143,7 +143,7 @@ package duel
 		{
 			if ( !interactable ) return;
 			if ( card.flipped && card.player == p1 ) {
-				card.model.peekOut();
+				card.sprite.peekOut();
 			}
 		}
 		
@@ -167,14 +167,14 @@ package duel
 		//
 		
 		private function selectCard( card:Card ):void {
-			if ( selectedCard != null && p1hand.contains( selectedCard.model ) )
+			if ( selectedCard != null && p1hand.contains( selectedCard.sprite ) )
 			{
 				p1hand.unshow( selectedCard );
 			}
 			
 			selection.selectedCard = card;
 			
-			if ( selectedCard != null && p1hand.contains( selectedCard.model ) )
+			if ( selectedCard != null && p1hand.contains( selectedCard.sprite ) )
 			{
 				p1hand.show( selectedCard );
 			}

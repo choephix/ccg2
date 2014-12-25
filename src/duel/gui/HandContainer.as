@@ -41,23 +41,23 @@ package duel.gui
 			for ( var i:int = 0; i < hand.count; i++ )
 			{
 				c = hand.at( i );
-				addChild( c.model );
+				addChild( c.sprite );
 				
-				game.jugglerStrict.removeTweens( c.model );
-				game.jugglerStrict.tween( c.model, 0.250, { y: 0, x: i * D } );
+				game.jugglerStrict.removeTweens( c.sprite );
+				game.jugglerStrict.tween( c.sprite, 0.250, { y: 0, x: i * D } );
 			}
 		}
 		
 		public function show( c:Card ):void
 		{
 			game.jugglerStrict.removeTweens( c );
-			game.jugglerStrict.tween( c.model, 0.100, { y: -140 } );
+			game.jugglerStrict.tween( c.sprite, 0.100, { y: -140 } );
 		}
 		
 		public function unshow( c:Card ):void
 		{
 			game.jugglerStrict.removeTweens( c );
-			game.jugglerStrict.tween( c.model, 0.200, { y: 0 } );
+			game.jugglerStrict.tween( c.sprite, 0.200, { y: 0 } );
 		}
 		
 	}
