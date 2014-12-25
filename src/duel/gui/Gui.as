@@ -1,4 +1,5 @@
-package duel.gui {
+package duel.gui
+{
 	import duel.GameSprite;
 	import starling.text.TextField;
 	
@@ -36,7 +37,7 @@ package duel.gui {
 			t2.touchable = false;
 		}
 		
-		public function advanceTime(time:Number):void 
+		public function advanceTime( time:Number ):void
 		{
 			t1.text = game.p1.name + ": " + game.p1.lp;
 			t2.text = game.p2.name + ": " + game.p2.lp;

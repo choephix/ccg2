@@ -28,6 +28,7 @@ package duel.cards
 			{
 				var b:CreatureCardBehaviour = new CreatureCardBehaviour();
 				b.attack = 10 + Math.random() * 10;
+				b.startFaceDown = Math.random() < .4;
 				c.behaviour = b;
 			}
 			else

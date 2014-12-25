@@ -49,7 +49,11 @@ package duel.cards
 			switch( owner.type )
 			{
 				case CardType.CREATURE:
-					tf.text = CreatureCardBehaviour( owner.behaviour ).attack + "x";
+					tf.text = CreatureCardBehaviour( owner.behaviour ).attack + "A";
+					if ( CreatureCardBehaviour( owner.behaviour ).startFaceDown )
+					{
+						tf.color = 0x771133;
+					}
 					tf.fontName = "Impact";
 					tf.hAlign = "left";
 					tf.fontSize = 72;

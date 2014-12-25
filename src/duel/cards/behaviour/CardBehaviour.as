@@ -6,6 +6,7 @@ package duel.cards.behaviour
 	 */
 	public class CardBehaviour 
 	{
+		public var startFaceDown:Boolean = false;
 		
 		public function CardBehaviour() 
 		{

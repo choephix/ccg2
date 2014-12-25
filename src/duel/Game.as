@@ -118,7 +118,7 @@ package duel
 				{
 					if ( canPlayHere( selectedCard, field ) )
 					{
-						var flipped:Boolean = selectedCard.type.isTrap;
+						var flipped:Boolean = selectedCard.behaviour.startFaceDown;
 						field.container.addCardTo( selectedCard, field, flipped );
 					}
 				}
