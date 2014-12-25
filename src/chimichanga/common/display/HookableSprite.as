@@ -1,6 +1,4 @@
 package chimichanga.common.display {
-	import flash.geom.Matrix;
-	import flash.geom.Rectangle;
 	import starling.core.RenderSupport;
 	import starling.display.DisplayObject;
 	import starling.display.Sprite;
@@ -30,7 +28,7 @@ package chimichanga.common.display {
 	 * 
 	 * @author choephix
 	 */
-	public class HookableSprite extends Sprite {
+	public class HookableSprite extends starling.display.Sprite {
 		
 		private var mHookee:DisplayObject;
 		

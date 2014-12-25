@@ -30,8 +30,8 @@ package duel
 		public var p2:Player;
 		
 		public var bg:Background;
-		public var side1:PlayerSide;
-		public var side2:PlayerSide;
+		public var p1side:PlayerSide;
+		public var p2side:PlayerSide;
 		
 		//
 		private var p1hand:HandContainer;
@@ -74,15 +74,15 @@ package duel
 			char2.scaleY =  CHAR_SCALE;
 			addChild( char2 );
 			
-			side1 = new PlayerSide( false );
-			addChild( side1 );
-			side1.x = App.W * 0.50;
-			side1.y = App.H * 0.70;
+			p2side = new PlayerSide( true );
+			addChild( p2side );
+			p2side.x = App.W * 0.50;
+			p2side.y = App.H * 0.30;
 			
-			side2 = new PlayerSide( true );
-			addChild( side2 );
-			side2.x = App.W * 0.50;
-			side2.y = App.H * 0.30;
+			p1side = new PlayerSide( false );
+			addChild( p1side );
+			p1side.x = App.W * 0.50;
+			p1side.y = App.H * 0.70;
 			
 			// GUI AND STUFF
 			gui = new Gui();
@@ -94,6 +94,26 @@ package duel
 			p1hand.x = ( App.W - p1hand.maxWidth ) * 0.5;
 			p1hand.y = App.H;
 			addChild( p1hand );
+			
+			var c:Card;
+			var i:int;
+			for ( i = 0; i < 40; i++ ) 
+			{
+				c = CardFactory.produceCard( 0 );
+				c.player = p1;
+				c.flipped = true;
+				jugglerStrict.delayCall( p1side.fieldDeck.cards.add, .4 + i * .010, c );
+				//jugglerStrict.delayCall( p1side.addCardTo, .4 + i * .010, c, p1side.fieldDeck, true );
+			}
+			for ( i = 0; i < 25; i++ ) 
+			{
+				c = CardFactory.produceCard( 0 );
+				c.player = p2;
+				c.flipped = true;
+				jugglerStrict.delayCall( p2side.fieldDeck.cards.add, .6 + i * .010, c );
+				//jugglerStrict.delayCall( p2side.addCardTo, .4 + i * .010, c, p2side.fieldDeck, true );
+			}
+			
 		}
 		
 		public function destroy():void 
@@ -130,6 +150,15 @@ package duel
 		
 		public function onCardClicked( card:Card ):void
 		{
+			if ( card.field != null )
+			{
+				if ( card.field.isDeckStack )
+				{
+					trace( "DRAW" );
+					p1.hand.add( card );
+					return;
+				}
+			}
 			//if ( card.field != null ){card.flipped = !card.flipped;return;}
 			selectCard( selectedCard == card ? null : card );
 		}
@@ -156,6 +185,11 @@ package duel
 		}
 		
 		// GAMEPLAY
+		
+		public function endTurn():void
+		{
+			
+		}
 		
 		public function performCardAttack( card:Card ):void
 		{

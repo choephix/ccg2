@@ -28,6 +28,7 @@ package duel.cards
 		// BATTLE
 		public var player:Player;
 		public var field:Field;
+		public var exhausted:Boolean;
 		public function get isInPlay():Boolean{return field != null}
 		
 		private var _flipped:Boolean = true;
@@ -45,6 +46,8 @@ package duel.cards
 		
 		//
 		public var sprite:CardSprite;
+		
+		internal var list:CardList;
 		
 		public function initialize():void
 		{

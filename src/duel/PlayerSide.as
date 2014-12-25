@@ -3,6 +3,7 @@ package duel {
 	import duel.cards.Card;
 	import duel.cards.CardSprite;
 	import duel.cards.CardType;
+	import duel.table.FieldType;
 	import flash.text.TextField;
 	import starling.animation.Transitions;
 	import starling.display.DisplayObjectContainer;
@@ -29,38 +30,39 @@ package duel {
 			var i:int;
 			for ( i = 0; i < FIELD_COLUMNS; i++ )
 			{
-				f = new Field( this, 0x440011 );
+				f = generateField( FieldType.CREATURE, i * ( G.CARD_W + FIELD_SPACING_X ),  ( flip ? 1.0 : -1.0 ) * 80 );
 				f.index = i;
-				f.sprite.x = i * ( G.CARD_W + FIELD_SPACING_X );
-				f.sprite.y = ( flip ? 1.0 : -1.0 ) * 80;
 				f.allowedCardType = CardType.CREATURE;
 				fieldsC.push( f );
-				addChild( f.sprite );
 			}
 			for ( i = 0; i < FIELD_COLUMNS; i++ )
 			{
-				f = new Field( this, 0x07274B );
+				f = generateField( FieldType.TRAP, i * ( G.CARD_W + FIELD_SPACING_X ),  ( flip ? -1.0 : 1.0 ) * 80 );
 				f.index = i;
-				f.sprite.x = fieldsC[ i ].sprite.x;
-				f.sprite.y = ( flip ? -1.0 : 1.0 ) * 80;
 				f.allowedCardType = CardType.TRAP;
 				fieldsT.push( f );
-				addChild( f.sprite );
 			}
 			
-			f = new Field( this, 0x221139 );
-			f.sprite.x = ( G.CARD_W + FIELD_SPACING_X ) * FIELD_COLUMNS;
-			f.sprite.y = ( flip ? 1.0 : -1.0 ) * 40;
-			addChild( f.sprite );
+			f = generateField( FieldType.DECK, ( G.CARD_W + FIELD_SPACING_X ) * FIELD_COLUMNS, ( flip ? 1.0 : -1.0 ) * 40 );
+			f.cardsContainer.cardSpacing = 2;
 			fieldDeck = f;
 			
-			f = new Field( this, 0x222222 );
-			f.sprite.x = -( G.CARD_W + FIELD_SPACING_X );
-			f.sprite.y = ( flip ? 1.0 : -1.0 ) * 40;
-			addChild( f.sprite );
+			f = generateField( FieldType.GRAVEYARD, -( G.CARD_W + FIELD_SPACING_X ), ( flip ? 1.0 : -1.0 ) * 40 );
+			f.cardsContainer.cardSpacing = 3;
 			fieldGrave = f;
 			
 			alignPivot();
+		}
+		
+		private function generateField( type:FieldType, x:Number, y:Number ):Field
+		{
+			var f:Field;
+			f = new Field( this, type );
+			f.sprite.x = x;
+			f.sprite.y = y;
+			f.cardsContainer.x = f.sprite.x;
+			f.cardsContainer.y = f.sprite.y;
+			return f;
 		}
 		
 		public function addCardTo( c:Card, field:Field, flipped:Boolean = false ):void
@@ -69,29 +71,11 @@ package duel {
 			if ( game.p2.hand.contains( c ) ) game.p2.hand.remove( c );
 			
 			if ( c.field != null ) {
-				c.field.card = null;
+				c.field.removeCard( c );
 			}
 			
-			field.card = c;
-			c.field = field;
-			
+			field.addCard( c );
 			c.flipped = flipped;
-			
-			// VISUAL
-			var m:CardSprite = c.sprite;
-			
-			addChild( m );
-			m.x = field.sprite.x;
-			m.y = field.sprite.y;
-			
-			m.scaleX = 1.3;
-			m.scaleY = 1.3;
-			game.jugglerStrict.xtween( m, 0.8, { 
-				scaleX:1.0,
-				scaleY:1.0,
-				alpha:1.0,
-				transition: Transitions.EASE_OUT_BOUNCE
-			} );
 		}
 		
 		public function containsField( field:Field ):Boolean {

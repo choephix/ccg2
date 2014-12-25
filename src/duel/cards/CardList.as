@@ -1,5 +1,7 @@
 package duel.cards {
 	import duel.cards.Card;
+	import flash.display3D.textures.VideoTexture;
+	import starling.events.Event;
 	import starling.events.EventDispatcher;
 	/**
 	 * ...
@@ -23,16 +25,22 @@ package duel.cards {
 		
 		public function add( card:Card ):void
 		{
+			if ( card.list != null ) {
+				card.list.remove( card );
+			}
+			
 			_count++;
 			list.push( card );
-			dispatchEventWith( CardListEvents.CHANGED );
+			onChange();
 		}
 		
 		public function remove( card:Card ):void
 		{
+			card.list = null;
+			
 			_count--;
 			list.splice( list.indexOf( card ), 1 );
-			dispatchEventWith( CardListEvents.CHANGED );
+			onChange();
 		}
 		
 		////
@@ -70,7 +78,14 @@ package duel.cards {
 		public function sort(compareFunction:Function):Vector.<duel.cards.Card> 
 		{
 			return list.sort(compareFunction);
-			dispatchEventWith( CardListEvents.CHANGED );
+			onChange();
+		}
+		
+		////
+		private function onChange():void
+		{
+			//trace("list  changed" );
+			dispatchEventWith( Event.CHANGE );
 		}
 		
 		public function toString():String 

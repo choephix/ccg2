@@ -108,11 +108,13 @@ package duel.cards
 		
 		public function peekIn():void 
 		{
+			return;
 			game.jugglerMild.xtween( back, 0.500, { delay : 0.500, alpha : 0.3 } );
 		}
 		
 		public function peekOut():void 
 		{
+			return;
 			game.jugglerMild.xtween( back, 0.250, { alpha : 1.0 } );
 		}
 		
@@ -165,7 +167,12 @@ package duel.cards
 			if ( _flippedness == value ) return;
 			_flippedness = value;
 			scaleX = Math.abs( value );
+			
 			back.visible = value < 0.0;
+			
+			pad.visible = !back.visible;
+			tf.visible = !back.visible;
+			title.visible = !back.visible;
 		}
 		
 	}
