@@ -27,11 +27,16 @@ package duel {
 		public var cardsContainer:CardsStackSprite;
 		public var player:Player;
 		
-		public function Field( container:TableSide, type:FieldType, cardList:CardList = null ) 
+		public function Field( container:TableSide ) 
 		{
 			this.container = container;
-			this.type = type;
 			this.player = container.player;
+		}
+		
+		public function initialize( type:FieldType, cardList:CardList = null ):void
+		{
+			this.type = type;
+			this.cards = cardList;
 			
 			var color:uint = 0xFFFFFF;
 			if ( isCreatureField )	color = 0x440011;	else
@@ -40,7 +45,6 @@ package duel {
 			if ( isGraveyardStack )	color = 0x221139;
 			
 			sprite = new FieldSprite( this, color );
-			cards = cardList != null ? cardList : new CardList();
 			cardsContainer = new CardsStackSprite( cards );
 			
 			container.addChild( sprite );
@@ -65,6 +69,15 @@ package duel {
 		{
 			cards.remove( c );
 			c.field = null;
+		}
+		
+		//
+		public function setViewPosition( x:Number, y:Number ):void
+		{
+			sprite.x = x;
+			sprite.y = y;
+			cardsContainer.x = sprite.x;
+			cardsContainer.y = sprite.y;
 		}
 		
 		public function animFall( c:Card ):void 

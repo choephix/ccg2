@@ -32,39 +32,36 @@ package duel {
 			var i:int;
 			for ( i = 0; i < G.FIELD_COLUMNS; i++ )
 			{
-				f = generateField( FieldType.CREATURE, i * ( G.CARD_W + FIELD_SPACING_X ),  ( flip ? 1.0 : -1.0 ) * 80 );
+				f = new Field( this );
 				f.index = i;
+				f.initialize( FieldType.CREATURE, player.fieldsC[ i ] );
+				f.setViewPosition( i * ( G.CARD_W + FIELD_SPACING_X ),  ( flip ? 1.0 : -1.0 ) * 80 );
 				f.allowedCardType = CardType.CREATURE;
 				fieldsC.push( f );
 			}
 			for ( i = 0; i < G.FIELD_COLUMNS; i++ )
 			{
-				f = generateField( FieldType.TRAP, i * ( G.CARD_W + FIELD_SPACING_X ),  ( flip ? -1.0 : 1.0 ) * 80 );
+				f = new Field( this );
 				f.index = i;
+				f.initialize( FieldType.TRAP, player.fieldsT[ i ] );
+				f.setViewPosition( i * ( G.CARD_W + FIELD_SPACING_X ),  ( flip ? -1.0 : 1.0 ) * 80 );
 				f.allowedCardType = CardType.TRAP;
 				fieldsT.push( f );
 			}
 			
-			f = generateField( FieldType.DECK, -( G.CARD_W + FIELD_SPACING_X ), ( flip ? 1.0 : -1.0 ) * 40, player.deck );
+			f = new Field( this );
+			f.initialize( FieldType.DECK, player.deck );
+			f.setViewPosition( -( G.CARD_W + FIELD_SPACING_X ), ( flip ? 1.0 : -1.0 ) * 40 );
 			f.cardsContainer.cardSpacing = 2;
 			fieldDeck = f;
 			
-			f = generateField( FieldType.GRAVEYARD, ( G.CARD_W + FIELD_SPACING_X ) * G.FIELD_COLUMNS, ( flip ? 1.0 : -1.0 ) * 40, player.grave );
+			f = new Field( this );
+			f.initialize( FieldType.GRAVEYARD, player.grave );
+			f.setViewPosition( ( G.CARD_W + FIELD_SPACING_X ) * G.FIELD_COLUMNS, ( flip ? 1.0 : -1.0 ) * 40 );
 			f.cardsContainer.cardSpacing = 3;
 			fieldGrave = f;
 			
 			alignPivot();
-		}
-		
-		private function generateField( type:FieldType, x:Number, y:Number, cardList:CardList = null ):Field
-		{
-			var f:Field;
-			f = new Field( this, type, cardList );
-			f.sprite.x = x;
-			f.sprite.y = y;
-			f.cardsContainer.x = f.sprite.x;
-			f.cardsContainer.y = f.sprite.y;
-			return f;
 		}
 		
 		public function addCardTo( c:Card, field:Field, flipped:Boolean = false ):void

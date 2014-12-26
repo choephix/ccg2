@@ -71,7 +71,7 @@ package duel.cards {
 			return list.some(callback, thisObject);
 		}
 		
-		public function filter(callback:Function, thisObject:Object = null):Vector.<duel.cards.Card> 
+		public function filter(callback:Function, thisObject:Object = null):Vector.<Card> 
 		{
 			return list.filter(callback, thisObject);
 		}
