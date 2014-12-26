@@ -1,6 +1,5 @@
 package duel.cards.visual {
-	import duel.cards.CardList;
-	import duel.cards.visual.CardsContainer;
+	import duel.cardlots.CardListBase;
 	import starling.animation.Transitions;
 	import starling.display.DisplayObject;
 	
@@ -12,7 +11,7 @@ package duel.cards.visual {
 	{
 		public var cardSpacing:Number = 10;
 		
-		public function CardsStackSprite( list:CardList )
+		public function CardsStackSprite( list:CardListBase )
 		{
 			setTargetList( list );
 			game.jugglerMild.add( this );
@@ -23,9 +22,9 @@ package duel.cards.visual {
 			removeChildren();
 			
 			var o:DisplayObject;
-			for ( var i:int = 0, iMax:int = list.count; i < iMax; i++ )
+			for ( var i:int = 0, iMax:int = list.cardsCount; i < iMax; i++ )
 			{
-				o = list.at( i ).sprite;
+				o = list.getCardAt( i ).sprite;
 				o.x = 0;
 				o.y = -cardSpacing * numChildren;
 				super.addChild( o );

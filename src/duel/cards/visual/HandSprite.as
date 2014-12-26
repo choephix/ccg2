@@ -1,8 +1,7 @@
 package duel.cards.visual {
 	import chimichanga.global.utils.MathF;
+	import duel.cardlots.Hand;
 	import duel.cards.Card;
-	import duel.cards.CardList;
-	import duel.cards.visual.CardsContainer;
 	import duel.G;
 	import starling.animation.Transitions;
 	import starling.display.DisplayObject;
@@ -22,9 +21,12 @@ package duel.cards.visual {
 		
 		private var selectedIndex:int = -1;
 		
-		public function HandSprite( list:CardList )
+		private var hand:Hand;
+		
+		public function HandSprite( hand:Hand )
 		{
-			setTargetList( list );
+			this.hand = hand;
+			setTargetList( hand );
 		}
 		
 		override public function arrange():void
@@ -36,9 +38,9 @@ package duel.cards.visual {
 				const A:Array = [];
 				var j:int = 0;
 				var m1:int = selectedIndex;
-				var m2:int = list.count - selectedIndex;
+				var m2:int = cardsCount - selectedIndex;
 				var n:Number;
-				for ( j = 0; j < list.count; j++ )
+				for ( j = 0; j < cardsCount; j++ )
 				{
 					n = 1.0 - ( Math.abs( j - selectedIndex ) / ( j < selectedIndex ? m1 : m2 ) );
 					A.push( n );
@@ -52,19 +54,19 @@ package duel.cards.visual {
 			var d:Number = 0.0;
 			var x:Number = G.CARD_W * .5;
 			var y:Number = 0.0;
-			for ( var i:int = 0; i < list.count; i++ )
+			for ( var i:int = 0; i < cardsCount; i++ )
 			{
-				c = list.at( i );
+				c = list.getCardAt( i );
 				super.addChild( c.sprite );
 				
 				/** /
-				if ( selectedIndex == -1 || selectedIndex == list.count - 1 )
+				if ( selectedIndex == -1 || selectedIndex == cardsCount - 1 )
 				{
-					d = Math.min( W / list.count, G.CARD_W );
+					d = Math.min( W / cardsCount, G.CARD_W );
 				}
 				else
 				{
-					d = Math.min( i == selectedIndex + 1 ? Number.MAX_VALUE : ( W - SEL_SPACE ) / list.count, G.CARD_W );
+					d = Math.min( i == selectedIndex + 1 ? Number.MAX_VALUE : ( W - SEL_SPACE ) / cardsCount, G.CARD_W );
 				}
 				/** /
 				if ( selectedIndex == -1 )
@@ -77,19 +79,19 @@ package duel.cards.visual {
 					if ( i == selectedIndex + 1 ) d = SEL_SPACE;
 				}
 				/**/
-				if ( selectedIndex == -1 || selectedIndex == list.count - 1 )
+				if ( selectedIndex == -1 || selectedIndex == cardsCount - 1 )
 				{
-					d = Math.min( W / list.count, G.CARD_W );
+					d = Math.min( W / cardsCount, G.CARD_W );
 				}
 				else
 				{
 					if ( i <= selectedIndex )
-						d = Math.min( W / list.count, G.CARD_W );
+						d = Math.min( W / cardsCount, G.CARD_W );
 					else 
 					if ( i == selectedIndex + 1 )
 						d = G.CARD_W;
 					else 
-						d = Math.min( W / list.count, G.CARD_W );
+						d = Math.min( W / cardsCount, G.CARD_W );
 				}
 				/**/
 				
@@ -103,14 +105,10 @@ package duel.cards.visual {
 			}
 		}
 		
-		override public function addChild( child:DisplayObject ):DisplayObject 
-		{
-			throw new Error( "NEVER USE ADDCHILD ON STACK" );
-		}
-		
+		//
 		public function show( c:Card ):void
 		{
-			selectedIndex = list.indexOf( c );
+			selectedIndex = list.indexOfCard( c );
 			dirty = true;
 		}
 		
@@ -120,6 +118,16 @@ package duel.cards.visual {
 			dirty = true;
 		}
 		
+		// ERRORS
+		override public function addChild( child:DisplayObject ):DisplayObject 
+		{
+			throw new Error( "NEVER USE ADDCHILD ON STACK" );
+		}
+		
+		//
+		public function get cardsCount():int { return list.cardsCount }
+		
+		//
 		public function get active():Boolean 
 		{
 			return _active;

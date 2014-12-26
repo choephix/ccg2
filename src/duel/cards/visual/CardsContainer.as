@@ -1,6 +1,6 @@
-package duel.cards.visual 
+package duel.cards.visual
 {
-	import duel.cards.CardList;
+	import duel.cardlots.CardListBase;
 	import duel.GameSprite;
 	import starling.animation.IAnimatable;
 	import starling.events.Event;
@@ -10,7 +10,7 @@ package duel.cards.visual
 	 */
 	public class CardsContainer extends GameSprite implements IAnimatable
 	{
-		protected var list:CardList;
+		protected var list:CardListBase;
 		protected var dirty:Boolean;
 		
 		public function advanceTime( time:Number ):void
@@ -24,7 +24,7 @@ package duel.cards.visual
 		
 		public function arrange():void {}
 		
-		public function setTargetList( target:CardList ):void
+		public function setTargetList( target:CardListBase ):void
 		{
 			if ( list )
 				list.removeEventListener( Event.CHANGE, onListChange );

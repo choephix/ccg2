@@ -1,18 +1,11 @@
 package duel.cards
 {
-	import chimichanga.common.display.Sprite;
-	import chimichanga.global.utils.Colors;
-	import duel.Field;
+	import duel.cardlots.CardListBase;
+	import duel.cardlots.Field;
 	import duel.cards.behaviour.CardBehaviour;
-	import duel.cards.CardData;
 	import duel.GameEntity;
 	import duel.GameEvents;
 	import duel.Player;
-	import starling.display.DisplayObjectContainer;
-	import starling.display.Quad;
-	import starling.events.Touch;
-	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
 	
 	/**
 	 * ...
@@ -27,39 +20,15 @@ package duel.cards
 		public var behaviour:CardBehaviour;
 		
 		// BATTLE
-		public var player:Player;
-		public var field:Field;
-		public function get isInPlay():Boolean{return field != null}
+		public var owner:Player;
+		public var lot:CardListBase;
 		
 		private var _faceDown:Boolean = true;
-		public function get faceDown():Boolean
-		{
-			return _faceDown;
-		}
-		public function set faceDown( value:Boolean ):void
-		{
-			if ( _faceDown == value )
-				return;
-			_faceDown = value;
-			sprite.setFlipped( value )
-		}
-		
 		private var _exhausted:Boolean;
-		public function get exhausted():Boolean 
-		{
-			return _exhausted;
-		}
-		public function set exhausted(value:Boolean):void 
-		{
-			_exhausted = value;
-			game.jugglerMild.xtween( sprite.exhaustClock, .500, { alpha : value ? 1 : 0 } );
-		}
-		
 		//
 		public var sprite:CardSprite;
 		
-		internal var list:CardList;
-		
+		//
 		public function initialize():void
 		{
 			sprite = new CardSprite();
@@ -76,8 +45,29 @@ package duel.cards
 		
 		public function onTurnStart():void
 		{
-			if ( game.currentPlayer == player ) exhausted = false;
+			if ( game.currentPlayer == controller ) exhausted = false;
 		}
+	
+		// GETTERS & SETTERS
+		public function get faceDown():Boolean{return _faceDown}
+		public function set faceDown( value:Boolean ):void
+		{
+			if ( _faceDown == value )
+				return;
+			_faceDown = value;
+			sprite.setFlipped( value )
+		}
+		
+		public function get exhausted():Boolean {return _exhausted}
+		public function set exhausted(value:Boolean):void 
+		{
+			_exhausted = value;
+			game.jugglerMild.xtween( sprite.exhaustClock, .500, { alpha : value ? 1 : 0 } );
+		}
+		
+		public function get field():Field { return lot as Field }
+		public function get controller():Player { return lot == null ? null : lot.owner }
+		
+		public function get isInPlay():Boolean{return lot is Field }
 	}
-
 }

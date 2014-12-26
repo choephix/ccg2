@@ -1,9 +1,9 @@
 package duel {
 	import adobe.utils.CustomActions;
 	import duel.cards.Card;
-	import duel.cards.CardList;
 	import duel.cards.CardSprite;
 	import duel.cards.CardType;
+	import duel.table.FieldSprite;
 	import duel.table.FieldType;
 	import flash.text.TextField;
 	import starling.animation.Transitions;
@@ -15,11 +15,6 @@ package duel {
 	 */
 	public class TableSide extends GameSprite
 	{
-		public var fieldsC:Vector.<Field> = new Vector.<Field>();
-		public var fieldsT:Vector.<Field> = new Vector.<Field>();
-		public var fieldDeck:Field;
-		public var fieldGrave:Field;
-		
 		public var player:Player;
 		
 		public function TableSide( player:Player, flip:Boolean )
@@ -28,57 +23,41 @@ package duel {
 			
 			const FIELD_SPACING_X:Number = 25;
 			
-			var f:Field;
+			var f:FieldSprite;
 			var i:int;
-			for ( i = 0; i < G.FIELD_COLUMNS; i++ )
+			var len:int;
+			for ( i = 0, len = player.fieldsC.length; i < len; i++ )
 			{
-				f = new Field( this );
-				f.index = i;
-				f.initialize( FieldType.CREATURE, player.fieldsC[ i ] );
-				f.setViewPosition( i * ( G.CARD_W + FIELD_SPACING_X ),  ( flip ? 1.0 : -1.0 ) * 80 );
-				f.allowedCardType = CardType.CREATURE;
-				fieldsC.push( f );
+				f = new FieldSprite();
+				f.x = i * ( G.CARD_W + FIELD_SPACING_X );
+				f.y = ( flip ? 1.0 : -1.0 ) * 80;
+				addChild( f );
+				f.initialize( player.fieldsC[ i ], 0x440011 );
 			}
-			for ( i = 0; i < G.FIELD_COLUMNS; i++ )
+			for ( i = 0, len = player.fieldsT.length; i < len; i++ )
 			{
-				f = new Field( this );
-				f.index = i;
-				f.initialize( FieldType.TRAP, player.fieldsT[ i ] );
-				f.setViewPosition( i * ( G.CARD_W + FIELD_SPACING_X ),  ( flip ? -1.0 : 1.0 ) * 80 );
-				f.allowedCardType = CardType.TRAP;
-				fieldsT.push( f );
+				f = new FieldSprite();
+				f.x = i * ( G.CARD_W + FIELD_SPACING_X );
+				f.y = ( flip ? -1.0 : 1.0 ) * 80;
+				addChild( f );
+				f.initialize( player.fieldsT[ i ], 0x07274B );
 			}
 			
-			f = new Field( this );
-			f.initialize( FieldType.DECK, player.deck );
-			f.setViewPosition( -( G.CARD_W + FIELD_SPACING_X ), ( flip ? 1.0 : -1.0 ) * 40 );
+			f = new FieldSprite();
+			f.x = -( G.CARD_W + FIELD_SPACING_X );
+			f.y = ( flip ? 1.0 : -1.0 ) * 40;
+			addChild( f );
+			f.initialize( player.deck, 0x222222 );
 			f.cardsContainer.cardSpacing = 2;
-			fieldDeck = f;
 			
-			f = new Field( this );
-			f.initialize( FieldType.GRAVEYARD, player.grave );
-			f.setViewPosition( ( G.CARD_W + FIELD_SPACING_X ) * G.FIELD_COLUMNS, ( flip ? 1.0 : -1.0 ) * 40 );
+			f = new FieldSprite();
+			f.x = ( G.CARD_W + FIELD_SPACING_X ) * G.FIELD_COLUMNS;
+			f.y = ( flip ? 1.0 : -1.0 ) * 40;
+			addChild( f );
+			f.initialize( player.grave, 0x221139 );
 			f.cardsContainer.cardSpacing = 3;
-			fieldGrave = f;
 			
 			alignPivot();
-		}
-		
-		public function addCardTo( c:Card, field:Field, flipped:Boolean = false ):void
-		{
-			if ( game.p1.hand.contains( c ) ) game.p1.hand.remove( c );
-			if ( game.p2.hand.contains( c ) ) game.p2.hand.remove( c );
-			
-			if ( c.field != null ) {
-				c.field.removeCard( c );
-			}
-			
-			field.addCard( c );
-			c.faceDown = flipped;
-		}
-		
-		public function containsField( field:Field ):Boolean {
-			return field.container == this;
 		}
 	}
 }

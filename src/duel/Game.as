@@ -2,6 +2,8 @@ package duel
 {
 	import chimichanga.common.assets.AdvancedAssetManager;
 	import chimichanga.global.app.Platform;
+	import duel.cardlots.Field;
+	import duel.cardlots.Hand;
 	import duel.cards.behaviour.CreatureCardBehaviour;
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
@@ -23,7 +25,6 @@ package duel
 		public static var current:Game;
 		
 		public var currentPlayer:Player;
-		public var currentOpponent:Player;
 		
 		//
 		public var jugglerStrict:GuiJuggler;
@@ -36,13 +37,8 @@ package duel
 		public var p2:Player;
 		
 		public var bg:Background;
-		public var p1side:TableSide;
-		public var p2side:TableSide;
 		
 		//
-		private var p1hand:HandSprite;
-		private var p2hand:HandSprite;
-		
 		public var cardsAll:Vector.<Card>;
 		public var cardsInPlay:Vector.<Card>;
 		
@@ -65,6 +61,8 @@ package duel
 			//
 			p1 = generatePlayer( "player1" );
 			p2 = generatePlayer( "player2" );
+			p1.opponent = p2;
+			p2.opponent = p1;
 			
 			// VISUALS
 			bg = new Background( assets.getTexture( "bg" ) );
@@ -90,17 +88,15 @@ package duel
 			char2.scaleY =  CHAR_SCALE;
 			addChild( char2 );
 			
-			p2side = new TableSide( p2, true );
-			addChild( p2side );
-			p2side.x = App.W * 0.50;
-			p2side.y = App.H * 0.30;
-			p2.tableSide = p2side;
+			p2.tableSide = new TableSide( p2, true );
+			p2.tableSide.x = App.W * 0.50;
+			p2.tableSide.y = App.H * 0.30;
+			addChild( p2.tableSide );
 			
-			p1side = new TableSide( p1, false );
-			addChild( p1side );
-			p1side.x = App.W * 0.50;
-			p1side.y = App.H * 0.70;
-			p1.tableSide = p1side;
+			p1.tableSide = new TableSide( p1, false );
+			p1.tableSide.x = App.W * 0.50;
+			p1.tableSide.y = App.H * 0.70;
+			addChild( p1.tableSide );
 			
 			// GUI AND STUFF
 			gui = new Gui();
@@ -108,15 +104,15 @@ package duel
 			
 			selection = new Selection();
 			
-			p1hand = new HandSprite( p1.hand );
-			p1hand.x = ( App.W - p1hand.maxWidth ) * 0.5;
-			p1hand.y = App.H;
-			addChild( p1hand );
+			p1.handSprite = new HandSprite( p1.hand );
+			p1.handSprite.x = ( App.W - p1.handSprite.maxWidth ) * 0.5;
+			p1.handSprite.y = App.H;
+			addChild( p1.handSprite );
 			
-			p2hand = new HandSprite( p2.hand );
-			p2hand.y = 0;
-			p2hand.x = ( App.W - p2hand.maxWidth ) * 0.5;
-			addChild( p2hand );
+			p2.handSprite = new HandSprite( p2.hand );
+			p2.handSprite.y = 0;
+			p2.handSprite.x = ( App.W - p2.handSprite.maxWidth ) * 0.5;
+			addChild( p2.handSprite );
 			
 			// PREPARE GAMEPLAY
 			var time:Number = 0.4;
@@ -126,31 +122,29 @@ package duel
 			{
 				time += .010;
 				c = generateCard();
-				c.player = p1;
+				c.owner = p1;
 				c.faceDown = true;
-				jugglerStrict.delayCall( p1.deck.add, time, c );
-				//jugglerStrict.delayCall( p1side.addCardTo, .4 + i * .010, c, p1side.fieldDeck, true );
+				jugglerStrict.delayCall( p1.deck.addCard, time, c );
 			}
 			for ( i = 0; i < 25; i++ ) 
 			{
 				time += .010;
 				c = generateCard();
-				c.player = p2;
+				c.owner = p2;
 				c.faceDown = true;
-				jugglerStrict.delayCall( p2.deck.add, time, c );
-				//jugglerStrict.delayCall( p2side.addCardTo, .4 + i * .010, c, p2side.fieldDeck, true );
+				jugglerStrict.delayCall( p2.deck.addCard, time, c );
 			}
 			for ( i = 0; i < 12; i++ ) 
 			{
 				time += .030;
 				jugglerStrict.delayCall( p1.draw, time );
-				jugglerStrict.delayCall( p2.draw, time );
+				jugglerStrict.delayCall( p2.draw, time+0.017 );
 			}
 			
 			
 			// START GAME
 			currentPlayer	= p1;
-			currentOpponent = p2;
+			currentPlayer.opponent = p2;
 		}
 		
 		public function destroy():void 
@@ -166,23 +160,28 @@ package duel
 			if ( selectedCard )
 			{
 				var c:Card = selectedCard;
+				var p:Player = c.controller;
+				
 				selectCard( null );
 				
-				//if ( selectedCard.field != null && !side1.containsField( field ) )
+				if ( field.type.isGraveyard && field.owner == p )
+				{
+					p.discard( c );
+					return;
+				}
+				
 				if ( c.isInPlay )
 				{
-					if ( field.isGraveyardStack && field.player == currentPlayer )
-						currentPlayer.discard( c )
-					
-					if ( c.type.isCreature && field.player == currentOpponent )
+					if ( c.type.isCreature && field.owner == p.opponent )
 						performCardAttack( c );
 				}
 				else
+				if ( currentPlayer.hand.containsCard( c ) )
 				{
 					if ( canPlayHere( c, field ) )
 					{
+						field.addCard( c );
 						var flipped:Boolean = c.behaviour.startFaceDown;
-						field.container.addCardTo( c, field, flipped );
 					}
 				}
 			}
@@ -190,20 +189,20 @@ package duel
 		
 		public function onCardClicked( card:Card ):void
 		{
-			if ( currentPlayer.deck.contains( card ) ) {
+			if ( currentPlayer.deck.containsCard( card ) ) {
 				currentPlayer.draw();
 				return;
 			}
 			
-			if ( currentPlayer.grave.contains( card ) ) {
+			if ( currentPlayer.grave.containsCard( card ) ) {
 				trace( "RESURRECT" );
-				currentPlayer.grave.remove( card );
-				currentPlayer.hand.add( card );
+				currentPlayer.grave.removeCard( card );
+				currentPlayer.hand.addCard( card );
 				card.faceDown = false;
 				return;
 			}
 			
-			if ( currentPlayer.hand.contains( card ) ) {
+			if ( currentPlayer.hand.containsCard( card ) ) {
 				if ( canSelect( card ) ) selectCard( selectedCard == card ? null : card );
 				return;
 			}
@@ -216,15 +215,13 @@ package duel
 		public function onCardRollOver( card:Card ):void
 		{
 			if ( !interactable ) return;
-			//if ( p1.hand.contains( card ) ) p1hand.show( card );
-			if ( card.faceDown && card.player == p1 ) card.sprite.peekIn();
+			dispatchEventWith( GameEvents.HOVER, false, card );
 		}
 		
 		public function onCardRollOut( card:Card ):void
 		{
 			if ( !interactable ) return;
-			//if ( p1.hand.contains( card ) ) p1hand.unshow( card );
-			if ( card.faceDown && card.player == p1 ) card.sprite.peekOut();
+			dispatchEventWith( GameEvents.UNHOVER, false, card );
 		}
 		
 		private function onBgClicked():void
@@ -238,14 +235,12 @@ package duel
 		{
 			dispatchEventWith( GameEvents.TURN_END );
 			var p:Player = currentPlayer;
-			currentPlayer = currentOpponent;
-			currentOpponent = p;
+			currentPlayer = currentPlayer.opponent;
+			currentPlayer.opponent = p;
 			p = null;
 			dispatchEventWith( GameEvents.TURN_START );
 			
 			currentPlayer.draw();
-			
-			
 		}
 		
 		public function performCardAttack( card:Card ):void
@@ -264,7 +259,7 @@ package duel
 			function finishAttack():void {
 				q.removeFromParent( true );
 				
-				damagePlayer( card.player == p1 ? p2 : p1, CreatureCardBehaviour( card.behaviour ).attack );
+				damagePlayer( card.controller.opponent, CreatureCardBehaviour( card.behaviour ).attack );
 				card.exhausted = true;
 			}
 		}
@@ -288,18 +283,12 @@ package duel
 		//
 		private function selectCard( card:Card ):void {
 			if ( selectedCard != null )
-			{
-				if ( p1hand.contains( selectedCard.sprite ) ) p1hand.unshow( selectedCard );
-				if ( p2hand.contains( selectedCard.sprite ) ) p2hand.unshow( selectedCard );
-			}
+				dispatchEventWith( GameEvents.SELECT, false, card );
 			
 			selection.selectedCard = card;
 			
 			if ( selectedCard != null )
-			{
-				if ( p1hand.contains( selectedCard.sprite ) ) p1hand.show( selectedCard );
-				if ( p2hand.contains( selectedCard.sprite ) ) p2hand.show( selectedCard );
-			}
+				dispatchEventWith( GameEvents.DESELECT, false, card );
 		}
 		
 		public function get selectedCard():Card { return selection.selectedCard }
@@ -326,8 +315,8 @@ package duel
 			jugglerMild.advanceTime( time );
 			
 			gui.advanceTime( time );
-			p1hand.advanceTime( time );
-			p2hand.advanceTime( time );
+			p1.handSprite.advanceTime( time );
+			p2.handSprite.advanceTime( time );
 			
 			//bg.visible = interactable;
 			this.touchable = interactable;
@@ -341,15 +330,12 @@ package duel
 		// QUESTIONS
 		public function canPlayHere( card:Card, field:Field ):Boolean
 		{
-			//if ( !side1.contains( field ) )
-				//return false;
-			if ( field.allowedCardType != card.type )
-				return false;
+			if ( card.controller != field.owner ) return false;
 			return true;
 		}
 		
 		public function canSelect( card:Card ):Boolean {
-			if ( card.player != currentPlayer ) return false;
+			if ( card.controller != currentPlayer ) return false;
 			if ( card.exhausted ) return false;
 			return true;
 		}
