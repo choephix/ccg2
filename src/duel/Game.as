@@ -1,15 +1,14 @@
 package duel
 {
 	import chimichanga.common.assets.AdvancedAssetManager;
-	import chimichanga.global.app.Platform;
-	import duel.cardlots.Field;
-	import duel.cardlots.Hand;
 	import duel.cards.behaviour.CreatureCardBehaviour;
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
+	import duel.display.cardlots.HandSprite;
+	import duel.display.TableSide;
 	import duel.gui.Gui;
 	import duel.gui.GuiJuggler;
-	import duel.cards.visual.HandSprite;
+	import duel.table.Field;
 	import starling.animation.IAnimatable;
 	import starling.core.Starling;
 	import starling.display.DisplayObjectContainer;

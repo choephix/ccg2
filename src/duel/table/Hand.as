@@ -1,6 +1,5 @@
-package duel.cardlots 
-{
-	import duel.Player;
+package duel.table {
+	import duel.cards.CardListBase;
 	/**
 	 * ...
 	 * @author choephix

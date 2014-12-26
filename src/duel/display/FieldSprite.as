@@ -1,10 +1,8 @@
-package duel.table 
-{
-	import chimichanga.common.display.Sprite;
-	import duel.cardlots.Field;
-	import duel.cards.visual.CardsStackSprite;
+package duel.display {
+	import duel.display.cardlots.CardsStackSprite;
 	import duel.G;
 	import duel.Game;
+	import duel.table.Field;
 	import starling.display.Image;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;

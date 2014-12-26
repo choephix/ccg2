@@ -1,5 +1,4 @@
-package duel.gui 
-{
+package duel.display {
 	import duel.G;
 	import duel.Game;
 	import starling.animation.Transitions;

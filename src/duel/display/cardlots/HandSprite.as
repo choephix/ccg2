@@ -1,6 +1,6 @@
-package duel.cards.visual {
+package duel.display.cardlots {
 	import chimichanga.global.utils.MathF;
-	import duel.cardlots.Hand;
+	import duel.table.Hand;
 	import duel.cards.Card;
 	import duel.G;
 	import starling.animation.Transitions;

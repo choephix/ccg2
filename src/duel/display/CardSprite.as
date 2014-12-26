@@ -1,8 +1,9 @@
-package duel.cards
-{
+package duel.display {
 	import chimichanga.common.display.Sprite;
 	import chimichanga.global.utils.Colors;
 	import duel.cards.behaviour.CreatureCardBehaviour;
+	import duel.cards.Card;
+	import duel.cards.CardType;
 	import duel.G;
 	import duel.GameSprite;
 	import starling.animation.IAnimatable;
@@ -164,7 +165,7 @@ package duel.cards
 		}
 		
 		// FLIPPING
-		internal function setFlipped( faceDown:Boolean ):void 
+		public function setFlipped( faceDown:Boolean ):void 
 		{
 			_flipTween.reset( this, .150, Transitions.EASE_OUT );
 			_flipTween.animate( "flippedness", faceDown ? -1.0 : 1.0 );

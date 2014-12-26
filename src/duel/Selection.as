@@ -1,7 +1,7 @@
 package duel
 {
 	import duel.cards.Card;
-	import duel.gui.CardAura;
+	import duel.display.CardAura;
 	
 	/**
 	 * ...

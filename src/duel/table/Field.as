@@ -1,5 +1,5 @@
-package duel.cardlots 
-{
+package duel.table {
+	import duel.cards.CardListBase;
 	import duel.table.FieldType;
 	/**
 	 * ...

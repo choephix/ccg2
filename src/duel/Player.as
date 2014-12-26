@@ -1,12 +1,13 @@
 package duel {
 	import duel.battleobjects.Creature;
 	import duel.battleobjects.Trap;
-	import duel.cardlots.CreatureField;
-	import duel.cardlots.Field;
-	import duel.cardlots.Hand;
-	import duel.cardlots.TrapField;
+	import duel.display.TableSide;
+	import duel.table.CreatureField;
+	import duel.table.Field;
+	import duel.table.Hand;
+	import duel.table.TrapField;
 	import duel.cards.Card;
-	import duel.cards.visual.HandSprite;
+	import duel.display.cardlots.HandSprite;
 	import duel.table.FieldType;
 	/**
 	 * ...
@@ -27,6 +28,9 @@ package duel {
 		public var fieldsC:Vector.<CreatureField>;
 		public var fieldsT:Vector.<TrapField>;
 		
+		public var creatures:Vector.<Creature>;
+		public var traps:Vector.<Trap>;
+		
 		//VISUAL
 		
 		public var tableSide:TableSide;
@@ -45,6 +49,9 @@ package duel {
 			while ( fieldsC.length < G.FIELD_COLUMNS ) fieldsC.push( new CreatureField( fieldsC.length ) );
 			fieldsT = new Vector.<TrapField>();
 			while ( fieldsT.length < G.FIELD_COLUMNS ) fieldsT.push( new TrapField( fieldsT.length ) );
+			
+			creatures = new Vector.<Creature>( G.FIELD_COLUMNS );
+			traps = new Vector.<Trap>( G.FIELD_COLUMNS );
 			
 			setAsFieldsOwner();
 		}
@@ -79,5 +86,12 @@ package duel {
 			
 			trace( name + " put a card to the grave." );
 		}
+		
+		// BATTLE ENTITIES
+		public function getCreatureAt( index:int ):Creature { return creatures[ index ]; }
+		public function setCreatureAt( index:int, o:Creature ):void { creatures[ index ] = o; }
+		
+		public function getTrapAt( index:int ):Trap { return traps[ index ]; }
+		public function setTrapAt( index:int, o:Trap ):void { traps[ index ] = o; }
 	}
 }

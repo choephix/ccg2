@@ -1,13 +1,8 @@
-package duel {
-	import adobe.utils.CustomActions;
-	import duel.cards.Card;
-	import duel.cards.CardSprite;
-	import duel.cards.CardType;
-	import duel.table.FieldSprite;
-	import duel.table.FieldType;
-	import flash.text.TextField;
-	import starling.animation.Transitions;
-	import starling.display.DisplayObjectContainer;
+package duel.display {
+	import duel.display.FieldSprite;
+	import duel.G;
+	import duel.GameSprite;
+	import duel.Player;
 	
 	/**
 	 * ...

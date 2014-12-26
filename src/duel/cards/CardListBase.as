@@ -1,5 +1,4 @@
-package duel.cardlots
-{
+package duel.cards {
 	import duel.cards.Card;
 	import duel.Player;
 	import flash.display3D.textures.VideoTexture;

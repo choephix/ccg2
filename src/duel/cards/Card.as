@@ -1,11 +1,12 @@
 package duel.cards
 {
-	import duel.cardlots.CardListBase;
-	import duel.cardlots.Field;
 	import duel.cards.behaviour.CardBehaviour;
+	import duel.cards.CardListBase;
+	import duel.display.CardSprite;
 	import duel.GameEntity;
 	import duel.GameEvents;
 	import duel.Player;
+	import duel.table.Field;
 	
 	/**
 	 * ...

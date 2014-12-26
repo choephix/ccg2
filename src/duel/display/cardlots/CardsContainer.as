@@ -1,6 +1,5 @@
-package duel.cards.visual
-{
-	import duel.cardlots.CardListBase;
+package duel.display.cardlots {
+	import duel.cards.CardListBase;
 	import duel.GameSprite;
 	import starling.animation.IAnimatable;
 	import starling.events.Event;
