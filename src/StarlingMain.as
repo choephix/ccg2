@@ -1,6 +1,7 @@
 package {
 	import chimichanga.common.display.Sprite;
 	import duel.GameEvents;
+	import duel.processes.ProcessManager;
 	import ecs.core.World;
 	import ecs.entities.Box;
 	import ecs.entities.Floor;
@@ -63,6 +64,15 @@ package {
 			}
 			if ( e.keyCode == Keyboard.SPACE ) {
 				g.endTurn();
+			}
+			if ( e.keyCode == Keyboard.Q ) {
+				g.processes.enqueueProcess( ProcessManager.gen( "test <<" ) );
+			}
+			if ( e.keyCode == Keyboard.W ) {
+				g.processes.interruptCurrentProcess( ProcessManager.gen( "test >>" ) );
+			}
+			if ( e.keyCode == Keyboard.E ) {
+				g.jugglerStrict.delayCall( trace, 1 );
 			}
 		}
 	}

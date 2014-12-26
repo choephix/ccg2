@@ -71,6 +71,12 @@ package duel {
 		// CARD ACTIONS
 		public function draw():void 
 		{
+			if ( deck.isEmpty )
+			{
+				lp--;
+				return;
+			}
+			
 			var c:Card = deck.getCardAt( deck.cardsCount - 1 );
 			deck.removeCard( c );
 			hand.addCard( c );

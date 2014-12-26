@@ -1,6 +1,7 @@
 package duel
 {
 	import chimichanga.common.assets.AdvancedAssetManager;
+	import dev.ProcessManagementInspector;
 	import duel.cards.behaviour.CreatureCardBehaviour;
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
@@ -8,6 +9,7 @@ package duel
 	import duel.display.TableSide;
 	import duel.gui.Gui;
 	import duel.gui.GuiJuggler;
+	import duel.processes.ProcessManager;
 	import duel.table.Field;
 	import duel.table.Hand;
 	import duel.table.IndexedField;
@@ -33,6 +35,7 @@ package duel
 		public static var current:Game;
 		
 		public var currentPlayer:Player;
+		public var processes:ProcessManager;
 		
 		//
 		public var jugglerStrict:GuiJuggler;
@@ -59,6 +62,8 @@ package duel
 			
 			jugglerStrict = new GuiJuggler();
 			juggler = new GuiJuggler();
+			
+			processes = new ProcessManager();
 			
 			//
 			p1 = generatePlayer( "player1" );
@@ -117,6 +122,28 @@ package duel
 			p2.handSprite.flipped = true;
 			addChild( p2.handSprite );
 			
+			// START GAME
+			currentPlayer	= p1;
+			currentPlayer.opponent = p2;
+			
+			
+			
+			
+			
+			
+			var pmi:ProcessManagementInspector = new ProcessManagementInspector( processes );
+			addChild( pmi );
+			pmi.alignPivot();
+			pmi.x = App.W * .25;
+			pmi.y = App.H * .50;
+			
+			processes.enqueueProcess( ProcessManager.gen( "--3--", trace ) );
+			processes.enqueueProcess( ProcessManager.gen( "--2--", trace ) );
+			processes.enqueueProcess( ProcessManager.gen( "--1--", trace ) );
+			return;
+			
+			
+			
 			// PREPARE GAMEPLAY
 			var time:Number = 0.4;
 			var c:Card;
@@ -143,11 +170,6 @@ package duel
 				jugglerStrict.delayCall( p1.draw, time );
 				jugglerStrict.delayCall( p2.draw, time+0.017 );
 			}
-			
-			
-			// START GAME
-			currentPlayer	= p1;
-			currentPlayer.opponent = p2;
 		}
 		
 		public function destroy():void 
@@ -155,6 +177,24 @@ package duel
 			dispatchEventWith( GameEvents.DESTROY );
 			Starling.juggler.remove( this );
 			removeFromParent( true );
+		}
+		
+		public function advanceTime( time:Number ):void
+		{
+			jugglerStrict.advanceTime( time );
+			juggler.advanceTime( time );
+			
+			gui.advanceTime( time );
+			p1.handSprite.advanceTime( time );
+			p2.handSprite.advanceTime( time );
+			
+			//bg.visible = interactable;
+			this.touchable = interactable;
+			
+			if ( jugglerStrict.isIdle )
+			{
+				processes.advanceTime( time );
+			}
 		}
 		
 		// INTERACTION
@@ -354,19 +394,6 @@ package duel
 		}
 		
 		//
-		public function advanceTime( time:Number ):void
-		{
-			jugglerStrict.advanceTime( time );
-			juggler.advanceTime( time );
-			
-			gui.advanceTime( time );
-			p1.handSprite.advanceTime( time );
-			p2.handSprite.advanceTime( time );
-			
-			//bg.visible = interactable;
-			this.touchable = interactable;
-		}
-		
 		public function get interactable():Boolean
 		{
 			return jugglerStrict.isIdle;
