@@ -21,7 +21,7 @@ package duel.display {
 			
 			this.blendMode = BlendMode.ADD;
 			
-			Game.current.jugglerMild.tween( this, 0.5, {
+			Game.current.juggler.tween( this, 0.5, {
 					scaleX:1.03,
 					scaleY:1.03,
 					repeatCount:0,

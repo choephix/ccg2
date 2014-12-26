@@ -36,7 +36,7 @@ package duel
 		
 		//
 		public var jugglerStrict:GuiJuggler;
-		public var jugglerMild:GuiJuggler;
+		public var juggler:GuiJuggler;
 		
 		public var gui:Gui;
 		public var selection:Selection;
@@ -58,7 +58,7 @@ package duel
 			Starling.juggler.add( this );
 			
 			jugglerStrict = new GuiJuggler();
-			jugglerMild = new GuiJuggler();
+			juggler = new GuiJuggler();
 			
 			//
 			p1 = generatePlayer( "player1" );
@@ -357,7 +357,7 @@ package duel
 		public function advanceTime( time:Number ):void
 		{
 			jugglerStrict.advanceTime( time );
-			jugglerMild.advanceTime( time );
+			juggler.advanceTime( time );
 			
 			gui.advanceTime( time );
 			p1.handSprite.advanceTime( time );

@@ -45,7 +45,7 @@ package duel.display {
 			this.owner = owner;
 			this._flipTween = new Tween( this, 0 );
 			
-			game.jugglerMild.add( this );
+			game.juggler.add( this );
 			
 			// MAIN
 			pad = assets.generateImage( "card", true, false );
@@ -139,13 +139,13 @@ package duel.display {
 		public function peekIn():void 
 		{
 			//back.alpha = 0.3; return;
-			game.jugglerMild.xtween( back, 0.250, { delay : 0.100, alpha : 0.3 } );
+			game.juggler.xtween( back, 0.250, { delay : 0.100, alpha : 0.3 } );
 		}
 		
 		public function peekOut():void 
 		{
 			//back.alpha = 1.0; return;
-			game.jugglerMild.xtween( back, 0.100, { alpha : 1.0 } );
+			game.juggler.xtween( back, 0.100, { alpha : 1.0 } );
 		}
 		
 		private function onTouch(e:TouchEvent):void 

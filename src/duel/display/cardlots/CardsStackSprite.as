@@ -14,7 +14,7 @@ package duel.display.cardlots {
 		public function CardsStackSprite( list:CardListBase )
 		{
 			setTargetList( list );
-			game.jugglerMild.add( this );
+			game.juggler.add( this );
 		}
 		
 		override public function arrange():void 

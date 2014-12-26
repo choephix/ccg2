@@ -83,7 +83,7 @@ package duel.cards
 		public function set exhausted(value:Boolean):void 
 		{
 			_exhausted = value;
-			game.jugglerMild.xtween( sprite.exhaustClock, .500, { alpha : value ? 1 : 0 } );
+			game.juggler.xtween( sprite.exhaustClock, .500, { alpha : value ? 1 : 0 } );
 		}
 		
 		// GETTERS & SETTERS - 3
