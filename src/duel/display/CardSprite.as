@@ -67,8 +67,6 @@ package duel.display {
 				return 0xFFFFFF;
 			}
 			
-			
-			
 			title = new TextField( G.CARD_W, G.CARD_H, owner.name, "Calibri", 24, 0x53001B );
 			title.touchable = false;
 			title.autoScale = true;
@@ -85,10 +83,6 @@ package duel.display {
 			{
 				case CardType.CREATURE:
 					tf.text = CreatureCardBehaviour( owner.behaviour ).attack + "";
-					if ( CreatureCardBehaviour( owner.behaviour ).startFaceDown )
-					{
-						//tf.color = 0x771133;
-					}
 					tf.fontName = "Impact";
 					tf.hAlign = "left";
 					tf.fontSize = 64;
@@ -111,13 +105,15 @@ package duel.display {
 			addChild( auraContainer );
 			
 			exhaustClock = assets.generateImage( "exhaustClock", false, true );
-			exhaustClock.x = G.CARD_W * 0.5;
-			exhaustClock.y = G.CARD_H * 0.5;
+			exhaustClock.x = G.CARD_W * 0.75;
+			exhaustClock.y = G.CARD_H * 0.50;
 			exhaustClock.alpha = 0.0;
 			addChild( exhaustClock );
 			
 			// ..
 			addEventListener( TouchEvent.TOUCH, onTouch );
+			
+			setFlipped( owner.faceDown );
 		}
 		
 		public function advanceTime(time:Number):void 
@@ -130,14 +126,14 @@ package duel.display {
 		//
 		public function peekIn():void 
 		{
-			return;
-			game.jugglerMild.xtween( back, 0.500, { delay : 0.500, alpha : 0.3 } );
+			//back.alpha = 0.3; return;
+			game.jugglerMild.xtween( back, 0.250, { delay : 0.100, alpha : 0.3 } );
 		}
 		
 		public function peekOut():void 
 		{
-			return;
-			game.jugglerMild.xtween( back, 0.250, { alpha : 1.0 } );
+			//back.alpha = 1.0; return;
+			game.jugglerMild.xtween( back, 0.100, { alpha : 1.0 } );
 		}
 		
 		private function onTouch(e:TouchEvent):void 
@@ -148,16 +144,20 @@ package duel.display {
 				if ( pointerOver ) {
 					pointerOver = false;
 					game.onCardRollOut( owner );
+					if ( owner.controller.controllable )
+						peekOut();
 				}
 				return;
 			}
-			
+			else
 			if ( t.phase == TouchPhase.HOVER ) {
 				if ( !pointerOver ) {
 					pointerOver = true;
 					game.onCardRollOver( owner );
+					if ( owner.controller.controllable )
+						peekIn();
 				}
-			} 
+			}
 			else
 			if ( t.phase == TouchPhase.ENDED ) {
 				game.onCardClicked( owner );
@@ -184,9 +184,9 @@ package duel.display {
 			
 			back.visible = value < 0.0;
 			
-			pad.visible = !back.visible;
-			tf.visible = !back.visible;
-			title.visible = !back.visible;
+			//pad.visible = !back.visible;
+			//tf.visible = !back.visible;
+			//title.visible = !back.visible;
 		}
 		
 	}

@@ -5,16 +5,12 @@ package duel.table {
 	 * ...
 	 * @author choephix
 	 */
-	public class CreatureField extends Field
+	public class CreatureField extends IndexedField
 	{
-		private var _index:int;
 		public function CreatureField( index:int )
 		{
-			_index = index;
-			super( FieldType.CREATURE );
+			super( FieldType.CREATURE, index );
 		}
-		
-		public function get index():int { return _index }
 	}
 
 }

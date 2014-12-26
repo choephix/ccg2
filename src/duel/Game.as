@@ -10,6 +10,7 @@ package duel
 	import duel.gui.GuiJuggler;
 	import duel.table.Field;
 	import duel.table.Hand;
+	import duel.table.IndexedField;
 	import starling.animation.IAnimatable;
 	import starling.core.Starling;
 	import starling.display.DisplayObjectContainer;
@@ -185,10 +186,7 @@ package duel
 						field.addCard( c );
 						c.faceDown = c.behaviour.startFaceDown;
 						if ( c.type.isCreature )
-						{
-							var b:CreatureCardBehaviour = c.behaviour as CreatureCardBehaviour;
-							c.exhausted = !b.haste;
-						}
+							c.exhausted = !CreatureCardBehaviour( c.behaviour ).haste;
 					}
 				}
 			}
@@ -230,6 +228,12 @@ package duel
 			else
 			{
 				var c:Card = selectedCard;
+				
+				if ( c != card && card.lot is Hand )
+				{
+					selectCard( card );
+					return;
+				}
 				
 				selectCard( null );
 				
@@ -284,13 +288,31 @@ package duel
 			q.x = card.sprite.parent.x;
 			q.y = card.sprite.parent.y;
 			q.alignPivot();
-			jugglerStrict.tween( q, .100, { y : q.y - 400, onComplete : finishAttack } );
+			jugglerStrict.tween( q, .100, { y : q.y - 150 * ( card.owner == p1 ? 1.0 : -1.0 ), onComplete : finishAttack } );
 			
 			function finishAttack():void {
 				q.removeFromParent( true );
 				
-				damagePlayer( card.controller.opponent, CreatureCardBehaviour( card.behaviour ).attack );
-				card.exhausted = true;
+				if ( card.field.opposingCreature == null )
+				{
+					damagePlayer( card.controller.opponent, CreatureCardBehaviour( card.behaviour ).attack );
+				}
+				else
+				{
+					var c1:Card = card;
+					var c2:Card = card.field.opposingCreature;
+					
+					c1.faceDown = false;
+					c2.faceDown = false;
+					
+					if ( CreatureCardBehaviour(c1.behaviour).attack <= CreatureCardBehaviour(c2.behaviour).attack )
+						c1.die();
+					if ( CreatureCardBehaviour(c2.behaviour).attack <= CreatureCardBehaviour(c1.behaviour).attack )
+						c2.die();
+				}
+				
+				if ( card.isInPlay )
+					card.exhausted = true;
 			}
 		}
 		

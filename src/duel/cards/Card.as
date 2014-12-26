@@ -8,6 +8,7 @@ package duel.cards
 	import duel.Player;
 	import duel.table.CreatureField;
 	import duel.table.Field;
+	import duel.table.IndexedField;
 	
 	/**
 	 * ...
@@ -53,12 +54,20 @@ package duel.cards
 		
 		//
 	
+		public function die():void 
+		{
+			lot.removeCard( this );
+			owner.putToGrave( this );
+		}
+		
+		// -.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'
+		
 		// GETTERS & SETTERS - 1
 		
-		public function get field():Field { return lot as Field }
+		public function get field():IndexedField { return lot as IndexedField }
 		public function get controller():Player { return lot == null ? null : lot.owner }
 		
-		public function get isInPlay():Boolean { return lot is CreatureField }
+		public function get isInPlay():Boolean { return lot is IndexedField }
 		
 		// GETTERS & SETTERS - 2
 		public function get faceDown():Boolean{return _faceDown}
@@ -67,7 +76,7 @@ package duel.cards
 			if ( _faceDown == value )
 				return;
 			_faceDown = value;
-			sprite.setFlipped( value )
+			sprite.setFlipped( value );
 		}
 		
 		public function get exhausted():Boolean {return _exhausted}

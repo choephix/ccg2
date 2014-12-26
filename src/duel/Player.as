@@ -81,8 +81,19 @@ package duel {
 		
 		public function discard( c:Card ):void 
 		{
+			putToGrave( c );
+		}
+		
+		public function putToGrave( c:Card ):void 
+		{
 			grave.addCard( c );
-			c.faceDown = true;
+			c.faceDown = false; // true false
+			
+			if ( c.isInPlay )
+			{
+				c.exhausted = false;
+				c.sprite.exhaustClock.alpha = 0.0;
+			}
 			
 			trace( name + " put a card to the grave." );
 		}

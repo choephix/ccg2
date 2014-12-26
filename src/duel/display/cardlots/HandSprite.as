@@ -33,6 +33,8 @@ package duel.display.cardlots {
 			game.addEventListener( GameEvents.TURN_START, onTurnStart );
 			game.addEventListener( GameEvents.SELECT, onCardSelected );
 			game.addEventListener( GameEvents.DESELECT, onCardDeselected );
+			//game.addEventListener( GameEvents.HOVER, onCardSelected );
+			//game.addEventListener( GameEvents.UNHOVER, onCardDeselected );
 		}
 		
 		override public function arrange():void
@@ -84,7 +86,7 @@ package duel.display.cardlots {
 					d = ( W - SEL_SPACE ) * A[i] / A_TOTAL;
 					if ( i == selectedIndex + 1 ) d = SEL_SPACE;
 				}
-				/**/
+				/** /
 				if ( selectedIndex == -1 || selectedIndex == cardsCount - 1 )
 				{
 					d = Math.min( W / cardsCount, G.CARD_W );
@@ -100,9 +102,19 @@ package duel.display.cardlots {
 						d = Math.min( W / cardsCount, G.CARD_W );
 				}
 				/**/
+				d = Math.min( W / cardsCount, G.CARD_W );
+				/**/
 				
 				x = x + d;
-				y = _active ? ( flipped ? -1.0 : 1.0 ) * ( i == selectedIndex ? -75 : 0 ) : ( flipped ? -1.0 : 1.0 ) * 50;
+				y = ( flipped ? -1.0 : 1.0 ) * 50;
+				if ( _active )
+				{
+					if ( selectedIndex < 0 )
+						y = 0
+					else
+						y = ( flipped ? -1.0 : 1.0 ) * ( i == selectedIndex ? -75 : 50 )
+				}
+					
 				
 				game.jugglerStrict.removeTweens( c.sprite );
 				game.jugglerStrict.tween( c.sprite, 0.250, // .850 .250

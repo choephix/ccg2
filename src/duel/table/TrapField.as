@@ -4,16 +4,12 @@ package duel.table {
 	 * ...
 	 * @author choephix
 	 */
-	public class TrapField extends Field 
+	public class TrapField extends IndexedField 
 	{
-		private var _index:int;
 		public function TrapField( index:int )
 		{
-			_index = index;
-			super( FieldType.TRAP );
+			super( FieldType.TRAP, index );
 		}
-		
-		public function get index():int { return _index }
 	}
 
 }
