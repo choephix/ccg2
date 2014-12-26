@@ -49,6 +49,10 @@ package duel
 		
 		public var bg:Background;
 		
+		// Useless Debug Shit
+		public var lastPlayedCreature:Card;
+		public var lastPlayedTrap:Card;
+		
 		//
 		public function Game()
 		{
@@ -140,15 +144,18 @@ package duel
 			processes.enqueueProcess( ProcessManager.gen( "--3--", trace ) );
 			processes.enqueueProcess( ProcessManager.gen( "--2--", trace ) );
 			processes.enqueueProcess( ProcessManager.gen( "--1--", trace ) );
-			return;
 			
 			
 			
 			// PREPARE GAMEPLAY
+			const DECK_SIZE_1:uint	= 16; /// 52 22 16 8 10 128
+			const DECK_SIZE_2:uint	= 16; ///
+			const HAND_SIZE:uint	= 8; /// 12 6 5 7 8 2
+			
 			var time:Number = 0.4;
 			var c:Card;
 			var i:int;
-			for ( i = 0; i < 52; i++ ) 
+			for ( i = 0; i < DECK_SIZE_1; i++ ) 
 			{
 				time += .010;
 				c = generateCard();
@@ -156,7 +163,7 @@ package duel
 				c.faceDown = true;
 				jugglerStrict.delayCall( p1.deck.addCard, time, c );
 			}
-			for ( i = 0; i < 25; i++ ) 
+			for ( i = 0; i < DECK_SIZE_2; i++ ) 
 			{
 				time += .010;
 				c = generateCard();
@@ -164,7 +171,7 @@ package duel
 				c.faceDown = true;
 				jugglerStrict.delayCall( p2.deck.addCard, time, c );
 			}
-			for ( i = 0; i < 12; i++ ) 
+			for ( i = 0; i < HAND_SIZE; i++ ) 
 			{
 				time += .030;
 				jugglerStrict.delayCall( p1.draw, time );
@@ -220,7 +227,14 @@ package duel
 						field.addCard( c );
 						c.faceDown = c.behaviour.startFaceDown;
 						if ( c.type.isCreature )
+						{
 							c.exhausted = !CreatureCardBehaviour( c.behaviour ).haste;
+							lastPlayedCreature = c;
+						}
+						if ( c.type.isTrap )
+						{
+							lastPlayedTrap = c;
+						}
 					}
 				}
 			}
@@ -316,13 +330,13 @@ package duel
 			card.faceDown = false;
 			//finishAttack(); return;
 			
-			var q:Quad = new Quad( 50, 50, 0xFF0000 );
+			var q:Quad = new Quad( 20, 80, 0xFF0000 );
 			card.sprite.parent.parent.addChild( q );
 			q.alpha = .50;
 			q.x = card.sprite.parent.x;
 			q.y = card.sprite.parent.y;
 			q.alignPivot();
-			jugglerStrict.tween( q, .100, { y : q.y - 150 * ( card.owner == p1 ? 1.0 : -1.0 ), onComplete : finishAttack } );
+			jugglerStrict.tween( q, .100, { y : q.y - 200 * ( card.owner == p1 ? 1.0 : -1.0 ), onComplete : finishAttack } );
 			
 			function finishAttack():void {
 				q.removeFromParent( true );

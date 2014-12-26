@@ -88,17 +88,16 @@ package duel.display {
 			switch( owner.type )
 			{
 				case CardType.CREATURE:
-					tfAttak.text = CreatureCardBehaviour( owner.behaviour ).attack + "";
-					tfAttak.fontName = "Impact";
-					tfAttak.hAlign = "left";
-					tfAttak.fontSize = 64;
-					
 					tfDescr.text = CreatureCardBehaviour( owner.behaviour ).toString();
 					tfDescr.bold = true;
 					tfDescr.hAlign = "center";
 					tfDescr.vAlign = "bottom";
 					tfDescr.hAlign = "right";
 					tfDescr.vAlign = "center";
+					tfAttak.text = CreatureCardBehaviour( owner.behaviour ).attack + "";
+					tfAttak.fontName = "Impact";
+					tfAttak.hAlign = "left";
+					tfAttak.fontSize = 64;
 					break;
 				case CardType.TRAP:
 					tfDescr.text = "Very important trap set here like for trapping niggas and shit...";
@@ -130,9 +129,11 @@ package duel.display {
 		
 		public function advanceTime(time:Number):void 
 		{
-			if ( !_flipTween.isComplete ) {
+			if ( !_flipTween.isComplete )
 				_flipTween.advanceTime( time );
-			}
+			
+			if ( owner.type.isCreature && !owner.faceDown )
+				tfAttak.text = CreatureCardBehaviour( owner.behaviour ).attack + "";
 		}
 		
 		//

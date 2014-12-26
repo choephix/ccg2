@@ -1,5 +1,6 @@
 package {
 	import chimichanga.common.display.Sprite;
+	import duel.cards.behaviour.CreatureCardBehaviour;
 	import duel.GameEvents;
 	import duel.processes.ProcessManager;
 	import ecs.core.World;
@@ -73,6 +74,14 @@ package {
 			}
 			if ( e.keyCode == Keyboard.E ) {
 				g.jugglerStrict.delayCall( trace, 1 );
+			}
+			if ( e.keyCode == Keyboard.A ) {
+				if ( g.lastPlayedCreature )
+					CreatureCardBehaviour( g.lastPlayedCreature.behaviour ).attack++;
+			}
+			if ( e.keyCode == Keyboard.S ) {
+				if ( g.lastPlayedTrap )
+					g.lastPlayedTrap.faceDown = !g.lastPlayedTrap.faceDown;
 			}
 		}
 	}
