@@ -6,6 +6,7 @@ package duel.cards
 	import duel.GameEntity;
 	import duel.GameEvents;
 	import duel.Player;
+	import duel.table.CreatureField;
 	import duel.table.Field;
 	
 	/**
@@ -39,6 +40,7 @@ package duel.cards
 			this.game.addEventListener( GameEvents.TURN_START, onTurnEnd );
 		}
 		
+		//
 		public function onTurnEnd():void
 		{
 			
@@ -48,8 +50,17 @@ package duel.cards
 		{
 			if ( game.currentPlayer == controller ) exhausted = false;
 		}
+		
+		//
 	
-		// GETTERS & SETTERS
+		// GETTERS & SETTERS - 1
+		
+		public function get field():Field { return lot as Field }
+		public function get controller():Player { return lot == null ? null : lot.owner }
+		
+		public function get isInPlay():Boolean { return lot is CreatureField }
+		
+		// GETTERS & SETTERS - 2
 		public function get faceDown():Boolean{return _faceDown}
 		public function set faceDown( value:Boolean ):void
 		{
@@ -66,9 +77,7 @@ package duel.cards
 			game.jugglerMild.xtween( sprite.exhaustClock, .500, { alpha : value ? 1 : 0 } );
 		}
 		
-		public function get field():Field { return lot as Field }
-		public function get controller():Player { return lot == null ? null : lot.owner }
-		
-		public function get isInPlay():Boolean{return lot is Field }
+		// GETTERS & SETTERS - 3
+		public function get canAttack():Boolean{ return type.isCreature && isInPlay && !exhausted }
 	}
 }

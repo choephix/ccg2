@@ -16,6 +16,7 @@ package duel.gui
 		
 		public var button1:Button;
 		public var button2:Button;
+		public var button3:Button;
 		
 		public function Gui()
 		{
@@ -57,12 +58,27 @@ package duel.gui
 			button2.y = button1.bounds.bottom + 10;
 			button2.addEventListener( Event.TRIGGERED, game.endGame );
 			addChild( button2 );
+			
+			button3 = new Button( assets.getTexture( "btn" ), "ATTACK" );
+			button3.fontColor = 0xFFFF00;
+			button3.fontBold = true;
+			button3.x = App.W - button1.width - 10;
+			button3.y = button2.bounds.bottom + 10;
+			button3.addEventListener( Event.TRIGGERED, btn3f );
+			function btn3f():void
+			{
+				game.performCardAttack( game.selectedCard );
+				game.selectCard( null );
+			}
+			addChild( button3 );
 		}
 		
 		public function advanceTime( time:Number ):void
 		{
 			updateTf( t1, game.p1, time );
 			updateTf( t2, game.p2, time );
+			
+			button3.visible = game.selectedCard != null && game.selectedCard.type.isCreature && game.selectedCard.canAttack;
 		}
 		
 		private function updateTf( t:AnimatedTextField, p:Player, time:Number ):void

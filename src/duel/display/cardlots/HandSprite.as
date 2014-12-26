@@ -1,8 +1,10 @@
 package duel.display.cardlots {
 	import chimichanga.global.utils.MathF;
+	import duel.GameEvents;
 	import duel.table.Hand;
 	import duel.cards.Card;
 	import duel.G;
+	import starling.events.Event;
 	import starling.animation.Transitions;
 	import starling.display.DisplayObject;
 	
@@ -27,6 +29,10 @@ package duel.display.cardlots {
 		{
 			this.hand = hand;
 			setTargetList( hand );
+			
+			game.addEventListener( GameEvents.TURN_START, onTurnStart );
+			game.addEventListener( GameEvents.SELECT, onCardSelected );
+			game.addEventListener( GameEvents.DESELECT, onCardDeselected );
 		}
 		
 		override public function arrange():void
@@ -102,6 +108,33 @@ package duel.display.cardlots {
 				game.jugglerStrict.tween( c.sprite, 0.250, // .850 .250
 					{ x: x, y: y, transition: Transitions.EASE_OUT // EASE_OUT EASE_OUT_BACK EASE_OUT_ELASTIC
 					} );
+			}
+		}
+		
+		// EVENT HANDLERS
+		
+		private function onTurnStart(e:Event):void 
+		{
+			active = game.currentPlayer == hand.owner;
+		}
+		
+		private function onCardSelected(e:Event):void 
+		{
+			var c:Card = e.data as Card;
+			if ( c == null ) return;
+			
+			if ( hand.containsCard( c ) ) {
+				show( c );
+			}
+		}
+		
+		private function onCardDeselected(e:Event):void 
+		{
+			var c:Card = e.data as Card;
+			if ( c == null ) return;
+			
+			if ( hand.containsCard( c ) ) {
+				unshow( c );
 			}
 		}
 		

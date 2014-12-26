@@ -2,6 +2,7 @@ package duel.display {
 	import duel.G;
 	import duel.Game;
 	import starling.animation.Transitions;
+	import starling.display.BlendMode;
 	import starling.display.Image;
 	
 	/**
@@ -17,6 +18,8 @@ package duel.display {
 			this.touchable = false;
 			this.useHandCursor = false;
 			alignPivot();
+			
+			this.blendMode = BlendMode.ADD;
 			
 			Game.current.jugglerMild.tween( this, 0.5, {
 					scaleX:1.03,

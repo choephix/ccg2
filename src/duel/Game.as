@@ -9,12 +9,20 @@ package duel
 	import duel.gui.Gui;
 	import duel.gui.GuiJuggler;
 	import duel.table.Field;
+	import duel.table.Hand;
 	import starling.animation.IAnimatable;
 	import starling.core.Starling;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Quad;
 	
+	[Event(name="turnStart", type="duel.GameEvents")] 
+	[Event(name="turnEnd", type="duel.GameEvents")] 
+	[Event(name="select", type="duel.GameEvents")] 
+	[Event(name="deselect", type="duel.GameEvents")] 
+	[Event(name="hover", type="duel.GameEvents")] 
+	[Event(name="unhover", type="duel.GameEvents")] 
+	[Event(name="destroy", type="duel.GameEvents")] 
 	/**
 	 * ...
 	 * @author choephix
@@ -111,6 +119,7 @@ package duel
 			p2.handSprite = new HandSprite( p2.hand );
 			p2.handSprite.y = 0;
 			p2.handSprite.x = ( App.W - p2.handSprite.maxWidth ) * 0.5;
+			p2.handSprite.flipped = true;
 			addChild( p2.handSprite );
 			
 			// PREPARE GAMEPLAY
@@ -169,18 +178,17 @@ package duel
 					return;
 				}
 				
-				if ( c.isInPlay )
-				{
-					if ( c.type.isCreature && field.owner == p.opponent )
-						performCardAttack( c );
-				}
-				else
 				if ( currentPlayer.hand.containsCard( c ) )
 				{
 					if ( canPlayHere( c, field ) )
 					{
 						field.addCard( c );
 						c.faceDown = c.behaviour.startFaceDown;
+						if ( c.type.isCreature )
+						{
+							var b:CreatureCardBehaviour = c.behaviour as CreatureCardBehaviour;
+							c.exhausted = !b.haste;
+						}
 					}
 				}
 			}
@@ -188,27 +196,50 @@ package duel
 		
 		public function onCardClicked( card:Card ):void
 		{
-			if ( currentPlayer.deck.containsCard( card ) ) {
-				currentPlayer.draw();
-				return;
+			if ( selectedCard == null )
+			{
+				if ( card.controller == currentPlayer )
+				{
+					if ( card.lot is Hand )
+					{
+						if ( canSelect( card ) ) selectCard( selectedCard == card ? null : card );
+						return;
+					}
+					else
+					if ( currentPlayer.deck.containsCard( card ) )
+					{
+						currentPlayer.draw();
+						return;
+					}
+					else
+					if ( currentPlayer.grave.containsCard( card ) )
+					{
+						trace( "RESURRECT" );
+						currentPlayer.grave.removeCard( card );
+						currentPlayer.hand.addCard( card );
+						card.faceDown = false;
+						return;
+					}
+					else
+					if ( canSelect( card ) )
+					{
+						selectCard( card );
+					}
+				}
 			}
-			
-			if ( currentPlayer.grave.containsCard( card ) ) {
-				trace( "RESURRECT" );
-				currentPlayer.grave.removeCard( card );
-				currentPlayer.hand.addCard( card );
-				card.faceDown = false;
-				return;
+			else
+			{
+				var c:Card = selectedCard;
+				
+				selectCard( null );
+				
+				if ( c.lot != card.lot && card.controller == c.controller )
+				{
+					if ( !card.lot.isEmpty )
+						c.faceDown = card.lot.getFirstCard().faceDown;
+					card.lot.addCard( c );
+				}
 			}
-			
-			if ( currentPlayer.hand.containsCard( card ) ) {
-				if ( canSelect( card ) ) selectCard( selectedCard == card ? null : card );
-				return;
-			}
-			
-			//if ( card.field != null ){card.flipped = !card.flipped;return;}
-			if ( canSelect( card ) ) selectCard( selectedCard == card ? null : card );
-			return;
 		}
 		
 		public function onCardRollOver( card:Card ):void
@@ -280,14 +311,14 @@ package duel
 		}
 		
 		//
-		private function selectCard( card:Card ):void {
+		public function selectCard( card:Card ):void {
 			if ( selectedCard != null )
-				dispatchEventWith( GameEvents.SELECT, false, card );
+				dispatchEventWith( GameEvents.DESELECT, false, selectedCard );
 			
 			selection.selectedCard = card;
 			
 			if ( selectedCard != null )
-				dispatchEventWith( GameEvents.DESELECT, false, card );
+				dispatchEventWith( GameEvents.SELECT, false, selectedCard );
 		}
 		
 		public function get selectedCard():Card { return selection.selectedCard }
@@ -330,6 +361,8 @@ package duel
 		public function canPlayHere( card:Card, field:Field ):Boolean
 		{
 			if ( card.controller != field.owner ) return false;
+			if ( card.type.isCreature && !field.type.isCreatureField ) return false;
+			if ( card.type.isTrap && !field.type.isTrapField ) return false;
 			return true;
 		}
 		

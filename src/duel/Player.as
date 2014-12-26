@@ -76,7 +76,7 @@ package duel {
 			hand.addCard( c );
 			c.faceDown = false;
 			
-			trace( name + " drew a card." );
+			//trace( name + " drew a card." );
 		}
 		
 		public function discard( c:Card ):void 

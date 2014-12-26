@@ -22,12 +22,15 @@ package duel.display.cardlots {
 			removeChildren();
 			
 			var o:DisplayObject;
-			for ( var i:int = 0, iMax:int = list.cardsCount; i < iMax; i++ )
+			var i:int = list.cardsCount;
+			var j:int = 0;
+			while ( --i >= 0 )
 			{
 				o = list.getCardAt( i ).sprite;
 				o.x = 0;
-				o.y = -cardSpacing * numChildren;
+				o.y = -cardSpacing * j;
 				super.addChild( o );
+				j++;
 			}
 		}
 		

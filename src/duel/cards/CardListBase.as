@@ -63,12 +63,6 @@ package duel.cards {
 		}
 		
 		////
-		public function get cardsCount():int
-		{
-			return _count;
-		}
-		
-		////
 		public function indexOfCard( searchElement:Card, fromIndex:int = 0 ):int
 		{
 			return _list.indexOf( searchElement, fromIndex );
@@ -78,6 +72,17 @@ package duel.cards {
 		{
 			return _list.sort( compareFunction );
 			onCardsChange();
+		}
+		
+		//// GETTIES 'N SETTIES
+		public function get cardsCount():int
+		{
+			return _count;
+		}
+		
+		public function get isEmpty():Boolean
+		{
+			return _count == 0;
 		}
 		
 		//// EVENTS

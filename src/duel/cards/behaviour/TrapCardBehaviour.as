@@ -9,7 +9,6 @@ package duel.cards.behaviour
 		
 		public function TrapCardBehaviour() 
 		{
-			super();
 			startFaceDown = true;
 		}
 		

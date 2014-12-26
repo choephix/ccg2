@@ -33,7 +33,7 @@ package duel
 			}
 			
 			_selectedCard.sprite.auraContainer.addChild( selectionAura );
-			selectionAura.color = 0xCCFF00;
+			selectionAura.color = 0x80FFFF;
 		}
 	}
 }

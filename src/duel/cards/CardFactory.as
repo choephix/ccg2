@@ -27,7 +27,7 @@ package duel.cards
 			{
 				var b:CreatureCardBehaviour = new CreatureCardBehaviour();
 				b.attack = 10 + Math.random() * 10;
-				b.startFaceDown = Math.random() < .4;
+				b.startFaceDown = Math.random() < .27;
 				c.behaviour = b;
 				c.name = "Creature "+uid+"";
 				//c.name = "#" + uid + " Creature";
