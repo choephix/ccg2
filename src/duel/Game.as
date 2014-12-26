@@ -180,7 +180,7 @@ package duel
 					if ( canPlayHere( c, field ) )
 					{
 						field.addCard( c );
-						var flipped:Boolean = c.behaviour.startFaceDown;
+						c.faceDown = c.behaviour.startFaceDown;
 					}
 				}
 			}
