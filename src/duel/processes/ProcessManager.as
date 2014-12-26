@@ -4,21 +4,6 @@ package duel.processes
 	import starling.events.Event;
 	import starling.events.EventDispatcher;
 	
-	/// A process has been removed
-	[Event(name = "removed", type = "starling.events.Event")] 
-	
-	/// A process has been added
-	[Event(name = "added", type = "starling.events.Event")] 
-	
-	///// A process has just started execution
-	//[Event(name = "triggered", type = "starling.events.Event")]
-	
-	/// A process has been aborted
-	[Event(name = "cancel", type = "starling.events.Event")]
-	
-	/// A process has finished successfully
-	[Event(name = "complete", type = "starling.events.Event")] 
-	
 	/**
 	 * ...
 	 * @author choephix
@@ -47,32 +32,27 @@ package duel.processes
 			if ( queue[ 0 ].callback != null )
 				queue[ 0 ].callback();
 			
-			dispatchEventWith( Event.COMPLETE, false, queue[ 0 ] );
 			removeCurrentProcess();
 		}
 		
 		public function abortCurrentProcess():void 
 		{
-			dispatchEventWith( Event.CANCEL, false, queue[ 0 ] );
 			removeCurrentProcess();
 		}
 		
 		private function removeCurrentProcess():void 
 		{
 			var p:Process = queue.shift();
-			dispatchEventWith( Event.REMOVED, false, p );
 		}
 		
 		public function enqueueProcess( p:Process ):void
 		{
 			queue.push( p );
-			dispatchEventWith( Event.ADDED, false, p );
 		}
 		
 		public function interruptCurrentProcess( p:Process ):void
 		{
 			queue.unshift( p );
-			dispatchEventWith( Event.ADDED, false, p );
 		}
 		
 		// // //
