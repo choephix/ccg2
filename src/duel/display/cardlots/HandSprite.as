@@ -59,53 +59,27 @@ package duel.display.cardlots {
 			const W:Number = maxWidth - G.CARD_W;
 			
 			var c:Card;
-			var d:Number = 0.0;
 			var x:Number = G.CARD_W * .5;
 			var y:Number = 0.0;
+			
+			//var o:DisplayObject;
+			//var i:int = list.cardsCount;
+			//var j:int = 0;
+			//while ( --i >= 0 )
+			//{
+				//o = list.getCardAt( i ).sprite;
+				//o.x = 0;
+				//o.y = -cardSpacing * j;
+				//super.addChild( o );
+				//j++;
+			//}
+			
 			for ( var i:int = 0; i < cardsCount; i++ )
 			{
 				c = list.getCardAt( i );
 				super.addChild( c.sprite );
 				
-				/** /
-				if ( selectedIndex == -1 || selectedIndex == cardsCount - 1 )
-				{
-					d = Math.min( W / cardsCount, G.CARD_W );
-				}
-				else
-				{
-					d = Math.min( i == selectedIndex + 1 ? Number.MAX_VALUE : ( W - SEL_SPACE ) / cardsCount, G.CARD_W );
-				}
-				/** /
-				if ( selectedIndex == -1 )
-				{
-					d = Math.min( W / hand.count, G.CARD_W );
-				}
-				else
-				{
-					d = ( W - SEL_SPACE ) * A[i] / A_TOTAL;
-					if ( i == selectedIndex + 1 ) d = SEL_SPACE;
-				}
-				/** /
-				if ( selectedIndex == -1 || selectedIndex == cardsCount - 1 )
-				{
-					d = Math.min( W / cardsCount, G.CARD_W );
-				}
-				else
-				{
-					if ( i <= selectedIndex )
-						d = Math.min( W / cardsCount, G.CARD_W );
-					else 
-					if ( i == selectedIndex + 1 )
-						d = G.CARD_W;
-					else 
-						d = Math.min( W / cardsCount, G.CARD_W );
-				}
-				/**/
-				d = Math.min( W / cardsCount, G.CARD_W );
-				/**/
-				
-				x = x + d;
+				x = x + theD( W );
 				y = ( flipped ? -1.0 : 1.0 ) * 50;
 				if ( _active )
 				{
@@ -121,6 +95,51 @@ package duel.display.cardlots {
 					{ x: x, y: y, transition: Transitions.EASE_OUT // EASE_OUT EASE_OUT_BACK EASE_OUT_ELASTIC
 					} );
 			}
+		}
+		
+		private function theD( W:Number ):Number
+		{
+			var d:Number;
+			
+			/** /
+			if ( selectedIndex == -1 || selectedIndex == cardsCount - 1 )
+			{
+				d = Math.min( W / cardsCount, G.CARD_W );
+			}
+			else
+			{
+				d = Math.min( i == selectedIndex + 1 ? Number.MAX_VALUE : ( W - SEL_SPACE ) / cardsCount, G.CARD_W );
+			}
+			/** /
+			if ( selectedIndex == -1 )
+			{
+				d = Math.min( W / hand.count, G.CARD_W );
+			}
+			else
+			{
+				d = ( W - SEL_SPACE ) * A[i] / A_TOTAL;
+				if ( i == selectedIndex + 1 ) d = SEL_SPACE;
+			}
+			/** /
+			if ( selectedIndex == -1 || selectedIndex == cardsCount - 1 )
+			{
+				d = Math.min( W / cardsCount, G.CARD_W );
+			}
+			else
+			{
+				if ( i <= selectedIndex )
+					d = Math.min( W / cardsCount, G.CARD_W );
+				else 
+				if ( i == selectedIndex + 1 )
+					d = G.CARD_W;
+				else 
+					d = Math.min( W / cardsCount, G.CARD_W );
+			}
+			/**/
+			d = Math.min( W / cardsCount, G.CARD_W );
+			/**/
+			
+			return d;
 		}
 		
 		// EVENT HANDLERS

@@ -47,9 +47,6 @@ package duel
 		public var bg:Background;
 		
 		//
-		public var cardsAll:Vector.<Card>;
-		public var cardsInPlay:Vector.<Card>;
-		
 		public function Game()
 		{
 			current = this;
@@ -62,9 +59,6 @@ package duel
 			
 			jugglerStrict = new GuiJuggler();
 			jugglerMild = new GuiJuggler();
-			
-			cardsAll = new Vector.<Card>();
-			cardsInPlay = new Vector.<Card>();
 			
 			//
 			p1 = generatePlayer( "player1" );
@@ -356,7 +350,6 @@ package duel
 		
 		private function generateCard():Card {
 			var c:Card = CardFactory.produceCard( 0 );
-			cardsAll.push( c );
 			return c;
 		}
 		

@@ -8,5 +8,6 @@ package duel.cards {
 	{
 		public var name:String;
 		public var type:CardType;
+		public var description:String;
 	}
 }

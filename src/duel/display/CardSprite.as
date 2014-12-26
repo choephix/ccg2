@@ -1,6 +1,7 @@
 package duel.display {
 	import chimichanga.common.display.Sprite;
 	import chimichanga.global.utils.Colors;
+	import duel.cards.behaviour.CardBehaviour;
 	import duel.cards.behaviour.CreatureCardBehaviour;
 	import duel.cards.Card;
 	import duel.cards.CardType;
@@ -26,8 +27,9 @@ package duel.display {
 		
 		private var back:Image;
 		private var pad:Image;
-		private var tf:TextField;
-		private var title:TextField;
+		private var tfDescr:TextField;
+		private var tfTitle:TextField;
+		private var tfAttak:TextField;
 		
 		private var pointerOver:Boolean;
 		
@@ -67,30 +69,40 @@ package duel.display {
 				return 0xFFFFFF;
 			}
 			
-			title = new TextField( G.CARD_W, G.CARD_H, owner.name, "Calibri", 24, 0x53001B );
-			title.touchable = false;
-			title.autoScale = true;
-			title.vAlign = "top";
-			title.bold = true;
-			title.color = 0x330011;
-			addChild( title );
+			tfTitle = new TextField( G.CARD_W, G.CARD_H, owner.name, "Calibri", 24, 0x53001B );
+			tfTitle.touchable = false;
+			tfTitle.autoScale = true;
+			tfTitle.vAlign = "top";
+			tfTitle.bold = true;
+			tfTitle.color = 0x330011;
+			addChild( tfTitle );
 			
-			tf = new TextField( G.CARD_W, G.CARD_H, "", "", 16, 0x330011 );
-			tf.touchable = false;
-			addChild( tf );
+			tfDescr = new TextField( G.CARD_W, G.CARD_H, "", "Verdana", 20, 0x330011 );
+			tfDescr.touchable = false;
+			addChild( tfDescr );
+			
+			tfAttak = new TextField( G.CARD_W, G.CARD_H, "", "", 16, 0x330011 );
+			tfAttak.touchable = false;
+			addChild( tfAttak );
 			
 			switch( owner.type )
 			{
 				case CardType.CREATURE:
-					tf.text = CreatureCardBehaviour( owner.behaviour ).attack + "";
-					tf.fontName = "Impact";
-					tf.hAlign = "left";
-					tf.fontSize = 64;
+					tfAttak.text = CreatureCardBehaviour( owner.behaviour ).attack + "";
+					tfAttak.fontName = "Impact";
+					tfAttak.hAlign = "left";
+					tfAttak.fontSize = 64;
+					
+					tfDescr.text = CreatureCardBehaviour( owner.behaviour ).toString();
+					tfDescr.bold = true;
+					tfDescr.hAlign = "center";
+					tfDescr.vAlign = "bottom";
+					tfDescr.hAlign = "right";
+					tfDescr.vAlign = "center";
 					break;
 				case CardType.TRAP:
-					tf.text = "Very important trap set here like for trapping niggas and shit...";
-					tf.fontName = "Gabriola";
-					tf.fontSize = 15;
+					tfDescr.text = "Very important trap set here like for trapping niggas and shit...";
+					tfDescr.fontSize = 14;
 			}
 			
 			back = assets.generateImage( "card-back", true, false );

@@ -21,13 +21,20 @@ package duel.cards
 			
 			//
 			c.id = id;
-			c.type = Math.random() < .67 ? CardType.CREATURE : CardType.TRAP;
+			c.type = chance( .67 ) ? CardType.CREATURE : CardType.TRAP;
 			
 			if ( c.type == CardType.CREATURE )
 			{
 				var b:CreatureCardBehaviour = new CreatureCardBehaviour();
+				// true false
+				b.haste		= chance( .3 );
+				b.defender	= chance( .1 );
+				b.immobile	= chance( .1 );
+				b.swift		= chance( .1 );
+				b.berserk	= chance( .2 );
+				//
 				b.attack = 10 + Math.random() * 10;
-				b.startFaceDown = Math.random() < .27;
+				b.startFaceDown = chance( .27 );
 				c.behaviour = b;
 				c.name = "Creature "+uid+"";
 				//c.name = "#" + uid + " Creature";
@@ -46,6 +53,7 @@ package duel.cards
 			return c;
 		}
 		
+		private static function chance( value:Number ):Boolean { return Math.random() < value }
 	}
 
 }
