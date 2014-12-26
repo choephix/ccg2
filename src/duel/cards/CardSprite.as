@@ -112,7 +112,7 @@ package duel.cards
 			exhaustClock = assets.generateImage( "exhaustClock", false, true );
 			exhaustClock.x = G.CARD_W * 0.5;
 			exhaustClock.y = G.CARD_H * 0.5;
-			exhaustClock.visible = false;
+			exhaustClock.alpha = 0.0;
 			addChild( exhaustClock );
 			
 			// ..

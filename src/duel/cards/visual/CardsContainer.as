@@ -8,7 +8,7 @@ package duel.cards.visual
 	 * ...
 	 * @author choephix
 	 */
-	public class CardsContainerBase extends GameSprite implements IAnimatable
+	public class CardsContainer extends GameSprite implements IAnimatable
 	{
 		protected var list:CardList;
 		protected var dirty:Boolean;

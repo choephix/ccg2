@@ -7,7 +7,7 @@ package duel
 	import duel.cards.CardFactory;
 	import duel.gui.Gui;
 	import duel.gui.GuiJuggler;
-	import duel.gui.HandContainer;
+	import duel.cards.visual.HandSprite;
 	import starling.animation.IAnimatable;
 	import starling.core.Starling;
 	import starling.display.DisplayObjectContainer;
@@ -40,17 +40,27 @@ package duel
 		public var p2side:TableSide;
 		
 		//
-		private var p1hand:HandContainer;
+		private var p1hand:HandSprite;
+		private var p2hand:HandSprite;
+		
+		public var cardsAll:Vector.<Card>;
+		public var cardsInPlay:Vector.<Card>;
 		
 		public function Game()
 		{
 			current = this;
-			
-			//
+			initialize();
+		}
+		
+		private function initialize():void
+		{
 			Starling.juggler.add( this );
 			
 			jugglerStrict = new GuiJuggler();
 			jugglerMild = new GuiJuggler();
+			
+			cardsAll = new Vector.<Card>();
+			cardsInPlay = new Vector.<Card>();
 			
 			//
 			p1 = generatePlayer( "player1" );
@@ -98,30 +108,44 @@ package duel
 			
 			selection = new Selection();
 			
-			p1hand = new HandContainer( p1.hand );
+			p1hand = new HandSprite( p1.hand );
 			p1hand.x = ( App.W - p1hand.maxWidth ) * 0.5;
 			p1hand.y = App.H;
 			addChild( p1hand );
 			
+			p2hand = new HandSprite( p2.hand );
+			p2hand.y = 0;
+			p2hand.x = ( App.W - p2hand.maxWidth ) * 0.5;
+			addChild( p2hand );
+			
+			// PREPARE GAMEPLAY
+			var time:Number = 0.4;
 			var c:Card;
 			var i:int;
-			for ( i = 0; i < 40; i++ ) 
+			for ( i = 0; i < 52; i++ ) 
 			{
-				c = CardFactory.produceCard( 0 );
+				time += .010;
+				c = generateCard();
 				c.player = p1;
 				c.faceDown = true;
-				jugglerStrict.delayCall( p1.deck.add, .4 + i * .010, c );
+				jugglerStrict.delayCall( p1.deck.add, time, c );
 				//jugglerStrict.delayCall( p1side.addCardTo, .4 + i * .010, c, p1side.fieldDeck, true );
 			}
 			for ( i = 0; i < 25; i++ ) 
 			{
-				c = CardFactory.produceCard( 0 );
+				time += .010;
+				c = generateCard();
 				c.player = p2;
 				c.faceDown = true;
-				jugglerStrict.delayCall( p2.deck.add, .6 + i * .010, c );
+				jugglerStrict.delayCall( p2.deck.add, time, c );
 				//jugglerStrict.delayCall( p2side.addCardTo, .4 + i * .010, c, p2side.fieldDeck, true );
 			}
-			
+			for ( i = 0; i < 12; i++ ) 
+			{
+				time += .030;
+				jugglerStrict.delayCall( p1.draw, time );
+				jugglerStrict.delayCall( p2.draw, time );
+			}
 			
 			
 			// START GAME
@@ -131,6 +155,7 @@ package duel
 		
 		public function destroy():void 
 		{
+			dispatchEventWith( GameEvents.DESTROY );
 			Starling.juggler.remove( this );
 			removeFromParent( true );
 		}
@@ -144,9 +169,12 @@ package duel
 				selectCard( null );
 				
 				//if ( selectedCard.field != null && !side1.containsField( field ) )
-				if ( c.field != null )
+				if ( c.isInPlay )
 				{
-					if ( c.type.isCreature )
+					if ( field.isGraveyardStack && field.player == currentPlayer )
+						currentPlayer.discard( c )
+					
+					if ( c.type.isCreature && field.player == currentOpponent )
 						performCardAttack( c );
 				}
 				else
@@ -163,10 +191,7 @@ package duel
 		public function onCardClicked( card:Card ):void
 		{
 			if ( currentPlayer.deck.contains( card ) ) {
-				trace( "DRAW" );
-				currentPlayer.deck.remove( card );
-				currentPlayer.hand.add( card );
-				card.faceDown = false;
+				currentPlayer.draw();
 				return;
 			}
 			
@@ -180,12 +205,6 @@ package duel
 			
 			if ( currentPlayer.hand.contains( card ) ) {
 				if ( canSelect( card ) ) selectCard( selectedCard == card ? null : card );
-				return;
-				
-				trace( "DISCARDO" );
-				currentPlayer.hand.remove( card );
-				currentPlayer.grave.add( card );
-				card.faceDown = true;
 				return;
 			}
 			
@@ -215,10 +234,6 @@ package duel
 		
 		// GAMEPLAY
 		
-		public function discard( card:Card ):void
-		{
-		}
-		
 		public function endTurn():void
 		{
 			dispatchEventWith( GameEvents.TURN_END );
@@ -227,6 +242,10 @@ package duel
 			currentOpponent = p;
 			p = null;
 			dispatchEventWith( GameEvents.TURN_START );
+			
+			currentPlayer.draw();
+			
+			
 		}
 		
 		public function performCardAttack( card:Card ):void
@@ -255,18 +274,31 @@ package duel
 			player.lp -= amount;
 		}
 		
+		public function endGame():void
+		{
+			var q:Quad = new Quad( App.W, App.H, 0x0 );
+			q.alpha = 0;
+			addChild( q );
+			touchable = false;
+			
+			Starling.juggler.remove( this );
+			Starling.juggler.tween( q, .440, { alpha : 1.0, onComplete : destroy } );
+		}
+		
 		//
 		private function selectCard( card:Card ):void {
-			if ( selectedCard != null && p1hand.contains( selectedCard.sprite ) )
+			if ( selectedCard != null )
 			{
-				p1hand.unshow( selectedCard );
+				if ( p1hand.contains( selectedCard.sprite ) ) p1hand.unshow( selectedCard );
+				if ( p2hand.contains( selectedCard.sprite ) ) p2hand.unshow( selectedCard );
 			}
 			
 			selection.selectedCard = card;
 			
-			if ( selectedCard != null && p1hand.contains( selectedCard.sprite ) )
+			if ( selectedCard != null )
 			{
-				p1hand.show( selectedCard );
+				if ( p1hand.contains( selectedCard.sprite ) ) p1hand.show( selectedCard );
+				if ( p2hand.contains( selectedCard.sprite ) ) p2hand.show( selectedCard );
 			}
 		}
 		
@@ -278,19 +310,16 @@ package duel
 			var p:Player = new Player();
 			p.name = name;
 			p.lp = 60;
-			
-			var c:Card;
-			while ( p.hand.count < 12 )
-			{
-				c = CardFactory.produceCard( 0 );
-				c.player = p;
-				p.hand.add( c );
-				c.faceDown = false;
-			}
-			
 			return p;
 		}
 		
+		private function generateCard():Card {
+			var c:Card = CardFactory.produceCard( 0 );
+			cardsAll.push( c );
+			return c;
+		}
+		
+		//
 		public function advanceTime( time:Number ):void
 		{
 			jugglerStrict.advanceTime( time );
@@ -298,6 +327,7 @@ package duel
 			
 			gui.advanceTime( time );
 			p1hand.advanceTime( time );
+			p2hand.advanceTime( time );
 			
 			//bg.visible = interactable;
 			this.touchable = interactable;

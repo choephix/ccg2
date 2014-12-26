@@ -1,5 +1,6 @@
 package {
 	import chimichanga.common.display.Sprite;
+	import duel.GameEvents;
 	import ecs.core.World;
 	import ecs.entities.Box;
 	import ecs.entities.Floor;
@@ -21,7 +22,6 @@ package {
 	 * @author choephix
 	 */
 	public class StarlingMain extends Sprite {
-		private var world:World;
 		private var g:Game;
 		
 		public function StarlingMain() {
@@ -42,16 +42,24 @@ package {
 		
 		private function onLoadingAppComplete():void {
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onkey);
-			
+			startGame();
+		}
+		
+		private function startGame():void {
+			trace( "Will start new game" );
 			g = new Game();
 			addChild( g );
+			g.addEventListener( GameEvents.DESTROY, onGameDestroyed );
+		}
+		
+		private function onGameDestroyed():void {
+			g.removeEventListener( GameEvents.DESTROY, onGameDestroyed );
+			Starling.juggler.delayCall( startGame, .250 );
 		}
 		
 		private function onkey( e:KeyboardEvent ):void {
 			if ( e.keyCode == Keyboard.ESCAPE ) {
-				g.destroy();
-				g = new Game();
-				addChild( g );
+				g.endGame();
 			}
 			if ( e.keyCode == Keyboard.SPACE ) {
 				g.endTurn();

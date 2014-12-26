@@ -3,7 +3,7 @@ package duel {
 	import duel.cards.Card;
 	import duel.cards.CardList;
 	import duel.cards.CardSprite;
-	import duel.cards.CardsStackSprite;
+	import duel.cards.visual.CardsStackSprite;
 	import duel.cards.CardType;
 	import duel.table.FieldSprite;
 	import duel.table.FieldType;
@@ -25,17 +25,19 @@ package duel {
 		
 		public var sprite:FieldSprite;
 		public var cardsContainer:CardsStackSprite;
+		public var player:Player;
 		
 		public function Field( container:TableSide, type:FieldType, cardList:CardList = null ) 
 		{
 			this.container = container;
 			this.type = type;
+			this.player = container.player;
 			
 			var color:uint = 0xFFFFFF;
 			if ( isCreatureField )	color = 0x440011;	else
 			if ( isTrapField )		color = 0x07274B;	else
-			if ( isDeckStack ) 		color = 0x221139;	else
-			if ( isGraveyardStack )	color = 0x222222;
+			if ( isDeckStack ) 		color = 0x222222;	else
+			if ( isGraveyardStack )	color = 0x221139;
 			
 			sprite = new FieldSprite( this, color );
 			cards = cardList != null ? cardList : new CardList();

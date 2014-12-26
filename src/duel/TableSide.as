@@ -20,25 +20,24 @@ package duel {
 		public var fieldDeck:Field;
 		public var fieldGrave:Field;
 		
-		private var player:Player;
+		public var player:Player;
 		
 		public function TableSide( player:Player, flip:Boolean )
 		{
 			this.player = player;
 			
 			const FIELD_SPACING_X:Number = 25;
-			const FIELD_COLUMNS:int = 4;
 			
 			var f:Field;
 			var i:int;
-			for ( i = 0; i < FIELD_COLUMNS; i++ )
+			for ( i = 0; i < G.FIELD_COLUMNS; i++ )
 			{
 				f = generateField( FieldType.CREATURE, i * ( G.CARD_W + FIELD_SPACING_X ),  ( flip ? 1.0 : -1.0 ) * 80 );
 				f.index = i;
 				f.allowedCardType = CardType.CREATURE;
 				fieldsC.push( f );
 			}
-			for ( i = 0; i < FIELD_COLUMNS; i++ )
+			for ( i = 0; i < G.FIELD_COLUMNS; i++ )
 			{
 				f = generateField( FieldType.TRAP, i * ( G.CARD_W + FIELD_SPACING_X ),  ( flip ? -1.0 : 1.0 ) * 80 );
 				f.index = i;
@@ -46,11 +45,11 @@ package duel {
 				fieldsT.push( f );
 			}
 			
-			f = generateField( FieldType.DECK, ( G.CARD_W + FIELD_SPACING_X ) * FIELD_COLUMNS, ( flip ? 1.0 : -1.0 ) * 40, player.deck );
+			f = generateField( FieldType.DECK, -( G.CARD_W + FIELD_SPACING_X ), ( flip ? 1.0 : -1.0 ) * 40, player.deck );
 			f.cardsContainer.cardSpacing = 2;
 			fieldDeck = f;
 			
-			f = generateField( FieldType.GRAVEYARD, -( G.CARD_W + FIELD_SPACING_X ), ( flip ? 1.0 : -1.0 ) * 40, player.grave );
+			f = generateField( FieldType.GRAVEYARD, ( G.CARD_W + FIELD_SPACING_X ) * G.FIELD_COLUMNS, ( flip ? 1.0 : -1.0 ) * 40, player.grave );
 			f.cardsContainer.cardSpacing = 3;
 			fieldGrave = f;
 			

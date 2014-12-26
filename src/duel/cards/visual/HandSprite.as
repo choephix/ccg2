@@ -1,9 +1,8 @@
-package duel.gui
-{
+package duel.cards.visual {
 	import chimichanga.global.utils.MathF;
 	import duel.cards.Card;
 	import duel.cards.CardList;
-	import duel.cards.visual.CardsContainerBase;
+	import duel.cards.visual.CardsContainer;
 	import duel.G;
 	import starling.animation.Transitions;
 	import starling.display.DisplayObject;
@@ -12,15 +11,18 @@ package duel.gui
 	 * ...
 	 * @author choephix
 	 */
-	public class HandContainer extends CardsContainerBase
+	public class HandSprite extends CardsContainer
 	{
 		static public const SEL_SPACE:Number = 100;
 		
 		public var maxWidth:Number = 500;
+		public var flipped:Boolean = false;
+		
+		private var _active:Boolean = true;
 		
 		private var selectedIndex:int = -1;
 		
-		public function HandContainer( list:CardList )
+		public function HandSprite( list:CardList )
 		{
 			setTargetList( list );
 		}
@@ -55,7 +57,7 @@ package duel.gui
 				c = list.at( i );
 				super.addChild( c.sprite );
 				
-				/**/
+				/** /
 				if ( selectedIndex == -1 || selectedIndex == list.count - 1 )
 				{
 					d = Math.min( W / list.count, G.CARD_W );
@@ -65,19 +67,37 @@ package duel.gui
 					d = Math.min( i == selectedIndex + 1 ? Number.MAX_VALUE : ( W - SEL_SPACE ) / list.count, G.CARD_W );
 				}
 				/** /
-				   if ( selectedIndex == -1 ) {
-				   d = Math.min( W / hand.count, G.CARD_W );
-				   } else {
-				   d = ( W - SEL_SPACE ) * A[i] / A_TOTAL;
-				   if ( i == selectedIndex + 1 ) d = SEL_SPACE;
-				   }
-				 /**/
+				if ( selectedIndex == -1 )
+				{
+					d = Math.min( W / hand.count, G.CARD_W );
+				}
+				else
+				{
+					d = ( W - SEL_SPACE ) * A[i] / A_TOTAL;
+					if ( i == selectedIndex + 1 ) d = SEL_SPACE;
+				}
+				/**/
+				if ( selectedIndex == -1 || selectedIndex == list.count - 1 )
+				{
+					d = Math.min( W / list.count, G.CARD_W );
+				}
+				else
+				{
+					if ( i <= selectedIndex )
+						d = Math.min( W / list.count, G.CARD_W );
+					else 
+					if ( i == selectedIndex + 1 )
+						d = G.CARD_W;
+					else 
+						d = Math.min( W / list.count, G.CARD_W );
+				}
+				/**/
 				
 				x = x + d;
-				y = i == selectedIndex ? -75 : 0;
+				y = _active ? ( flipped ? -1.0 : 1.0 ) * ( i == selectedIndex ? -75 : 0 ) : ( flipped ? -1.0 : 1.0 ) * 50;
 				
 				game.jugglerStrict.removeTweens( c.sprite );
-				game.jugglerStrict.tween( c.sprite, 0.150, // .850 .250
+				game.jugglerStrict.tween( c.sprite, 0.250, // .850 .250
 					{ x: x, y: y, transition: Transitions.EASE_OUT // EASE_OUT EASE_OUT_BACK EASE_OUT_ELASTIC
 					} );
 			}
@@ -97,6 +117,17 @@ package duel.gui
 		public function unshow( c:Card ):void
 		{
 			selectedIndex = -1;
+			dirty = true;
+		}
+		
+		public function get active():Boolean 
+		{
+			return _active;
+		}
+		
+		public function set active(value:Boolean):void 
+		{
+			_active = value;
 			dirty = true;
 		}
 	

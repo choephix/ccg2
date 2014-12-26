@@ -1,6 +1,6 @@
-package duel.cards 
-{
-	import duel.cards.visual.CardsContainerBase;
+package duel.cards.visual {
+	import duel.cards.CardList;
+	import duel.cards.visual.CardsContainer;
 	import starling.animation.Transitions;
 	import starling.display.DisplayObject;
 	
@@ -8,7 +8,7 @@ package duel.cards
 	 * ...
 	 * @author choephix
 	 */
-	public class CardsStackSprite extends CardsContainerBase
+	public class CardsStackSprite extends CardsContainer
 	{
 		public var cardSpacing:Number = 10;
 		

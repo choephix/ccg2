@@ -6,6 +6,7 @@ package duel.cards
 	import duel.cards.behaviour.CardBehaviour;
 	import duel.cards.CardData;
 	import duel.GameEntity;
+	import duel.GameEvents;
 	import duel.Player;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Quad;
@@ -51,7 +52,7 @@ package duel.cards
 		public function set exhausted(value:Boolean):void 
 		{
 			_exhausted = value;
-			sprite.exhaustClock.visible = value;
+			game.jugglerMild.xtween( sprite.exhaustClock, .500, { alpha : value ? 1 : 0 } );
 		}
 		
 		//
@@ -63,10 +64,19 @@ package duel.cards
 		{
 			sprite = new CardSprite();
 			sprite.initialize( this );
+			
+			this.game.addEventListener( GameEvents.TURN_START, onTurnStart );
+			this.game.addEventListener( GameEvents.TURN_START, onTurnEnd );
 		}
 		
-		public function onTurnEnd():void {
+		public function onTurnEnd():void
+		{
 			
+		}
+		
+		public function onTurnStart():void
+		{
+			if ( game.currentPlayer == player ) exhausted = false;
 		}
 	}
 
