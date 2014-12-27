@@ -42,10 +42,12 @@ package duel.processes
 		
 		public function finishCurrentProcess():void 
 		{
-			if ( queue[ 0 ].callback != null )
-				queue[ 0 ].callback.apply( null, queue[ 0 ].callbackArgs );
+			var p:Process = queue[ 0 ];
 			
 			removeCurrentProcess();
+			
+			if ( p.callback != null )
+				p.callback.apply( null, p.callbackArgs );
 		}
 		
 		public function abortCurrentProcess():void 
@@ -55,7 +57,7 @@ package duel.processes
 		
 		private function removeCurrentProcess():void 
 		{
-			var p:Process = queue.shift();
+			queue.shift();
 		}
 		
 		public function enqueueProcess( p:Process ):void
@@ -90,7 +92,7 @@ class Process
 	public static var UID:uint = 0;
 	
 	public var uid:uint = 0;
-	public var time:Number = CONFIG::slowmode?.999:.150;
+	public var time:Number = CONFIG::slowmode?1.999:.150;
 	public var name:String = "unnamed";
 	public var callback:Function = null;
 	public var callbackArgs:Array = null;
