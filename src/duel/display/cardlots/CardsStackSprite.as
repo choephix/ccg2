@@ -57,17 +57,41 @@ package duel.display.cardlots {
 				_fallingCardTween.advanceTime( Number.MAX_VALUE );
 			
 			if ( list.indexOfCard( e.data as Card ) != 0 )
-			{
 				quickArrange();
-				return;
+			else
+			{
+				animFallingCard( e.data.sprite as CardSprite );
 			}
+		}
+		
+		private function animFallingCard( o:CardSprite ):void
+		{
+			addCardChild( o );
 			
-			_fallingCardTween.reset( e.data.sprite, .250, Transitions.EASE_IN );
-			//_fallingCardTween.reset( e.data.sprite, .500, Transitions.EASE_OUT_BOUNCE );
-			_fallingCardTween.animate( "y", -cardSpacing * ( cardsCount - 1 ) );
-			e.data.sprite.y = - 100;
-			e.data.sprite.x = - 0;
-			addCardChild( e.data.sprite );
+			const TARGET_Y:Number = -cardSpacing * ( cardsCount - 1 );
+			
+			o.visible = true;
+			o.scaleX = 1.0;
+			o.scaleY = 1.0;
+			o.x = 0.0;
+			o.y = TARGET_Y;
+			o.alpha = 1.0;
+			
+			/** /
+				_fallingCardTween.reset( o, .250, Transitions.EASE_OUT ); // EASE_OUT EASE_IN
+				_fallingCardTween.animate( "y", TARGET_Y );
+				o.y = TARGET_Y - 40;
+			/** /
+				_fallingCardTween.reset( o, .660, Transitions.EASE_OUT_BOUNCE );
+				_fallingCardTween.animate( "y", TARGET_Y );
+				o.y = TARGET_Y - 40;
+			/**/
+				_fallingCardTween.reset( o, .880, Transitions.EASE_OUT_BOUNCE );
+				_fallingCardTween.animate( "scaleX", 1.0 );
+				_fallingCardTween.animate( "scaleY", 1.0 );
+				o.scaleX = 1.4;
+				o.scaleY = 1.4;
+			/**/
 			
 			jugglerStrict.add( _fallingCardTween );
 		}

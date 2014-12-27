@@ -87,7 +87,7 @@ package duel.cards
 			if ( _faceDown == value )
 				return;
 			_faceDown = value;
-			sprite.setFlipped( value );
+			sprite.faceDown = value;
 		}
 		
 		public function get exhausted():Boolean {return _exhausted}

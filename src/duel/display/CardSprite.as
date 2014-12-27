@@ -26,6 +26,7 @@ package duel.display {
 		public var auraContainer:Sprite;
 		public var exhaustClock:Image;
 		
+		private var front:Sprite;
 		private var back:Image;
 		private var pad:Image;
 		private var tfDescr:TextField;
@@ -49,9 +50,27 @@ package duel.display {
 			juggler.add( this );
 			
 			// MAIN
+			front = new Sprite();
+			front.pivotX = G.CARD_W * 0.5;
+			front.pivotY = G.CARD_H * 0.5;
+			addChild( front );
+			
+			back = assets.generateImage( "card-back", true, true );
+			addChild( back );
+			
+			auraContainer = new Sprite();
+			addChild( auraContainer );
+			
+			exhaustClock = assets.generateImage( "exhaustClock", false, true );
+			exhaustClock.x = G.CARD_W * 0.25;
+			exhaustClock.y = G.CARD_H * 0.00;
+			exhaustClock.alpha = 0.0;
+			addChild( exhaustClock );
+			
+			// MAIN - FRONT
 			pad = assets.generateImage( "card", true, false );
 			pad.color = generateColor();
-			addChild( pad );
+			front.addChild( pad );
 			
 			function generateColor():uint 
 			{
@@ -76,16 +95,16 @@ package duel.display {
 			tfTitle.vAlign = "top";
 			tfTitle.bold = true;
 			tfTitle.color = 0x330011;
-			addChild( tfTitle );
+			front.addChild( tfTitle );
 			
 			tfDescr = new TextField( G.CARD_W, G.CARD_H, "", "Verdana", 10, 0x330011 );
 			tfDescr.touchable = false;
 			tfDescr.autoScale = true;
-			addChild( tfDescr );
+			front.addChild( tfDescr );
 			
 			tfAttak = new TextField( G.CARD_W, G.CARD_H, "", "", 16, 0x330011 );
 			tfAttak.touchable = false;
-			addChild( tfAttak );
+			front.addChild( tfAttak );
 			
 			switch( owner.type )
 			{
@@ -103,28 +122,13 @@ package duel.display {
 					tfDescr.fontSize = 14;
 			}
 			
-			back = assets.generateImage( "card-back", true, false );
-			addChild( back );
-			
-			alignPivot();
-			
 			// ..
-			auraContainer = new Sprite();
-			auraContainer.x = G.CARD_W * 0.5;
-			auraContainer.y = G.CARD_H * 0.5;
-			addChild( auraContainer );
-			
-			exhaustClock = assets.generateImage( "exhaustClock", false, true );
-			exhaustClock.x = G.CARD_W * 0.75;
-			exhaustClock.y = G.CARD_H * 0.50;
-			exhaustClock.alpha = 0.0;
-			addChild( exhaustClock );
 			
 			// ..
 			addEventListener( TouchEvent.TOUCH, onTouch );
 			
 			updateData();
-			setFlipped( owner.faceDown );
+			faceDown = owner.faceDown;
 		}
 		
 		public function advanceTime(time:Number):void 
@@ -189,8 +193,7 @@ package duel.display {
 		{
 			var q:Quad = new Quad( 40, 40, 0xFF0000 );
 			addChild( q );
-			q.x = G.CARD_W * 0.5;
-			q.y = G.CARD_H * 0.5;
+			q.alignPivot();
 			q.alpha = .50;
 			jugglerStrict.tween( q, .200,
 				{ 
@@ -239,10 +242,15 @@ package duel.display {
 		}
 		
 		// FLIPPING
-		public function setFlipped( faceDown:Boolean ):void 
+		public function set faceDown( faceDown:Boolean ):void 
 		{
-			_flipTween.reset( this, .150, Transitions.EASE_OUT );
+			_flipTween.reset( this, .500, Transitions.EASE_OUT );
 			_flipTween.animate( "flippedness", faceDown ? -1.0 : 1.0 );
+		}
+		
+		public function get faceDown():Boolean
+		{
+			return _flippedness < .0;
 		}
 		
 		public function get flippedness():Number 
@@ -254,13 +262,17 @@ package duel.display {
 		{
 			if ( _flippedness == value ) return;
 			_flippedness = value;
-			scaleX = Math.abs( value );
 			
-			back.visible = value < 0.0;
+			front.visible	= value > .0;
+			back.visible	= value < .0;
 			
-			//pad.visible = !back.visible;
-			//tf.visible = !back.visible;
-			//title.visible = !back.visible;
+			if ( front.visible )
+				front.scaleX = Math.abs( value );
+				
+			if ( back.visible )
+				back.scaleX = Math.abs( value );
+			
+			auraContainer.scaleX = .25 + .75 * Math.abs( value );
 		}
 		
 	}
