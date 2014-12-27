@@ -1,5 +1,6 @@
 package duel.display.cardlots {
 	import duel.cards.CardListBase;
+	import duel.display.CardSprite;
 	import starling.animation.Transitions;
 	import starling.display.DisplayObject;
 	
@@ -21,7 +22,7 @@ package duel.display.cardlots {
 		{
 			removeChildren();
 			
-			var o:DisplayObject;
+			var o:CardSprite;
 			var i:int = list.cardsCount;
 			var j:int = 0;
 			while ( --i >= 0 )
@@ -30,14 +31,9 @@ package duel.display.cardlots {
 				o.alpha = 1.0;
 				o.x = 0;
 				o.y = -cardSpacing * j;
-				super.addChild( o );
+				addCardChild( o );
 				j++;
 			}
-		}
-		
-		override public function addChild( child:DisplayObject ):DisplayObject 
-		{
-			throw new Error( "NEVER USE ADDCHILD ON STACK" );
 		}
 		
 		public function animBunch():void

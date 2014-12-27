@@ -1,12 +1,11 @@
 package duel.display.cardlots {
-	import chimichanga.global.utils.MathF;
+	import duel.cards.Card;
+	import duel.display.CardSprite;
+	import duel.G;
 	import duel.GameEvents;
 	import duel.table.Hand;
-	import duel.cards.Card;
-	import duel.G;
-	import starling.events.Event;
 	import starling.animation.Transitions;
-	import starling.display.DisplayObject;
+	import starling.events.Event;
 	
 	/**
 	 * ...
@@ -63,14 +62,14 @@ package duel.display.cardlots {
 			var x:Number = G.CARD_W * .5;
 			var y:Number = 0.0;
 			
-			var o:DisplayObject;
+			var o:CardSprite;
 			var i:int = list.cardsCount;
 			var jj:int = 0;
 			while ( --i >= 0 )
 			{
 				o = list.getCardAt( i ).sprite;
 				
-				super.addChild( o );
+				addCardChild( o );
 				x = x + theD( W );
 				y = ( flipped ? -1.0 : 1.0 ) * 50;
 				if ( _active )
@@ -188,12 +187,6 @@ package duel.display.cardlots {
 		{
 			selectedIndex = -1;
 			dirty = true;
-		}
-		
-		// ERRORS
-		override public function addChild( child:DisplayObject ):DisplayObject 
-		{
-			throw new Error( "NEVER USE ADDCHILD ON STACK" );
 		}
 		
 		//

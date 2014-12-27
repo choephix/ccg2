@@ -1,8 +1,10 @@
 package duel.display.cardlots
 {
 	import duel.cards.CardListBase;
+	import duel.display.CardSprite;
 	import duel.GameSprite;
 	import starling.animation.IAnimatable;
+	import starling.display.DisplayObject;
 	import starling.events.Event;
 	
 	/**
@@ -23,6 +25,7 @@ package duel.display.cardlots
 			}
 		}
 		
+		/// empty method
 		public function arrange():void{}
 		
 		public function setTargetList( target:CardListBase ):void
@@ -50,10 +53,21 @@ package duel.display.cardlots
 			dirty = true;
 		}
 		
+		/// empty method
 		protected function onCardAdded( e:Event ):void {}
 		
+		/// empty method
 		protected function onCardRemoved( e:Event ):void {}
-	
+		
+		//
+		protected function addCardChild( child:CardSprite ):void
+		{
+			super.addChild( child );
+		}
+		
+		override public function addChild( child:DisplayObject ):DisplayObject 
+		{
+			throw new Error( "NEVER USE ADDCHILD ON STACK" );
+		}
 	}
-
 }
