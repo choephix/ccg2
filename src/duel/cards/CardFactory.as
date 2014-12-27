@@ -40,6 +40,13 @@ package duel.cards
 					setToCreature();
 					bc.attack = 10;
 					bc.startFaceDown = true;
+					bc.onCombatFlipFunc = function():void {
+						if ( c.field.opposingCreature != null )
+						{
+							//c.field.opposingCreature.die();
+							c.field.opposingCreature.behaviourC.attack -= 5;
+						}
+					}
 					break;
 				case  2:
 					c.name = "Gasoline";

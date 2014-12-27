@@ -68,7 +68,7 @@ package duel.processes
 			
 			function onComplete():void
 			{
-				if ( attacker.behaviourC.attack <= attacker.behaviourC.attack )
+				if ( attackee.behaviourC.attack <= attacker.behaviourC.attack )
 					attackee.die();
 			}
 		}
