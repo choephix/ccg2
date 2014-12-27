@@ -81,7 +81,7 @@ package duel {
 			deck.removeCard( c );
 			putInHand( c );
 			
-			trace( name + " drew a card." );
+			//trace( name + " drew a card." );
 		}
 		
 		public function discard( c:Card ):void 
@@ -100,7 +100,7 @@ package duel {
 				c.sprite.exhaustClock.alpha = 0.0;
 			}
 			
-			trace( name + " put a card to the grave." );
+			//trace( name + " put a card to the grave." );
 		}
 		
 		public function putInHand( c:Card ):void 

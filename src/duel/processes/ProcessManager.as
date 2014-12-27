@@ -12,43 +12,47 @@ package duel.processes
 	{
 		public var queue:Vector.<Process>;
 		
-		private var dispatchCompleteEvent:Boolean;
+		private var processEvent:ProcessEvent;
+		
+		private var running:Boolean;
 		
 		public function ProcessManager()
 		{
 			queue = new Vector.<Process>();
+			processEvent = new ProcessEvent( ProcessEvent.PROCESS );
 		}
 		
 		public function advanceTime( time:Number ):void 
 		{
-			if ( isIdle )
+			if ( queue.length == 0 )
 			{
-				if ( dispatchCompleteEvent )
+				if ( running )
 				{
-					//trace( "PM now empty" );
 					dispatchEventWith( Event.COMPLETE );
 					removeEventListeners( Event.COMPLETE );
-					dispatchCompleteEvent = false;
+					running = false;
 				}
 				return;
 			}
 			
-			dispatchCompleteEvent = true;
+			running = true;
 			
-			if ( queue[ 0 ].time < .0 )
-				finishCurrentProcess();
-			else
-				queue[ 0 ].time -= time;
-		}
-		
-		public function finishCurrentProcess():void 
-		{
-			var p:Process = queue[ 0 ];
+			var currentProcess:Process = queue[ 0 ];
 			
-			removeCurrentProcess();
+			if ( currentProcess.isComplete )
+			{
+				removeCurrentProcess();
+				
+				if ( currentProcess.callback != null )
+					currentProcess.callback.apply( null, currentProcess.callbackArgs );
+				
+				return;
+			}
 			
-			if ( p.callback != null )
-				p.callback.apply( null, p.callbackArgs );
+			currentProcess.advanceTime( time );
+			processEvent.processName = currentProcess.name;
+			processEvent.processArgs = currentProcess.callbackArgs;
+			dispatchEvent( processEvent );
 		}
 		
 		public function abortCurrentProcess():void 
@@ -73,7 +77,9 @@ package duel.processes
 		
 		// // //
 		
-		public function get isIdle():Boolean { return queue.length == 0 }
+		public function get isIdle():Boolean { return !running }
+		
+		public function toString():String { return queue.join("\n"); }
 		
 		// // //
 		public static function gen( name:String, callback:Function = null, ...callbackArgs ):Process
@@ -93,13 +99,22 @@ class Process
 	public static var UID:uint = 0;
 	
 	public var uid:uint = 0;
-	public var time:Number = CONFIG::slowmode?1.444:.033;
+	public var time:Number = CONFIG::slowmode?.888:.033;
 	public var name:String = "unnamed";
 	public var callback:Function = null;
 	public var callbackArgs:Array = null;
 	
+	public var isComplete:Boolean = false;
+	
 	public function toString():String 
 	{
 		return uid + ". " + name + "[" + time.toFixed(2) + "]";
+	}
+	
+	public function advanceTime( time:Number ):void 
+	{
+		this.time -= time;
+		
+		isComplete = this.time < .0;
 	}
 }

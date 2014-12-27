@@ -133,8 +133,8 @@ package duel.display {
 		
 		public function advanceTime(time:Number):void 
 		{
-			if ( !_flipTween.isComplete )
-				_flipTween.advanceTime( time );
+			//if ( !_flipTween.isComplete )
+				//_flipTween.advanceTime( time );
 			
 			updateData();
 		}
@@ -188,18 +188,56 @@ package duel.display {
 			juggler.xtween( back, 0.100, { alpha : 1.0 } );
 		}
 		
+		
 		// ANIMATIONS
-		public function animAttack():void 
+		private var __attackSprite:Quad;
+		private function assertAnimAttackSpriteExists():void
 		{
-			var q:Quad = assets.generateImage( "hadouken", false, true );
-			addChild( q );
-			q.alignPivot();
-			jugglerStrict.tween( q, .240,
+			if ( __attackSprite != null ) return;
+			__attackSprite = assets.generateImage( "hadouken", false, true );
+			__attackSprite.alignPivot();
+			addChild( __attackSprite );
+		}
+		private function destroyAnimAttackSprite():void
+		{
+			if ( __attackSprite == null ) return;
+			__attackSprite.removeFromParent( true );
+			__attackSprite = null;
+		}
+		public function animAttackPrepare():void 
+		{
+			assertAnimAttackSpriteExists();
+			__attackSprite.scaleX = .25;
+			__attackSprite.scaleY = .25;
+			__attackSprite.alpha = .0;
+			jugglerStrict.tween( __attackSprite, .240,
+				{
+					transition : Transitions.EASE_OUT_BACK, // EASE_IN EASE_OUT_BACK
+					alpha  : 1.0,
+					scaleX : 1.0,
+					scaleY : 1.0
+				} );
+		}
+		public function animAttackPerform():void 
+		{
+			assertAnimAttackSpriteExists();
+			jugglerStrict.tween( __attackSprite, .240,
 				{
 					transition : Transitions.EASE_IN,
-					y : q.y - 200 * ( card.owner == game.p1 ? 1.0 : -1.0 ), 
-					onComplete : q.removeFromParent,
-					onCompleteArgs : [true]
+					y : __attackSprite.y - 200 * ( card.owner == game.p1 ? 1.0 : -1.0 ), 
+					onComplete : destroyAnimAttackSprite
+				} );
+		}
+		public function animAttackAbort():void 
+		{
+			assertAnimAttackSpriteExists();
+			jugglerStrict.tween( __attackSprite, .240,
+				{
+					transition : Transitions.EASE_OUT,
+					alpha  : .0,
+					scaleX : .9,
+					scaleY : .9,
+					onComplete : destroyAnimAttackSprite
 				} );
 		}
 		
@@ -207,6 +245,7 @@ package duel.display {
 		{
 			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFF0000 );
 			addChild( q );
+			q.alignPivot();
 			q.alpha = .50;
 			jugglerStrict.tween( q, .200,
 				{ 
@@ -240,11 +279,26 @@ package duel.display {
 				} );
 		}
 		
+		public function animFlipEffect():void
+		{
+			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFFFFFF );
+			addChild( q );
+			q.alignPivot();
+			q.alpha = .999;
+			jugglerStrict.tween( q, .500,
+				{ 
+					alpha: .0, 
+					onComplete : q.removeFromParent,
+					onCompleteArgs : [true]
+				} );
+		}
+		
 		// FLIPPING
 		public function set faceDown( faceDown:Boolean ):void 
 		{
 			_flipTween.reset( this, .500, Transitions.EASE_OUT );
 			_flipTween.animate( "flippedness", faceDown ? -1.0 : 1.0 );
+			jugglerStrict.add( _flipTween );
 		}
 		
 		public function get faceDown():Boolean

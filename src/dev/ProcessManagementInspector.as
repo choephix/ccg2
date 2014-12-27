@@ -36,9 +36,7 @@ package dev
 		
 		public function advanceTime(time:Number):void 
 		{
-			var s:String = "";
-			s += manager.queue.join("\n");
-			tf.text = s;
+			tf.text = manager.toString();
 		}
 	}
 }

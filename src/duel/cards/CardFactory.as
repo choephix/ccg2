@@ -43,9 +43,9 @@ package duel.cards
 					bc.onCombatFlipFunc = function():void {
 						if ( c.field.opposingCreature != null )
 						{
-							//c.field.opposingCreature.die();
+							c.field.opposingCreature.die();
 							//c.field.opposingCreature.behaviourC.attack -= 5;
-							c.field.opposingCreature.behaviourC.noattack = true;
+							//c.field.opposingCreature.behaviourC.noattack = true;
 						}
 					}
 					break;

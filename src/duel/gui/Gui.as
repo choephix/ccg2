@@ -78,7 +78,7 @@ package duel.gui
 			updateTf( t1, game.p1, time );
 			updateTf( t2, game.p2, time );
 			
-			button3.visible = game.selectedCard != null && game.selectedCard.type.isCreature && game.selectedCard.canAttack;
+			button3.visible = game.interactable && game.selectedCard != null && game.selectedCard.type.isCreature && game.selectedCard.canAttack;
 		}
 		
 		private function updateTf( t:AnimatedTextField, p:Player, time:Number ):void

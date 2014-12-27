@@ -20,13 +20,13 @@ package duel.processes
 		
 		private function performSummon( c:Card, field:CreatureField ):void
 		{
-			enqueueProcess( gen( "performSummon", onComplete ) );
+			enqueueProcess( gen( "performSummon", onComplete, c, field ) );
 			
-			function onComplete():void
+			function onComplete( c:Card, field:CreatureField ):void
 			{
 				if ( !game.canPlaceCreatureHere( c, field ) )
 				{
-					enqueueProcess( gen( "abortSummon" ) );
+					enqueueProcess( gen( "abortSummon", null, c, field ) );
 					return;
 				}
 				
@@ -38,7 +38,7 @@ package duel.processes
 				//if ( c.type.isCreature )
 					//c.exhausted = !c.behaviourC.haste;
 				
-				enqueueProcess( gen( "completeSummon" ) );
+				enqueueProcess( gen( "completeSummon", null, c, field ) );
 			}
 		}
 		
@@ -52,13 +52,13 @@ package duel.processes
 		
 		private function performTrapSet( c:Card, field:TrapField ):void
 		{
-			enqueueProcess( gen( "performTrapSet", onComplete ) );
+			enqueueProcess( gen( "performTrapSet", onComplete, c, field ) );
 			
-			function onComplete():void
+			function onComplete( c:Card, field:TrapField ):void
 			{
 				if ( !game.canPlaceTrapHere( c, field ) )
 				{
-					enqueueProcess( gen( "abortTrapSet" ) );
+					enqueueProcess( gen( "abortTrapSet", null, c, field ) );
 					return;
 				}
 				
@@ -68,7 +68,7 @@ package duel.processes
 				//if ( c.type.isCreature )
 					//c.exhausted = !c.behaviourC.haste;
 				
-				enqueueProcess( gen( "completeTrapSet" ) );
+				enqueueProcess( gen( "completeTrapSet", null, c, field ) );
 			}
 		}
 		
@@ -76,22 +76,22 @@ package duel.processes
 		
 		public function performTrapActivation( c:Card ):void
 		{
-			enqueueProcess( gen( "performTrapActivation", onComplete ) );
+			enqueueProcess( gen( "performTrapActivation", onComplete, c ) );
 			
-			function onComplete():void
+			function onComplete( c:Card ):void
 			{
 				if ( !c.canActivate )
 				{
-					enqueueProcess( gen( "abortTrapActivation", discard ) );
+					enqueueProcess( gen( "abortTrapActivation", discard, c ) );
 					return;
 				}
 				
 				c.behaviourT.onActivateFunc();
 				
-				enqueueProcess( gen( "completeTrapActivation", discard ) );
+				enqueueProcess( gen( "completeTrapActivation", discard, c ) );
 			}
 			
-			function discard():void
+			function discard( c:Card ):void
 			{
 				if ( !c.behaviourT.persistent )
 					c.die();
@@ -108,13 +108,13 @@ package duel.processes
 		
 		private function performRelocation( c:Card, field:CreatureField ):void
 		{
-			enqueueProcess( gen( "performRelocation", onComplete ) );
+			enqueueProcess( gen( "performRelocation", onComplete, c, field ) );
 			
-			function onComplete():void
+			function onComplete( c:Card, field:CreatureField ):void
 			{
 				if ( !c.canRelocate )
 				{
-					enqueueProcess( gen( "abortRelocation" ) );
+					enqueueProcess( gen( "abortRelocation", null, c, field ) );
 					return;
 				}
 				
@@ -123,55 +123,65 @@ package duel.processes
 				
 				c.sprite.animSummon();
 				
-				enqueueProcess( gen( "completeRelocation" ) );
+				enqueueProcess( gen( "completeRelocation", null, c, field ) );
 			}
 		}
 		
 		// ATTACK
 		
-		public function startChain_Attack( attacker:Card ):void
+		public function startChain_Attack( c:Card ):void
 		{
-			attacker.faceDown = false;
-			enqueueProcess( gen( "declareAttack", performAttack, attacker ) );
+			c.faceDown = false;
+			enqueueProcess( gen( "declareAttack", onComplete, c ) );
+			
+			function onComplete( c:Card ):void
+			{
+				c.sprite.animAttackPrepare();
+				performAttack( c );
+			}
 		}
 		
-		private function performAttack( attacker:Card ):void
+		private function performAttack( c:Card ):void
 		{
-			enqueueProcess( gen( "performAttack", onComplete ) );
+			enqueueProcess( gen( "performAttack", onComplete, c ) );
 			
-			function onComplete():void
+			function onComplete( c:Card ):void
 			{
-				if ( !attacker.canAttack )
+				if ( !c.canAttack )
 				{
-					enqueueProcess( gen( "abortAttack" ) );
+					enqueueProcess( gen( "abortAttack", null, c ) );
+					c.sprite.animAttackAbort();
 					return;
 				}
 				
-				if ( attacker.field.opposingCreature == null )
+				if ( c.field.opposingCreature == null )
 				{
-					dealCombatDamageDirect( attacker, attacker.controller.opponent );
+					c.sprite.animAttackPerform();
+					dealCombatDamageDirect( c, c.controller.opponent );
 				}
 				else
 				{
-					if ( attacker.field.opposingCreature.faceDown )
+					if ( c.field.opposingCreature.faceDown )
 					{
-						combatFlip( attacker.field.opposingCreature );
-						performAttack( attacker );
+						combatFlip( c.field.opposingCreature );
+						performAttack( c );
 						return;
 					}
 					
-					dealCombatDamage( attacker, attacker.field.opposingCreature );
-					dealCombatDamage( attacker.field.opposingCreature, attacker );
+					c.sprite.animAttackPerform();
+					c.field.opposingCreature.sprite.animAttackPerform();
+					dealCombatDamage( c, c.field.opposingCreature );
+					dealCombatDamage( c.field.opposingCreature, c );
 				}
-				enqueueProcess( gen( "completeAttack" ) );
+				enqueueProcess( gen( "completeAttack", null, c ) );
 			}
 		}
 		
 		private function dealCombatDamageDirect( attacker:Card, attackee:Player ):void
 		{
-			enqueueProcess( gen( "dealCombatDamageDirect", onComplete ) );
+			enqueueProcess( gen( "dealCombatDamageDirect", onComplete, attacker, attackee ) );
 			
-			function onComplete():void
+			function onComplete( attacker:Card, attackee:Player ):void
 			{
 				attackee.takeDirectDamage( attacker.behaviourC.attack );
 			}
@@ -179,9 +189,9 @@ package duel.processes
 		
 		private function dealCombatDamage( attacker:Card, attackee:Card ):void
 		{
-			enqueueProcess( gen( "dealCombatDamage", onComplete ) );
+			enqueueProcess( gen( "dealCombatDamage", onComplete, attacker, attackee ) );
 			
-			function onComplete():void
+			function onComplete( attacker:Card, attackee:Card ):void
 			{
 				if ( attackee.behaviourC.attack <= attacker.behaviourC.attack )
 					attackee.die();
@@ -191,8 +201,16 @@ package duel.processes
 		private function combatFlip( c:Card ):void
 		{
 			c.faceDown = false;
-			//c.behaviourC.onCombatFlip();
-			interruptCurrentProcess( gen( "combatFlip", c.behaviourC.onCombatFlip ) );
+			interruptCurrentProcess( gen( "combatFlip", combatFlipEffect, c ) );
+			
+			function combatFlipEffect( c:Card ):void
+			{
+				if ( c.behaviourC.onCombatFlipFunc != null )
+				{
+					c.sprite.animFlipEffect();
+					interruptCurrentProcess( gen( "combatFlipEffect", c.behaviourC.onCombatFlip, c ) );
+				}
+			}
 		}
 		
 		

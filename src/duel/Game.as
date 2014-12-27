@@ -10,6 +10,7 @@ package duel
 	import duel.gui.Gui;
 	import duel.gui.GuiJuggler;
 	import duel.processes.GameplayProcessManager;
+	import duel.processes.ProcessEvent;
 	import duel.table.CreatureField;
 	import duel.table.Field;
 	import duel.table.Hand;
@@ -141,6 +142,9 @@ package duel
 			pmi.alignPivot();
 			pmi.x = App.W * .25;
 			pmi.y = App.H * .50;
+			
+			processes.addEventListener( ProcessEvent.PROCESS, onP );
+			function onP( e:ProcessEvent ):void { trace( e.processName, e.processArgs ); }
 			}
 			
 			// PREPARE GAMEPLAY
@@ -388,8 +392,6 @@ package duel
 		{
 			processes.startChain_Attack( c );
 			
-			c.sprite.animAttack();
-			
 			processes.addEventListener( Event.COMPLETE, onComplete );
 			function onComplete():void {
 				if ( c.isInPlay )
@@ -400,10 +402,6 @@ package duel
 		public function activateTrap( c:Card ):void
 		{
 			processes.performTrapActivation( c );
-			
-			
-			
-			
 		}
 		
 		//

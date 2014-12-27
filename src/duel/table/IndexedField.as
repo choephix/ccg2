@@ -16,6 +16,11 @@ package duel.table
 			super(type);
 		}
 		
+		override public function toString():String 
+		{
+			return type.toString() + "_FIELD #" + index;
+		}
+		
 		//
 		public function get topCard():Card { return isEmpty ? null : getFirstCard() }
 		public function get opposingCreatureField():IndexedField { return owner.opponent.fieldsC[index] }
