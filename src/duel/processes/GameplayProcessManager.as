@@ -90,12 +90,16 @@ package duel.processes
 		
 		public function startChain_TrapActivation( c:Card ):void
 		{
+			var currentProcess:Process = isIdle ? null : queue[ 0 ];
+			
 			enqueueProcess( gen( "declareTrapActivation", stepDeclare, c ) );
 			
 			function stepDeclare( c:Card ):void
 			{
 				c.specialFlipUp();
 				enqueueProcess( gen( "performTrapActivation", stepPerform, c ) );
+				
+				trace ( c + " interrupted process " + currentProcess );
 			}
 			function stepPerform( c:Card ):void
 			{
