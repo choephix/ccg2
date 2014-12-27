@@ -2,6 +2,7 @@ package duel.display {
 	import duel.display.cardlots.CardsStackSprite;
 	import duel.G;
 	import duel.Game;
+	import duel.GameSprite;
 	import duel.table.Field;
 	import starling.display.Image;
 	import starling.events.Touch;
@@ -12,15 +13,11 @@ package duel.display {
 	 * ...
 	 * @author choephix
 	 */
-	public class FieldSprite extends Image 
+	public class FieldSprite extends GameSprite 
 	{
 		public var cardsContainer:CardsStackSprite;
+		public var image:Image;
 		public var field:Field;
-		
-		public function FieldSprite() 
-		{
-			super( App.assets.getTexture( "field" ) );
-		}
 		
 		public function initialize( field:Field, color:uint ):void
 		{
@@ -35,20 +32,17 @@ package duel.display {
 			}
 			/**/
 			
-			this.field = field;
-			
-			this.width = G.CARD_W;
-			this.height = G.CARD_H;
-			this.color = color; 
-			//this.alpha = 0.5;
-			this.touchable = true;
-			this.useHandCursor = true;
-			alignPivot();
+			image = assets.generateImage( "field", true, true );
+			addChild( image );
 			
 			cardsContainer = new CardsStackSprite( field );
-			cardsContainer.x = x;
-			cardsContainer.y = y;
-			parent.addChild( cardsContainer );
+			cardsContainer.touchable = false;
+			addChild( cardsContainer );
+			
+			this.field = field;
+			field.sprite = this;
+			
+			image.color = color; 
 			
 			addEventListener( TouchEvent.TOUCH, onTouch );
 		}

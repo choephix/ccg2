@@ -217,11 +217,10 @@ package duel.display {
 		public function animSummon():void 
 		{
 			var q:Quad = assets.generateImage( "ring", false, true );
-			q.x = G.CARD_W * 0.5;
-			q.y = G.CARD_H * 0.5;
-			q.color = 0x885522;
-			addChild( q );
-			jugglerStrict.tween( q, .250,
+			q.color = 0xCF873F;
+			q.alpha = .3;
+			card.field.sprite.addChild( q );
+			jugglerStrict.tween( q, .400,
 				{ 
 					alpha: .0, 
 					scaleX: 5,

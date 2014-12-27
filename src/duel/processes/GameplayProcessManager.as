@@ -24,7 +24,7 @@ package duel.processes
 			
 			function onComplete():void
 			{
-				if ( !game.canPlayHere( c, field ) )
+				if ( !game.canPlaceCreatureHere( c, field ) )
 				{
 					enqueueProcess( gen( "abortSummon" ) );
 					return;
@@ -56,7 +56,7 @@ package duel.processes
 			
 			function onComplete():void
 			{
-				if ( !game.canPlayHere( c, field ) )
+				if ( !game.canPlaceTrapHere( c, field ) )
 				{
 					enqueueProcess( gen( "abortTrapSet" ) );
 					return;

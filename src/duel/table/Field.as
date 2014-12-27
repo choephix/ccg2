@@ -1,5 +1,6 @@
 package duel.table {
 	import duel.cards.CardListBase;
+	import duel.display.FieldSprite;
 	import duel.table.FieldType;
 	/**
 	 * ...
@@ -7,6 +8,8 @@ package duel.table {
 	 */
 	public class Field extends CardListBase 
 	{
+		public var sprite:FieldSprite;
+		
 		private var _type:FieldType = FieldType.UNKNOWN;
 		public function get type():FieldType { return _type }
 		

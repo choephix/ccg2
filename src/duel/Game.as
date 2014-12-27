@@ -207,6 +207,11 @@ package duel
 		// INTERACTION
 		public function onFieldClicked( field:Field ):void
 		{
+			if ( field is IndexedField && !field.isEmpty )
+			{
+				onCardClicked( IndexedField( field ).topCard );
+			}
+			else
 			if ( selectedCard )
 			{
 				var c:Card = selectedCard;
@@ -214,12 +219,12 @@ package duel
 				
 				if ( currentPlayer.hand.containsCard( c ) )
 				{
-					if ( c.type.isCreature && field is CreatureField && canPlayHere( c, field ) )
+					if ( c.type.isCreature && field is CreatureField && canPlaceCreatureHere( c, field as CreatureField ) )
 					{
 						performCardSummon( c, field as CreatureField );
 						return;
 					}
-					if ( c.type.isTrap && field is TrapField && canPlayHere( c, field ) )
+					if ( c.type.isTrap && field is TrapField && canPlaceTrapHere( c, field as TrapField ) )
 					{
 						performTrapSet( c, field as TrapField );
 						return;
@@ -234,7 +239,7 @@ package duel
 					return;
 				}
 				
-				if ( c.type.isCreature && field is CreatureField && c.canRelocate && canPlayHere( c, field ) )
+				if ( c.type.isCreature && field is CreatureField && c.canRelocate && canPlaceCreatureHere( c, field as CreatureField ) )
 				{
 					performRelocation( c, field as CreatureField );
 					return;
@@ -273,6 +278,7 @@ package duel
 					{
 						selectCard( card );
 					}
+					
 					/// DEV SHIT
 					else
 					if ( card.isInPlay && card.type.isTrap )
@@ -293,6 +299,13 @@ package duel
 				
 				selectCard( null );
 				
+				/// DEV SHIT
+				if ( currentPlayer.grave.containsCard( card ) )
+				{
+					currentPlayer.putToGrave( c );
+					return;
+				}
+					
 				// STACK CARDS ?
 				/** /
 				if ( c.lot != card.lot && card.controller == c.controller )
@@ -435,11 +448,19 @@ package duel
 		}
 		
 		// QUESTIONS
-		public function canPlayHere( card:Card, field:Field ):Boolean
+		public function canPlaceCreatureHere( card:Card, field:CreatureField ):Boolean
 		{
+			if ( !card.type.isCreature ) throw new ArgumentError( "How do you summon a non creature, dickface?" );
 			if ( card.controller != field.owner ) return false;
-			if ( card.type.isCreature && !field.type.isCreatureField ) return false;
-			if ( card.type.isTrap && !field.type.isTrapField ) return false;
+			if ( !field.isEmpty ) return false;
+			return true;
+		}
+		
+		public function canPlaceTrapHere( card:Card, field:TrapField ):Boolean
+		{
+			if ( !card.type.isTrap ) throw new ArgumentError( "How do you trap-set a non trap, assface?" );
+			if ( card.controller != field.owner ) return false;
+			if ( !field.isEmpty ) return false;
 			return true;
 		}
 		

@@ -65,10 +65,10 @@ package duel.display.cardlots
 			super.addChild( child );
 		}
 		
-		override public function addChild( child:DisplayObject ):DisplayObject 
-		{
-			throw new Error( "NEVER USE ADDCHILD ON STACK" );
-		}
+		//override public function addChild( child:DisplayObject ):DisplayObject 
+		//{
+			//throw new Error( "NEVER USE ADDCHILD ON STACK" );
+		//}
 		
 		//
 		public function get cardsCount():int { return list.cardsCount }
