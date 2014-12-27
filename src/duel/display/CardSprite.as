@@ -191,12 +191,11 @@ package duel.display {
 		// ANIMATIONS
 		public function animAttack():void 
 		{
-			var q:Quad = new Quad( 40, 40, 0xFF0000 );
+			var q:Quad = assets.generateImage( "hadouken", false, true );
 			addChild( q );
 			q.alignPivot();
-			q.alpha = .50;
-			jugglerStrict.tween( q, .200,
-				{ 
+			jugglerStrict.tween( q, .240,
+				{
 					transition : Transitions.EASE_IN,
 					y : q.y - 200 * ( card.owner == game.p1 ? 1.0 : -1.0 ), 
 					onComplete : q.removeFromParent,
