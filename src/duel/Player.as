@@ -77,7 +77,7 @@ package duel {
 				return;
 			}
 			
-			var c:Card = deck.getCardAt( deck.cardsCount - 1 );
+			var c:Card = deck.getFirstCard();
 			deck.removeCard( c );
 			putInHand( c );
 			

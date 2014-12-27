@@ -41,6 +41,7 @@ package duel.display.cardlots {
 		{
 			removeChildren();
 			
+			/** /
 			if ( selectedIndex >= 0 )
 			{
 				const A:Array = [];
@@ -55,30 +56,21 @@ package duel.display.cardlots {
 				}
 				const A_TOTAL:Number = MathF.sum( A );
 			}
+			/**/
 			
 			const W:Number = maxWidth - G.CARD_W;
 			
-			var c:Card;
 			var x:Number = G.CARD_W * .5;
 			var y:Number = 0.0;
 			
-			//var o:DisplayObject;
-			//var i:int = list.cardsCount;
-			//var j:int = 0;
-			//while ( --i >= 0 )
-			//{
-				//o = list.getCardAt( i ).sprite;
-				//o.x = 0;
-				//o.y = -cardSpacing * j;
-				//super.addChild( o );
-				//j++;
-			//}
-			
-			for ( var i:int = 0; i < cardsCount; i++ )
+			var o:DisplayObject;
+			var i:int = list.cardsCount;
+			var jj:int = 0;
+			while ( --i >= 0 )
 			{
-				c = list.getCardAt( i );
-				super.addChild( c.sprite );
+				o = list.getCardAt( i ).sprite;
 				
+				super.addChild( o );
 				x = x + theD( W );
 				y = ( flipped ? -1.0 : 1.0 ) * 50;
 				if ( _active )
@@ -88,19 +80,15 @@ package duel.display.cardlots {
 					else
 						y = ( flipped ? -1.0 : 1.0 ) * ( i == selectedIndex ? -75 : 50 )
 				}
-					
-				//c.sprite.x = x;
-				//c.sprite.y = y;
-				//c.sprite.alpha = 1.0;
-				//continue;
-				
-				jugglerGui.removeTweens( c.sprite );
-				jugglerGui.tween( c.sprite, 0.250, // .850 .250
+				jugglerGui.removeTweens( o );
+				jugglerGui.tween( o, 0.250, // .850 .250
 					{ 
 						alpha: 1.0,
 						x: x, y: y, 
 						transition: Transitions.EASE_OUT // EASE_OUT EASE_OUT_BACK EASE_OUT_ELASTIC
 					} );
+					
+				jj++;
 			}
 		}
 		

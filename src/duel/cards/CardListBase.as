@@ -38,14 +38,18 @@ package duel.cards {
 			return _list.indexOf( card ) >= 0;
 		}
 		
-		public function addCard( card:Card ):void
+		public function addCard( card:Card, asLast:Boolean = false ):void
 		{
 			if ( card.lot != null ) 
 				card.lot.removeCard( card );
 			card.lot = this;
 			
 			_count++;
-			_list.unshift( card );
+			
+			if ( asLast )
+				_list.push( card );
+			else
+				_list.unshift( card );
 			
 			onCardAdded( card );
 			onCardsChange();
@@ -68,9 +72,15 @@ package duel.cards {
 			return _list.indexOf( searchElement, fromIndex );
 		}
 		
-		public function sortCards( compareFunction:Function ):Vector.<Card>
+		public function reverseCards():void
 		{
-			return _list.sort( compareFunction );
+			_list.reverse();
+			onCardsChange();
+		}
+		
+		public function sortCards( compareFunction:Function ):void
+		{
+			_list.sort( compareFunction );
 			onCardsChange();
 		}
 		

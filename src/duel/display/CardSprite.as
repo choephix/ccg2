@@ -187,11 +187,14 @@ package duel.display {
 		// ANIMATIONS
 		public function animAttack():void 
 		{
-			var q:Quad = new Quad( 20, 80, 0xFF0000 );
+			var q:Quad = new Quad( 40, 40, 0xFF0000 );
 			addChild( q );
+			q.x = G.CARD_W * 0.5;
+			q.y = G.CARD_H * 0.5;
 			q.alpha = .50;
-			jugglerStrict.tween( q, .100,
+			jugglerStrict.tween( q, .200,
 				{ 
+					transition : Transitions.EASE_IN,
 					y : q.y - 200 * ( card.owner == game.p1 ? 1.0 : -1.0 ), 
 					onComplete : q.removeFromParent,
 					onCompleteArgs : [true]

@@ -45,7 +45,7 @@ package duel.processes
 		
 		// SET TRAP
 		
-		public function startChain_TrapSet(c:Card, field:TrapField):void 
+		public function startChain_TrapSet( c:Card, field:TrapField ):void 
 		{
 			enqueueProcess( gen( "declareTrapSet", performTrapSet, c, field ) );
 		}

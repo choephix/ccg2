@@ -143,11 +143,11 @@ package duel
 			}
 			
 			// PREPARE GAMEPLAY
-			const DECK_SIZE_1:uint	= 16; /// 52 22 16 8 10 128
-			const DECK_SIZE_2:uint	= 16; ///
+			const DECK_SIZE_1:uint	= CardFactory.MAX; /// 52 22 16 8 10 128
+			const DECK_SIZE_2:uint	= CardFactory.MAX; /// CardFactory.MAX
 			const HAND_SIZE:uint	= 8; /// 12 6 5 7 8 2
 			
-			var time:Number = 0.4;
+			var time:Number = 0.7;
 			var c:Card;
 			var i:int;
 			for ( i = 0; i < DECK_SIZE_1; i++ ) 
@@ -156,16 +156,18 @@ package duel
 				c = CardFactory.produceCard( i % CardFactory.MAX );
 				c.owner = p1;
 				c.faceDown = true;
-				jugglerStrict.delayCall( p1.deck.addCard, time, c );
+				jugglerStrict.delayCall( p1.deck.addCard, time, c, true );
 			}
+			
 			for ( i = 0; i < DECK_SIZE_2; i++ ) 
 			{
 				time += .010;
 				c = CardFactory.produceCard( i % CardFactory.MAX );
 				c.owner = p2;
 				c.faceDown = true;
-				jugglerStrict.delayCall( p2.deck.addCard, time, c );
+				jugglerStrict.delayCall( p2.deck.addCard, time, c, true );
 			}
+			
 			for ( i = 0; i < HAND_SIZE; i++ ) 
 			{
 				time += .030;
