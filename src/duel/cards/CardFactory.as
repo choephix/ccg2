@@ -11,36 +11,23 @@ package duel.cards
 	 */
 	public class CardFactory
 	{
-		static public const MAX:uint = 20;
 		static private var uid:uint = 0;
 		
-		
-		
-		public static function produceCard( id:int ):Card
-		{
-			uid++;
-			
-			var c:Card = new Card();
-			
-			//
-			c.id = id;
-			var bc:CreatureCardBehaviour;
-			var bt:TrapCardBehaviour;
-			
-			switch ( id )
-			{
-				case  0:
+		static private const ARRAY:Array = [
+				function( c:Card ):void
+				{
 					c.name = "Gonzales";
-					setToCreature();
-					bc.attack = 10;
-					bc.haste = true;
-					break;
-				case  1:
+					setToCreature( c );
+					c.behaviourC.attack = 10;
+					c.behaviourC.haste = true;
+				},
+				function( c:Card ):void
+				{
 					c.name = "Flippers";
-					setToCreature();
-					bc.attack = 10;
-					bc.startFaceDown = true;
-					bc.onCombatFlipFunc = function():void {
+					setToCreature( c );
+					c.behaviourC.attack = 10;
+					c.behaviourC.startFaceDown = true;
+					c.behaviourC.onCombatFlipFunc = function():void {
 						if ( c.field.opposingCreature != null )
 						{
 							c.field.opposingCreature.die();
@@ -48,126 +35,134 @@ package duel.cards
 							//c.field.opposingCreature.behaviourC.noattack = true;
 						}
 					}
-					break;
-				case  2:
+				},
+				function( c:Card ):void
+				{
 					c.name = "Gasoline";
-					setToTrap();
-					bt.onActivateFunc = function():void {
+					setToTrap( c );
+					c.behaviourT.onActivateFunc = function():void {
 						if ( c.field.opposingCreature != null )
 						{
 							c.field.opposingCreature.die();
 						}
 					}
-					break;
-				case  3:
+				},
+				function( c:Card ):void
+				{
 					c.name = "Bozo";
-					setToCreature();
-					bc.attack = 6;
-					bc.startFaceDown = true;
-					break;
-				case  4:
-					c.name = "Obelix";
-					setToCreature();
-					bc.attack = 14;
-					break;
-				case  5:
+					setToCreature( c );
+					c.behaviourC.attack = 6;
+					c.behaviourC.startFaceDown = true;
+				},
+				function( c:Card ):void
+				{
 					c.name = "Trap-hole";
-					setToTrap();
-					bt.onActivateFunc = function():void {
+					setToTrap( c );
+					c.behaviourT.onActivateFunc = function():void {
 						if ( c.field.opposingCreature != null )
 						{
 							c.field.opposingCreature.die();
 						}
 					}
-					break;
-				case  6:
+				},
+				function( c:Card ):void
+				{
+					c.name = "Obelix";
+					setToCreature( c );
+					c.behaviourC.attack = 14;
+				},
+				function( c:Card ):void
+				{
 					c.name = "Flappy Bird";
-					setToCreature();
-					bc.attack = 7;
-					bc.swift = true;
-					break;
-				case  7:
+					setToCreature( c );
+					c.behaviourC.attack = 7;
+					c.behaviourC.swift = true;
+				},
+				function( c:Card ):void
+				{
 					c.name = "Big Shield";
-					setToCreature();
-					bc.attack = 14;
-					bc.noattack = true;
-					break;
-				case  8:
+					setToCreature( c );
+					c.behaviourC.attack = 14;
+					c.behaviourC.noattack = true;
+				},
+				function( c:Card ):void
+				{
 					c.name = "Smelly sock";
-					setToTrap();
-					bt.onActivateFunc = function():void {
+					setToTrap( c );
+					c.behaviourT.onActivateFunc = function():void {
 						if ( c.field.opposingCreature != null )
 						{
 							c.field.opposingCreature.returnToHand();
 						}
 					}
-					break;
-				case  9:
+				},
+				function( c:Card ):void
+				{
 					c.name = "Stunner";
-					setToTrap();
-					bt.onActivateFunc = function():void {
+					setToTrap( c );
+					c.behaviourT.onActivateFunc = function():void {
 						if ( c.field.opposingCreature != null )
 						{
 							c.field.opposingCreature.behaviourC.noattack = true;
 						}
 					}
-					break;
-				case 10:
+				},
+				function( c:Card ):void
+				{
 					c.name = "Hulk";
-					setToCreature();
-					bc.attack = 16;
-					bc.berserk = true;
-					break;
-				case 11:
+					setToCreature( c );
+					c.behaviourC.attack = 16;
+					c.behaviourC.berserk = true;
+				},
+				function( c:Card ):void
+				{
 					c.name = "Draw";
-					setToTrap();
-					bt.onActivateFunc = function():void {
+					setToTrap( c );
+					c.behaviourT.onActivateFunc = function():void {
 						c.controller.draw();
 					}
-					break;
-				case 12:
+				},
+				function( c:Card ):void
+				{
 					c.name = "Cozmo";
-					setToCreature();
-					bc.attack = 8;
-					break;
-				case 13:
+					setToCreature( c );
+					c.behaviourC.attack = 8;
+				},
+				function( c:Card ):void
+				{
 					c.name = "Hard Surprise";
-					setToCreature();
-					bc.attack = 17;
-					bc.noattack = true;
-					bc.startFaceDown = true;
-					break;
-				case 14:
-				case 15:
-				case 16:
-				case 17:
-				case 18:
-				case 19:
-				default:
-					c.name = "Unnamed #"+id;
-					setToCreature();
-					bc.attack = 5 + Math.random() * 10;
-					break;
-			}
+					setToCreature( c );
+					c.behaviourC.attack = 17;
+					c.behaviourC.noattack = true;
+					c.behaviourC.startFaceDown = true;
+				},
+			];
+		static public const MAX:uint = ARRAY.length;
+		
+		public static function produceCard( id:int ):Card
+		{
+			uid++;
 			
-			function setToCreature():void
-			{
-				c.type = CardType.CREATURE;
-				c.behaviour = bc = new CreatureCardBehaviour();
-			}
+			var c:Card = new Card();
 			
-			function setToTrap():void
-			{
-				c.type = CardType.TRAP;
-				c.behaviour = bt = new TrapCardBehaviour();
-			}
-			
-			//
+			c.id = id;
+			ARRAY[ id ]( c );
 			
 			c.initialize();
 			return c;
 		}
 		
+		public static function setToCreature( c ):void
+		{
+			c.type = CardType.CREATURE;
+			c.behaviour = new CreatureCardBehaviour();
+		}
+			
+		public static function setToTrap( c ):void
+		{
+			c.type = CardType.TRAP;
+			c.behaviour = new TrapCardBehaviour();
+		}
 		
 		public static function produceRandomCard():Card
 		{
