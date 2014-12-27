@@ -231,10 +231,9 @@ package duel
 					return;
 				}
 				
-				if ( field.type.isCreatureField && c.type.isCreature && field.owner == c.controller && !c.exhausted )
+				if ( c.type.isCreature && field is CreatureField && c.canRelocate && canPlayHere( c, field ) )
 				{
-					field.addCard( c );
-					c.exhausted = true;
+					performRelocation( c, field as CreatureField );
 					return;
 				}
 			}
@@ -285,12 +284,14 @@ package duel
 				
 				selectCard( null );
 				
+				// STACK CARDS ?
+				/** /
 				if ( c.lot != card.lot && card.controller == c.controller )
 				{
 					if ( !card.lot.isEmpty )
 						c.faceDown = card.lot.getFirstCard().faceDown;
 					card.lot.addCard( c );
-				}
+				} /**/
 			}
 		}
 		
@@ -341,6 +342,17 @@ package duel
 			lastPlayedCreature = c;
 		}
 		
+		public function performRelocation( c:Card, field:CreatureField ):void
+		{
+			processes.startChain_Relocation( c, field );
+			
+			processes.addEventListener( Event.COMPLETE, onComplete );
+			function onComplete():void {
+				if ( c.isInPlay )
+					c.exhausted = true;
+			}
+		}
+		
 		public function performTrapSet( c:Card, field:TrapField ):void
 		{
 			processes.startChain_TrapSet( c, field );
@@ -350,16 +362,16 @@ package duel
 			lastPlayedTrap = c;
 		}
 		
-		public function performCardAttack( card:Card ):void
+		public function performCardAttack( c:Card ):void
 		{
-			processes.startChain_Attack( card );
+			processes.startChain_Attack( c );
 			
-			card.sprite.animAttack();
+			c.sprite.animAttack();
 			
 			processes.addEventListener( Event.COMPLETE, onComplete );
 			function onComplete():void {
-				if ( card.isInPlay )
-					card.exhausted = true;
+				if ( c.isInPlay )
+					c.exhausted = true;
 			}
 		}
 		

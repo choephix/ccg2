@@ -101,5 +101,8 @@ package duel.cards
 		public function get canAttack():Boolean { 
 			return type.isCreature && isInPlay && !exhausted && !behaviourC.noattack
 		}
+		public function get canRelocate():Boolean { 
+			return type.isCreature && isInPlay && !exhausted && !behaviourC.nomove
+		}
 	}
 }

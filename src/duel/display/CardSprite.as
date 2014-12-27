@@ -39,11 +39,11 @@ package duel.display {
 		private var _flipTween:Tween;
 		
 		//
-		private var owner:Card;
+		private var card:Card;
 		
 		public function initialize( owner:Card ):void
 		{
-			this.owner = owner;
+			this.card = owner;
 			this._flipTween = new Tween( this, 0 );
 			
 			juggler.add( this );
@@ -137,9 +137,9 @@ package duel.display {
 		
 		public function updateData():void 
 		{
-			if ( owner.type.isCreature && !owner.faceDown ) {
-				tfAttak.text = owner.behaviourC.attack + "";
-				tfDescr.text = owner.behaviourC.toString();
+			if ( card.type.isCreature && !card.faceDown ) {
+				tfAttak.text = card.behaviourC.attack + "";
+				tfDescr.text = card.behaviourC.toString();
 			}
 		}
 		
@@ -150,8 +150,8 @@ package duel.display {
 			if ( t == null ) {
 				if ( pointerOver ) {
 					pointerOver = false;
-					game.onCardRollOut( owner );
-					if ( owner.controller.controllable )
+					game.onCardRollOut( card );
+					if ( card.controller.controllable )
 						peekOut();
 				}
 				return;
@@ -160,14 +160,14 @@ package duel.display {
 			if ( t.phase == TouchPhase.HOVER ) {
 				if ( !pointerOver ) {
 					pointerOver = true;
-					game.onCardRollOver( owner );
-					if ( owner.controller.controllable )
+					game.onCardRollOver( card );
+					if ( card.controller.controllable )
 						peekIn();
 				}
 			}
 			else
 			if ( t.phase == TouchPhase.ENDED ) {
-				game.onCardClicked( owner );
+				game.onCardClicked( card );
 			} 
 		}
 		
@@ -187,10 +187,23 @@ package duel.display {
 		// ANIMATIONS
 		public function animAttack():void 
 		{
-			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFF0000 );
+			var q:Quad = new Quad( 20, 80, 0xFF0000 );
 			addChild( q );
 			q.alpha = .50;
 			jugglerStrict.tween( q, .100,
+				{ 
+					y : q.y - 200 * ( card.owner == game.p1 ? 1.0 : -1.0 ), 
+					onComplete : q.removeFromParent,
+					onCompleteArgs : [true]
+				} );
+		}
+		
+		public function animDamage():void 
+		{
+			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFF0000 );
+			addChild( q );
+			q.alpha = .50;
+			jugglerStrict.tween( q, .200,
 				{ 
 					alpha: .0, 
 					onComplete : q.removeFromParent,
@@ -203,8 +216,9 @@ package duel.display {
 			var q:Quad = assets.generateImage( "ring", false, true );
 			q.x = G.CARD_W * 0.5;
 			q.y = G.CARD_H * 0.5;
+			q.color = 0x885522;
 			addChild( q );
-			juggler.tween( q, .250,
+			jugglerStrict.tween( q, .250,
 				{ 
 					alpha: .0, 
 					scaleX: 5,
@@ -216,7 +230,7 @@ package duel.display {
 		
 		public function animDie():void 
 		{
-			jugglerStrict.tween( this, .100,
+			jugglerStrict.tween( this, .250,
 				{ 
 					alpha: .0
 				} );

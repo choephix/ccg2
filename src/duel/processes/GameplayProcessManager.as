@@ -11,7 +11,7 @@ package duel.processes
 	 */
 	public class GameplayProcessManager extends ProcessManager
 	{
-		// SUMMONS
+		// SUMMON
 		
 		public function startChain_Summon( c:Card, field:CreatureField ):void
 		{
@@ -43,7 +43,7 @@ package duel.processes
 		}
 		
 		
-		// SET TRAPS
+		// SET TRAP
 		
 		public function startChain_TrapSet(c:Card, field:TrapField):void 
 		{
@@ -72,7 +72,36 @@ package duel.processes
 			}
 		}
 		
-		// ATTACKS
+		
+		// RELOCATION
+		
+		public function startChain_Relocation( c:Card, field:CreatureField ):void
+		{
+			enqueueProcess( gen( "declareRelocation", performRelocation, c, field ) );
+		}
+		
+		private function performRelocation( c:Card, field:CreatureField ):void
+		{
+			enqueueProcess( gen( "performRelocation", onComplete ) );
+			
+			function onComplete():void
+			{
+				if ( !c.canRelocate )
+				{
+					enqueueProcess( gen( "abortRelocation" ) );
+					return;
+				}
+				
+				field.addCard( c );
+				c.faceDown = false;
+				
+				c.sprite.animSummon();
+				
+				enqueueProcess( gen( "completeRelocation" ) );
+			}
+		}
+		
+		// ATTACK
 		
 		public function startChain_Attack( attacker:Card ):void
 		{
@@ -91,7 +120,7 @@ package duel.processes
 					enqueueProcess( gen( "abortAttack" ) );
 					return;
 				}
-				else
+				
 				if ( attacker.field.opposingCreature == null )
 				{
 					dealCombatDamageDirect( attacker, attacker.controller.opponent );
