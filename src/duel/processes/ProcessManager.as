@@ -10,7 +10,9 @@ package duel.processes
 	 */
 	public class ProcessManager extends EventDispatcher implements IAnimatable
 	{
-		public var queue:Vector.<Process>
+		public var queue:Vector.<Process>;
+		
+		private var dispatchCompleteEvent:Boolean;
 		
 		public function ProcessManager()
 		{
@@ -19,8 +21,19 @@ package duel.processes
 		
 		public function advanceTime( time:Number ):void 
 		{
-			if ( queue.length == 0 )
+			if ( isIdle )
+			{
+				if ( dispatchCompleteEvent )
+				{
+					trace( "PM now empty" );
+					dispatchEventWith( Event.COMPLETE );
+					dispatchCompleteEvent = false;
+				}
 				return;
+			}
+			
+			dispatchCompleteEvent = true;
+			
 			if ( queue[ 0 ].time < .0 )
 				finishCurrentProcess();
 			else
@@ -30,7 +43,7 @@ package duel.processes
 		public function finishCurrentProcess():void 
 		{
 			if ( queue[ 0 ].callback != null )
-				queue[ 0 ].callback();
+				queue[ 0 ].callback.apply( null, queue[ 0 ].callbackArgs );
 			
 			removeCurrentProcess();
 		}
@@ -57,25 +70,16 @@ package duel.processes
 		
 		// // //
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		public function get isIdle():Boolean { return queue.length == 0 }
 		
 		// // //
-		public static function gen( name:String, callback:Function = null ):Process
+		public static function gen( name:String, callback:Function = null, ...callbackArgs ):Process
 		{
 			var p:Process = new Process();
 			p.uid = ++Process.UID;
 			p.name = name;
 			p.callback = callback;
+			p.callbackArgs = callbackArgs;
 			return p;
 		}
 	}
@@ -86,10 +90,10 @@ class Process
 	public static var UID:uint = 0;
 	
 	public var uid:uint = 0;
-	public var time:Number = .999;
-	//public var time:Number = .250;
+	public var time:Number = CONFIG::slowmode?.999:.150;
 	public var name:String = "unnamed";
 	public var callback:Function = null;
+	public var callbackArgs:Array = null;
 	
 	public function toString():String 
 	{

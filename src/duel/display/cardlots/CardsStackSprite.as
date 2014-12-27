@@ -14,7 +14,7 @@ package duel.display.cardlots {
 		public function CardsStackSprite( list:CardListBase )
 		{
 			setTargetList( list );
-			game.juggler.add( this );
+			juggler.add( this );
 		}
 		
 		override public function arrange():void 
@@ -27,6 +27,7 @@ package duel.display.cardlots {
 			while ( --i >= 0 )
 			{
 				o = list.getCardAt( i ).sprite;
+				o.alpha = 1.0;
 				o.x = 0;
 				o.y = -cardSpacing * j;
 				super.addChild( o );
@@ -48,7 +49,7 @@ package duel.display.cardlots {
 				o.x = .0;
 				o.y = -50 * ( i + 1 );
 				o.rotation = Math.random() * 0.2 - 0.1;
-				game.jugglerStrict.xtween( o, 0.8, { 
+				jugglerStrict.xtween( o, 0.8, { 
 					x: .0,
 					y: -cardSpacing * i,
 					//rotation: 0.0,

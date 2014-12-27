@@ -14,12 +14,20 @@ package duel.cards.behaviour
 		public var swift:Boolean = false; 		// CAN ATTACK AND MOVE SAME TURN
 		public var berserk:Boolean = false;		// ATTACKS AUTOMATICALLY
 		
+		public var onCombatFlipFunc:Function;
+		
+		public function onCombatFlip():void
+		{
+			if ( onCombatFlipFunc != null )
+				onCombatFlipFunc();
+		}
+		
 		public function toString():String 
 		{
 			var a:Array = [];
 			if ( haste )	a.push( "haste" );
-			if ( defender )	a.push( "defender" );
-			if ( immobile )	a.push( "immobile" );
+			if ( defender )	a.push( "no attack" );
+			if ( immobile )	a.push( "no move" );
 			if ( swift )	a.push( "swift" );
 			if ( berserk )	a.push( "berserk" );
 			return a.join( "\n" );

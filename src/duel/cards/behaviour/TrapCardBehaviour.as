@@ -7,9 +7,17 @@ package duel.cards.behaviour
 	public class TrapCardBehaviour extends CardBehaviour 
 	{
 		
+		public var onActivateFunc:Function;
+		
 		public function TrapCardBehaviour() 
 		{
 			startFaceDown = true;
+		}
+		
+		public function activate():void
+		{
+			if ( onActivateFunc != null )
+				onActivateFunc();
 		}
 		
 	}

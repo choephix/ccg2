@@ -9,15 +9,16 @@ package duel
 	import duel.display.TableSide;
 	import duel.gui.Gui;
 	import duel.gui.GuiJuggler;
+	import duel.processes.GameplayProcessManager;
 	import duel.processes.ProcessManager;
 	import duel.table.Field;
 	import duel.table.Hand;
-	import duel.table.IndexedField;
 	import starling.animation.IAnimatable;
 	import starling.core.Starling;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Quad;
+	import starling.events.Event;
 	
 	[Event(name="turnStart", type="duel.GameEvents")] 
 	[Event(name="turnEnd", type="duel.GameEvents")] 
@@ -35,7 +36,7 @@ package duel
 		public static var current:Game;
 		
 		public var currentPlayer:Player;
-		public var processes:ProcessManager;
+		public var processes:GameplayProcessManager;
 		
 		//
 		public var jugglerStrict:GuiJuggler;
@@ -67,7 +68,7 @@ package duel
 			jugglerStrict = new GuiJuggler();
 			juggler = new GuiJuggler();
 			
-			processes = new ProcessManager();
+			processes = new GameplayProcessManager();
 			
 			//
 			p1 = generatePlayer( "player1" );
@@ -130,22 +131,13 @@ package duel
 			currentPlayer	= p1;
 			currentPlayer.opponent = p2;
 			
-			
-			
-			
-			
-			
+			CONFIG::development {
 			var pmi:ProcessManagementInspector = new ProcessManagementInspector( processes );
 			addChild( pmi );
 			pmi.alignPivot();
 			pmi.x = App.W * .25;
 			pmi.y = App.H * .50;
-			
-			processes.enqueueProcess( ProcessManager.gen( "--3--", trace ) );
-			processes.enqueueProcess( ProcessManager.gen( "--2--", trace ) );
-			processes.enqueueProcess( ProcessManager.gen( "--1--", trace ) );
-			
-			
+			}
 			
 			// PREPARE GAMEPLAY
 			const DECK_SIZE_1:uint	= 16; /// 52 22 16 8 10 128
@@ -158,7 +150,7 @@ package duel
 			for ( i = 0; i < DECK_SIZE_1; i++ ) 
 			{
 				time += .010;
-				c = generateCard();
+				c = CardFactory.produceCard( i % CardFactory.MAX );
 				c.owner = p1;
 				c.faceDown = true;
 				jugglerStrict.delayCall( p1.deck.addCard, time, c );
@@ -166,7 +158,7 @@ package duel
 			for ( i = 0; i < DECK_SIZE_2; i++ ) 
 			{
 				time += .010;
-				c = generateCard();
+				c = CardFactory.produceCard( i % CardFactory.MAX );
 				c.owner = p2;
 				c.faceDown = true;
 				jugglerStrict.delayCall( p2.deck.addCard, time, c );
@@ -214,12 +206,6 @@ package duel
 				
 				selectCard( null );
 				
-				if ( field.type.isGraveyard && field.owner == p )
-				{
-					p.discard( c );
-					return;
-				}
-				
 				if ( currentPlayer.hand.containsCard( c ) )
 				{
 					if ( canPlayHere( c, field ) )
@@ -228,7 +214,7 @@ package duel
 						c.faceDown = c.behaviour.startFaceDown;
 						if ( c.type.isCreature )
 						{
-							c.exhausted = !CreatureCardBehaviour( c.behaviour ).haste;
+							c.exhausted = !c.behaviourC.haste;
 							lastPlayedCreature = c;
 						}
 						if ( c.type.isTrap )
@@ -236,6 +222,19 @@ package duel
 							lastPlayedTrap = c;
 						}
 					}
+				}
+				
+				if ( field.type.isGraveyard && field.owner == p )
+				{
+					p.discard( c );
+					return;
+				}
+				
+				if ( field.type.isCreatureField && c.type.isCreature && field.owner == c.controller && !c.exhausted )
+				{
+					field.addCard( c );
+					c.exhausted = true;
+					return;
 				}
 			}
 		}
@@ -327,38 +326,12 @@ package duel
 		
 		public function performCardAttack( card:Card ):void
 		{
-			card.faceDown = false;
-			//finishAttack(); return;
+			processes.startChain_Attack( card );
 			
-			var q:Quad = new Quad( 20, 80, 0xFF0000 );
-			card.sprite.parent.parent.addChild( q );
-			q.alpha = .50;
-			q.x = card.sprite.parent.x;
-			q.y = card.sprite.parent.y;
-			q.alignPivot();
-			jugglerStrict.tween( q, .100, { y : q.y - 200 * ( card.owner == p1 ? 1.0 : -1.0 ), onComplete : finishAttack } );
+			card.sprite.animAttack();
 			
-			function finishAttack():void {
-				q.removeFromParent( true );
-				
-				if ( card.field.opposingCreature == null )
-				{
-					damagePlayer( card.controller.opponent, CreatureCardBehaviour( card.behaviour ).attack );
-				}
-				else
-				{
-					var c1:Card = card;
-					var c2:Card = card.field.opposingCreature;
-					
-					c1.faceDown = false;
-					c2.faceDown = false;
-					
-					if ( CreatureCardBehaviour(c1.behaviour).attack <= CreatureCardBehaviour(c2.behaviour).attack )
-						c1.die();
-					if ( CreatureCardBehaviour(c2.behaviour).attack <= CreatureCardBehaviour(c1.behaviour).attack )
-						c2.die();
-				}
-				
+			processes.addEventListener( Event.COMPLETE, onComplete );
+			function onComplete():void {
 				if ( card.isInPlay )
 					card.exhausted = true;
 			}
@@ -402,15 +375,10 @@ package duel
 			return p;
 		}
 		
-		private function generateCard():Card {
-			var c:Card = CardFactory.produceCard( 0 );
-			return c;
-		}
-		
 		//
 		public function get interactable():Boolean
 		{
-			return jugglerStrict.isIdle;
+			return jugglerStrict.isIdle && processes.isIdle;
 		}
 		
 		// QUESTIONS

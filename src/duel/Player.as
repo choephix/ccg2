@@ -79,10 +79,9 @@ package duel {
 			
 			var c:Card = deck.getCardAt( deck.cardsCount - 1 );
 			deck.removeCard( c );
-			hand.addCard( c );
-			c.faceDown = false;
+			putInHand( c );
 			
-			//trace( name + " drew a card." );
+			trace( name + " drew a card." );
 		}
 		
 		public function discard( c:Card ):void 
@@ -104,11 +103,25 @@ package duel {
 			trace( name + " put a card to the grave." );
 		}
 		
+		public function putInHand( c:Card ):void 
+		{
+			hand.addCard( c );
+			c.faceDown = false;
+		}
+		
+		// BATTLE
+		
+		public function takeDirectDamage( amount:int ):void 
+		{
+			lp -= amount;
+		}
+		
 		// BATTLE ENTITIES
 		public function getCreatureAt( index:int ):Creature { return creatures[ index ]; }
 		public function setCreatureAt( index:int, o:Creature ):void { creatures[ index ] = o; }
 		
 		public function getTrapAt( index:int ):Trap { return traps[ index ]; }
 		public function setTrapAt( index:int, o:Trap ):void { traps[ index ] = o; }
+		
 	}
 }

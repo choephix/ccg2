@@ -77,7 +77,7 @@ package {
 			}
 			if ( e.keyCode == Keyboard.A ) {
 				if ( g.lastPlayedCreature )
-					CreatureCardBehaviour( g.lastPlayedCreature.behaviour ).attack++;
+					g.lastPlayedCreature.behaviourC.attack++;
 			}
 			if ( e.keyCode == Keyboard.S ) {
 				if ( g.lastPlayedTrap )

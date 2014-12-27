@@ -1,13 +1,13 @@
 package duel.cards
 {
 	import duel.cards.behaviour.CardBehaviour;
+	import duel.cards.behaviour.CreatureCardBehaviour;
+	import duel.cards.behaviour.TrapCardBehaviour;
 	import duel.cards.CardListBase;
 	import duel.display.CardSprite;
 	import duel.GameEntity;
 	import duel.GameEvents;
 	import duel.Player;
-	import duel.table.CreatureField;
-	import duel.table.Field;
 	import duel.table.IndexedField;
 	
 	/**
@@ -56,8 +56,16 @@ package duel.cards
 	
 		public function die():void 
 		{
+			exhausted = false;
 			lot.removeCard( this );
 			owner.putToGrave( this );
+		}
+		
+		public function returnToHand():void 
+		{
+			exhausted = false;
+			lot.removeCard( this );
+			owner.putInHand( this );
 		}
 		
 		// -.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'
@@ -66,6 +74,9 @@ package duel.cards
 		
 		public function get field():IndexedField { return lot as IndexedField }
 		public function get controller():Player { return lot == null ? null : lot.owner }
+		
+		public function get behaviourC():CreatureCardBehaviour { return behaviour as CreatureCardBehaviour }
+		public function get behaviourT():TrapCardBehaviour { return behaviour as TrapCardBehaviour }
 		
 		public function get isInPlay():Boolean { return lot is IndexedField }
 		
@@ -83,7 +94,7 @@ package duel.cards
 		public function set exhausted(value:Boolean):void 
 		{
 			_exhausted = value;
-			game.juggler.xtween( sprite.exhaustClock, .500, { alpha : value ? 1 : 0 } );
+			juggler.xtween( sprite.exhaustClock, .500, { alpha : value ? 1 : 0 } );
 		}
 		
 		// GETTERS & SETTERS - 3

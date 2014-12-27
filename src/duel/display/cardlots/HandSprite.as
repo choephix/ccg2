@@ -90,9 +90,12 @@ package duel.display.cardlots {
 				}
 					
 				
-				game.jugglerStrict.removeTweens( c.sprite );
-				game.jugglerStrict.tween( c.sprite, 0.250, // .850 .250
-					{ x: x, y: y, transition: Transitions.EASE_OUT // EASE_OUT EASE_OUT_BACK EASE_OUT_ELASTIC
+				jugglerStrict.removeTweens( c.sprite );
+				jugglerStrict.tween( c.sprite, 0.250, // .850 .250
+					{ 
+						alpha: 1.0,
+						x: x, y: y, 
+						transition: Transitions.EASE_OUT // EASE_OUT EASE_OUT_BACK EASE_OUT_ELASTIC
 					} );
 			}
 		}

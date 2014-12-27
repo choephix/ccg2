@@ -22,11 +22,11 @@ package dev
 			this.manager = manager;
 			Starling.juggler.add( this );
 			
-			var q:Quad = new Quad( 200, 500, 0x0 );
+			var q:Quad = new Quad( 300, 500, 0x0 );
 			q.alpha = .25;
 			addChild( q );
 			
-			tf = new TextField( 200, 500, "", "Lucida Console", 11, 0x22BBFF, true );
+			tf = new TextField( 300, 500, "", "Lucida Console", 11, 0x22BBFF, true );
 			addChild( tf );
 			
 			this.touchable = false;

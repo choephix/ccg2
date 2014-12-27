@@ -11,6 +11,7 @@ package duel.display {
 	import starling.animation.Transitions;
 	import starling.animation.Tween;
 	import starling.display.Image;
+	import starling.display.Quad;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
@@ -45,7 +46,7 @@ package duel.display {
 			this.owner = owner;
 			this._flipTween = new Tween( this, 0 );
 			
-			game.juggler.add( this );
+			juggler.add( this );
 			
 			// MAIN
 			pad = assets.generateImage( "card", true, false );
@@ -77,8 +78,9 @@ package duel.display {
 			tfTitle.color = 0x330011;
 			addChild( tfTitle );
 			
-			tfDescr = new TextField( G.CARD_W, G.CARD_H, "", "Verdana", 20, 0x330011 );
+			tfDescr = new TextField( G.CARD_W, G.CARD_H, "", "Verdana", 10, 0x330011 );
 			tfDescr.touchable = false;
+			tfDescr.autoScale = true;
 			addChild( tfDescr );
 			
 			tfAttak = new TextField( G.CARD_W, G.CARD_H, "", "", 16, 0x330011 );
@@ -88,13 +90,14 @@ package duel.display {
 			switch( owner.type )
 			{
 				case CardType.CREATURE:
-					tfDescr.text = CreatureCardBehaviour( owner.behaviour ).toString();
+					tfDescr.text = owner.behaviourC.toString();
 					tfDescr.bold = true;
 					tfDescr.hAlign = "center";
 					tfDescr.vAlign = "bottom";
 					tfDescr.hAlign = "right";
 					tfDescr.vAlign = "center";
-					tfAttak.text = CreatureCardBehaviour( owner.behaviour ).attack + "";
+					tfDescr.fontSize = 14;
+					tfAttak.text = owner.behaviourC.attack + "";
 					tfAttak.fontName = "Impact";
 					tfAttak.hAlign = "left";
 					tfAttak.fontSize = 64;
@@ -133,20 +136,7 @@ package duel.display {
 				_flipTween.advanceTime( time );
 			
 			if ( owner.type.isCreature && !owner.faceDown )
-				tfAttak.text = CreatureCardBehaviour( owner.behaviour ).attack + "";
-		}
-		
-		//
-		public function peekIn():void 
-		{
-			//back.alpha = 0.3; return;
-			game.juggler.xtween( back, 0.250, { delay : 0.100, alpha : 0.3 } );
-		}
-		
-		public function peekOut():void 
-		{
-			//back.alpha = 1.0; return;
-			game.juggler.xtween( back, 0.100, { alpha : 1.0 } );
+				tfAttak.text = owner.behaviourC.attack + "";
 		}
 		
 		private function onTouch(e:TouchEvent):void 
@@ -175,6 +165,41 @@ package duel.display {
 			if ( t.phase == TouchPhase.ENDED ) {
 				game.onCardClicked( owner );
 			} 
+		}
+		
+		//
+		public function peekIn():void 
+		{
+			//back.alpha = 0.3; return;
+			juggler.xtween( back, 0.250, { delay : 0.100, alpha : 0.3 } );
+		}
+		
+		public function peekOut():void 
+		{
+			//back.alpha = 1.0; return;
+			juggler.xtween( back, 0.100, { alpha : 1.0 } );
+		}
+		
+		// ANIMATIONS
+		public function animAttack():void 
+		{
+			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFF0000 );
+			addChild( q );
+			q.alpha = .50;
+			jugglerStrict.tween( q, .100,
+				{ 
+					alpha: .0, 
+					onComplete : q.removeFromParent,
+					onCompleteArgs : [true]
+				} );
+		}
+		
+		public function animDie():void 
+		{
+			jugglerStrict.tween( this, .100,
+				{ 
+					alpha: .0
+				} );
 		}
 		
 		// FLIPPING
