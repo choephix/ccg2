@@ -35,26 +35,23 @@ package duel.processes
 					return;
 				}
 				else
+				if ( attacker.field.opposingCreature == null )
 				{
-					if ( attacker.field.opposingCreature == null )
-					{
-						dealCombatDamageDirect( attacker, attacker.controller.opponent );
-					}
-					else
-					{
-						if ( attacker.field.opposingCreature.faceDown )
-						{
-							attacker.field.opposingCreature.faceDown = false;
-							attacker.field.opposingCreature.behaviourC.onCombatFlip();
-							performAttack( attacker );
-							return;
-						}
-						
-						dealCombatDamage( attacker, attacker.field.opposingCreature );
-						dealCombatDamage( attacker.field.opposingCreature, attacker );
-					}
-					enqueueProcess( gen( "completeAttack" ) );
+					dealCombatDamageDirect( attacker, attacker.controller.opponent );
 				}
+				else
+				{
+					if ( attacker.field.opposingCreature.faceDown )
+					{
+						combatFlip( attacker.field.opposingCreature );
+						performAttack( attacker );
+						return;
+					}
+					
+					dealCombatDamage( attacker, attacker.field.opposingCreature );
+					dealCombatDamage( attacker.field.opposingCreature, attacker );
+				}
+				enqueueProcess( gen( "completeAttack" ) );
 			}
 		}
 		
@@ -77,6 +74,13 @@ package duel.processes
 				if ( attackee.behaviourC.attack <= attacker.behaviourC.attack )
 					attackee.die();
 			}
+		}
+		
+		private function combatFlip( c:Card ):void
+		{
+			c.faceDown = false;
+			//c.behaviourC.onCombatFlip();
+			interruptCurrentProcess( gen( "combatFlip", c.behaviourC.onCombatFlip ) );
 		}
 		
 		///
