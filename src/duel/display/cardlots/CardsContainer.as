@@ -69,5 +69,8 @@ package duel.display.cardlots
 		{
 			throw new Error( "NEVER USE ADDCHILD ON STACK" );
 		}
+		
+		//
+		public function get cardsCount():int { return list.cardsCount }
 	}
 }

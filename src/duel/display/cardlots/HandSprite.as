@@ -190,9 +190,6 @@ package duel.display.cardlots {
 		}
 		
 		//
-		public function get cardsCount():int { return list.cardsCount }
-		
-		//
 		public function get active():Boolean 
 		{
 			return _active;
