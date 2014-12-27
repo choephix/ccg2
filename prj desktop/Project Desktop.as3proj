@@ -46,7 +46,7 @@
     <option loadExterns="" />
     <option staticLinkRSL="True" />
     <option additional="" />
-    <option compilerConstants="CONFIG::development,true&#xA;CONFIG::sandbox,false&#xA;CONFIG::slowmode,false" />
+    <option compilerConstants="CONFIG::development,true&#xA;CONFIG::sandbox,false&#xA;CONFIG::slowmode,true" />
     <option minorVersion="" />
   </build>
   <!-- SWC Include Libraries -->

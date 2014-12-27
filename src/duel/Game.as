@@ -2,7 +2,6 @@ package duel
 {
 	import chimichanga.common.assets.AdvancedAssetManager;
 	import dev.ProcessManagementInspector;
-	import duel.cards.behaviour.CardBehaviour;
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
 	import duel.display.cardlots.HandSprite;
@@ -173,11 +172,11 @@ package duel
 				jugglerStrict.delayCall( p2.deck.addCard, time, c, true );
 			}
 			
-			for ( i = 0; i < HAND_SIZE; i++ ) 
+			jugglerStrict.delayCall( drawCards, time + .300 );
+			function drawCards():void
 			{
-				time += .030;
-				jugglerStrict.delayCall( p1.draw, time );
-				jugglerStrict.delayCall( p2.draw, time+0.017 );
+				performDraw( p1, HAND_SIZE );
+				performDraw( p2, HAND_SIZE );
 			}
 		}
 		
@@ -265,7 +264,7 @@ package duel
 					else
 					if ( currentPlayer.deck.containsCard( card ) )
 					{
-						currentPlayer.draw();
+						performDraw( currentPlayer );
 						return;
 					}
 					else
@@ -273,8 +272,7 @@ package duel
 					{
 						trace( "RESURRECT" );
 						currentPlayer.grave.removeCard( card );
-						currentPlayer.hand.addCard( card );
-						card.faceDown = false;
+						currentPlayer.putInHand( card );
 						return;
 					}
 					else
@@ -349,7 +347,12 @@ package duel
 			p = null;
 			dispatchEventWith( GameEvents.TURN_START );
 			
-			currentPlayer.draw();
+			performDraw( currentPlayer );
+		}
+		
+		public function performDraw( p:Player, count:int = 1 ):void
+		{
+			processes.startChain_Draw( p, count );
 		}
 		
 		public function performCardSummon( c:Card, field:CreatureField ):void
@@ -401,7 +404,7 @@ package duel
 		
 		public function activateTrap( c:Card ):void
 		{
-			processes.performTrapActivation( c );
+			processes.startChain_TrapActivation( c );
 		}
 		
 		//

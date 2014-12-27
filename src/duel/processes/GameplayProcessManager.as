@@ -14,6 +14,22 @@ package duel.processes
 	 */
 	public class GameplayProcessManager extends ProcessManager
 	{
+		public function startChain_Draw( p:Player, count:int = 1 ):void
+		{
+			var pro:Process;
+			while ( --count >= 0 )
+			{
+				pro = gen( "drawCard", onComplete, p );
+				pro.time = .033;
+				interruptCurrentProcess( pro )
+			}
+			
+			function onComplete( p:Player ):void 
+			{
+				p.draw();
+			}
+		}
+		
 		// SUMMON
 		
 		public function startChain_Summon( c:Card, field:CreatureField ):void
@@ -50,14 +66,13 @@ package duel.processes
 		
 		public function startChain_TrapSet( c:Card, field:TrapField ):void 
 		{
-			enqueueProcess( gen( "declareTrapSet", performTrapSet, c, field ) );
-		}
-		
-		private function performTrapSet( c:Card, field:TrapField ):void
-		{
-			enqueueProcess( gen( "performTrapSet", onComplete, c, field ) );
+			enqueueProcess( gen( "declareTrapSet", stepDeclare, c, field ) );
 			
-			function onComplete( c:Card, field:TrapField ):void
+			function stepDeclare( c:Card, field:TrapField ):void
+			{
+				enqueueProcess( gen( "performTrapSet", stepPerform, c, field ) );
+			}
+			function stepPerform( c:Card, field:TrapField ):void
 			{
 				if ( !game.canPlaceTrapHere( c, field ) )
 				{
@@ -68,20 +83,21 @@ package duel.processes
 				field.addCard( c );
 				c.faceDown = c.behaviour.startFaceDown;
 				
-				//if ( c.type.isCreature )
-					//c.exhausted = !c.behaviourC.haste;
-				
 				enqueueProcess( gen( "completeTrapSet", null, c, field ) );
 			}
 		}
 		
 		
-		
-		public function performTrapActivation( c:Card ):void
+		public function startChain_TrapActivation( c:Card ):void
 		{
-			enqueueProcess( gen( "performTrapActivation", onComplete, c ) );
+			enqueueProcess( gen( "declareTrapActivation", stepDeclare, c ) );
 			
-			function onComplete( c:Card ):void
+			function stepDeclare( c:Card ):void
+			{
+				c.specialFlipUp();
+				enqueueProcess( gen( "performTrapActivation", stepPerform, c ) );
+			}
+			function stepPerform( c:Card ):void
 			{
 				if ( !c.canActivate )
 				{
@@ -89,11 +105,11 @@ package duel.processes
 					return;
 				}
 				
+				c.sprite.animFlipEffect();
 				c.behaviourT.onActivateFunc();
 				
 				enqueueProcess( gen( "completeTrapActivation", discard, c ) );
 			}
-			
 			function discard( c:Card ):void
 			{
 				if ( !c.behaviourT.persistent )
@@ -113,6 +129,8 @@ package duel.processes
 		{
 			enqueueProcess( gen( "performRelocation", onComplete, c, field ) );
 			
+			c.specialFlipUp();
+			
 			function onComplete( c:Card, field:CreatureField ):void
 			{
 				if ( !c.canRelocate )
@@ -122,7 +140,6 @@ package duel.processes
 				}
 				
 				field.addCard( c );
-				c.faceDown = false;
 				
 				c.sprite.animSummon();
 				
@@ -134,12 +151,12 @@ package duel.processes
 		
 		public function startChain_Attack( c:Card ):void
 		{
-			c.faceDown = false;
 			enqueueProcess( gen( "declareAttack", onComplete, c ) );
 			
 			function onComplete( c:Card ):void
 			{
 				c.sprite.animAttackPrepare();
+				c.specialFlipUp();
 				performAttack( c );
 			}
 		}
@@ -203,7 +220,7 @@ package duel.processes
 		
 		private function combatFlip( c:Card ):void
 		{
-			c.faceDown = false;
+			c.specialFlipUp();
 			interruptCurrentProcess( gen( "combatFlip", combatFlipEffect, c ) );
 			
 			function combatFlipEffect( c:Card ):void

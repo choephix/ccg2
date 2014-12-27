@@ -1,8 +1,6 @@
 package duel.display {
 	import chimichanga.common.display.Sprite;
 	import chimichanga.global.utils.Colors;
-	import duel.cards.behaviour.CardBehaviour;
-	import duel.cards.behaviour.CreatureCardBehaviour;
 	import duel.cards.Card;
 	import duel.cards.CardType;
 	import duel.G;
@@ -38,6 +36,8 @@ package duel.display {
 		///
 		private var _flippedness:Number = .0;
 		private var _flipTween:Tween;
+		
+		private var __attackSprite:Quad;
 		
 		//
 		private var card:Card;
@@ -128,7 +128,7 @@ package duel.display {
 			addEventListener( TouchEvent.TOUCH, onTouch );
 			
 			updateData();
-			faceDown = owner.faceDown;
+			setFaceDown( owner.faceDown, false );
 		}
 		
 		public function advanceTime(time:Number):void 
@@ -139,7 +139,7 @@ package duel.display {
 			updateData();
 		}
 		
-		public function updateData():void 
+		internal function updateData():void 
 		{
 			if ( card.type.isCreature && !card.faceDown ) {
 				tfAttak.text = card.behaviourC.attack + "";
@@ -190,7 +190,6 @@ package duel.display {
 		
 		
 		// ANIMATIONS
-		private var __attackSprite:Quad;
 		private function assertAnimAttackSpriteExists():void
 		{
 			if ( __attackSprite != null ) return;
@@ -295,15 +294,29 @@ package duel.display {
 				} );
 		}
 		
+		animation function animTrapEffect():void
+		{
+			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFFFFFF );
+			addChild( q );
+			q.alignPivot();
+			q.alpha = .999;
+			jugglerStrict.tween( q, .500,
+				{ 
+					alpha: .0, 
+					onComplete : q.removeFromParent,
+					onCompleteArgs : [true]
+				} );
+		}
+		
 		// FLIPPING
-		public function set faceDown( faceDown:Boolean ):void 
+		public function setFaceDown( faceDown:Boolean, strict:Boolean = false ):void 
 		{
 			_flipTween.reset( this, .500, Transitions.EASE_OUT );
 			_flipTween.animate( "flippedness", faceDown ? -1.0 : 1.0 );
-			jugglerStrict.add( _flipTween );
+			( strict ? jugglerStrict : juggler ).add( _flipTween );
 		}
 		
-		public function get faceDown():Boolean
+		public function get isFaceDown():Boolean
 		{
 			return _flippedness < .0;
 		}
