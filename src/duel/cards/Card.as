@@ -59,6 +59,8 @@ package duel.cards
 			exhausted = false;
 			lot.removeCard( this );
 			owner.putToGrave( this );
+			
+			//sprite.animDie();
 		}
 		
 		public function returnToHand():void 

@@ -17,15 +17,17 @@ package duel.cards
 				function( c:Card ):void
 				{
 					c.name = "Gonzales";
+					
 					setToCreature( c );
 					c.behaviourC.attack = 10;
 					c.behaviourC.haste = true;
 				},
 				function( c:Card ):void
 				{
-					c.name = "Flippers";
+					c.name = "Bozo";
+					
 					setToCreature( c );
-					c.behaviourC.attack = 10;
+					c.behaviourC.attack = 6;
 					c.behaviourC.startFaceDown = true;
 					c.behaviourC.onCombatFlipFunc = function():void {
 						if ( c.field.opposingCreature != null )
@@ -39,6 +41,7 @@ package duel.cards
 				function( c:Card ):void
 				{
 					c.name = "Gasoline";
+					
 					setToTrap( c );
 					c.behaviourT.onActivateFunc = function():void {
 						if ( c.field.opposingCreature != null )
@@ -49,14 +52,16 @@ package duel.cards
 				},
 				function( c:Card ):void
 				{
-					c.name = "Bozo";
+					c.name = "Flippers";
+					
 					setToCreature( c );
-					c.behaviourC.attack = 6;
+					c.behaviourC.attack = 10;
 					c.behaviourC.startFaceDown = true;
 				},
 				function( c:Card ):void
 				{
 					c.name = "Trap-hole";
+					
 					setToTrap( c );
 					c.behaviourT.onActivateFunc = function():void {
 						if ( c.field.opposingCreature != null )
@@ -68,12 +73,14 @@ package duel.cards
 				function( c:Card ):void
 				{
 					c.name = "Obelix";
+					
 					setToCreature( c );
 					c.behaviourC.attack = 14;
 				},
 				function( c:Card ):void
 				{
 					c.name = "Flappy Bird";
+					
 					setToCreature( c );
 					c.behaviourC.attack = 7;
 					c.behaviourC.swift = true;
@@ -81,6 +88,7 @@ package duel.cards
 				function( c:Card ):void
 				{
 					c.name = "Big Shield";
+					
 					setToCreature( c );
 					c.behaviourC.attack = 14;
 					c.behaviourC.noattack = true;
@@ -88,6 +96,7 @@ package duel.cards
 				function( c:Card ):void
 				{
 					c.name = "Smelly sock";
+					
 					setToTrap( c );
 					c.behaviourT.onActivateFunc = function():void {
 						if ( c.field.opposingCreature != null )
@@ -99,6 +108,7 @@ package duel.cards
 				function( c:Card ):void
 				{
 					c.name = "Stunner";
+					
 					setToTrap( c );
 					c.behaviourT.onActivateFunc = function():void {
 						if ( c.field.opposingCreature != null )
@@ -110,6 +120,7 @@ package duel.cards
 				function( c:Card ):void
 				{
 					c.name = "Hulk";
+					
 					setToCreature( c );
 					c.behaviourC.attack = 16;
 					c.behaviourC.berserk = true;
@@ -117,6 +128,7 @@ package duel.cards
 				function( c:Card ):void
 				{
 					c.name = "Draw";
+					
 					setToTrap( c );
 					c.behaviourT.onActivateFunc = function():void {
 						c.controller.draw();
@@ -125,12 +137,14 @@ package duel.cards
 				function( c:Card ):void
 				{
 					c.name = "Cozmo";
+					
 					setToCreature( c );
 					c.behaviourC.attack = 8;
 				},
 				function( c:Card ):void
 				{
 					c.name = "Hard Surprise";
+					
 					setToCreature( c );
 					c.behaviourC.attack = 17;
 					c.behaviourC.noattack = true;

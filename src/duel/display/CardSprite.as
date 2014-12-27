@@ -204,7 +204,7 @@ package duel.display {
 			__attackSprite.removeFromParent( true );
 			__attackSprite = null;
 		}
-		public function animAttackPrepare():void 
+		animation function animAttackPrepare():void 
 		{
 			assertAnimAttackSpriteExists();
 			__attackSprite.scaleX = .25;
@@ -218,7 +218,7 @@ package duel.display {
 					scaleY : 1.0
 				} );
 		}
-		public function animAttackPerform():void 
+		animation function animAttackPerform():void 
 		{
 			assertAnimAttackSpriteExists();
 			jugglerStrict.tween( __attackSprite, .240,
@@ -228,9 +228,9 @@ package duel.display {
 					onComplete : destroyAnimAttackSprite
 				} );
 		}
-		public function animAttackAbort():void 
+		animation function animAttackAbort():void 
 		{
-			assertAnimAttackSpriteExists();
+			if ( __attackSprite == null ) return;
 			jugglerStrict.tween( __attackSprite, .240,
 				{
 					transition : Transitions.EASE_OUT,
@@ -241,7 +241,7 @@ package duel.display {
 				} );
 		}
 		
-		public function animDamage():void 
+		animation function animDamage():void 
 		{
 			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFF0000 );
 			addChild( q );
@@ -255,7 +255,7 @@ package duel.display {
 				} );
 		}
 		
-		public function animSummon():void 
+		animation function animSummon():void 
 		{
 			var q:Quad = assets.generateImage( "ring", false, true );
 			q.color = 0xCF873F;
@@ -271,15 +271,17 @@ package duel.display {
 				} );
 		}
 		
-		public function animDie():void 
+		animation function animDie():void 
 		{
-			jugglerStrict.tween( this, .250,
-				{ 
-					alpha: .0
-				} );
+			destroyAnimAttackSprite();
+			
+			//jugglerStrict.tween( this, .250,
+				//{ 
+					//alpha: .0
+				//} );
 		}
 		
-		public function animFlipEffect():void
+		animation function animFlipEffect():void
 		{
 			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFFFFFF );
 			addChild( q );

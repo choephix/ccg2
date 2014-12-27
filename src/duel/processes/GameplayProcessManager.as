@@ -1,10 +1,13 @@
 package duel.processes
 {
 	import duel.cards.Card;
+	import duel.display.animation;
 	import duel.Game;
 	import duel.Player;
 	import duel.table.CreatureField;
 	import duel.table.TrapField;
+	
+	use namespace animation;
 	/**
 	 * ...
 	 * @author choephix
@@ -208,8 +211,13 @@ package duel.processes
 				if ( c.behaviourC.onCombatFlipFunc != null )
 				{
 					c.sprite.animFlipEffect();
-					interruptCurrentProcess( gen( "combatFlipEffect", c.behaviourC.onCombatFlip, c ) );
+					interruptCurrentProcess( gen( "combatFlipEffect", complete, c ) );
 				}
+			}
+			function complete( c:Card ):void
+			{
+				if ( c.behaviourC.onCombatFlipFunc != null )
+					c.behaviourC.onCombatFlip();
 			}
 		}
 		
