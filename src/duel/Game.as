@@ -2,7 +2,6 @@ package duel
 {
 	import chimichanga.common.assets.AdvancedAssetManager;
 	import dev.ProcessManagementInspector;
-	import duel.cards.behaviour.CreatureCardBehaviour;
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
 	import duel.display.cardlots.HandSprite;
@@ -10,9 +9,11 @@ package duel
 	import duel.gui.Gui;
 	import duel.gui.GuiJuggler;
 	import duel.processes.GameplayProcessManager;
-	import duel.processes.ProcessManager;
+	import duel.table.CreatureField;
 	import duel.table.Field;
 	import duel.table.Hand;
+	import duel.table.IndexedField;
+	import duel.table.TrapField;
 	import starling.animation.IAnimatable;
 	import starling.core.Starling;
 	import starling.display.DisplayObjectContainer;
@@ -208,19 +209,15 @@ package duel
 				
 				if ( currentPlayer.hand.containsCard( c ) )
 				{
-					if ( canPlayHere( c, field ) )
+					if ( c.type.isCreature && field is CreatureField && canPlayHere( c, field ) )
 					{
-						field.addCard( c );
-						c.faceDown = c.behaviour.startFaceDown;
-						if ( c.type.isCreature )
-						{
-							c.exhausted = !c.behaviourC.haste;
-							lastPlayedCreature = c;
-						}
-						if ( c.type.isTrap )
-						{
-							lastPlayedTrap = c;
-						}
+						performCardSummon( c, field as CreatureField );
+						return;
+					}
+					if ( c.type.isTrap && field is TrapField && canPlayHere( c, field ) )
+					{
+						performTrapSet( c, field as TrapField );
+						return;
 					}
 				}
 				
@@ -322,6 +319,31 @@ package duel
 			dispatchEventWith( GameEvents.TURN_START );
 			
 			currentPlayer.draw();
+		}
+		
+		public function performCardSummon( c:Card, field:CreatureField ):void
+		{
+			processes.startChain_Summon( c, field );
+			
+			processes.addEventListener( Event.COMPLETE, onComplete );
+			function onComplete():void {
+				if ( c.isInPlay )
+				{
+					c.exhausted = !c.behaviourC.haste;
+					lastPlayedCreature = c;
+				}
+			}
+			
+			lastPlayedCreature = c;
+		}
+		
+		public function performTrapSet( c:Card, field:TrapField ):void
+		{
+			processes.startChain_TrapSet( c, field );
+			
+			//c.sprite.animFaceDownSet();
+			
+			lastPlayedTrap = c;
 		}
 		
 		public function performCardAttack( card:Card ):void

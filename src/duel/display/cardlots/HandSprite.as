@@ -89,6 +89,10 @@ package duel.display.cardlots {
 						y = ( flipped ? -1.0 : 1.0 ) * ( i == selectedIndex ? -75 : 50 )
 				}
 					
+				//c.sprite.x = x;
+				//c.sprite.y = y;
+				//c.sprite.alpha = 1.0;
+				//continue;
 				
 				jugglerStrict.removeTweens( c.sprite );
 				jugglerStrict.tween( c.sprite, 0.250, // .850 .250

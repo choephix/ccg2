@@ -198,6 +198,22 @@ package duel.display {
 				} );
 		}
 		
+		public function animSummon():void 
+		{
+			var q:Quad = assets.generateImage( "ring", false, true );
+			q.x = G.CARD_W * 0.5;
+			q.y = G.CARD_H * 0.5;
+			addChild( q );
+			juggler.tween( q, .250,
+				{ 
+					alpha: .0, 
+					scaleX: 5,
+					scaleY: 5,
+					onComplete : q.removeFromParent,
+					onCompleteArgs : [true]
+				} );
+		}
+		
 		public function animDie():void 
 		{
 			jugglerStrict.tween( this, .100,

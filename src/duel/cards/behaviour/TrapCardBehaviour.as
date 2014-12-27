@@ -6,7 +6,6 @@ package duel.cards.behaviour
 	 */
 	public class TrapCardBehaviour extends CardBehaviour 
 	{
-		
 		public var onActivateFunc:Function;
 		
 		public function TrapCardBehaviour() 

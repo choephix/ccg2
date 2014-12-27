@@ -68,6 +68,7 @@ package {
 			}
 			if ( e.keyCode == Keyboard.Z ) {
 				g.juggler.speed = g.juggler.speed < 1.0 ? 1.0 : 0.2;
+				g.jugglerStrict.speed = g.juggler.speed;
 			}
 			if ( e.keyCode == Keyboard.Q ) {
 				g.processes.enqueueProcess( ProcessManager.gen( "test <<" ) );
