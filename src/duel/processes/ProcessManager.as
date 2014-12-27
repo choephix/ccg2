@@ -93,7 +93,7 @@ class Process
 	public static var UID:uint = 0;
 	
 	public var uid:uint = 0;
-	public var time:Number = CONFIG::slowmode?1.999:.033;
+	public var time:Number = CONFIG::slowmode?1.999:.100;
 	public var name:String = "unnamed";
 	public var callback:Function = null;
 	public var callbackArgs:Array = null;

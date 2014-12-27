@@ -41,6 +41,7 @@ package duel
 		
 		//
 		public var jugglerStrict:GuiJuggler;
+		public var jugglerGui:GuiJuggler;
 		public var juggler:GuiJuggler;
 		
 		public var gui:Gui;
@@ -67,6 +68,7 @@ package duel
 			Starling.juggler.add( this );
 			
 			jugglerStrict = new GuiJuggler();
+			jugglerGui = new GuiJuggler();
 			juggler = new GuiJuggler();
 			
 			processes = new GameplayProcessManager();
@@ -182,19 +184,21 @@ package duel
 		public function advanceTime( time:Number ):void
 		{
 			jugglerStrict.advanceTime( time );
+			jugglerGui.advanceTime( time );
 			juggler.advanceTime( time );
 			
 			gui.advanceTime( time );
 			p1.handSprite.advanceTime( time );
 			p2.handSprite.advanceTime( time );
 			
+			if ( jugglerStrict.isIdle )
+				processes.advanceTime( time );
+			
+			if ( selectedCard != null && !canSelect( selectedCard ) )
+				selectCard( null );
+			
 			//bg.visible = interactable;
 			this.touchable = interactable;
-			
-			if ( jugglerStrict.isIdle )
-			{
-				processes.advanceTime( time );
-			}
 		}
 		
 		// INTERACTION
@@ -204,8 +208,6 @@ package duel
 			{
 				var c:Card = selectedCard;
 				var p:Player = c.controller;
-				
-				selectCard( null );
 				
 				if ( currentPlayer.hand.containsCard( c ) )
 				{
@@ -220,6 +222,8 @@ package duel
 						return;
 					}
 				}
+				
+				selectCard( null );
 				
 				if ( field.type.isGraveyard && field.owner == p )
 				{
@@ -400,7 +404,7 @@ package duel
 		//
 		public function get interactable():Boolean
 		{
-			return jugglerStrict.isIdle && processes.isIdle;
+			return jugglerStrict.isIdle && jugglerGui.isIdle && processes.isIdle;
 		}
 		
 		// QUESTIONS
@@ -414,6 +418,7 @@ package duel
 		
 		public function canSelect( card:Card ):Boolean {
 			if ( card.controller != currentPlayer ) return false;
+			if ( card.type.isTrap && card.isInPlay ) return false;
 			if ( card.exhausted ) return false;
 			return true;
 		}

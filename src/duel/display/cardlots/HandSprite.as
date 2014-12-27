@@ -94,8 +94,8 @@ package duel.display.cardlots {
 				//c.sprite.alpha = 1.0;
 				//continue;
 				
-				jugglerStrict.removeTweens( c.sprite );
-				jugglerStrict.tween( c.sprite, 0.250, // .850 .250
+				jugglerGui.removeTweens( c.sprite );
+				jugglerGui.tween( c.sprite, 0.250, // .850 .250
 					{ 
 						alpha: 1.0,
 						x: x, y: y, 
@@ -150,6 +150,19 @@ package duel.display.cardlots {
 		}
 		
 		// EVENT HANDLERS
+		
+		override protected function onCardAdded( e:Event ):void 
+		{
+			
+		}
+		
+		override protected function onCardRemoved( e:Event ):void 
+		{
+			var c:Card = e.data as Card;
+			jugglerGui.removeTweens( c.sprite );
+			selectedIndex = -1;
+			dirty = true;
+		}
 		
 		private function onTurnStart(e:Event):void 
 		{
