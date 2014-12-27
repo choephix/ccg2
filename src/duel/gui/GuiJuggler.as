@@ -8,10 +8,12 @@ package duel.gui {
 	 */
 	public class GuiJuggler extends Juggler
 	{
+		public var speed:Number = 1.0;
 		
-		override public function add( object:IAnimatable ):void
+		override public function advanceTime( time:Number ):void 
 		{
-			super.add( object );
+			time *= speed;
+			super.advanceTime( time );
 		}
 		
 		public function get isIdle():Boolean
