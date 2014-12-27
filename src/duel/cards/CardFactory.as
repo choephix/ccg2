@@ -68,7 +68,7 @@ package duel.cards
 				case  4:
 					c.name = "Obelix";
 					setToCreature();
-					bc.attack = 15;
+					bc.attack = 14;
 					break;
 				case  5:
 					c.name = "Trap-hole";
@@ -89,9 +89,8 @@ package duel.cards
 				case  7:
 					c.name = "Big Shield";
 					setToCreature();
-					bc.attack = 19;
+					bc.attack = 14;
 					bc.noattack = true;
-					bc.nomove = true;
 					break;
 				case  8:
 					c.name = "Smelly sock";
@@ -116,7 +115,7 @@ package duel.cards
 				case 10:
 					c.name = "Hulk";
 					setToCreature();
-					bc.attack = 14;
+					bc.attack = 16;
 					bc.berserk = true;
 					break;
 				case 11:
