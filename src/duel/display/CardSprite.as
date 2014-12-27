@@ -90,14 +90,10 @@ package duel.display {
 			switch( owner.type )
 			{
 				case CardType.CREATURE:
-					tfDescr.text = owner.behaviourC.toString();
 					tfDescr.bold = true;
-					tfDescr.hAlign = "center";
-					tfDescr.vAlign = "bottom";
 					tfDescr.hAlign = "right";
 					tfDescr.vAlign = "center";
 					tfDescr.fontSize = 14;
-					tfAttak.text = owner.behaviourC.attack + "";
 					tfAttak.fontName = "Impact";
 					tfAttak.hAlign = "left";
 					tfAttak.fontSize = 64;
@@ -127,6 +123,7 @@ package duel.display {
 			// ..
 			addEventListener( TouchEvent.TOUCH, onTouch );
 			
+			updateData();
 			setFlipped( owner.faceDown );
 		}
 		
@@ -135,8 +132,15 @@ package duel.display {
 			if ( !_flipTween.isComplete )
 				_flipTween.advanceTime( time );
 			
-			if ( owner.type.isCreature && !owner.faceDown )
+			updateData();
+		}
+		
+		public function updateData():void 
+		{
+			if ( owner.type.isCreature && !owner.faceDown ) {
 				tfAttak.text = owner.behaviourC.attack + "";
+				tfDescr.text = owner.behaviourC.toString();
+			}
 		}
 		
 		private function onTouch(e:TouchEvent):void 

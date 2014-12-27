@@ -44,7 +44,8 @@ package duel.cards
 						if ( c.field.opposingCreature != null )
 						{
 							//c.field.opposingCreature.die();
-							c.field.opposingCreature.behaviourC.attack -= 5;
+							//c.field.opposingCreature.behaviourC.attack -= 5;
+							c.field.opposingCreature.behaviourC.noattack = true;
 						}
 					}
 					break;
@@ -89,8 +90,8 @@ package duel.cards
 					c.name = "Big Shield";
 					setToCreature();
 					bc.attack = 19;
-					bc.defender = true;
-					bc.immobile = true;
+					bc.noattack = true;
+					bc.nomove = true;
 					break;
 				case  8:
 					c.name = "Smelly sock";
@@ -108,7 +109,7 @@ package duel.cards
 					bt.onActivateFunc = function():void {
 						if ( c.field.opposingCreature != null )
 						{
-							c.field.opposingCreature.behaviourC.defender = true;
+							c.field.opposingCreature.behaviourC.noattack = true;
 						}
 					}
 					break;
@@ -134,7 +135,7 @@ package duel.cards
 					c.name = "Hard Surprise";
 					setToCreature();
 					bc.attack = 17;
-					bc.defender = true;
+					bc.noattack = true;
 					bc.startFaceDown = true;
 					break;
 				case 14:
@@ -181,8 +182,8 @@ package duel.cards
 				var b:CreatureCardBehaviour = new CreatureCardBehaviour();
 				// true false
 				b.haste		= chance( .3 );
-				b.defender	= chance( .1 );
-				b.immobile	= chance( .1 );
+				b.noattack	= chance( .1 );
+				b.nomove	= chance( .1 );
 				b.swift		= chance( .1 );
 				b.berserk	= chance( .2 );
 				//

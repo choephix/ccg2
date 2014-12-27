@@ -98,6 +98,8 @@ package duel.cards
 		}
 		
 		// GETTERS & SETTERS - 3
-		public function get canAttack():Boolean{ return type.isCreature && isInPlay && !exhausted }
+		public function get canAttack():Boolean { 
+			return type.isCreature && isInPlay && !exhausted && !behaviourC.noattack
+		}
 	}
 }

@@ -25,30 +25,36 @@ package duel.processes
 		
 		private function performAttack( attacker:Card ):void
 		{
-			if ( !attacker.canAttack )
+			enqueueProcess( gen( "performAttack", onComplete ) );
+			
+			function onComplete():void
 			{
-				return;
-			}
-			else
-			{
-				if ( attacker.field.opposingCreature == null )
+				if ( !attacker.canAttack )
 				{
-					dealCombatDamageDirect( attacker, attacker.controller.opponent );
+					enqueueProcess( gen( "abortAttack" ) );
+					return;
 				}
 				else
 				{
-					if ( attacker.field.opposingCreature.faceDown )
+					if ( attacker.field.opposingCreature == null )
 					{
-						attacker.field.opposingCreature.faceDown = false;
-						attacker.field.opposingCreature.behaviourC.onCombatFlip();
-						performAttack( attacker );
-						return;
+						dealCombatDamageDirect( attacker, attacker.controller.opponent );
 					}
-					
-					dealCombatDamage( attacker, attacker.field.opposingCreature );
-					dealCombatDamage( attacker.field.opposingCreature, attacker );
+					else
+					{
+						if ( attacker.field.opposingCreature.faceDown )
+						{
+							attacker.field.opposingCreature.faceDown = false;
+							attacker.field.opposingCreature.behaviourC.onCombatFlip();
+							performAttack( attacker );
+							return;
+						}
+						
+						dealCombatDamage( attacker, attacker.field.opposingCreature );
+						dealCombatDamage( attacker.field.opposingCreature, attacker );
+					}
+					enqueueProcess( gen( "completeAttack" ) );
 				}
-				enqueueProcess( gen( "completeAttack" ) );
 			}
 		}
 		

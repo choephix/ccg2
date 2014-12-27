@@ -9,8 +9,8 @@ package duel.cards.behaviour
 		public var attack:int = 0;
 		
 		public var haste:Boolean = false; 		// CAN ATTACK OR MOVE FIRST TURN
-		public var defender:Boolean = false; 	// CANNOT ATTACK
-		public var immobile:Boolean = false; 	// CANNOT MOVE
+		public var noattack:Boolean = false; 	// CANNOT ATTACK
+		public var nomove:Boolean = false; 		// CANNOT MOVE
 		public var swift:Boolean = false; 		// CAN ATTACK AND MOVE SAME TURN
 		public var berserk:Boolean = false;		// ATTACKS AUTOMATICALLY
 		
@@ -26,8 +26,8 @@ package duel.cards.behaviour
 		{
 			var a:Array = [];
 			if ( haste )	a.push( "haste" );
-			if ( defender )	a.push( "no attack" );
-			if ( immobile )	a.push( "no move" );
+			if ( noattack )	a.push( "no attack" );
+			if ( nomove )	a.push( "no move" );
 			if ( swift )	a.push( "swift" );
 			if ( berserk )	a.push( "berserk" );
 			return a.join( "\n" );
