@@ -73,6 +73,32 @@ package duel.processes
 		}
 		
 		
+		
+		public function performTrapActivation( c:Card ):void
+		{
+			enqueueProcess( gen( "performTrapActivation", onComplete ) );
+			
+			function onComplete():void
+			{
+				if ( !c.canActivate )
+				{
+					enqueueProcess( gen( "abortTrapActivation", discard ) );
+					return;
+				}
+				
+				c.behaviourT.onActivateFunc();
+				
+				enqueueProcess( gen( "completeTrapActivation", discard ) );
+			}
+			
+			function discard():void
+			{
+				if ( !c.behaviourT.persistent )
+					c.die();
+			}
+		}
+		
+		
 		// RELOCATION
 		
 		public function startChain_Relocation( c:Card, field:CreatureField ):void

@@ -104,5 +104,8 @@ package duel.cards
 		public function get canRelocate():Boolean { 
 			return type.isCreature && isInPlay && !exhausted && !behaviourC.nomove
 		}
+		public function get canActivate():Boolean { 
+			return type.isTrap && isInPlay
+		}
 	}
 }

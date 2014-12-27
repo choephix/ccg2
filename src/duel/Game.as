@@ -2,6 +2,7 @@ package duel
 {
 	import chimichanga.common.assets.AdvancedAssetManager;
 	import dev.ProcessManagementInspector;
+	import duel.cards.behaviour.CardBehaviour;
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
 	import duel.display.cardlots.HandSprite;
@@ -272,6 +273,12 @@ package duel
 					{
 						selectCard( card );
 					}
+					/// DEV SHIT
+					else
+					if ( card.isInPlay && card.type.isTrap )
+					{
+						activateTrap( card )
+					}
 				}
 			}
 			else
@@ -377,10 +384,16 @@ package duel
 			}
 		}
 		
-		public function damagePlayer( player:Player, amount:int ):void
+		public function activateTrap( c:Card ):void
 		{
-			player.lp -= amount;
+			processes.performTrapActivation( c );
+			
+			
+			
+			
 		}
+		
+		//
 		
 		public function endGame():void
 		{
