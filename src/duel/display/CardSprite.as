@@ -74,7 +74,7 @@ package duel.display {
 			
 			function generateColor():uint 
 			{
-				if ( owner.type == CardType.CREATURE )
+				if ( owner.type.isCreature )
 				{
 					return !owner.behaviour.startFaceDown
 							?
@@ -83,7 +83,7 @@ package duel.display {
 							Colors.fromRGB( 1, .5 + Math.random() * 0.10, .3 )
 							;
 				}
-				if ( owner.type == CardType.TRAP ) 		
+				if ( owner.type.isTrap ) 		
 					//return Colors.fromRGB( 1, .3, .3+Math.random()*0.2 );
 					return Colors.fromRGB( .7+Math.random()*0.2, .4, .5+Math.random()*0.3 );
 				return 0xFFFFFF;

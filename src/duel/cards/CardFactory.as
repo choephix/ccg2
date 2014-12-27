@@ -185,7 +185,7 @@ package duel.cards
 			//
 			c.id = Math.random() * int.MAX_VALUE;
 			c.type = chance( .67 ) ? CardType.CREATURE : CardType.TRAP;
-			if ( c.type == CardType.CREATURE )
+			if ( c.type.isCreature )
 			{
 				var b:CreatureCardBehaviour = new CreatureCardBehaviour();
 				// true false
@@ -202,7 +202,7 @@ package duel.cards
 				//c.name = "#" + uid + " Creature";
 			}
 			else
-			if ( c.type == CardType.TRAP )
+			if ( c.type.isTrap )
 			{
 				c.behaviour = new TrapCardBehaviour();
 				c.name = "Trap "+uid+"";
