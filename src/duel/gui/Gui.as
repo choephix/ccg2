@@ -88,6 +88,8 @@ package duel.gui
 		
 		public function advanceTime( time:Number ):void
 		{
+			alpha = game.interactable ? 1.0 : 0.5;
+			
 			updateTf( t1, game.p1, time );
 			updateTf( t2, game.p2, time );
 			
