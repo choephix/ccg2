@@ -327,7 +327,7 @@ package duel.processes
 			function performDeath( c:Card ):void 
 			{
 				c.sprite.animDie();
-				interruptCurrentProcess( gen( "completeDeath", null, c ) );
+				interruptCurrentProcess( gen( "completeDeath", completeDeath, c ) );
 			}
 			function completeDeath( c:Card ):void 
 			{
