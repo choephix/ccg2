@@ -468,7 +468,6 @@ package duel
 		}
 		
 		//
-		
 		public function endGame():void
 		{
 			var q:Quad = new Quad( App.W, App.H, 0x0 );

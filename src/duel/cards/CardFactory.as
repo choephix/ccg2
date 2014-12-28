@@ -216,41 +216,6 @@ package duel.cards
 			c.behaviour = new TrapCardBehaviour();
 		}
 		
-		public static function produceRandomCard():Card
-		{
-			uid++;
-			var c:Card = new Card();
-			//
-			c.id = Math.random() * int.MAX_VALUE;
-			c.type = chance( .67 ) ? CardType.CREATURE : CardType.TRAP;
-			if ( c.type.isCreature )
-			{
-				var b:CreatureCardBehaviour = new CreatureCardBehaviour();
-				// true false
-				b.haste		= chance( .3 );
-				b.noattack	= chance( .1 );
-				b.nomove	= chance( .1 );
-				b.swift		= chance( .1 );
-				b.berserk	= chance( .2 );
-				//
-				b.attack = 10 + Math.random() * 10;
-				b.startFaceDown = chance( .27 );
-				c.behaviour = b;
-				c.name = "Creature "+uid+"";
-				//c.name = "#" + uid + " Creature";
-			}
-			else
-			if ( c.type.isTrap )
-			{
-				c.behaviour = new TrapCardBehaviour();
-				c.name = "Trap "+uid+"";
-				//c.name = "#" + uid + " Trap";
-			}
-			//
-			c.initialize();
-			return c;
-		}
-		
 		private static function chance( value:Number ):Boolean { return Math.random() < value }
 	}
 
