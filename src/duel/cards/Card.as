@@ -56,13 +56,6 @@ package duel.cards
 		
 		//
 		
-		public function specialFlipUp():void {
-			if ( !faceDown ) return;
-			
-			_faceDown = false;
-			sprite.setFaceDown( false, true );
-		}
-	
 		public function die():void 
 		{
 			game.processes.startChain_death( this );
@@ -93,7 +86,6 @@ package duel.cards
 			if ( _faceDown == value )
 				return;
 			_faceDown = value;
-			sprite.setFaceDown( value );
 		}
 		
 		public function get exhausted():Boolean {return _exhausted}

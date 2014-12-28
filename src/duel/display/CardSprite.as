@@ -32,6 +32,7 @@ package duel.display {
 		private var tfAttak:TextField;
 		
 		///
+		private var _isFaceDown:Boolean = true;
 		private var _flippedness:Number = .0;
 		private var _flipTween:Tween;
 		
@@ -138,6 +139,11 @@ package duel.display {
 				//_flipTween.advanceTime( time );
 			
 			updateData();
+			
+			if ( _isFaceDown != card.faceDown )
+			{
+				setFaceDown( card.faceDown, false );
+			}
 		}
 		
 		internal function updateData():void 
@@ -176,7 +182,6 @@ package duel.display {
 			front.visible = false;
 			//juggler.xtween( back, 0.100, { alpha : 1.0 } );
 		}
-		
 		
 		// ANIMATIONS
 		private function assertAnimAttackSpriteExists():void
@@ -248,6 +253,23 @@ package duel.display {
 				} );
 		}
 		
+		public function animRelocation():void 
+		{
+			jugglerStrict.tween( this, .600,
+				{ 
+					scaleX: 1.2,
+					scaleY: 1.2,
+					transition : Transitions.EASE_OUT_ELASTIC
+				} );
+		}
+		
+		public function animRelocationCompleteOrAbort():void 
+		{
+			this.scaleX = 1.0;
+			this.scaleY = 1.0;
+			this.alpha = 1.0;
+		}
+		
 		animation function animDie():void 
 		{
 			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFF0000 );
@@ -297,17 +319,23 @@ package duel.display {
 				} );
 		}
 		
-		// FLIPPING
-		public function setFaceDown( faceDown:Boolean, strict:Boolean = false ):void 
+		animation function animSpecialFlip():void
 		{
+			setFaceDown( false, true );
+		}
+		
+		// FLIPPING
+		protected function setFaceDown( faceDown:Boolean, strict:Boolean = false ):void 
+		{
+			_isFaceDown = faceDown;
 			_flipTween.reset( this, .500, Transitions.EASE_OUT );
 			_flipTween.animate( "flippedness", faceDown ? -1.0 : 1.0 );
 			( strict ? jugglerStrict : juggler ).add( _flipTween );
 		}
 		
-		public function get isFaceDown():Boolean
+		protected function get isFaceDown():Boolean
 		{
-			return _flippedness < .0;
+			return _isFaceDown;
 		}
 		
 		public function get flippedness():Number 

@@ -17,6 +17,7 @@ package duel.gui
 		public var button1:Button;
 		public var button2:Button;
 		public var button3:Button;
+		public var button4:Button;
 		
 		public function Gui()
 		{
@@ -71,6 +72,18 @@ package duel.gui
 				game.selectCard( null );
 			}
 			addChild( button3 );
+			
+			button4 = new Button( assets.getTexture( "btn" ), "FLIP" );
+			button4.fontColor = 0xFFFF00;
+			button4.fontBold = true;
+			button4.x = App.W - button1.width - 10;
+			button4.y = button3.bounds.bottom + 10;
+			button4.addEventListener( Event.TRIGGERED, btn4f );
+			function btn4f():void
+			{
+				game.performSafeFlip( game.selectedCard );
+			}
+			addChild( button4 );
 		}
 		
 		public function advanceTime( time:Number ):void
@@ -78,7 +91,18 @@ package duel.gui
 			updateTf( t1, game.p1, time );
 			updateTf( t2, game.p2, time );
 			
-			button3.visible = game.interactable && game.selectedCard != null && game.selectedCard.type.isCreature && game.selectedCard.canAttack;
+			button3.visible = 
+				game.interactable && 
+				game.selectedCard != null && 
+				game.selectedCard.type.isCreature && 
+				game.selectedCard.canAttack;
+			
+			button4.visible = 
+				game.interactable && 
+				game.selectedCard != null && 
+				game.selectedCard.type.isCreature && 
+				game.selectedCard.faceDown &&
+				game.selectedCard.exhausted == false;
 		}
 		
 		private function updateTf( t:AnimatedTextField, p:Player, time:Number ):void

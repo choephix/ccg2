@@ -15,11 +15,40 @@ package duel.cards.behaviour
 		public var berserk:Boolean = false;		// ATTACKS AUTOMATICALLY
 		
 		public var onCombatFlipFunc:Function;
+		public var onSafeFlipFunc:Function;
+		public var onMagicFlipFunc:Function;
+		
+		public function get hasCombatFlipEffect():Boolean
+		{
+			return onCombatFlipFunc != null;
+		}
+		
+		public function get hasSafeFlipEffect():Boolean
+		{
+			return onSafeFlipFunc != null;
+		}
+		
+		public function get hasMagicFlipEffect():Boolean
+		{
+			return onMagicFlipFunc != null;
+		}
 		
 		public function onCombatFlip():void
 		{
 			if ( onCombatFlipFunc != null )
 				onCombatFlipFunc();
+		}
+		
+		public function onSafeFlip():void
+		{
+			if ( onSafeFlipFunc != null )
+				onSafeFlipFunc();
+		}
+		
+		public function onMagicFlip():void
+		{
+			if ( onMagicFlipFunc != null )
+				onMagicFlipFunc();
 		}
 		
 		public function toString():String 

@@ -416,28 +416,12 @@ package duel
 		public function performCardSummon( c:Card, field:CreatureField ):void
 		{
 			processes.startChain_Summon( c, field );
-			
-			processes.addEventListener( Event.COMPLETE, onComplete );
-			function onComplete():void {
-				if ( c.isInPlay )
-				{
-					c.exhausted = !c.behaviourC.haste;
-					lastPlayedCreature = c;
-				}
-			}
-			
 			lastPlayedCreature = c;
 		}
 		
 		public function performRelocation( c:Card, field:CreatureField ):void
 		{
 			processes.startChain_Relocation( c, field );
-			
-			processes.addEventListener( Event.COMPLETE, onComplete );
-			function onComplete():void {
-				if ( c.isInPlay )
-					c.exhausted = true;
-			}
 		}
 		
 		public function performTrapSet( c:Card, field:TrapField ):void
@@ -452,12 +436,11 @@ package duel
 		public function performCardAttack( c:Card ):void
 		{
 			processes.startChain_Attack( c );
-			
-			processes.addEventListener( Event.COMPLETE, onComplete );
-			function onComplete():void {
-				if ( c.isInPlay )
-					c.exhausted = true;
-			}
+		}
+		
+		public function performSafeFlip( c:Card ):void
+		{
+			processes.startChain_SafeFlip( c );
 		}
 		
 		public function activateTrap( c:Card ):void
