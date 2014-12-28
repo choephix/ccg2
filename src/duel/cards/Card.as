@@ -70,9 +70,7 @@ package duel.cards
 		
 		public function returnToHand():void 
 		{
-			exhausted = false;
-			lot.removeCard( this );
-			owner.putInHand( this );
+			game.processes.enterHand( this, controller );
 		}
 		
 		// -.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'

@@ -46,7 +46,7 @@ package duel.processes
 			while ( --count >= 0 )
 			{
 				pro = gen( "drawCard", onComplete, p );
-				pro.time = .033;
+				pro.time = .001;
 				interruptCurrentProcess( pro )
 			}
 			
@@ -59,7 +59,27 @@ package duel.processes
 				}
 				var c:Card = p.deck.getFirstCard();
 				p.deck.removeCard( c );
-				p.putInHand( c );
+				
+				enterHand( c, p );
+				pro = gen( "completeDrawCard", null, p, c );
+				pro.time = .001;
+				interruptCurrentProcess( pro )
+			}
+		}
+		
+		public function startChain_Discard( p:Player, c:Card ):void 
+		{
+			enqueueProcess( gen( "discardCard", onComplete, p, c ) );
+			function onComplete():void
+			{
+				if ( !p.hand.containsCard( c ) )
+				{
+					enqueueProcess( gen( "abortDiscardCard", null, p, c ) );
+					return;
+				}
+				p.hand.removeCard( c );
+				enterGrave( c );
+				enqueueProcess( gen( "completeDiscardCard", null, p, c ) );
 			}
 		}
 		
@@ -311,14 +331,35 @@ package duel.processes
 		}
 		
 		// CHAINGING CARD CONTAINERS
-		private function enterGrave( c:Card ):void 
+		public function enterGrave( c:Card ):void 
 		{
 			interruptCurrentProcess( gen( "enterGrave", onComplete, c ) );
 			function onComplete( c:Card ):void 
 			{
-				c.exhausted = false;
-				c.owner.putToGrave( c );
+				if ( c.isInPlay )
+				{
+					c.exhausted = false;
+					c.sprite.exhaustClock.alpha = 0.0;
+				}
+				c.owner.grave.addCard( c );
+				c.faceDown = false;
 				interruptCurrentProcess( gen( "enterGraveComplete", null, c ) );
+			}
+		}
+		
+		public function enterHand( c:Card, p:Player ):void 
+		{
+			interruptCurrentProcess( gen( "enterHand", onComplete, c, p ) );
+			function onComplete( c:Card, p:Player ):void 
+			{
+				if ( c.isInPlay )
+				{
+					c.exhausted = false;
+					c.sprite.exhaustClock.alpha = 0.0;
+				}
+				c.owner.hand.addCard( c );
+				c.faceDown = false;
+				interruptCurrentProcess( gen( "enterHandComplete", null, c, p ) );
 			}
 		}
 		

@@ -289,7 +289,7 @@ package duel
 				
 				if ( field.type.isGraveyard && field.owner == p )
 				{
-					p.discard( c );
+					performDiscard( p, c );
 					return;
 				}
 				
@@ -326,11 +326,11 @@ package duel
 						return;
 					}
 					else
-					if ( currentPlayer.grave.containsCard( card ) )
+					if ( card.field.type.isGraveyard )
 					{
 						trace( "RESURRECT" );
 						currentPlayer.grave.removeCard( card );
-						currentPlayer.putInHand( card );
+						processes.enterHand( card, currentPlayer );
 						return;
 					}
 					else
@@ -362,7 +362,7 @@ package duel
 				/// DEV SHIT
 				if ( currentPlayer.grave.containsCard( card ) )
 				{
-					currentPlayer.putToGrave( c );
+					processes.enterGrave( c );
 					return;
 				}
 					
@@ -406,6 +406,11 @@ package duel
 		public function performDraw( p:Player, count:int = 1 ):void
 		{
 			processes.startChain_Draw( p, count );
+		}
+		
+		public function performDiscard( p:Player, c:Card ):void
+		{
+			processes.startChain_Discard( p, c );
 		}
 		
 		public function performCardSummon( c:Card, field:CreatureField ):void

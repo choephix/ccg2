@@ -70,31 +70,6 @@ package duel {
 		
 		// CARD ACTIONS
 		
-		public function discard( c:Card ):void 
-		{
-			putToGrave( c );
-		}
-		
-		public function putToGrave( c:Card ):void 
-		{
-			grave.addCard( c );
-			c.faceDown = false; // true false
-			
-			if ( c.isInPlay )
-			{
-				c.exhausted = false;
-				c.sprite.exhaustClock.alpha = 0.0;
-			}
-			
-			//trace( name + " put a card to the grave." );
-		}
-		
-		public function putInHand( c:Card ):void 
-		{
-			hand.addCard( c );
-			c.faceDown = false;
-		}
-		
 		// BATTLE ENTITIES
 		public function getCreatureAt( index:int ):Creature { return creatures[ index ]; }
 		public function setCreatureAt( index:int, o:Creature ):void { creatures[ index ] = o; }

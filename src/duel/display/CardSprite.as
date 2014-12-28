@@ -253,12 +253,17 @@ package duel.display {
 			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFF0000 );
 			addChild( q );
 			q.alignPivot();
-			q.alpha = .50;
-			jugglerStrict.tween( q, .200,
+			q.alpha = .99;
+			jugglerStrict.tween( q, .400,
 				{ 
 					alpha: .0, 
 					onComplete : q.removeFromParent,
 					onCompleteArgs : [true]
+				} );
+			jugglerStrict.tween( this, .400,
+				{ 
+					delay: .2, 
+					alpha: .0
 				} );
 			
 			destroyAnimAttackSprite();
