@@ -299,6 +299,13 @@ package duel
 					return;
 				}
 			}
+			else
+			{
+				if ( field.type.isDeck )
+				{
+					performDraw( currentPlayer );
+				}
+			}
 		}
 		
 		public function onCardClicked( card:Card ):void
