@@ -302,7 +302,7 @@ package duel
 			{
 				if ( field.type.isDeck )
 				{
-					performDraw( currentPlayer );
+					performDraw( currentPlayer, 5 );
 				}
 			}
 		}
@@ -399,7 +399,7 @@ package duel
 		
 		public function endTurn():void
 		{
-			processes.turnEnd( currentPlayer );
+			processes.startChain_TurnEnd( currentPlayer );
 		}
 		
 		public function performDraw( p:Player, count:int = 1 ):void

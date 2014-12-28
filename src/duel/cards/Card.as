@@ -61,7 +61,7 @@ package duel.cards
 			game.processes.startChain_death( this );
 		}
 		
-		public function returnToHand():void 
+		public function returnToControllerHand():void 
 		{
 			game.processes.enterHand( this, controller );
 		}

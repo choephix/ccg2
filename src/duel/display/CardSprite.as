@@ -319,9 +319,18 @@ package duel.display {
 				} );
 		}
 		
+		/// Plays ste standard flip-up animation, but in a way that pauses gameplay processes during it
 		animation function animSpecialFlip():void
 		{
 			setFaceDown( false, true );
+		}
+		
+		animation function resetAnimState():void
+		{
+			jugglerStrict.removeTweens( this );
+			this.scaleX = 1.0;
+			this.scaleY = 1.0;
+			this.alpha = 1.0;
 		}
 		
 		// FLIPPING

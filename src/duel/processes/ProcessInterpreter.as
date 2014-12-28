@@ -31,6 +31,13 @@ package duel.processes
 			throw new ArgumentError( "What to do... ..." );
 		}
 		
+		public static function getPlayer( p:Process ):Player
+		{
+			if ( p.callbackArgs[ 0 ] is Player ) 
+				return Player( p.callbackArgs[ 0 ] );
+			throw new ArgumentError( "What to do... ..." );
+		}
+		
 		public static function getSourceCard( p:Process ):Card
 		{
 			if ( p.callbackArgs[ 0 ] is Card ) 

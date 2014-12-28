@@ -17,27 +17,27 @@ package duel.processes
 	{
 		// TURN LOGIC
 		
-		public function turnEnd( p:Player ):void
+		public function startChain_TurnEnd( p:Player ):void
 		{
-			enqueueProcess( gen( "turnEnd", onComplete, p ) );
-			function onComplete( p:Player ):void
+			enqueueProcess( gen( "turnEnd", turnEnd, p ) );
+			function turnEnd( p:Player ):void
 			{
 				game.dispatchEventWith( GameEvents.TURN_END );
 				turnStart( p.opponent );
 			}
-		}
-		
-		public function turnStart( p:Player ):void
-		{
-			enqueueProcess( gen( "turnStart", onComplete, p ) );
-			function onComplete():void
+			function turnStart( p:Player ):void
 			{
 				game.currentPlayer = p;
-				game.dispatchEventWith( GameEvents.TURN_START );
-				startChain_Draw( p, 1 );
+				enqueueProcess( gen( "turnStart", onComplete, p ) );
+				function onComplete():void
+				{
+					game.dispatchEventWith( GameEvents.TURN_START );
+					startChain_Draw( p, 1 );
+				}
 			}
 		}
 		
+		// DRAW & DISCARD
 		
 		public function startChain_Draw( p:Player, count:int = 1 ):void
 		{
@@ -115,7 +115,7 @@ package duel.processes
 		}
 		
 		
-		// SET TRAP
+		// TRAPS
 		
 		public function startChain_TrapSet( c:Card, field:TrapField ):void 
 		{
@@ -159,18 +159,23 @@ package duel.processes
 			{
 				if ( !c.canActivate )
 				{
-					interruptCurrentProcess( gen( "abortTrapActivation", discard, c ) );
+					interruptCurrentProcess( gen( "abortTrapActivation", abortTrapActivation, c ) );
 					return;
 				}
 				
+				interruptCurrentProcess( gen( "completeTrapActivation", completeTrapActivation, c ) );
+				
 				c.sprite.animFlipEffect();
 				c.behaviourT.onActivateFunc( currentProcess );
-				
-				interruptCurrentProcess( gen( "completeTrapActivation", discard, c ) );
 			}
-			function discard( c:Card ):void
+			function abortTrapActivation( c:Card ):void
 			{
-				if ( !c.behaviourT.persistent )
+				if ( c.isInPlay )
+					enterGrave( c );
+			}
+			function completeTrapActivation( c:Card ):void
+			{
+				if ( c.isInPlay && !c.behaviourT.persistent )
 					enterGrave( c );
 			}
 		}
@@ -362,6 +367,11 @@ package duel.processes
 			}
 			function performCombatFlipEffect( c:Card ):void
 			{
+				if ( !c.isInPlay )
+				{
+					enqueueProcess( gen( "abortCombatFlipEffect", null, c ) );
+					return;
+				}
 				if ( c.behaviourC.onCombatFlipFunc != null )
 					c.behaviourC.onCombatFlip();
 				interruptCurrentProcess( gen( "completeCombatFlipEffect", null, c ) );
@@ -441,6 +451,7 @@ package duel.processes
 					c.exhausted = false;
 					c.sprite.exhaustClock.alpha = 0.0;
 				}
+				//c.controller = c.owner;
 				c.owner.grave.addCard( c );
 				c.faceDown = false;
 				interruptCurrentProcess( gen( "enterGraveComplete", null, c ) );
@@ -449,7 +460,11 @@ package duel.processes
 		
 		public function enterHand( c:Card, p:Player ):void 
 		{
-			interruptCurrentProcess( gen( "enterHand", onComplete, c, p ) );
+			var pro:Process;
+			
+			pro = gen( "enterHand", onComplete, c, p );
+			pro.time = .001;
+			interruptCurrentProcess( pro );
 			function onComplete( c:Card, p:Player ):void 
 			{
 				if ( c.isInPlay )
@@ -457,9 +472,12 @@ package duel.processes
 					c.exhausted = false;
 					c.sprite.exhaustClock.alpha = 0.0;
 				}
-				c.owner.hand.addCard( c );
+				p.hand.addCard( c );
 				c.faceDown = false;
-				interruptCurrentProcess( gen( "enterHandComplete", null, c, p ) );
+				
+				pro = gen( "enterHandComplete", null, c, p );
+				pro.time = .001;
+				interruptCurrentProcess( pro );
 			}
 		}
 		
