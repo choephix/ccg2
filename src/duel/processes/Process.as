@@ -7,14 +7,15 @@ package duel.processes
 	public class Process
 	{
 		private static var UID:uint = 0;
+		private var uid:uint = 0;
 		
-		public var uid:uint = 0;
 		public var time:Number = CONFIG::slowmode?.888:.033;
 		public var name:String = "unnamed";
 		public var callback:Function = null;
 		public var callbackArgs:Array = null;
 		
-		public var isComplete:Boolean = false;
+		internal var isComplete:Boolean = false;
+		internal var aborted:Boolean = false;
 		
 		public function Process()
 		{
@@ -31,6 +32,11 @@ package duel.processes
 			this.time -= time;
 			
 			isComplete = this.time < .0;
+		}
+		
+		public function abort():void
+		{
+			aborted = true;
 		}
 	}
 }

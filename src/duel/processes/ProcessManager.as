@@ -39,6 +39,12 @@ package duel.processes
 			
 			var currentProcess:Process = queue[ 0 ];
 			
+			if ( currentProcess.aborted )
+			{
+				removeCurrentProcess();
+				return;
+			}
+			
 			if ( currentProcess.isComplete )
 			{
 				removeCurrentProcess();
