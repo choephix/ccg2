@@ -92,12 +92,12 @@ package duel.processes
 		{
 			var currentProcess:Process = isIdle ? null : queue[ 0 ];
 			
-			enqueueProcess( gen( "declareTrapActivation", stepDeclare, c ) );
+			interruptCurrentProcess( gen( "declareTrapActivation", stepDeclare, c ) );
 			
 			function stepDeclare( c:Card ):void
 			{
 				c.specialFlipUp();
-				enqueueProcess( gen( "performTrapActivation", stepPerform, c ) );
+				interruptCurrentProcess( gen( "performTrapActivation", stepPerform, c ) );
 				
 				trace ( c + " interrupted process " + currentProcess );
 			}
@@ -105,14 +105,14 @@ package duel.processes
 			{
 				if ( !c.canActivate )
 				{
-					enqueueProcess( gen( "abortTrapActivation", discard, c ) );
+					interruptCurrentProcess( gen( "abortTrapActivation", discard, c ) );
 					return;
 				}
 				
 				c.sprite.animFlipEffect();
-				c.behaviourT.onActivateFunc();
+				c.behaviourT.onActivateFunc( currentProcess );
 				
-				enqueueProcess( gen( "completeTrapActivation", discard, c ) );
+				interruptCurrentProcess( gen( "completeTrapActivation", discard, c ) );
 			}
 			function discard( c:Card ):void
 			{

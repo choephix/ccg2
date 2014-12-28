@@ -17,7 +17,10 @@ package duel.display {
 	{
 		public var cardsContainer:CardsStackSprite;
 		public var image:Image;
+		
 		public var field:Field;
+		
+		private var _pointerIsOver:Boolean = false;
 		
 		public function initialize( field:Field, color:uint ):void
 		{
@@ -51,10 +54,25 @@ package duel.display {
 		{
 			var t:Touch = e.getTouch( this );
 			
-			if ( t == null ) return;
-			
+			if ( t == null ) {
+				if ( _pointerIsOver ) {
+					_pointerIsOver = false;
+					if ( !field.isEmpty )
+						game.onCardRollOut( field.getCardAt( 0 ) );
+				}
+				return;
+			}
+			else
+			if ( t.phase == TouchPhase.HOVER ) {
+				if ( !_pointerIsOver ) {
+					_pointerIsOver = true;
+					if ( !field.isEmpty )
+						game.onCardRollOver( field.getCardAt( 0 ) );
+				}
+			}
+			else
 			if ( t.phase == TouchPhase.ENDED ) {
-				Game.current.onFieldClicked( field );
+				game.onFieldClicked( field );
 			} 
 		}
 		

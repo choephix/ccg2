@@ -19,6 +19,7 @@ package duel.cards
 		// PERSISTENT
 		public var id:int;
 		public var name:String;
+		public var descr:String;
 		public var type:CardType;
 		public var behaviour:CardBehaviour;
 		

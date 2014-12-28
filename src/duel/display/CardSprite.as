@@ -31,8 +31,6 @@ package duel.display {
 		private var tfTitle:TextField;
 		private var tfAttak:TextField;
 		
-		private var pointerOver:Boolean;
-		
 		///
 		private var _flippedness:Number = .0;
 		private var _flipTween:Tween;
@@ -118,7 +116,7 @@ package duel.display {
 					tfAttak.fontSize = 64;
 					break;
 				case CardType.TRAP:
-					tfDescr.text = "Very important trap set here like for trapping niggas and shit...";
+					tfDescr.text = card.descr == null ? "?" : card.descr;
 					tfDescr.fontSize = 14;
 			}
 			
@@ -151,25 +149,8 @@ package duel.display {
 		{
 			var t:Touch = e.getTouch( this );
 			
-			if ( t == null ) {
-				if ( pointerOver ) {
-					pointerOver = false;
-					game.onCardRollOut( card );
-					if ( card.controller.controllable )
-						peekOut();
-				}
-				return;
-			}
-			else
-			if ( t.phase == TouchPhase.HOVER ) {
-				if ( !pointerOver ) {
-					pointerOver = true;
-					game.onCardRollOver( card );
-					if ( card.controller.controllable )
-						peekIn();
-				}
-			}
-			else
+			if ( t == null ) return;
+			
 			if ( t.phase == TouchPhase.ENDED ) {
 				game.onCardClicked( card );
 			} 
@@ -178,14 +159,19 @@ package duel.display {
 		//
 		public function peekIn():void 
 		{
-			//back.alpha = 0.3; return;
-			juggler.xtween( back, 0.250, { delay : 0.100, alpha : 0.3 } );
+			if ( !isFaceDown ) return;
+			back.alpha = 0.3
+			front.visible = true;
+			front.scaleX = 1.0;
+			//juggler.xtween( back, 0.250, { delay : 0.100, alpha : 0.3 } );
 		}
 		
 		public function peekOut():void 
 		{
-			//back.alpha = 1.0; return;
-			juggler.xtween( back, 0.100, { alpha : 1.0 } );
+			if ( !isFaceDown ) return;
+			back.alpha = 1.0;
+			front.visible = false;
+			//juggler.xtween( back, 0.100, { alpha : 1.0 } );
 		}
 		
 		
@@ -195,6 +181,9 @@ package duel.display {
 			if ( __attackSprite != null ) return;
 			__attackSprite = assets.generateImage( "hadouken", false, true );
 			__attackSprite.alignPivot();
+			if ( isTopSide ) {
+				__attackSprite.rotation = Math.PI;
+			}
 			addChild( __attackSprite );
 		}
 		private function destroyAnimAttackSprite():void
@@ -223,7 +212,7 @@ package duel.display {
 			jugglerStrict.tween( __attackSprite, .240,
 				{
 					transition : Transitions.EASE_IN,
-					y : __attackSprite.y - 200 * ( card.owner == game.p1 ? 1.0 : -1.0 ), 
+					y : __attackSprite.y + 200 * ( isTopSide ? 1.0 : -1.0 ), 
 					onComplete : destroyAnimAttackSprite
 				} );
 		}
@@ -341,6 +330,11 @@ package duel.display {
 				back.scaleX = Math.abs( value );
 			
 			auraContainer.scaleX = .25 + .75 * Math.abs( value );
+		}
+		
+		public function get isTopSide():Boolean
+		{
+			return card.owner == game.p1;
 		}
 		
 	}

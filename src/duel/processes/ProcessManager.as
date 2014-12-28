@@ -50,8 +50,7 @@ package duel.processes
 			}
 			
 			currentProcess.advanceTime( time );
-			processEvent.processName = currentProcess.name;
-			processEvent.processArgs = currentProcess.callbackArgs;
+			processEvent.process = currentProcess;
 			dispatchEvent( processEvent );
 		}
 		
@@ -85,7 +84,6 @@ package duel.processes
 		public static function gen( name:String, callback:Function = null, ...callbackArgs ):Process
 		{
 			var p:Process = new Process();
-			p.uid = ++Process.UID;
 			p.name = name;
 			p.callback = callback;
 			p.callbackArgs = callbackArgs;

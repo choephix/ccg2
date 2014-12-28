@@ -6,7 +6,7 @@ package duel.processes
 	 */
 	public class Process
 	{
-		public static var UID:uint = 0;
+		private static var UID:uint = 0;
 		
 		public var uid:uint = 0;
 		public var time:Number = CONFIG::slowmode?.888:.033;
@@ -15,6 +15,11 @@ package duel.processes
 		public var callbackArgs:Array = null;
 		
 		public var isComplete:Boolean = false;
+		
+		public function Process()
+		{
+			++UID;
+		}
 		
 		public function toString():String 
 		{

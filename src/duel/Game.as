@@ -9,6 +9,7 @@ package duel
 	import duel.gui.Gui;
 	import duel.gui.GuiJuggler;
 	import duel.processes.GameplayProcessManager;
+	import duel.processes.Process;
 	import duel.processes.ProcessEvent;
 	import duel.table.CreatureField;
 	import duel.table.Field;
@@ -73,6 +74,7 @@ package duel
 			juggler = new GuiJuggler();
 			
 			processes = new GameplayProcessManager();
+			processes.addEventListener( ProcessEvent.PROCESS, onProcessAdvance );
 			
 			//
 			p1 = generatePlayer( "player1" );
@@ -141,9 +143,6 @@ package duel
 			pmi.alignPivot();
 			pmi.x = App.W * .25;
 			pmi.y = App.H * .50;
-			
-			processes.addEventListener( ProcessEvent.PROCESS, onP );
-			function onP( e:ProcessEvent ):void { trace( e.processName, e.processArgs ); }
 			}
 			
 			// PREPARE GAMEPLAY
@@ -205,6 +204,58 @@ package duel
 			
 			//bg.visible = interactable;
 			this.touchable = interactable;
+		}
+		
+		// PROCESSES
+		
+		private function onProcessAdvance( e:ProcessEvent ):void
+		{ 
+			playerInspectProcess( currentPlayer.opponent, e.process );
+			playerInspectProcess( currentPlayer, e.process );
+		}
+		
+		private function playerInspectProcess( p:Player, pro:Process ):void
+		{ 
+			var c:Card;
+			var i:int;
+			var len:int;
+			
+			len = p.fieldsT.length;
+			for ( i = 0; i < len; i++ ) 
+			{
+				if ( p.fieldsT[ i ].isEmpty )
+					continue;
+				
+				c = p.fieldsT[ i ].topCard;
+				
+				if ( c.behaviourT.activationConditionMet( pro ) )
+				{
+					activateTrap( c );
+					return;
+				}
+			}
+			
+			len = p.fieldsC.length;
+			for ( i = 0; i < len; i++ ) 
+			{
+				if ( p.fieldsC[ i ].isEmpty )
+					continue;
+				
+				c = p.fieldsC[ i ].topCard;
+				
+				// whatevah ...
+			}
+			
+			len = p.grave.cardsCount;
+			for ( i = 0; i < len; i++ ) 
+			{
+				c = p.grave.getCardAt( i );
+				
+				if ( !c.behaviour.processCheckInGrave )
+					continue;
+				
+				// whatevah ...
+			}
 		}
 		
 		// INTERACTION
@@ -322,12 +373,14 @@ package duel
 		public function onCardRollOver( card:Card ):void
 		{
 			if ( !interactable ) return;
+			if ( card.controller.controllable ) card.sprite.peekIn();
 			dispatchEventWith( GameEvents.HOVER, false, card );
 		}
 		
 		public function onCardRollOut( card:Card ):void
 		{
 			if ( !interactable ) return;
+			if ( card.controller.controllable ) card.sprite.peekOut();
 			dispatchEventWith( GameEvents.UNHOVER, false, card );
 		}
 		
@@ -469,6 +522,8 @@ package duel
 			if ( card.controller != currentPlayer ) return false;
 			if ( card.type.isTrap && card.isInPlay ) return false;
 			if ( card.exhausted ) return false;
+			if ( card.field && card.field.type.isGraveyard ) return false;
+			if ( card.field && card.field.type.isDeck ) return false;
 			return true;
 		}
 		

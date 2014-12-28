@@ -11,8 +11,7 @@ package duel.processes
 		static public const PROCESS:String = "process";
 		static public const COMPLETE_ALL:String = "completeAll";
 		
-		public var processName:String;
-		public var processArgs:Array;
+		public var process:Process;
 		
 		public function ProcessEvent( type:String, bubbles:Boolean=false, data:Object=null ) 
 		{
