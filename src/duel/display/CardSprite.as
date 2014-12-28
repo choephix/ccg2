@@ -334,7 +334,7 @@ package duel.display {
 		
 		public function get isTopSide():Boolean
 		{
-			return card.owner == game.p1;
+			return card.controller == game.p2;
 		}
 		
 	}
