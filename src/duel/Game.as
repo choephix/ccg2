@@ -140,9 +140,8 @@ package duel
 			CONFIG::development {
 			var pmi:ProcessManagementInspector = new ProcessManagementInspector( processes );
 			addChild( pmi );
-			pmi.alignPivot();
-			pmi.x = App.W * .25;
-			pmi.y = App.H * .50;
+			pmi.x = 200;
+			pmi.y = 400;
 			}
 			
 			// PREPARE GAMEPLAY
