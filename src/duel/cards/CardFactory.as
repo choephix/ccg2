@@ -43,7 +43,7 @@ package duel.cards
 				},
 				function( c:Card ):void
 				{
-					c.name = "Gasoline";
+					c.name = "Surprise Motherfucker!";
 					
 					setToTrap( c );						// TRAP - - - - - - //
 					c.behaviourT.activationConditionFunc = function( p:Process ):Boolean {
@@ -105,11 +105,11 @@ package duel.cards
 				},
 				function( c:Card ):void
 				{
-					c.name = "Big Shield";
+					c.name = "Bro";
 					
 					setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 14;
-					c.behaviourC.noattack = true;
+					c.behaviourC.attack = 13;
+					c.behaviourC.haste = true;
 				},
 				function( c:Card ):void
 				{
@@ -174,14 +174,14 @@ package duel.cards
 				},
 				function( c:Card ):void
 				{
-					c.name = "Cozmo";
+					c.name = "Random Dude";
 					
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 8;
 				},
 				function( c:Card ):void
 				{
-					c.name = "Hard Surprise";
+					c.name = "Big Shield";
 					
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 17;
