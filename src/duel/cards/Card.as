@@ -8,6 +8,7 @@ package duel.cards
 	import duel.GameEntity;
 	import duel.GameEvents;
 	import duel.Player;
+	import duel.table.Field;
 	import duel.table.IndexedField;
 	
 	/**
@@ -39,7 +40,7 @@ package duel.cards
 			sprite.initialize( this );
 			
 			this.game.addEventListener( GameEvents.TURN_START, onTurnStart );
-			this.game.addEventListener( GameEvents.TURN_START, onTurnEnd );
+			this.game.addEventListener( GameEvents.TURN_END, onTurnEnd );
 		}
 		
 		//
@@ -64,11 +65,7 @@ package duel.cards
 	
 		public function die():void 
 		{
-			exhausted = false;
-			lot.removeCard( this );
-			owner.putToGrave( this );
-			
-			//sprite.animDie();
+			game.processes.startChain_death( this );
 		}
 		
 		public function returnToHand():void 
@@ -82,7 +79,8 @@ package duel.cards
 		
 		// GETTERS & SETTERS - 1
 		
-		public function get field():IndexedField { return lot as IndexedField }
+		public function get field():Field { return lot as Field }
+		public function get indexedField():IndexedField { return lot as IndexedField }
 		public function get controller():Player { return lot == null ? null : lot.owner }
 		
 		public function get behaviourC():CreatureCardBehaviour { return behaviour as CreatureCardBehaviour }

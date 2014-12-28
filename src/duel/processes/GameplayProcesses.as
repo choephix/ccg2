@@ -7,6 +7,8 @@ package duel.processes
 	public class GameplayProcesses 
 	{
 		static public const DRAW_CARD:String = "drawCard";
+		static public const TURN_END:String = "turnEnd";
+		static public const TURN_START:String = "turnStart";
 		static public const SUMMON_DECLARE:String = "summonDeclare";
 		static public const SUMMON_PERFORM:String = "summonPerform";
 		static public const SUMMON_COMPLETE:String = "summonComplete";

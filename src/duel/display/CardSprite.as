@@ -232,26 +232,12 @@ package duel.display {
 				} );
 		}
 		
-		animation function animDamage():void 
-		{
-			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFF0000 );
-			addChild( q );
-			q.alignPivot();
-			q.alpha = .50;
-			jugglerStrict.tween( q, .200,
-				{ 
-					alpha: .0, 
-					onComplete : q.removeFromParent,
-					onCompleteArgs : [true]
-				} );
-		}
-		
 		animation function animSummon():void 
 		{
 			var q:Quad = assets.generateImage( "ring", false, true );
 			q.color = 0xCF873F;
 			q.alpha = .3;
-			card.field.sprite.addChild( q );
+			card.indexedField.sprite.addChild( q );
 			jugglerStrict.tween( q, .400,
 				{ 
 					alpha: .0, 
@@ -264,12 +250,18 @@ package duel.display {
 		
 		animation function animDie():void 
 		{
-			destroyAnimAttackSprite();
+			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFF0000 );
+			addChild( q );
+			q.alignPivot();
+			q.alpha = .50;
+			jugglerStrict.tween( q, .200,
+				{ 
+					alpha: .0, 
+					onComplete : q.removeFromParent,
+					onCompleteArgs : [true]
+				} );
 			
-			//jugglerStrict.tween( this, .250,
-				//{ 
-					//alpha: .0
-				//} );
+			destroyAnimAttackSprite();
 		}
 		
 		animation function animFlipEffect():void

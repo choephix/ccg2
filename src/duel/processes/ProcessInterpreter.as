@@ -15,7 +15,7 @@ package duel.processes
 			if ( p.callbackArgs[ 0 ] is Card ) 
 			{
 				if ( Card( p.callbackArgs[ 0 ] ).isInPlay )
-					return Card( p.callbackArgs[ 0 ] ).field.index;
+					return Card( p.callbackArgs[ 0 ] ).indexedField.index;
 				else
 					return -1;
 			}

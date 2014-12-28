@@ -400,14 +400,7 @@ package duel
 		
 		public function endTurn():void
 		{
-			dispatchEventWith( GameEvents.TURN_END );
-			var p:Player = currentPlayer;
-			currentPlayer = currentPlayer.opponent;
-			currentPlayer.opponent = p;
-			p = null;
-			dispatchEventWith( GameEvents.TURN_START );
-			
-			performDraw( currentPlayer );
+			processes.turnEnd( currentPlayer );
 		}
 		
 		public function performDraw( p:Player, count:int = 1 ):void

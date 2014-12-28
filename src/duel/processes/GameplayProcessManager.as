@@ -3,6 +3,7 @@ package duel.processes
 	import duel.cards.Card;
 	import duel.display.animation;
 	import duel.Game;
+	import duel.GameEvents;
 	import duel.Player;
 	import duel.table.CreatureField;
 	import duel.table.TrapField;
@@ -14,6 +15,31 @@ package duel.processes
 	 */
 	public class GameplayProcessManager extends ProcessManager
 	{
+		// TURN LOGIC
+		
+		public function turnEnd( p:Player ):void
+		{
+			enqueueProcess( gen( "turnEnd", onComplete, p ) );
+			function onComplete( p:Player ):void
+			{
+				game.dispatchEventWith( GameEvents.TURN_END );
+				turnStart( p.opponent );
+			}
+		}
+		
+		public function turnStart( p:Player ):void
+		{
+			enqueueProcess( gen( "turnStart", onComplete, p ) );
+			function onComplete():void
+			{
+				game.currentPlayer = p;
+				game.dispatchEventWith( GameEvents.TURN_START );
+				startChain_Draw( p, 1 );
+				startChain_Draw( p.opponent, 1 );
+			}
+		}
+		
+		
 		public function startChain_Draw( p:Player, count:int = 1 ):void
 		{
 			var pro:Process;
@@ -26,7 +52,14 @@ package duel.processes
 			
 			function onComplete( p:Player ):void 
 			{
-				p.draw();
+				if ( p.deck.isEmpty )
+				{
+					dealEffectDamageDirect( p, 1 );
+					return;
+				}
+				var c:Card = p.deck.getFirstCard();
+				p.deck.removeCard( c );
+				p.putInHand( c );
 			}
 		}
 		
@@ -117,7 +150,7 @@ package duel.processes
 			function discard( c:Card ):void
 			{
 				if ( !c.behaviourT.persistent )
-					c.die();
+					enterGrave( c );
 			}
 		}
 		
@@ -155,21 +188,28 @@ package duel.processes
 		
 		public function startChain_Attack( c:Card ):void
 		{
-			enqueueProcess( gen( "declareAttack", onComplete, c ) );
+			if ( c.faceDown )
+				enqueueProcess( gen( "flipUpForAttack", declareAttack, c ) );
+			else
+				enqueueProcess( gen( "declareAttack", declareAttack, c ) );
 			
-			function onComplete( c:Card ):void
+			function flipUpForAttack( c:Card ):void
 			{
-				c.sprite.animAttackPrepare();
 				c.specialFlipUp();
-				performAttack( c );
+				enqueueProcess( gen( "declareAttack", declareAttack, c ) );
 			}
-		}
-		
-		private function performAttack( c:Card ):void
-		{
-			enqueueProcess( gen( "performAttack", onComplete, c ) );
-			
-			function onComplete( c:Card ):void
+				
+			function declareAttack( c:Card ):void
+			{
+				if ( !c.canAttack )
+				{
+					enqueueProcess( gen( "abortAttack", null, c ) );
+					return;
+				}
+				c.sprite.animAttackPrepare();
+				enqueueProcess( gen( "performAttack", performAttack, c ) );
+			}
+			function performAttack( c:Card ):void
 			{
 				if ( !c.canAttack )
 				{
@@ -178,38 +218,30 @@ package duel.processes
 					return;
 				}
 				
-				if ( c.field.opposingCreature == null )
+				if ( c.indexedField.opposingCreature == null )
 				{
 					c.sprite.animAttackPerform();
 					dealCombatDamageDirect( c, c.controller.opponent );
 				}
 				else
 				{
-					if ( c.field.opposingCreature.faceDown )
+					if ( c.indexedField.opposingCreature.faceDown )
 					{
-						combatFlip( c.field.opposingCreature );
-						performAttack( c );
+						combatFlip( c.indexedField.opposingCreature );
+						enqueueProcess( gen( "performAttack", performAttack, c ) );
 						return;
 					}
 					
 					c.sprite.animAttackPerform();
-					c.field.opposingCreature.sprite.animAttackPerform();
-					dealCombatDamage( c, c.field.opposingCreature );
-					dealCombatDamage( c.field.opposingCreature, c );
+					c.indexedField.opposingCreature.sprite.animAttackPerform();
+					dealCombatDamage( c, c.indexedField.opposingCreature );
+					dealCombatDamage( c.indexedField.opposingCreature, c );
 				}
 				enqueueProcess( gen( "completeAttack", null, c ) );
 			}
 		}
 		
-		private function dealCombatDamageDirect( attacker:Card, attackee:Player ):void
-		{
-			enqueueProcess( gen( "dealCombatDamageDirect", onComplete, attacker, attackee ) );
-			
-			function onComplete( attacker:Card, attackee:Player ):void
-			{
-				attackee.takeDirectDamage( attacker.behaviourC.attack );
-			}
-		}
+		// DAMAGE & DEATH
 		
 		private function dealCombatDamage( attacker:Card, attackee:Card ):void
 		{
@@ -218,9 +250,45 @@ package duel.processes
 			function onComplete( attacker:Card, attackee:Card ):void
 			{
 				if ( attackee.behaviourC.attack <= attacker.behaviourC.attack )
-					attackee.die();
+					startChain_death( attackee );
 			}
 		}
+		
+		private function dealCombatDamageDirect( attacker:Card, attackee:Player ):void
+		{
+			enqueueProcess( gen( "dealCombatDamageDirect", dealDamageDirect, attackee, attacker.behaviourC.attack ) );
+		}
+		
+		private function dealEffectDamageDirect( p:Player, amount:int ):void 
+		{
+			interruptCurrentProcess( gen( "dealEffectDamageDirect", dealDamageDirect, p, amount ) );
+		}
+		
+		private function dealDamageDirect( p:Player, amount:int ):void 
+		{
+			interruptCurrentProcess( gen( "dealDamageDirect", onComplete, p, amount ) );
+			function onComplete( p:Player, amount:int ):void 
+			{
+				p.lp -= amount;
+			}
+		}
+		
+		public function startChain_death( c:Card ):void 
+		{
+			interruptCurrentProcess( gen( "declareDeath", declareDeath, c ) );
+			function declareDeath( c:Card ):void 
+			{
+				c.sprite.animDie();
+				interruptCurrentProcess( gen( "performDeath", performDeath, c ) );
+			}
+			function performDeath( c:Card ):void 
+			{
+				interruptCurrentProcess( gen( "completeDeath", null, c ) );
+				enterGrave( c );
+			}
+		}
+		
+		// COMBAT FLIP
 		
 		private function combatFlip( c:Card ):void
 		{
@@ -242,9 +310,18 @@ package duel.processes
 			}
 		}
 		
+		// CHAINGING CARD CONTAINERS
+		private function enterGrave( c:Card ):void 
+		{
+			interruptCurrentProcess( gen( "enterGrave", onComplete, c ) );
+			function onComplete( c:Card ):void 
+			{
+				c.exhausted = false;
+				c.owner.putToGrave( c );
+				interruptCurrentProcess( gen( "enterGraveComplete", null, c ) );
+			}
+		}
 		
-		
-		//
 		
 		
 		

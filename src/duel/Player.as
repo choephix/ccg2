@@ -69,20 +69,6 @@ package duel {
 		}
 		
 		// CARD ACTIONS
-		public function draw():void 
-		{
-			if ( deck.isEmpty )
-			{
-				lp--;
-				return;
-			}
-			
-			var c:Card = deck.getFirstCard();
-			deck.removeCard( c );
-			putInHand( c );
-			
-			//trace( name + " drew a card." );
-		}
 		
 		public function discard( c:Card ):void 
 		{
@@ -107,13 +93,6 @@ package duel {
 		{
 			hand.addCard( c );
 			c.faceDown = false;
-		}
-		
-		// BATTLE
-		
-		public function takeDirectDamage( amount:int ):void 
-		{
-			lp -= amount;
 		}
 		
 		// BATTLE ENTITIES

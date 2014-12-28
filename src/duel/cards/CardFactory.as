@@ -33,11 +33,11 @@ package duel.cards
 					c.behaviourC.attack = 6;
 					c.behaviourC.startFaceDown = true;
 					c.behaviourC.onCombatFlipFunc = function():void {
-						if ( c.field.opposingCreature != null )
+						if ( c.indexedField.opposingCreature != null )
 						{
-							c.field.opposingCreature.die();
-							//c.field.opposingCreature.behaviourC.attack -= 5;
-							//c.field.opposingCreature.behaviourC.noattack = true;
+							c.indexedField.opposingCreature.die();
+							//c.indexedField.opposingCreature.behaviourC.attack -= 5;
+							//c.indexedField.opposingCreature.behaviourC.noattack = true;
 						}
 					}
 				},
@@ -48,15 +48,15 @@ package duel.cards
 					setToTrap( c );						// TRAP - - - - - - //
 					c.behaviourT.activationConditionFunc = function( p:Process ):Boolean {
 						if ( "declareAttack" != p.name ) return false;
-						if ( c.field.index != ProcessInterpreter.getIndex( p ) ) return false;
+						if ( c.indexedField.index != ProcessInterpreter.getIndex( p ) ) return false;
 						if ( c.controller.opponent != ProcessInterpreter.getAttacker( p ).controller ) return false;
-						if ( !c.field.samesideCreatureField.isEmpty ) return false;
+						if ( !c.indexedField.samesideCreatureField.isEmpty ) return false;
 						return true;
 					}
 					c.behaviourT.onActivateFunc = function( p:Process ):void {
-						if ( c.field.opposingCreature != null )
+						if ( c.indexedField.opposingCreature != null )
 						{
-							c.field.opposingCreature.die();
+							c.indexedField.opposingCreature.die();
 						}
 					}
 					c.descr = "On opp. direct attack - kill attacking creature";
@@ -76,14 +76,14 @@ package duel.cards
 					setToTrap( c );						// TRAP - - - - - - //
 					c.behaviourT.activationConditionFunc = function( p:Process ):Boolean {
 						if ( "completeSummon" != p.name ) return false;
-						if ( c.field.index != ProcessInterpreter.getIndex( p ) ) return false;
+						if ( c.indexedField.index != ProcessInterpreter.getIndex( p ) ) return false;
 						if ( c.controller.opponent != ProcessInterpreter.getSummonedField( p ).owner ) return false;
 						return true;
 					}
 					c.behaviourT.onActivateFunc = function( p:Process ):void {
-						if ( c.field.opposingCreature != null )
+						if ( c.indexedField.opposingCreature != null )
 						{
-							c.field.opposingCreature.die();
+							c.indexedField.opposingCreature.die();
 						}
 					}
 					c.descr = "On opp. summon - kill summoned creature";
@@ -118,14 +118,14 @@ package duel.cards
 					setToTrap( c );						// TRAP - - - - - - //
 					c.behaviourT.activationConditionFunc = function( p:Process ):Boolean {
 						if ( "performAttack" != p.name ) return false;
-						if ( c.field.index != ProcessInterpreter.getIndex( p ) ) return false;
+						if ( c.indexedField.index != ProcessInterpreter.getIndex( p ) ) return false;
 						if ( c.controller.opponent != ProcessInterpreter.getAttacker( p ).controller ) return false;
 						return true;
 					}
 					c.behaviourT.onActivateFunc = function( p:Process ):void {
-						if ( c.field.opposingCreature != null )
+						if ( c.indexedField.opposingCreature != null )
 						{
-							c.field.opposingCreature.returnToHand();
+							c.indexedField.opposingCreature.returnToHand();
 						}
 					}
 					c.descr = "On opp. attack - return attacking creature to hand";
@@ -137,17 +137,17 @@ package duel.cards
 					setToTrap( c );						// TRAP - - - - - - //
 					c.behaviourT.activationConditionFunc = function( p:Process ):Boolean {
 						if ( "performAttack" != p.name ) return false;
-						if ( c.field.index != ProcessInterpreter.getIndex( p ) ) return false;
+						if ( c.indexedField.index != ProcessInterpreter.getIndex( p ) ) return false;
 						if ( c.controller.opponent != ProcessInterpreter.getAttacker( p ).controller ) return false;
 						return true;
 					}
 					c.behaviourT.onActivateFunc = function( p:Process ):void {
-						if ( c.field.opposingCreature != null )
+						if ( c.indexedField.opposingCreature != null )
 						{
-							c.field.opposingCreature.behaviourC.noattack = true;
+							c.indexedField.opposingCreature.behaviourC.noattack = true;
 						}
 					}
-					c.descr = "On opp. attack - stun attacking creature forever\n\n(it's CONCEPT DEMO!)";
+					c.descr = "On opp. attack - stun attacking creature forever\n(it's CONCEPT DEMO!)";
 				},
 				function( c:Card ):void
 				{
