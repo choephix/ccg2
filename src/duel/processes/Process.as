@@ -19,7 +19,7 @@ package duel.processes
 		
 		public function Process()
 		{
-			++UID;
+			this.uid = ++UID;
 		}
 		
 		public function toString():String 
