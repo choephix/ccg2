@@ -87,12 +87,15 @@ package duel.display {
 				return 0xFFFFFF;
 			}
 			
-			tfTitle = new TextField( G.CARD_W, G.CARD_H, owner.name, "Calibri", 24, 0x53001B );
+			tfTitle = new TextField( 500, G.CARD_H, owner.name, "Arial Black", 24, 0x53001B );
 			tfTitle.touchable = false;
-			tfTitle.autoScale = true;
+			tfTitle.hAlign = "center";
 			tfTitle.vAlign = "top";
 			tfTitle.bold = true;
 			tfTitle.color = 0x330011;
+			tfTitle.pivotX = tfTitle.width * .5;
+			tfTitle.x = G.CARD_W * .5;
+			tfTitle.scaleX = Number.min( 1.0, G.CARD_W / tfTitle.textBounds.width - .05 );
 			front.addChild( tfTitle );
 			
 			tfDescr = new TextField( G.CARD_W, G.CARD_H, "", "Verdana", 10, 0x330011 );
