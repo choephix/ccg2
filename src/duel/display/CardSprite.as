@@ -40,9 +40,9 @@ package duel.display {
 		//
 		private var card:Card;
 		
-		public function initialize( owner:Card ):void
+		public function initialize( card:Card ):void
 		{
-			this.card = owner;
+			this.card = card;
 			this._flipTween = new Tween( this, 0 );
 			
 			juggler.add( this );
@@ -72,22 +72,22 @@ package duel.display {
 			
 			function generateColor():uint 
 			{
-				if ( owner.type.isCreature )
+				if ( card.type.isCreature )
 				{
-					return !owner.behaviour.startFaceDown
+					return !card.behaviour.startFaceDown
 							?
 							Colors.fromRGB( 1, .7 + Math.random() * 0.15, .4 )
 							:
 							Colors.fromRGB( 1, .5 + Math.random() * 0.10, .3 )
 							;
 				}
-				if ( owner.type.isTrap ) 		
+				if ( card.type.isTrap ) 		
 					//return Colors.fromRGB( 1, .3, .3+Math.random()*0.2 );
 					return Colors.fromRGB( .7+Math.random()*0.2, .4, .5+Math.random()*0.3 );
 				return 0xFFFFFF;
 			}
 			
-			tfTitle = new TextField( 500, G.CARD_H, owner.name, "Arial Black", 24, 0x53001B );
+			tfTitle = new TextField( 500, G.CARD_H, card.name, "Arial Black", 24, 0x53001B );
 			tfTitle.touchable = false;
 			tfTitle.hAlign = "center";
 			tfTitle.vAlign = "top";
@@ -107,7 +107,7 @@ package duel.display {
 			tfAttak.touchable = false;
 			front.addChild( tfAttak );
 			
-			switch( owner.type )
+			switch( card.type )
 			{
 				case CardType.CREATURE:
 					tfDescr.bold = true;
@@ -129,7 +129,7 @@ package duel.display {
 			addEventListener( TouchEvent.TOUCH, onTouch );
 			
 			updateData();
-			setFaceDown( owner.faceDown, false );
+			setFaceDown( card.faceDown, false );
 		}
 		
 		public function advanceTime(time:Number):void 
