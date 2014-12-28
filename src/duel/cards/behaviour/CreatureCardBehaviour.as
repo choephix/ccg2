@@ -59,6 +59,9 @@ package duel.cards.behaviour
 			if ( nomove )	a.push( "no move" );
 			if ( swift )	a.push( "swift" );
 			if ( berserk )	a.push( "berserk" );
+			if ( hasCombatFlipEffect )	a.push( "combat-flip" );
+			if ( hasSafeFlipEffect )	a.push( "safe-flip" );
+			if ( hasMagicFlipEffect )	a.push( "magic-flip" );
 			return a.join( "\n" );
 		}
 	}
