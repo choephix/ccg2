@@ -70,6 +70,8 @@ package duel.cards
 		
 		// GETTERS & SETTERS - 0
 		
+		// GETTERS & SETTERS - 1
+		
 		public function get behaviour():CardBehaviour { return _behaviour }
 		public function set behaviour(value:CardBehaviour):void 
 		{
@@ -77,14 +79,12 @@ package duel.cards
 			_behaviour.card = this;
 		}
 		
-		// GETTERS & SETTERS - 1
+		public function get behaviourC():CreatureCardBehaviour { return behaviour as CreatureCardBehaviour }
+		public function get behaviourT():TrapCardBehaviour { return behaviour as TrapCardBehaviour }
 		
 		public function get field():Field { return lot as Field }
 		public function get indexedField():IndexedField { return lot as IndexedField }
 		public function get controller():Player { return lot == null ? null : lot.owner }
-		
-		public function get behaviourC():CreatureCardBehaviour { return behaviour as CreatureCardBehaviour }
-		public function get behaviourT():TrapCardBehaviour { return behaviour as TrapCardBehaviour }
 		
 		public function get isInPlay():Boolean { return lot is IndexedField }
 		
