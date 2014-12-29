@@ -103,7 +103,12 @@ package duel.cards
 			else
 			if ( type.isCreature )
 			{
-				if ( behaviourC.hasInPlaySpecial && behaviourC.inplaySpecialConditionFunc( p ) )
+				if ( behaviourC.hasInPlayOngoingEffect )
+				{
+					behaviourC.inplayOngoingFunc( p );
+					return;
+				}
+				if ( behaviourC.hasInPlaySpecialEffect && behaviourC.inplaySpecialConditionFunc( p ) )
 				{
 					p.interrupt();
 					processes.startChain_SpecialActivation( this, behaviourC.inplaySpecialActivateFunc );

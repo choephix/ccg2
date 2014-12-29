@@ -24,24 +24,22 @@ package duel.cards
 					c.name = "TEST";
 					
 					setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 10;
+					c.behaviourC.attack = 0;
 					c.behaviourC.haste = true;
 					
-					c.behaviourC.handSpecialConditionFunc = function( p:Process ):Boolean {
-						if ( "turnEnd" != p.name ) return false;
-						if ( c.controller != ProcessInterpreter.getPlayer( p ) ) return false;
-						return true;
+					c.behaviourC.inplayOngoingFunc = function( p:Process ):Boolean {
+						c.behaviourC.attack = c.controller.hand.cardsCount * 2;
 					}
-					c.behaviourC.handSpecialActivateFunc = function( p:Process ):void {
-						Game.current.processes.enterGrave( c );
-					}
-					c.behaviourC.graveSpecialConditionFunc = function( p:Process ):Boolean {
-						if ( "turnStart" != p.name ) return false;
-						if ( c.controller != ProcessInterpreter.getPlayer( p ) ) return false;
-						return true;
-					}
-					c.behaviourC.graveSpecialActivateFunc = function( p:Process ):void {
-						c.returnToControllerHand();
+				},
+				function( c:Card ):void ///		..C		TEST
+				{
+					c.name = "The Producer";
+					
+					setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 0;
+					
+					c.behaviourC.inplayOngoingFunc = function( p:Process ):Boolean {
+						c.behaviourC.attack = c.controller.hand.cardsCount * 2;
 					}
 				},
 				function( c:Card ):void ///		..C		Impatient Jeff

@@ -16,6 +16,7 @@ package duel.cards.behaviour
 		
 		public var inplaySpecialConditionFunc:Function;
 		public var inplaySpecialActivateFunc:Function;
+		public var inplayOngoingFunc:Function;
 		
 		public var onCombatFlipFunc:Function;
 		public var onSafeFlipFunc:Function;
@@ -30,8 +31,11 @@ package duel.cards.behaviour
 		public function get hasMagicFlipEffect():Boolean
 		{ return onMagicFlipFunc != null; }
 		
-		public function get hasInPlaySpecial():Boolean
-		{ return onMagicFlipFunc != null; }
+		public function get hasInPlaySpecialEffect():Boolean
+		{ return inplaySpecialActivateFunc != null; }
+		
+		public function get hasInPlayOngoingEffect():Boolean
+		{ return inplayOngoingFunc != null; }
 		
 		public function onCombatFlip():void
 		{
@@ -62,6 +66,8 @@ package duel.cards.behaviour
 			if ( hasCombatFlipEffect )	a.push( "combat-flip" );
 			if ( hasSafeFlipEffect )	a.push( "safe-flip" );
 			if ( hasMagicFlipEffect )	a.push( "magic-flip" );
+			if ( hasInPlaySpecialEffect )	a.push( "special" );
+			if ( hasInPlayOngoingEffect )	a.push( "ongoing" );
 			return a.join( "\n" );
 		}
 	}
