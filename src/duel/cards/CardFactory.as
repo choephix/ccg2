@@ -65,10 +65,12 @@ package duel.cards
 					c.behaviourC.onCombatFlipFunc = function():void {
 						if ( c.indexedField.opposingCreature != null )
 						{
+							c.indexedField.opposingCreature.returnToControllerHand();
+							return;
+							
 							c.die();
 							c.indexedField.opposingCreature.die();
-							//c.indexedField.opposingCreature.behaviourC.attack -= 5;
-							//c.indexedField.opposingCreature.behaviourC.noattack = true;
+							return;
 						}
 					}
 				},
