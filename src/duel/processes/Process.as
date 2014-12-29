@@ -10,13 +10,13 @@ package duel.processes
 		private static var UID:uint = 0;
 		private var uid:uint = 0;
 		
-		public var delay:Number = CONFIG::slowmode ? .500 : NaN;
-		
 		public var name:String = "unnamed";
 		public var callback:Function = null;
 		public var callbackArgs:Array = null;
 		
-		public var state:ProcessState = ProcessState.WAITING;
+		internal var delay:Number = CONFIG::slowmode ? .500 : NaN;
+		
+		protected var state:ProcessState = ProcessState.WAITING;
 		
 		public function Process()
 		{
