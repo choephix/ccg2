@@ -1,5 +1,6 @@
 package duel.gui
 {
+	import chimichanga.common.display.Sprite;
 	import duel.GameSprite;
 	import duel.Player;
 	import starling.display.Button;
@@ -13,6 +14,8 @@ package duel.gui
 	{
 		private var t1:AnimatedTextField;
 		private var t2:AnimatedTextField;
+		
+		public var buttonsContainer:Sprite;
 		
 		public var button1:Button;
 		public var button2:Button;
@@ -33,7 +36,6 @@ package duel.gui
 			t1.vAlign = "bottom";
 			t1.touchable = false;
 			
-			
 			t2 = new AnimatedTextField( 0, 0, ( game.p2.name + ": " + AnimatedTextField.DEFAULT_MARKER ), "Impact", 50 );
 			addChild( t2 );
 			t2.x = INSET;
@@ -44,51 +46,47 @@ package duel.gui
 			t2.vAlign = "top";
 			t2.touchable = false;
 			
-			button1 = new Button( assets.getTexture( "btn" ), "END TURN" );
-			button1.fontColor = 0x53449B;
-			button1.fontBold = true;
-			button1.x = App.W - button1.width - 10;
-			button1.y = 10;
-			button1.addEventListener( Event.TRIGGERED, game.endTurn );
-			addChild( button1 );
+			// BUTTONS
 			
-			button2 = new Button( assets.getTexture( "btn" ), "RESTART" );
-			button2.fontColor = 0x53449B;
-			button2.fontBold = true;
-			button2.x = App.W - button1.width - 10;
-			button2.y = button1.bounds.bottom + 10;
-			button2.addEventListener( Event.TRIGGERED, game.endGame );
-			addChild( button2 );
+			buttonsContainer = new Sprite();
+			addChild( buttonsContainer );
 			
-			button3 = new Button( assets.getTexture( "btn" ), "ATTACK" );
-			button3.fontColor = 0xFFFF00;
-			button3.fontBold = true;
-			button3.x = App.W - button1.width - 10;
-			button3.y = button2.bounds.bottom + 10;
-			button3.addEventListener( Event.TRIGGERED, btn3f );
+			function addButton( name:String, color:uint, func:Function ):Button
+			{
+				var btn:Button = new Button( assets.getTexture( "btn" ), name );
+				btn.fontColor = color;
+				btn.fontBold = true;
+				btn.x = 0;
+				btn.y = buttonsContainer.height + 10;
+				btn.addEventListener( Event.TRIGGERED, func );
+				buttonsContainer.addChild( btn );
+				return btn;
+			}
+			
+			button1 = addButton( "RESTART", 0x53449B, game.endGame );
+			button2 = addButton( "END TURN", 0x53449B, game.endTurn );
+			button3 = addButton( "ATTACK", 0xFF2000, btn3f );
+			button4 = addButton( "FLIP", 0xFFCC33, btn4f );
+			
 			function btn3f():void
 			{
 				game.performCardAttack( game.selectedCard );
 				game.selectCard( null );
 			}
-			addChild( button3 );
 			
-			button4 = new Button( assets.getTexture( "btn" ), "FLIP" );
-			button4.fontColor = 0xFFFF00;
-			button4.fontBold = true;
-			button4.x = App.W - button1.width - 10;
-			button4.y = button3.bounds.bottom + 10;
-			button4.addEventListener( Event.TRIGGERED, btn4f );
 			function btn4f():void
 			{
 				game.performSafeFlip( game.selectedCard );
 			}
-			addChild( button4 );
+			
+			buttonsContainer.alignPivot( "right", "top" );
+			buttonsContainer.x = App.W;
+			buttonsContainer.y = 0;
 		}
 		
 		public function advanceTime( time:Number ):void
 		{
-			alpha = game.interactable ? 1.0 : 0.5;
+			buttonsContainer.alpha = game.interactable ? 1.0 : 0.6;
 			
 			updateTf( t1, game.p1, time );
 			updateTf( t2, game.p2, time );
