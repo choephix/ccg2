@@ -363,6 +363,12 @@ package duel
 				
 				selectCard( null );
 				
+				if ( canSelect( card ) )
+				{
+					selectCard( card );
+					return;
+				}
+				
 				/// DEV SHIT
 				if ( currentPlayer.grave.containsCard( card ) )
 				{
