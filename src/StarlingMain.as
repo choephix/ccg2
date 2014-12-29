@@ -71,10 +71,10 @@ package {
 				g.jugglerStrict.speed = g.juggler.speed;
 			}
 			if ( e.keyCode == Keyboard.Q ) {
-				g.processes.enqueueProcess( ProcessManager.gen( "test <<" ) );
+				g.processes.appendProcess( ProcessManager.gen( "test <<" ) );
 			}
 			if ( e.keyCode == Keyboard.W ) {
-				g.processes.interruptCurrentProcess( ProcessManager.gen( "test >>" ) );
+				g.processes.prependProcess( ProcessManager.gen( "test >>" ) );
 			}
 			if ( e.keyCode == Keyboard.E ) {
 				g.jugglerStrict.delayCall( trace, 1 );

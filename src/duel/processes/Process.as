@@ -1,5 +1,6 @@
 package duel.processes 
 {
+	import duel.Game;
 	/**
 	 * ...
 	 * @author choephix
@@ -9,34 +10,68 @@ package duel.processes
 		private static var UID:uint = 0;
 		private var uid:uint = 0;
 		
-		public var time:Number = CONFIG::slowmode?.888:.033;
 		public var name:String = "unnamed";
 		public var callback:Function = null;
 		public var callbackArgs:Array = null;
 		
-		internal var isComplete:Boolean = false;
-		internal var aborted:Boolean = false;
+		public var state:ProcessState = ProcessState.WAITING;
 		
 		public function Process()
 		{
 			this.uid = ++UID;
 		}
 		
-		public function toString():String 
+		internal function advanceTimeBefore( timePassed:Number ):void 
 		{
-			return uid + ". " + name + "[" + time.toFixed(2) + "]";
+			CONFIG::development { if ( !isStarted ) log( "started" ) }
+			state = ProcessState.ONGOING;
 		}
 		
-		public function advanceTime( time:Number ):void 
+		internal function advanceTimeAfter( timePassed:Number ):void 
 		{
-			this.time -= time;
+			if ( state == ProcessState.INTERRUPTED )
+				return;
 			
-			isComplete = this.time < .0;
+			if ( state == ProcessState.ABORTED )
+				return;
+			
+			state = ProcessState.COMPLETE;
+			CONFIG::development{ log( "completed" ) }
 		}
 		
 		public function abort():void
 		{
-			aborted = true;
+			state = ProcessState.ABORTED
+			CONFIG::development{ log( "aborted" ) }
 		}
+		
+		public function interrupt():void
+		{
+			state = ProcessState.INTERRUPTED
+			CONFIG::development{ log( "interrupted" ) }
+		}
+		
+		//
+		public function get isStarted():Boolean { return state != ProcessState.WAITING }
+		public function get isComplete():Boolean { return state == ProcessState.COMPLETE }
+		public function get isAborted():Boolean { return state == ProcessState.ABORTED }
+		public function get isInterrupted():Boolean { return state == ProcessState.INTERRUPTED }
+		
+		//
+		public function toString():String { return uid + ". " + name + "[" + state + "]" }
+		
+		CONFIG::development
+		private function log( msg:String ):void { trace ( "4:"+Game.frameNum+". "+name+" -:> "+msg ) }
 	}
 }
+
+class ProcessState
+{
+	public static const WAITING:ProcessState = new ProcessState();
+	public static const ONGOING:ProcessState = new ProcessState();
+	public static const COMPLETE:ProcessState = new ProcessState();
+	public static const ABORTED:ProcessState = new ProcessState();
+	public static const INTERRUPTED:ProcessState = new ProcessState();
+}
+
+

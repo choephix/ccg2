@@ -12,14 +12,14 @@ package duel.processes
 	{
 		public var queue:Vector.<Process>;
 		
-		private var processEvent:ProcessEvent;
+		private var currentProcessEvent:ProcessEvent;
 		
 		private var running:Boolean;
 		
 		public function ProcessManager()
 		{
 			queue = new Vector.<Process>();
-			processEvent = new ProcessEvent( ProcessEvent.PROCESS );
+			currentProcessEvent = new ProcessEvent( ProcessEvent.CURRENT_PROCESS );
 		}
 		
 		public function advanceTime( time:Number ):void 
@@ -37,32 +37,24 @@ package duel.processes
 			
 			running = true;
 			
-			var currentProcess:Process = queue[ 0 ];
+			var p:Process = queue[ 0 ];
 			
-			if ( currentProcess.aborted )
+			p.advanceTimeBefore( time );
+			currentProcessEvent.process = p;
+			dispatchEvent( currentProcessEvent );
+			p.advanceTimeAfter( time );
+			
+			if ( p.isAborted )
 			{
 				removeCurrentProcess();
-				return;
 			}
-			
-			if ( currentProcess.isComplete )
+			else
+			if ( p.isComplete )
 			{
 				removeCurrentProcess();
-				
-				if ( currentProcess.callback != null )
-					currentProcess.callback.apply( null, currentProcess.callbackArgs );
-				
-				return;
+				if ( p.callback != null )
+					p.callback.apply( null, p.callbackArgs );
 			}
-			
-			currentProcess.advanceTime( time );
-			processEvent.process = currentProcess;
-			dispatchEvent( processEvent );
-		}
-		
-		public function abortCurrentProcess():void 
-		{
-			removeCurrentProcess();
 		}
 		
 		private function removeCurrentProcess():void 
@@ -70,12 +62,12 @@ package duel.processes
 			queue.shift();
 		}
 		
-		public function enqueueProcess( p:Process ):void
+		public function appendProcess( p:Process ):void
 		{
 			queue.push( p );
 		}
 		
-		public function interruptCurrentProcess( p:Process ):void
+		public function prependProcess( p:Process ):void
 		{
 			queue.unshift( p );
 		}
@@ -83,6 +75,7 @@ package duel.processes
 		// // //
 		
 		public function get isIdle():Boolean { return !running }
+		public function get currentProcess():Process { return isIdle ? null : queue[ 0 ] }
 		
 		public function toString():String { return queue.join("\n"); }
 		

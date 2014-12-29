@@ -11,6 +11,7 @@ package duel
 	import duel.processes.GameplayProcessManager;
 	import duel.processes.Process;
 	import duel.processes.ProcessEvent;
+	import duel.processes.ProcessManager;
 	import duel.table.CreatureField;
 	import duel.table.Field;
 	import duel.table.Hand;
@@ -21,7 +22,6 @@ package duel
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Quad;
-	import starling.events.Event;
 	
 	[Event(name="turnStart", type="duel.GameEvents")] 
 	[Event(name="turnEnd", type="duel.GameEvents")] 
@@ -37,6 +37,7 @@ package duel
 	public class Game extends DisplayObjectContainer implements IAnimatable
 	{
 		public static var current:Game;
+		public static var frameNum:int = 0;
 		
 		public var currentPlayer:Player;
 		public var processes:GameplayProcessManager;
@@ -74,7 +75,7 @@ package duel
 			juggler = new GuiJuggler();
 			
 			processes = new GameplayProcessManager();
-			processes.addEventListener( ProcessEvent.PROCESS, onProcessAdvance );
+			processes.addEventListener( ProcessEvent.CURRENT_PROCESS, onProcessAdvance );
 			
 			//
 			p1 = generatePlayer( "player1" );
@@ -187,6 +188,8 @@ package duel
 		
 		public function advanceTime( time:Number ):void
 		{
+			frameNum++;
+			
 			jugglerStrict.advanceTime( time );
 			jugglerGui.advanceTime( time );
 			juggler.advanceTime( time );
