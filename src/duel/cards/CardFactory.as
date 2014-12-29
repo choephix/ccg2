@@ -33,77 +33,6 @@ package duel.cards
 						c.behaviourC.attack = c.controller.opponent.hand.cardsCount * 3;
 					}
 				}, 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-				function( c:Card ):void ///		..C		Zig
-				{
-					c.name = "Zig";
-					
-					setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 7;
-					c.behaviourC.startFaceDown = true;
-					
-					c.behaviourC.inplaySpecialConditionFunc = function( p:Process ):Boolean {
-						if ( "turnEnd" != p.name ) return false;
-						if ( c.owner.grave.findByName( "Zag" ) == null ) return false;
-						return true;
-					}
-					c.behaviourC.inplaySpecialActivateFunc = function( p:Process ):Boolean {
-						Game.current.processes.enterHand( c.owner.grave.findByName( "Zag" ), c.owner );
-					}
-				},
-				function( c:Card ):void ///		..C		Zag
-				{
-					c.name = "Zag";
-					
-					setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 8;
-					
-					c.behaviourC.inplaySpecialConditionFunc = function( p:Process ):Boolean {
-						if ( "turnEnd" != p.name ) return false;
-						if ( c.owner.grave.findByName( "Zig" ) == null ) return false;
-						return true;
-					}
-					c.behaviourC.inplaySpecialActivateFunc = function( p:Process ):Boolean {
-						Game.current.processes.enterHand( c.owner.grave.findByName( "Zig" ), c.owner );
-					}
-				},
-				function( c:Card ):void ///		..C		Yang
-				{
-					c.name = "Yang";
-					
-					setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 5;
-					
-					c.behaviourC.inplayOngoingFunc = function( p:Process ):Boolean {
-						c.behaviourC.attack = hasAdjacentYin() ? 15 : 5;
-					}
-					function hasAdjacentYin():Boolean {
-						var cf:CreatureField;
-						cf = CreatureField( c.indexedField ).adjacentLeft as CreatureField;
-						if ( cf != null && cf.topCard != null && cf.topCard.name == "Yin" ) return true;
-						cf = CreatureField( c.indexedField ).adjacentRight as CreatureField;
-						if ( cf != null && cf.topCard != null && cf.topCard.name == "Yin" ) return true;
-						return false;
-					}
-				},
-				function( c:Card ):void ///		..C		Yin
-				{
-					c.name = "Yin";
-					
-					setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 6;
-					
-					c.behaviourC.inplayOngoingFunc = function( p:Process ):Boolean {
-						c.behaviourC.attack = hasAdjacentYang() ? 14 : 6;
-					}
-					function hasAdjacentYang():Boolean {
-						var cf:CreatureField;
-						cf = CreatureField( c.indexedField ).adjacentLeft as CreatureField;
-						if ( cf != null && cf.topCard != null && cf.topCard.name == "Yang" ) return true;
-						cf = CreatureField( c.indexedField ).adjacentRight as CreatureField;
-						if ( cf != null && cf.topCard != null && cf.topCard.name == "Yang" ) return true;
-						return false;
-					}
-				},
 				function( c:Card ):void ///		..C		Pao the Confused
 				{
 					c.name = "Pao the Confused";
@@ -331,6 +260,77 @@ package duel.cards
 						Game.current.performDraw( c.controller, 5 );
 					}
 					c.descr = "On turn start and controller hand is 0 - draw 5 cards";
+				},
+				function( c:Card ):void ///		..C		Zig
+				{
+					c.name = "Zig";
+					
+					setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 7;
+					c.behaviourC.startFaceDown = true;
+					
+					c.behaviourC.inplaySpecialConditionFunc = function( p:Process ):Boolean {
+						if ( "turnEnd" != p.name ) return false;
+						if ( c.owner.grave.findByName( "Zag" ) == null ) return false;
+						return true;
+					}
+					c.behaviourC.inplaySpecialActivateFunc = function( p:Process ):Boolean {
+						Game.current.processes.enterHand( c.owner.grave.findByName( "Zag" ), c.owner );
+					}
+				},
+				function( c:Card ):void ///		..C		Zag
+				{
+					c.name = "Zag";
+					
+					setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 8;
+					
+					c.behaviourC.inplaySpecialConditionFunc = function( p:Process ):Boolean {
+						if ( "turnEnd" != p.name ) return false;
+						if ( c.owner.grave.findByName( "Zig" ) == null ) return false;
+						return true;
+					}
+					c.behaviourC.inplaySpecialActivateFunc = function( p:Process ):Boolean {
+						Game.current.processes.enterHand( c.owner.grave.findByName( "Zig" ), c.owner );
+					}
+				},
+				function( c:Card ):void ///		..C		Yang
+				{
+					c.name = "Yang";
+					
+					setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 5;
+					
+					c.behaviourC.inplayOngoingFunc = function( p:Process ):Boolean {
+						c.behaviourC.attack = hasAdjacentYin() ? 15 : 5;
+					}
+					function hasAdjacentYin():Boolean {
+						var cf:CreatureField;
+						cf = CreatureField( c.indexedField ).adjacentLeft as CreatureField;
+						if ( cf != null && cf.topCard != null && cf.topCard.name == "Yin" ) return true;
+						cf = CreatureField( c.indexedField ).adjacentRight as CreatureField;
+						if ( cf != null && cf.topCard != null && cf.topCard.name == "Yin" ) return true;
+						return false;
+					}
+				},
+				function( c:Card ):void ///		..C		Yin
+				{
+					c.name = "Yin";
+					
+					setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 6;
+					
+					c.behaviourC.inplayOngoingFunc = function( p:Process ):Boolean {
+						c.behaviourC.attack = hasAdjacentYang() ? 14 : 6;
+					}
+					function hasAdjacentYang():Boolean {
+						var cf:CreatureField;
+						cf = CreatureField( c.indexedField ).adjacentLeft as CreatureField;
+						if ( cf != null && cf.topCard != null && cf.topCard.name == "Yang" ) return true;
+						cf = CreatureField( c.indexedField ).adjacentRight as CreatureField;
+						if ( cf != null && cf.topCard != null && cf.topCard.name == "Yang" ) return true;
+						return false;
+					}
 				},
 				function( c:Card ):void ///		T..		Smelly sock
 				{
