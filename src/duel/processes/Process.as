@@ -66,7 +66,10 @@ package duel.processes
 		public function get isInterrupted():Boolean { return state == ProcessState.INTERRUPTED }
 		
 		//
-		public function toString():String { return uid + ". " + name + "[" + delay.toFixed(2) + "]" }
+		public function toString():String { 
+			return uid + ". " + name + 
+			( isNaN( delay ) ? "" : 
+			"[" + delay.toFixed(2) + "]" ) }
 		
 		CONFIG::development
 		private function log( msg:String ):void { trace ( "4:"+Game.frameNum+". "+name+" -:> "+msg ) }
