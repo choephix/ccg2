@@ -52,6 +52,10 @@ package duel.processes
 			if ( p.isComplete )
 			{
 				removeCurrentProcess();
+				
+				if ( p.next != null )
+					queue.unshift( p.next );
+				
 				if ( p.callback != null )
 					p.callback.apply( null, p.callbackArgs );
 			}

@@ -15,6 +15,7 @@ package duel.processes
 		public var callbackArgs:Array = null;
 		
 		internal var delay:Number = CONFIG::slowmode ? .500 : NaN;
+		internal var next:Process = null;
 		
 		protected var state:ProcessState = ProcessState.WAITING;
 		
@@ -57,6 +58,11 @@ package duel.processes
 		{
 			state = ProcessState.INTERRUPTED
 			CONFIG::development{ log( "interrupted" ) }
+		}
+		
+		public function chain( p:Process ):Process
+		{
+			return next = p;
 		}
 		
 		//
