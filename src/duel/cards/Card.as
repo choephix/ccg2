@@ -54,16 +54,20 @@ package duel.cards
 			if ( game.currentPlayer == controller ) exhausted = false;
 		}
 		
-		//
+		// -.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'
+		
+		// GAMEPLAY SHIT
+		
+		// 
 		
 		public function die():void 
 		{
-			game.processes.startChain_death( this );
+			processes.startChain_death( this );
 		}
 		
 		public function returnToControllerHand():void 
 		{
-			game.processes.enterHand( this, controller );
+			processes.enterHand( this, controller );
 		}
 		
 		// -.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'
