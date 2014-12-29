@@ -72,7 +72,10 @@ package duel.processes
 			"[" + delay.toFixed(2) + "]" ) }
 		
 		CONFIG::development
-		private function log( msg:String ):void { trace ( "4:"+Game.frameNum+". "+name+" -:> "+msg ) }
+		private function log( msg:String ):void {
+			//return;
+			trace ( "4:" + Game.frameNum + ". " + name+" -:> " + msg )
+		}
 	}
 }
 
