@@ -32,7 +32,7 @@ package duel.display.cardlots
 		{
 			if ( list )
 			{
-				list.removeEventListener( Event.CHANGE, onCardsChanged );
+				list.removeEventListener( Event.CHANGE, onCardsReordered );
 				list.removeEventListener( Event.ADDED, onCardAdded );
 				list.removeEventListener( Event.REMOVED, onCardRemoved );
 			}
@@ -42,22 +42,26 @@ package duel.display.cardlots
 			
 			if ( list )
 			{
-				list.addEventListener( Event.CHANGE, onCardsChanged );
+				list.addEventListener( Event.CHANGE, onCardsReordered );
 				list.addEventListener( Event.ADDED, onCardAdded );
 				list.addEventListener( Event.REMOVED, onCardRemoved );
 			}
 		}
 		
-		protected function onCardsChanged( e:Event ):void
+		protected function onCardsReordered( e:Event ):void
 		{
 			dirty = true;
 		}
 		
 		/// empty method
-		protected function onCardAdded( e:Event ):void {}
+		protected function onCardAdded( e:Event ):void {
+			dirty = true;
+		}
 		
 		/// empty method
-		protected function onCardRemoved( e:Event ):void {}
+		protected function onCardRemoved( e:Event ):void {
+			dirty = true;
+		}
 		
 		//
 		protected function addCardChild( child:CardSprite ):void
