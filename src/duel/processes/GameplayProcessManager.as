@@ -45,6 +45,7 @@ package duel.processes
 			while ( --count >= 0 )
 			{
 				pro = gen( "drawCard", onComplete, p );
+				pro.delay = NaN;
 				prependProcess( pro )
 			}
 			
@@ -60,6 +61,7 @@ package duel.processes
 				
 				enterHand( c, p );
 				pro = gen( "completeDrawCard", null, p, c );
+				pro.delay = NaN;
 				prependProcess( pro )
 			}
 		}
@@ -461,6 +463,7 @@ package duel.processes
 			var pro:Process;
 			
 			pro = gen( "enterHand", onComplete, c, p );
+			pro.delay = NaN;
 			prependProcess( pro );
 			function onComplete( c:Card, p:Player ):void 
 			{
@@ -473,6 +476,7 @@ package duel.processes
 				c.faceDown = false;
 				
 				pro = gen( "enterHandComplete", null, c, p );
+				pro.delay = NaN;
 				prependProcess( pro );
 			}
 		}

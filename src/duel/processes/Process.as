@@ -10,6 +10,8 @@ package duel.processes
 		private static var UID:uint = 0;
 		private var uid:uint = 0;
 		
+		public var delay:Number = CONFIG::slowmode ? .500 : NaN;
+		
 		public var name:String = "unnamed";
 		public var callback:Function = null;
 		public var callbackArgs:Array = null;
@@ -21,13 +23,13 @@ package duel.processes
 			this.uid = ++UID;
 		}
 		
-		internal function advanceTimeBefore( timePassed:Number ):void 
+		internal function advanceTimeBefore( time:Number ):void 
 		{
-			CONFIG::development { if ( !isStarted ) log( "started" ) }
+			CONFIG::development { if ( state == ProcessState.WAITING ) log( "started" ) }
 			state = ProcessState.ONGOING;
 		}
 		
-		internal function advanceTimeAfter( timePassed:Number ):void 
+		internal function advanceTimeAfter( time:Number ):void 
 		{
 			if ( state == ProcessState.INTERRUPTED )
 				return;
@@ -35,6 +37,12 @@ package duel.processes
 			if ( state == ProcessState.ABORTED )
 				return;
 			
+			if ( !isNaN( delay ) && delay > .0 )
+			{
+				delay -= time;
+				return;
+			}
+				
 			state = ProcessState.COMPLETE;
 			CONFIG::development{ log( "completed" ) }
 		}
@@ -58,7 +66,7 @@ package duel.processes
 		public function get isInterrupted():Boolean { return state == ProcessState.INTERRUPTED }
 		
 		//
-		public function toString():String { return uid + ". " + name + "[" + state + "]" }
+		public function toString():String { return uid + ". " + name + "[" + delay.toFixed(2) + "]" }
 		
 		CONFIG::development
 		private function log( msg:String ):void { trace ( "4:"+Game.frameNum+". "+name+" -:> "+msg ) }
