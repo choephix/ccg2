@@ -32,6 +32,14 @@ package duel.cards {
 			return _list[ _count - 1 ];
 		}
 		
+		public function findByName( name:String ):Card
+		{
+			for ( var i:int = 0; i < _count; i++ ) 
+				if ( name == _list[ i ].name )
+					return _list[ i ];
+			return null;
+		}
+		
 		//
 		public function containsCard( card:Card ):Boolean
 		{

@@ -203,34 +203,21 @@ package duel.processes
 			
 			function declare( c:Card ):void
 			{
-				if ( c.faceDown )
-				{
-					c.faceDown = false;
-					c.sprite.animSpecialFlip();
-				}
 				c.lot.moveCardToTop( c );
 				
 				prependProcess( gen( "performSpecialActivation", perform, c ) );
+				if ( c.faceDown )
+					startChain_MagicFlip( c );
 				
 				trace ( c + " interrupted process " + interruptedProcess );
 			}
 			function perform( c:Card ):void
 			{
 				//TODO must recheck conditions here
-				prependProcess( gen( "completeSpecialActivation", complete, c ) );
+				prependProcess( gen( "completeSpecialActivation", null, c ) );
 				
 				c.sprite.animFlipEffect();
 				func( interruptedProcess );
-			}
-			function abort( c:Card ):void
-			{
-				if ( c.isInPlay )
-					enterGrave( c );
-			}
-			function complete( c:Card ):void
-			{
-				if ( c.isInPlay && !c.behaviourT.persistent )
-					enterGrave( c );
 			}
 		}
 		

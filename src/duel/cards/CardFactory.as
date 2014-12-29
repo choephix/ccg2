@@ -31,6 +31,39 @@ package duel.cards
 						c.behaviourC.attack = c.controller.hand.cardsCount * 2;
 					}
 				},
+				function( c:Card ):void ///		..C		Zig
+				{
+					c.name = "Zig";
+					
+					setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 7;
+					c.behaviourC.startFaceDown = true;
+					
+					c.behaviourC.inplaySpecialConditionFunc = function( p:Process ):Boolean {
+						if ( "turnEnd" != p.name ) return false;
+						if ( c.owner.grave.findByName( "Zag" ) == null ) return false;
+						return true;
+					}
+					c.behaviourC.inplaySpecialActivateFunc = function( p:Process ):Boolean {
+						Game.current.processes.enterHand( c.owner.grave.findByName( "Zag" ), c.owner );
+					}
+				},
+				function( c:Card ):void ///		..C		Zag
+				{
+					c.name = "Zag";
+					
+					setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 8;
+					
+					c.behaviourC.inplaySpecialConditionFunc = function( p:Process ):Boolean {
+						if ( "turnEnd" != p.name ) return false;
+						if ( c.owner.grave.findByName( "Zig" ) == null ) return false;
+						return true;
+					}
+					c.behaviourC.inplaySpecialActivateFunc = function( p:Process ):Boolean {
+						Game.current.processes.enterHand( c.owner.grave.findByName( "Zig" ), c.owner );
+					}
+				},
 				function( c:Card ):void ///		..C		Pao the Confused
 				{
 					c.name = "Pao the Confused";
