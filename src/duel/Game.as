@@ -149,7 +149,7 @@ package duel
 			  
 			// PREPARE GAMEPLAY
 			const DECK_SIZE_1:uint	= CardFactory.MAX; /// 52 22 16 8 10 128
-			const DECK_SIZE_2:uint	= CardFactory.MAX; /// CardFactory.MAX
+			const DECK_SIZE_2:uint	= Number.min( CardFactory.MAX, 18 ); /// CardFactory.MAX
 			const HAND_SIZE:uint	= 8; /// 12 6 5 7 8 2
 			
 			var time:Number = 0.7;
@@ -167,7 +167,7 @@ package duel
 			for ( i = 0; i < DECK_SIZE_2; i++ ) 
 			{
 				time += .010;
-				c = CardFactory.produceCard( i % CardFactory.MAX );
+				c = CardFactory.produceCard( ( 12 + i ) % CardFactory.MAX );
 				c.owner = p2;
 				c.faceDown = true;
 				jugglerStrict.delayCall( p2.deck.addCard, time, c, true );
