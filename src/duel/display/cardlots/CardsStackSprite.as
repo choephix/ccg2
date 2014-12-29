@@ -1,4 +1,5 @@
 package duel.display.cardlots {
+	import chimichanga.global.utils.MathF;
 	import duel.cards.Card;
 	import duel.cards.CardListBase;
 	import duel.display.CardSprite;
@@ -91,6 +92,7 @@ package duel.display.cardlots {
 				_fallingCardTween.animate( "scaleY", 1.0 );
 				o.scaleX = 1.4;
 				o.scaleY = 1.4;
+				o.rotation = MathF.randSign * MathF.random( .025 );
 			/**/
 			
 			jugglerStrict.add( _fallingCardTween );

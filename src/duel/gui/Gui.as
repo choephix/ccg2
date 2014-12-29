@@ -64,7 +64,7 @@ package duel.gui
 			}
 			
 			button1 = addButton( "RESTART", 0x53449B, game.endGame );
-			button2 = addButton( "END TURN", 0x53449B, game.endTurn );
+			button2 = addButton( "END TURN", 0x2EACE9, game.endTurn );
 			button3 = addButton( "ATTACK", 0xFF2000, btn3f );
 			button4 = addButton( "FLIP", 0xFFCC33, btn4f );
 			
