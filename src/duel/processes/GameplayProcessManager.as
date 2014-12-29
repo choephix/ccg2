@@ -19,7 +19,10 @@ package duel.processes
 		
 		public function startChain_TurnEnd( p:Player ):void
 		{
-			appendProcess( gen( "turnEnd", turnEnd, p ) );
+			var pro:Process;
+			pro = gen( "turnEnd", turnEnd, p );
+			pro.delay = .333;
+			appendProcess( pro );
 			function turnEnd( p:Player ):void
 			{
 				game.dispatchEventWith( GameEvents.TURN_END );
@@ -28,12 +31,14 @@ package duel.processes
 			function turnStart( p:Player ):void
 			{
 				game.currentPlayer = p;
-				appendProcess( gen( "turnStart", onComplete, p ) );
-				function onComplete():void
-				{
-					game.dispatchEventWith( GameEvents.TURN_START );
-					startChain_Draw( p, 1 );
-				}
+				pro = gen( "turnStart", completeTurnStart, p );
+				pro.delay = .333;
+				appendProcess( pro );
+			}
+			function completeTurnStart( p:Player ):void
+			{
+				game.dispatchEventWith( GameEvents.TURN_START );
+				startChain_Draw( p, 1 );
 			}
 		}
 		
