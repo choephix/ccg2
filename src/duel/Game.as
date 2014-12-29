@@ -2,6 +2,7 @@ package duel
 {
 	import chimichanga.common.assets.AdvancedAssetManager;
 	import dev.ProcessManagementInspector;
+	import dev.ProcessTester;
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
 	import duel.display.cardlots.HandSprite;
@@ -143,8 +144,9 @@ package duel
 			addChild( pmi );
 			pmi.x = 200;
 			pmi.y = 400;
+			/** / ProcessTester.initTest1( processes ); return /**/
 			}
-			
+			  
 			// PREPARE GAMEPLAY
 			const DECK_SIZE_1:uint	= CardFactory.MAX; /// 52 22 16 8 10 128
 			const DECK_SIZE_2:uint	= CardFactory.MAX; /// CardFactory.MAX
