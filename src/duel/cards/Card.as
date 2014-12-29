@@ -22,7 +22,7 @@ package duel.cards
 		public var name:String;
 		public var descr:String;
 		public var type:CardType;
-		public var behaviour:CardBehaviour;
+		private var _behaviour:CardBehaviour;
 		
 		// BATTLE
 		public var owner:Player;
@@ -67,6 +67,15 @@ package duel.cards
 		}
 		
 		// -.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'
+		
+		// GETTERS & SETTERS - 0
+		
+		public function get behaviour():CardBehaviour { return _behaviour }
+		public function set behaviour(value:CardBehaviour):void 
+		{
+			_behaviour = value;
+			_behaviour.card = this;
+		}
 		
 		// GETTERS & SETTERS - 1
 		
