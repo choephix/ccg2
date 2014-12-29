@@ -218,47 +218,45 @@ package duel
 			playerInspectProcess( currentPlayer, e.process );
 		}
 		
-		private function playerInspectProcess( p:Player, pro:Process ):void
+		private function playerInspectProcess( player:Player, p:Process ):void
 		{ 
-			var c:Card;
 			var i:int;
 			var len:int;
 			
-			len = p.fieldsT.length;
+			if ( p.isInterrupted )
+				return;
+			
+			len = player.fieldsT.length;
 			for ( i = 0; i < len; i++ ) 
 			{
-				if ( p.fieldsT[ i ].isEmpty )
+				if ( player.fieldsT[ i ].isEmpty )
 					continue;
 				
-				c = p.fieldsT[ i ].topCard;
+				player.fieldsT[ i ].topCard.onGameProcess( p );
 				
-				if ( c.behaviourT.activationConditionMet( pro ) )
-				{
-					activateTrap( c );
+				if ( p.isInterrupted )
 					return;
-				}
 			}
 			
-			len = p.fieldsC.length;
+			len = player.fieldsC.length;
 			for ( i = 0; i < len; i++ ) 
 			{
-				if ( p.fieldsC[ i ].isEmpty )
+				if ( player.fieldsC[ i ].isEmpty )
 					continue;
 				
-				c = p.fieldsC[ i ].topCard;
+				player.fieldsC[ i ].topCard.onGameProcess( p );
 				
-				// whatevah ...
+				if ( p.isInterrupted )
+					return;
 			}
 			
-			len = p.grave.cardsCount;
+			len = player.grave.cardsCount;
 			for ( i = 0; i < len; i++ ) 
 			{
-				c = p.grave.getCardAt( i );
+				player.grave.getCardAt( i ).onGameProcess( p );
 				
-				if ( !c.behaviour.processCheckInGrave )
-					continue;
-				
-				// whatevah ...
+				if ( p.isInterrupted )
+					return;
 			}
 		}
 		
@@ -341,13 +339,6 @@ package duel
 					if ( canSelect( card ) )
 					{
 						selectCard( card );
-					}
-					
-					/// DEV SHIT
-					else
-					if ( card.isInPlay && card.type.isTrap )
-					{
-						activateTrap( card )
 					}
 				}
 			}
@@ -445,11 +436,6 @@ package duel
 		public function performSafeFlip( c:Card ):void
 		{
 			processes.startChain_SafeFlip( c );
-		}
-		
-		public function activateTrap( c:Card ):void
-		{
-			processes.startChain_TrapActivation( c );
 		}
 		
 		//

@@ -8,6 +8,7 @@ package duel.cards
 	import duel.GameEntity;
 	import duel.GameEvents;
 	import duel.Player;
+	import duel.processes.Process;
 	import duel.table.Field;
 	import duel.table.IndexedField;
 	
@@ -57,6 +58,38 @@ package duel.cards
 		// -.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'
 		
 		// GAMEPLAY SHIT
+		
+		//
+		
+		public function onGameProcess( p:Process ):void
+		{
+			CONFIG::development { if ( p.isInterrupted ) throw new Error( "HANDLE PROCESS INTERRUPTIONS!" ) }
+			
+			if ( behaviour.processCheckInGrave )
+			{
+				// grave logic
+			}
+			
+			// ONLY IN-PLAY CHECKS BEYOND THIS POINT!
+			
+			if ( !isInPlay )
+				return;
+			
+			if ( type.isTrap )
+			{
+				if ( behaviourT.activationConditionMet( p ) )
+				{
+					p.interrupt();
+					processes.startChain_TrapActivation( this );
+				}
+			}
+			else
+			if ( type.isCreature )
+			{
+				
+			}
+			
+		}
 		
 		// 
 		
