@@ -31,6 +31,22 @@ package duel.cards
 						c.behaviourC.attack = c.controller.hand.cardsCount * 2;
 					}
 				},
+				function( c:Card ):void ///		..C		Pao the Confused
+				{
+					c.name = "Pao the Confused";
+					
+					setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 9;
+					c.behaviourC.haste = true;
+					
+					c.behaviourC.inplaySpecialConditionFunc = function( p:Process ):Boolean {
+						if ( "turnEnd" != p.name ) return false;
+						return true;
+					}
+					c.behaviourC.inplaySpecialActivateFunc = function( p:Process ):Boolean {
+						c.die();
+					}
+				},
 				function( c:Card ):void ///		..C		TEST
 				{
 					c.name = "The Producer";
