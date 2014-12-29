@@ -1,20 +1,35 @@
 package duel.processes 
 {
+	import chimichanga.debug.logging.error;
 	/**
 	 * ...
 	 * @author choephix
 	 */
 	public class ProcessWatcher 
 	{
+		public var funcCondition:Function;
+		public var funcEffect:Function;
 		
 		public function ProcessWatcher() 
 		{
 			
 		}
 		
-		public function processMeetsConditions( p:Process ):void 
+		/// Returns true if the process was interrupted here, false otherwise
+		public function interruptProcessMaybe( p:Process ):Boolean 
 		{
-			
+			if ( p.isInterrupted )
+			{
+				CONFIG::development { error( "ProcessWatcher: already interrupted." ) }
+				return false;
+			}
+			if ( funcCondition( p ) )
+			{
+				p.interrupt();
+				funcEffect( p );
+				return true;
+			}
+			return false;
 		}
 		
 	}
