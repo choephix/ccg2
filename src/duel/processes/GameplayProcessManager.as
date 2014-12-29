@@ -180,6 +180,55 @@ package duel.processes
 			}
 		}
 		
+		public function startChain_SpecialActivation( c:Card, func:Function ):void
+		{
+			var interruptedProcess:Process = currentProcess;
+			
+			//if ( c.faceDown )
+				//appendProcess( gen( "flipUpForRelocation", flipUpForRelocation, c ) );
+			//else
+				//appendProcess( gen( "declareRelocation", declareRelocation, c, field ) );
+			//function prepareForSpecial( c:Card ):void
+			//{
+				//startChain_SafeFlip( c );
+				//appendProcess( gen( "declareRelocation", declareRelocation, c, field ) );
+			//}
+			
+			prependProcess( gen( "declareSpecialActivation", declare, c ) );
+			
+			function declare( c:Card ):void
+			{
+				if ( c.faceDown )
+				{
+					c.faceDown = false;
+					c.sprite.animSpecialFlip();
+				}
+				c.lot.moveCardToTop( c );
+				
+				prependProcess( gen( "performSpecialActivation", perform, c ) );
+				
+				trace ( c + " interrupted process " + interruptedProcess );
+			}
+			function perform( c:Card ):void
+			{
+				//TODO must recheck conditions here
+				prependProcess( gen( "completeSpecialActivation", complete, c ) );
+				
+				c.sprite.animFlipEffect();
+				func( interruptedProcess );
+			}
+			function abort( c:Card ):void
+			{
+				if ( c.isInPlay )
+					enterGrave( c );
+			}
+			function complete( c:Card ):void
+			{
+				if ( c.isInPlay && !c.behaviourT.persistent )
+					enterGrave( c );
+			}
+		}
+		
 		
 		// RELOCATION
 		

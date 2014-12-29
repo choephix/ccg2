@@ -10,6 +10,7 @@ package duel.cards
 	import duel.Player;
 	import duel.processes.Process;
 	import duel.table.Field;
+	import duel.table.Hand;
 	import duel.table.IndexedField;
 	
 	/**
@@ -65,9 +66,24 @@ package duel.cards
 		{
 			CONFIG::development { if ( p.isInterrupted ) throw new Error( "HANDLE PROCESS INTERRUPTIONS!" ) }
 			
-			if ( behaviour.processCheckInGrave )
+			if ( lot is Hand && behaviour.hasHandSpecial )
 			{
-				// grave logic
+				if ( behaviourC.hasHandSpecial && behaviour.handSpecialConditionFunc( p ) )
+				{
+					p.interrupt();
+					processes.startChain_SpecialActivation( this, behaviour.handSpecialActivateFunc );
+					return;
+				}
+			}
+			
+			if ( field && field.type.isGraveyard && behaviour.hasGraveSpecial )
+			{
+				if ( behaviourC.hasGraveSpecial && behaviour.graveSpecialConditionFunc( p ) )
+				{
+					p.interrupt();
+					processes.startChain_SpecialActivation( this, behaviour.graveSpecialActivateFunc );
+					return;
+				}
 			}
 			
 			// ONLY IN-PLAY CHECKS BEYOND THIS POINT!
@@ -81,12 +97,18 @@ package duel.cards
 				{
 					p.interrupt();
 					processes.startChain_TrapActivation( this );
+					return;
 				}
 			}
 			else
 			if ( type.isCreature )
 			{
-				
+				if ( behaviourC.hasInPlaySpecial && behaviourC.inplaySpecialConditionFunc( p ) )
+				{
+					p.interrupt();
+					processes.startChain_SpecialActivation( this, behaviourC.inplaySpecialActivateFunc );
+					return;
+				}
 			}
 			
 		}

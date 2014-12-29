@@ -250,6 +250,15 @@ package duel
 					return;
 			}
 			
+			len = player.hand.cardsCount;
+			for ( i = 0; i < len; i++ ) 
+			{
+				player.hand.getCardAt( i ).onGameProcess( p );
+				
+				if ( p.isInterrupted )
+					return;
+			}
+			
 			len = player.grave.cardsCount;
 			for ( i = 0; i < len; i++ ) 
 			{

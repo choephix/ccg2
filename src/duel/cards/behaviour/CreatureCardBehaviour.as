@@ -14,24 +14,24 @@ package duel.cards.behaviour
 		public var swift:Boolean = false; 		// CAN ATTACK AND MOVE SAME TURN
 		public var berserk:Boolean = false;		// ATTACKS AUTOMATICALLY
 		
+		public var inplaySpecialConditionFunc:Function;
+		public var inplaySpecialActivateFunc:Function;
+		
 		public var onCombatFlipFunc:Function;
 		public var onSafeFlipFunc:Function;
 		public var onMagicFlipFunc:Function;
 		
 		public function get hasCombatFlipEffect():Boolean
-		{
-			return onCombatFlipFunc != null;
-		}
+		{ return onCombatFlipFunc != null; }
 		
 		public function get hasSafeFlipEffect():Boolean
-		{
-			return onSafeFlipFunc != null;
-		}
+		{ return onSafeFlipFunc != null; }
 		
 		public function get hasMagicFlipEffect():Boolean
-		{
-			return onMagicFlipFunc != null;
-		}
+		{ return onMagicFlipFunc != null; }
+		
+		public function get hasInPlaySpecial():Boolean
+		{ return onMagicFlipFunc != null; }
 		
 		public function onCombatFlip():void
 		{

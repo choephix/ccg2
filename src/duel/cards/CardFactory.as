@@ -19,6 +19,62 @@ package duel.cards
 		static private var uid:uint = 0;
 		
 		static private const ARRAY:Array = [
+				function( c:Card ):void ///		..C		TEST
+				{
+					c.name = "TEST";
+					
+					setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 10;
+					c.behaviourC.haste = true;
+					
+					c.behaviourC.handSpecialConditionFunc = function( p:Process ):Boolean {
+						if ( "turnEnd" != p.name ) return false;
+						if ( c.controller != ProcessInterpreter.getPlayer( p ) ) return false;
+						return true;
+					}
+					c.behaviourC.handSpecialActivateFunc = function( p:Process ):void {
+						Game.current.processes.enterGrave( c );
+					}
+					c.behaviourC.graveSpecialConditionFunc = function( p:Process ):Boolean {
+						if ( "turnStart" != p.name ) return false;
+						if ( c.controller != ProcessInterpreter.getPlayer( p ) ) return false;
+						return true;
+					}
+					c.behaviourC.graveSpecialActivateFunc = function( p:Process ):void {
+						c.returnToControllerHand();
+					}
+				},
+				function( c:Card ):void ///		..C		Impatient Jeff
+				{
+					c.name = "Impatient Jeff";
+					
+					setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 13;
+					
+					c.behaviourC.handSpecialConditionFunc = function( p:Process ):Boolean {
+						if ( "turnEnd" != p.name ) return false;
+						if ( c.controller != ProcessInterpreter.getPlayer( p ) ) return false;
+						return true;
+					}
+					c.behaviourC.handSpecialActivateFunc = function( p:Process ):void {
+						Game.current.processes.enterGrave( c );
+					}
+				},
+				function( c:Card ):void ///		..C		Immortal Bob
+				{
+					c.name = "Immortal Bob";
+					
+					setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 2;
+					
+					c.behaviourC.graveSpecialConditionFunc = function( p:Process ):Boolean {
+						if ( "turnEnd" != p.name ) return false;
+						return true;
+					}
+					c.behaviourC.graveSpecialActivateFunc = function( p:Process ):void {
+						c.returnToControllerHand();
+					}
+				},
 				function( c:Card ):void ///		..C		Gonzales
 				{
 					c.name = "Gonzales";
@@ -65,8 +121,8 @@ package duel.cards
 					c.behaviourC.onCombatFlipFunc = function():void {
 						if ( c.indexedField.opposingCreature != null )
 						{
-							c.indexedField.opposingCreature.returnToControllerHand();
-							return;
+							//c.indexedField.opposingCreature.returnToControllerHand();
+							//return;
 							
 							c.die();
 							c.indexedField.opposingCreature.die();

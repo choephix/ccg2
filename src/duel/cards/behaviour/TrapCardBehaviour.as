@@ -16,10 +16,7 @@ package duel.cards.behaviour
 		//private var watchers:Vector.<ProcessWatcher>;
 		
 		
-		public function TrapCardBehaviour() 
-		{
-			startFaceDown = true;
-		}
+		public function TrapCardBehaviour() { startFaceDown = true }
 		
 		//public function addProcessWatcher( pw:ProcessWatcher ):void
 		//{
