@@ -38,7 +38,7 @@ package duel.cards {
 			return _list.indexOf( card ) >= 0;
 		}
 		
-		public function addCard( card:Card, asLast:Boolean = false ):void
+		public function addCard( card:Card, toBottom:Boolean = false ):void
 		{
 			if ( card.lot != null ) 
 				card.lot.removeCard( card );
@@ -46,13 +46,12 @@ package duel.cards {
 			
 			_count++;
 			
-			if ( asLast )
+			if ( toBottom )
 				_list.push( card );
 			else
 				_list.unshift( card );
 			
 			onCardAdded( card );
-			onCardsChange();
 		}
 		
 		public function removeCard( card:Card ):void
@@ -63,7 +62,6 @@ package duel.cards {
 			_list.splice( _list.indexOf( card ), 1 );
 			
 			onCardRemoved( card );
-			onCardsChange();
 		}
 		
 		////
@@ -75,13 +73,27 @@ package duel.cards {
 		public function reverseCards():void
 		{
 			_list.reverse();
-			onCardsChange();
+			onCardsReorder();
 		}
 		
 		public function sortCards( compareFunction:Function ):void
 		{
 			_list.sort( compareFunction );
-			onCardsChange();
+			onCardsReorder();
+		}
+		
+		public function moveCardToTop(c:Card):void 
+		{
+			_list.splice( _list.indexOf( c ), 1 );
+			_list.unshift( c );
+			onCardsReorder();
+		}
+		
+		public function moveCardToBottom(c:Card):void 
+		{
+			_list.splice( _list.indexOf( c ), 1 );
+			_list.push( c );
+			onCardsReorder();
 		}
 		
 		//// GETTIES 'N SETTIES
@@ -96,9 +108,14 @@ package duel.cards {
 		}
 		
 		//// EVENTS
-		protected function onCardAdded( c:Card ):void	{ dispatchEventWith( Event.ADDED, false, c ) }
-		protected function onCardRemoved( c:Card ):void	{ dispatchEventWith( Event.REMOVED, false, c ) }
-		protected function onCardsChange():void 		{ dispatchEventWith( Event.CHANGE ) }
+		protected function onCardAdded( c:Card ):void
+		{ dispatchEventWith( Event.ADDED, false, c ) }
+		
+		protected function onCardRemoved( c:Card ):void
+		{ dispatchEventWith( Event.REMOVED, false, c ) }
+		
+		protected function onCardsReorder():void
+		{ dispatchEventWith( Event.CHANGE ) }
 		
 		// REST
 		public function toString():String { return _list.join( "," ); }

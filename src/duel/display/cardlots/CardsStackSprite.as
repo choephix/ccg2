@@ -104,6 +104,14 @@ package duel.display.cardlots {
 			quickArrange();
 		}
 		
+		override protected function onCardsReordered(e:Event):void 
+		{
+			if ( !_fallingCardTween.isComplete )
+				_fallingCardTween.advanceTime( Number.MAX_VALUE );
+			
+			quickArrange();
+		}
+		
 		public function animBunch():void
 		{
 			var o:DisplayObject;

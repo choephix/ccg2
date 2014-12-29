@@ -140,11 +140,12 @@ package duel.display.cardlots {
 		
 		override protected function onCardAdded( e:Event ):void 
 		{
-			
+			super.onCardAdded( e );
 		}
 		
 		override protected function onCardRemoved( e:Event ):void 
 		{
+			super.onCardRemoved( e );
 			var c:Card = e.data as Card;
 			jugglerGui.removeTweens( c.sprite );
 			selectedIndex = -1;
