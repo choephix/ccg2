@@ -324,8 +324,8 @@ package duel.display {
 			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFFFFFF );
 			addChild( q );
 			q.alignPivot();
-			q.alpha = .999;
-			jugglerStrict.tween( q, .500,
+			q.alpha = .50;
+			jugglerStrict.tween( q, .600,
 				{ 
 					alpha: .0, 
 					onComplete : q.removeFromParent,

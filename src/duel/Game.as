@@ -325,7 +325,7 @@ package duel
 				CONFIG::development
 				{
 					if ( field.type.isDeck )
-						processes.prepend_Draw( p, 5 );
+						processes.prepend_Draw( field.owner, 5 );
 				}
 			}
 			
