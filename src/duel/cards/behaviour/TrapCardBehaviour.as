@@ -13,23 +13,10 @@ package duel.cards.behaviour
 		
 		public var persistent:Boolean = false;
 		
-		//private var watchers:Vector.<ProcessWatcher>;
-		
-		
 		public function TrapCardBehaviour() { startFaceDown = true }
-		
-		//public function addProcessWatcher( pw:ProcessWatcher ):void
-		//{
-			//if ( watchers == null )
-				//watchers = new Vector.<ProcessWatcher>();
-			//watchers.push( pw );
-		//}
 		
 		public function activationConditionMet( p:GameplayProcess ):Boolean
 		{
-			//if ( watchers == null ) return false;
-			//for ( var i:int = 0, iMax:int = watchers.length; i < iMax; i++ ) 
-				//return watchers[ i ].processMeetsConditions( p );
 			return activationConditionFunc == null ? false : activationConditionFunc( p );
 		}
 	}
