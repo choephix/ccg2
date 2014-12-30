@@ -154,6 +154,9 @@ package duel.cards
 		public function get controller():Player { return lot == null ? null : lot.owner }
 		
 		public function get isInPlay():Boolean { return lot is IndexedField }
+		public function get isInHand():Boolean { return lot is Hand }
+		public function get isInGrave():Boolean { return field != null && field.type.isGraveyard }
+		public function get isInDeck():Boolean { return field != null && field.type.isDeck }
 		
 		// GETTERS & SETTERS - 2
 		public function get faceDown():Boolean{return _faceDown}
