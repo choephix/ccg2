@@ -79,14 +79,6 @@ package {
 			if ( e.keyCode == Keyboard.E ) {
 				g.jugglerStrict.delayCall( trace, 1 );
 			}
-			if ( e.keyCode == Keyboard.A ) {
-				if ( g.lastPlayedCreature )
-					g.lastPlayedCreature.behaviourC.attack++;
-			}
-			if ( e.keyCode == Keyboard.S ) {
-				if ( g.lastPlayedTrap )
-					g.lastPlayedTrap.faceDown = !g.lastPlayedTrap.faceDown;
-			}
 		}
 	}
 }
