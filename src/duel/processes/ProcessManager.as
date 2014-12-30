@@ -52,12 +52,12 @@ package duel.processes
 			
 			if ( p.isAborted )
 			{
-				removeCurrentProcess();
+				removeProcess( p );
 			}
 			else
 			if ( p.isComplete )
 			{
-				removeCurrentProcess();
+				removeProcess( p );
 				
 				if ( p.next != null )
 					queue.unshift( p.next );
@@ -66,9 +66,9 @@ package duel.processes
 			}
 		}
 		
-		private function removeCurrentProcess():void 
+		private function removeProcess( p:Process ):void 
 		{
-			queue.shift();
+			queue.splice( queue.indexOf( p ), 1 );
 		}
 		
 		public function appendProcess( p:Process ):void
