@@ -31,6 +31,18 @@ package duel.cards
 						c.behaviourC.attack = c.controller.opponent.hand.cardsCount * 3;
 					}
 				}, 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+				function( c:Card ):void ///		..C		Mr Miracle
+				{
+					c.name = "Mr Miracle";
+					
+					setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 0;
+					c.behaviourC.tributes = 1;
+					
+					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):Boolean {
+						c.behaviourC.attack = c.controller.creatureCount * 5;
+					}
+				},
 				function( c:Card ):void ///		..C		Pao the Confused
 				{
 					c.name = "Pao the Confused";
@@ -47,7 +59,7 @@ package duel.cards
 						c.die();
 					}
 				},
-				function( c:Card ):void ///		..C		TEST
+				function( c:Card ):void ///		..C		The Producer
 				{
 					c.name = "The Producer";
 					
