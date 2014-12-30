@@ -42,6 +42,14 @@ package duel.cards
 		//
 		public function initialize():void
 		{
+			CONFIG::development
+			{
+				if ( type == null )
+					throw VerifyError( "You left " + this + "'s type = NULL, you cunt." );
+				if ( _behaviour == null )
+					throw VerifyError( "You left " + this + "'s behaviour = NULL, you cunt." );
+			}
+			
 			sprite = new CardSprite();
 			sprite.initialize( this );
 		}
