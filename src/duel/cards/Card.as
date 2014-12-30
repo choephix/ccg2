@@ -40,9 +40,6 @@ package duel.cards
 		{
 			sprite = new CardSprite();
 			sprite.initialize( this );
-			
-			this.game.addEventListener( GameEvents.TURN_START, onTurnStart );
-			this.game.addEventListener( GameEvents.TURN_END, onTurnEnd );
 		}
 		
 		//
@@ -90,6 +87,12 @@ package duel.cards
 			
 			if ( !isInPlay )
 				return;
+			
+			if ( p.name == "turnStart" )
+				onTurnStart();
+			
+			if ( p.name == "turnEnd" )
+				onTurnEnd();
 			
 			if ( type.isTrap )
 			{
