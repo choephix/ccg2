@@ -338,7 +338,7 @@ package duel
 			function canSetTrap():Boolean
 			{
 				if ( !c.type.isTrap ) return false;
-				if ( field == null ) return false;
+				if ( field as TrapField == null ) return false;
 				return CommonCardQuestions.canPlaceTrapHere( c, field as TrapField );
 			}
 			function canRelocate():Boolean
