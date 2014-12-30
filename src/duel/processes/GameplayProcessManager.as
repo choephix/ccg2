@@ -253,7 +253,7 @@ package duel.processes
 			var pro:GameplayProcess;
 			
 			pro = gen( GameplayProcess.ACTIVATE_TRAP, null, c );
-			pro.abortCheck = CommonCardQuestions.isInPlay;
+			pro.abortCheck = CommonCardQuestions.isNotInPlay;
 			pro.onAbort = onAbort;
 			pro.onStart = onStart;
 			pro.onEnd = onEnd;
