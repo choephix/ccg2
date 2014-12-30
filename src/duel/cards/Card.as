@@ -65,20 +65,20 @@ package duel.cards
 			
 			if ( lot is Hand && behaviour.hasHandSpecial )
 			{
-				if ( behaviourC.hasHandSpecial && behaviour.handSpecialConditionFunc( p ) )
+				if ( behaviour.hasHandSpecial && behaviour.handSpecial.mustInterrupt( p ) )
 				{
 					p.interrupt();
-					processes.startChain_InHandSpecialActivation( this );
+					processes.prepend_InHandSpecialActivation( this );
 					return;
 				}
 			}
 			
 			if ( field && field.type.isGraveyard && behaviour.hasGraveSpecial )
 			{
-				if ( behaviourC.hasGraveSpecial && behaviour.graveSpecialConditionFunc( p ) )
+				if ( behaviour.hasGraveSpecial && behaviour.graveSpecial.mustInterrupt( p ) )
 				{
 					p.interrupt();
-					processes.startChain_InGraveSpecialActivation( this );
+					processes.prepend_InGraveSpecialActivation( this );
 					return;
 				}
 			}
@@ -99,7 +99,7 @@ package duel.cards
 				if ( behaviourT.activationConditionMet( p ) )
 				{
 					p.interrupt();
-					processes.startChain_TrapActivation( this );
+					processes.prepend_TrapActivation( this );
 					return;
 				}
 			}
@@ -111,10 +111,10 @@ package duel.cards
 					behaviourC.inplayOngoingFunc( p );
 					return;
 				}
-				if ( behaviourC.hasInPlaySpecialEffect && behaviourC.inplaySpecialConditionFunc( p ) )
+				if ( behaviourC.hasInPlaySpecialEffect && behaviourC.inplaySpecial.mustInterrupt( p ) )
 				{
 					p.interrupt();
-					processes.startChain_InPlaySpecialActivation( this );
+					processes.prepend_InPlaySpecialActivation( this );
 					return;
 				}
 			}
@@ -125,12 +125,12 @@ package duel.cards
 		
 		public function die():void 
 		{
-			processes.startChain_death( this );
+			processes.prepend_Death( this );
 		}
 		
 		public function returnToControllerHand():void 
 		{
-			processes.enterHand( this, controller );
+			processes.prepend_EnterHand( this, controller );
 		}
 		
 		// -.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'
@@ -180,6 +180,12 @@ package duel.cards
 		}
 		public function get canRelocate():Boolean { 
 			return type.isCreature && isInPlay && !exhausted && !behaviourC.nomove
+		}
+		
+		//
+		public function toString():String 
+		{
+			return "[" + name + "]";
 		}
 	}
 }

@@ -6,6 +6,7 @@ package duel.processes
 	import duel.DamageType;
 	import duel.display.animation;
 	import duel.Game;
+	import duel.otherlogic.SpecialEffect;
 	import duel.Player;
 	import duel.table.CreatureField;
 	import duel.table.TrapField;
@@ -19,7 +20,7 @@ package duel.processes
 	{
 		// TURN LOGIC
 		
-		public function startChain_TurnEnd( p:Player ):void
+		public function append_TurnEnd( p:Player ):void
 		{
 			var pro:GameplayProcess;
 			
@@ -30,11 +31,11 @@ package duel.processes
 			
 			function turnEnd( p:Player ):void
 			{
-				startChain_TurnStart( p.opponent );
+				append_TurnStart( p.opponent );
 			}
 		}
 		
-		public function startChain_TurnStart( p:Player ):void
+		public function append_TurnStart( p:Player ):void
 		{
 			var pro:GameplayProcess;
 			
@@ -52,13 +53,13 @@ package duel.processes
 			
 			function onEnd( p:Player ):void
 			{
-				startChain_Draw( p, 1 );
+				prepend_Draw( p, 1 );
 			}
 		}
 		
 		// DRAW & DISCARD
 		
-		public function startChain_Draw( p:Player, count:int = 1 ):void
+		public function prepend_Draw( p:Player, count:int = 1 ):void
 		{
 			var pro:GameplayProcess;
 			while ( --count >= 0 )
@@ -72,7 +73,7 @@ package duel.processes
 			{
 				if ( p.deck.isEmpty )
 				{
-					dealDirectDamage( p, new Damage( 1, DamageType.SPECIAL, null ) );
+					prepend_DirectDamage( p, new Damage( 1, DamageType.SPECIAL, null ) );
 					return;
 				}
 				
@@ -83,11 +84,11 @@ package duel.processes
 				pro.delay = NaN;
 				prependProcess( pro );
 				
-				enterHand( c, p );
+				prepend_EnterHand( c, p );
 			}
 		}
 		
-		public function startChain_Discard( p:Player, c:Card ):void 
+		public function prepend_Discard( p:Player, c:Card ):void 
 		{
 			var pro:GameplayProcess;
 			
@@ -95,7 +96,7 @@ package duel.processes
 			pro.abortCheck = abortCheck;
 			pro.delay = .333;
 			
-			appendProcess( pro );
+			prependProcess( pro );
 			
 			function abortCheck( p:Player, c:Card ):Boolean
 			{
@@ -105,7 +106,7 @@ package duel.processes
 			function discardCard( p:Player, c:Card ):void
 			{
 				p.hand.removeCard( c );
-				enterGrave( c );
+				prepend_EnterGrave( c );
 			}
 				
 			pro = pro.chain( gen( GameplayProcess.DISCARD_CARD_COMPLETE, null, p, c ) );
@@ -113,7 +114,7 @@ package duel.processes
 		
 		// SUMMON
 		
-		public function startChain_SummonHere( c:Card, field:CreatureField ):void
+		public function append_SummonHere( c:Card, field:CreatureField ):void
 		{
 			var pro:GameplayProcess;
 			
@@ -148,12 +149,12 @@ package duel.processes
 			function onAbort( c:Card ):void
 			{
 				if ( c.isInPlay )
-					enterGrave( c );
+					prepend_EnterGrave( c );
 			}
 			
 		}
 		
-		public function startChain_ResurrectHere( c:Card, field:CreatureField ):void	//TODO  USE THIS SHIT (zig&zag)
+		public function prepend_ResurrectHere( c:Card, field:CreatureField ):void	//TODO  USE THIS SHIT (zig&zag)
 		{
 			var pro:GameplayProcess;
 			
@@ -172,13 +173,13 @@ package duel.processes
 			function onAbort( c:Card ):void
 			{
 				if ( c.isInPlay )
-					enterGrave( c );
+					prepend_EnterGrave( c );
 			}
 			
 			function onEnd( c:Card, field:CreatureField ):void
 			{
 				c.lot.removeCard( c );
-				startChain_SummonHere( c, field );
+				append_SummonHere( c, field );
 			}
 			
 			appendProcess( gen( GameplayProcess.RESURRECT_COMPLETE, null, c, field ) );
@@ -186,12 +187,12 @@ package duel.processes
 		
 		// RELOCATION
 		
-		public function startChain_Relocation( c:Card, field:CreatureField ):void
+		public function append_Relocation( c:Card, field:CreatureField ):void
 		{
 			var pro:GameplayProcess;
 			
 			if ( c.faceDown )
-				startChain_SafeFlip( c );
+				prepend_SafeFlip( c );
 			
 			pro = gen( GameplayProcess.RELOCATE, null, c, field );
 			pro.abortCheck = CommonCardQuestions.cannotRelocateHere;
@@ -223,7 +224,7 @@ package duel.processes
 		
 		// TRAPS
 		
-		public function startChain_TrapSet( c:Card, field:TrapField ):void 
+		public function append_TrapSet( c:Card, field:TrapField ):void 
 		{
 			var pro:GameplayProcess;
 			
@@ -234,7 +235,7 @@ package duel.processes
 			function onAbort( c:Card ):void
 			{
 				if ( c.isInPlay )
-					enterGrave( c );
+					prepend_EnterGrave( c );
 			}
 			
 			appendProcess( pro );
@@ -248,7 +249,7 @@ package duel.processes
 			pro = pro.chain( gen( GameplayProcess.SET_TRAP_COMPLETE, null, c, field ) );
 		}
 		
-		public function startChain_TrapActivation( c:Card ):void
+		public function prepend_TrapActivation( c:Card ):void
 		{
 			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
 			var pro:GameplayProcess;
@@ -262,7 +263,7 @@ package duel.processes
 			function onAbort( c:Card ):void
 			{
 				if ( c.isInPlay )
-					enterGrave( c );
+					prepend_EnterGrave( c );
 			}
 			
 			prependProcess( pro );
@@ -285,37 +286,34 @@ package duel.processes
 			function onComplete( c:Card ):void
 			{
 				if ( c.isInPlay && !c.behaviourT.persistent )
-					enterGrave( c );
+					prepend_EnterGrave( c );
 			}
 		}
 		
 		// SPECIAL EFFECTS
 		
-		public function startChain_InPlaySpecialActivation( c:Card ):void
+		public function prepend_InPlaySpecialActivation( c:Card ):void
 		{
-			startChain_SpecialActivation( c,
-					c.behaviourC.inplaySpecialActivateFunc, 
-					c.behaviourC.inplaySpecialConditionFunc, 
+			prepend_SpecialActivation( c,
+					c.behaviourC.inplaySpecial, 
 					CommonCardQuestions.isNotInPlay );
 		}
 		
-		public function startChain_InGraveSpecialActivation( c:Card ):void
+		public function prepend_InGraveSpecialActivation( c:Card ):void
 		{
-			startChain_SpecialActivation( c,
-					c.behaviourC.graveSpecialActivateFunc, 
-					c.behaviourC.graveSpecialConditionFunc, 
+			prepend_SpecialActivation( c,
+					c.behaviourC.graveSpecial, 
 					CommonCardQuestions.isNotInGrave );
 		}
 		
-		public function startChain_InHandSpecialActivation( c:Card ):void
+		public function prepend_InHandSpecialActivation( c:Card ):void
 		{
-			startChain_SpecialActivation( c,
-					c.behaviourC.handSpecialActivateFunc, 
-					c.behaviourC.handSpecialConditionFunc, 
+			prepend_SpecialActivation( c,
+					c.behaviourC.handSpecial, 
 					CommonCardQuestions.isNotInHand );
 		}
 		
-		private function startChain_SpecialActivation( c:Card, func:Function, abortCheckFunc:Function, abortCheck2:Function ):void
+		private function prepend_SpecialActivation( c:Card, special:SpecialEffect, extraAbortCheck:Function ):void
 		{
 			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
 			var pro:GameplayProcess;
@@ -329,7 +327,7 @@ package duel.processes
 			
 			function abortCheck( c:Card ):Boolean
 			{ 
-				return abortCheck2( c ) || abortCheckFunc( interruptedProcess );
+				return extraAbortCheck( c ) || !special.meetsCondition( interruptedProcess );
 			}
 			
 			function onStart( c:Card ):void
@@ -337,7 +335,7 @@ package duel.processes
 				c.lot.moveCardToTop( c );
 				
 				if ( c.faceDown )
-					startChain_SilentFlip( c );
+					prepend_SilentFlip( c );
 				
 				trace ( c + " interrupted process " + interruptedProcess );
 			}
@@ -345,7 +343,7 @@ package duel.processes
 			function onEnd( c:Card ):void
 			{
 				c.sprite.animSpecialEffect();
-				func( interruptedProcess );
+				special.activateNow( interruptedProcess );
 			}
 			
 			pro = pro.chain( gen( GameplayProcess.ACTIVATE_SPECIAL_COMPLETE, null, c ) );
@@ -353,12 +351,12 @@ package duel.processes
 		
 		// ATTACK
 		
-		public function startChain_Attack( c:Card ):void
+		public function append_Attack( c:Card ):void
 		{
 			var pro:GameplayProcess;
 			
 			if ( c.faceDown )
-				startChain_SafeFlip( c );
+				prepend_SafeFlip( c );
 			
 			pro = gen( GameplayProcess.ATTACK, null, c );
 			pro.abortCheck = CommonCardQuestions.cannotPerformAttack;
@@ -374,7 +372,7 @@ package duel.processes
 				
 				if ( c.indexedField.opposingCreature != null )
 					if ( c.indexedField.opposingCreature.faceDown )
-						startChain_CombatFlip( c.indexedField.opposingCreature );
+						prepend_CombatFlip( c.indexedField.opposingCreature );
 			}
 			
 			function onEnd( c:Card ):void
@@ -383,13 +381,13 @@ package duel.processes
 				
 				if ( c.indexedField.opposingCreature == null )
 				{
-					dealDirectDamage( c.controller.opponent, c.behaviourC.genAttackDamage() );
+					prepend_DirectDamage( c.controller.opponent, c.behaviourC.genAttackDamage() );
 				}
 				else
 				{
 					c.indexedField.opposingCreature.sprite.animAttackPerform();
-					dealCreatureDamage( c, c.indexedField.opposingCreature.behaviourC.genAttackDamage() );
-					dealCreatureDamage( c.indexedField.opposingCreature, c.behaviourC.genAttackDamage() );
+					prepend_CreatureDamage( c, c.indexedField.opposingCreature.behaviourC.genAttackDamage() );
+					prepend_CreatureDamage( c.indexedField.opposingCreature, c.behaviourC.genAttackDamage() );
 				}
 			}
 			
@@ -404,7 +402,7 @@ package duel.processes
 		
 		// DAMAGE & DEATH
 		
-		private function dealCreatureDamage( c:Card, dmg:Damage ):void
+		private function prepend_CreatureDamage( c:Card, dmg:Damage ):void
 		{
 			var pro:GameplayProcess;
 			
@@ -425,7 +423,7 @@ package duel.processes
 			function onStart( c:Card, dmg:Damage ):void
 			{
 				if ( c.faceDown )
-					startChain_SilentFlip( c );
+					prepend_SilentFlip( c );
 			}
 			
 			function onEnd( c:Card, dmg:Damage ):void
@@ -434,7 +432,7 @@ package duel.processes
 					return;
 				
 				if ( c.behaviourC.attack <= dmg.amount )
-					startChain_death( c );
+					prepend_Death( c );
 				else
 					c.sprite.animDamageOnly();
 			}
@@ -442,7 +440,7 @@ package duel.processes
 			pro = pro.chain( gen( GameplayProcess.CREATURE_DAMAGE_COMPLETE, null, c, dmg ) );
 		}
 		
-		private function dealDirectDamage( p:Player, dmg:Damage ):void
+		private function prepend_DirectDamage( p:Player, dmg:Damage ):void
 		{
 			var pro:GameplayProcess;
 			
@@ -459,7 +457,7 @@ package duel.processes
 			pro.delay = .440;
 		}
 		
-		public function startChain_death( c:Card ):void 
+		public function prepend_Death( c:Card ):void 
 		{
 			var pro:GameplayProcess;
 			
@@ -473,7 +471,7 @@ package duel.processes
 			function onStart( c:Card ):void
 			{
 				if ( c.faceDown )
-					startChain_SilentFlip( c );
+					prepend_SilentFlip( c );
 			}
 			
 			function onEnd( c:Card ):void
@@ -485,13 +483,13 @@ package duel.processes
 			
 			function complete( c:Card ):void 
 			{
-				enterGrave( c );
+				prepend_EnterGrave( c );
 			}
 		}
 		
 		// COMBAT FLIP & SAFE FLIP & MAGIC FLIP
 		
-		private function startChain_CombatFlip( c:Card ):void
+		private function prepend_CombatFlip( c:Card ):void
 		{
 			var pro:GameplayProcess;
 			
@@ -538,18 +536,18 @@ package duel.processes
 			}
 		}
 		
-		public function startChain_SafeFlip( c:Card ):void
+		public function prepend_SafeFlip( c:Card ):void
 		{
 			/// ...
 		}
 		
-		public function startChain_SilentFlip( c:Card ):void
+		public function prepend_SilentFlip( c:Card ):void
 		{
 			/// ...
 		}
 		
 		// CHAINGING CARD CONTAINERS
-		public function enterGrave( c:Card ):void 
+		public function prepend_EnterGrave( c:Card ):void 
 		{
 			var pro:GameplayProcess;
 			
@@ -581,7 +579,7 @@ package duel.processes
 			}
 		}
 		
-		public function enterHand( c:Card, p:Player ):void 
+		public function prepend_EnterHand( c:Card, p:Player ):void 
 		{
 			var pro:GameplayProcess;
 			

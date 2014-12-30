@@ -51,11 +51,8 @@ package duel.cards
 					c.behaviourC.attack = 9;
 					c.behaviourC.haste = true;
 					
-					c.behaviourC.inplaySpecialConditionFunc = function( p:GameplayProcess ):Boolean {
-						if ( "turnEnd" != p.name ) return false;
-						return true;
-					}
-					c.behaviourC.inplaySpecialActivateFunc = function( p:GameplayProcess ):Boolean {
+					c.behaviourC.inplaySpecial.watch( "turnEnd" );
+					c.behaviourC.inplaySpecial.funcActivate = function( p:GameplayProcess ):Boolean {
 						c.die();
 					}
 				},
@@ -76,14 +73,13 @@ package duel.cards
 					
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 13;
-					
-					c.behaviourC.handSpecialConditionFunc = function( p:GameplayProcess ):Boolean {
-						if ( "turnEnd" != p.name ) return false;
-						if ( c.controller != p.getPlayer() ) return false;
-						return true;
+
+					c.behaviourC.handSpecial.watch( "turnEnd" );
+					c.behaviourC.handSpecial.funcCondition = function( p:GameplayProcess ):Boolean {
+						return c.controller == p.getPlayer();
 					}
-					c.behaviourC.handSpecialActivateFunc = function( p:GameplayProcess ):void {
-						Game.current.processes.startChain_Discard( c.controller, c );
+					c.behaviourC.handSpecial.funcActivate = function( p:GameplayProcess ):void {
+						Game.current.processes.prepend_Discard( c.controller, c );
 					}
 				},
 				function( c:Card ):void ///		..C		Immortal Bob
@@ -93,11 +89,8 @@ package duel.cards
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 2;
 					
-					c.behaviourC.graveSpecialConditionFunc = function( p:GameplayProcess ):Boolean {
-						if ( "turnEnd" != p.name ) return false;
-						return true;
-					}
-					c.behaviourC.graveSpecialActivateFunc = function( p:GameplayProcess ):void {
+					c.behaviourC.graveSpecial.watch( "turnEnd" );
+					c.behaviourC.graveSpecial.funcActivate = function( p:GameplayProcess ):void {
 						c.returnToControllerHand();
 					}
 				},
@@ -243,7 +236,7 @@ package duel.cards
 						return true;
 					}
 					c.behaviourT.onActivateFunc = function( p:GameplayProcess ):void {
-						Game.current.processes.enterGrave( p.getSourceCard() );
+						Game.current.processes.prepend_EnterGrave( p.getSourceCard() );
 					}
 					c.descr = "On opp. trap activation - negate and destroy trap";
 				},
@@ -267,7 +260,7 @@ package duel.cards
 						return true;
 					}
 					c.behaviourT.onActivateFunc = function( p:GameplayProcess ):void {
-						Game.current.processes.startChain_Draw( c.controller, 5 );
+						Game.current.processes.prepend_Draw( c.controller, 5 );
 					}
 					c.descr = "On turn start and controller hand is 0 - draw 5 cards";
 				},
@@ -279,13 +272,12 @@ package duel.cards
 					c.behaviourC.attack = 7;
 					c.behaviourC.startFaceDown = true;
 					
-					c.behaviourC.inplaySpecialConditionFunc = function( p:GameplayProcess ):Boolean {
-						if ( "turnEnd" != p.name ) return false;
-						if ( c.owner.grave.findByName( "Zag" ) == null ) return false;
-						return true;
+					c.behaviourC.inplaySpecial.watch( "turnEnd" );
+					c.behaviourC.inplaySpecial.funcCondition = function( p:GameplayProcess ):Boolean {
+						return ( c.owner.grave.findByName( "Zag" ) != null );
 					}
-					c.behaviourC.inplaySpecialActivateFunc = function( p:GameplayProcess ):Boolean {
-						Game.current.processes.enterHand( c.owner.grave.findByName( "Zag" ), c.owner );
+					c.behaviourC.inplaySpecial.funcActivate = function( p:GameplayProcess ):Boolean {
+						Game.current.processes.prepend_EnterHand( c.owner.grave.findByName( "Zag" ), c.owner );
 					}
 				},
 				function( c:Card ):void ///		..C		Zag
@@ -293,15 +285,14 @@ package duel.cards
 					c.name = "Zag";
 					
 					setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 8;
+					c.behaviourC.attack = 7;
 					
-					c.behaviourC.inplaySpecialConditionFunc = function( p:GameplayProcess ):Boolean {
-						if ( "turnEnd" != p.name ) return false;
-						if ( c.owner.grave.findByName( "Zig" ) == null ) return false;
-						return true;
+					c.behaviourC.inplaySpecial.watch( "turnEnd" );
+					c.behaviourC.inplaySpecial.funcCondition = function( p:GameplayProcess ):Boolean {
+						return ( c.owner.grave.findByName( "Zig" ) != null );
 					}
-					c.behaviourC.inplaySpecialActivateFunc = function( p:GameplayProcess ):Boolean {
-						Game.current.processes.enterHand( c.owner.grave.findByName( "Zig" ), c.owner );
+					c.behaviourC.inplaySpecial.funcActivate = function( p:GameplayProcess ):Boolean {
+						Game.current.processes.prepend_EnterHand( c.owner.grave.findByName( "Zig" ), c.owner );
 					}
 				},
 				function( c:Card ):void ///		..C		Yang

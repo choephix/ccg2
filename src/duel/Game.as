@@ -172,8 +172,8 @@ package duel
 			jugglerStrict.delayCall( drawCards, time + .300 );
 			function drawCards():void
 			{
-				processes.startChain_Draw( p1, HAND_SIZE );
-				processes.startChain_Draw( p2, HAND_SIZE );
+				processes.prepend_Draw( p1, HAND_SIZE );
+				processes.prepend_Draw( p2, HAND_SIZE );
 			}
 		}
 		
@@ -316,7 +316,7 @@ package duel
 				CONFIG::development
 				{
 					if ( field.type.isGraveyard && field.owner == p )
-						processes.startChain_Discard( p, c );
+						processes.prepend_Discard( p, c );
 				}
 			}
 			else
@@ -325,7 +325,7 @@ package duel
 				CONFIG::development
 				{
 					if ( field.type.isDeck )
-						processes.startChain_Draw( p, 5 );
+						processes.prepend_Draw( p, 5 );
 				}
 			}
 			
@@ -386,20 +386,26 @@ package duel
 				}
 				
 				/// DEV SHIT
-				if ( currentPlayer.grave.containsCard( card ) )
+				
+				CONFIG::development
 				{
-					processes.enterGrave( c );
-					return;
+					/** /
+					// MANUALLY ADD TO GRAVE
+					if ( currentPlayer.grave.containsCard( card ) )
+					{
+						processes.enterGrave( c );
+						return;
+					}
+					/** /
+					// STACK CARDS LIKE IT'S NOTHING
+					if ( c.lot != card.lot && card.controller == c.controller )
+					{
+						if ( !card.lot.isEmpty )
+							c.faceDown = card.lot.getFirstCard().faceDown;
+						card.lot.addCard( c );
+					}
+					/**/
 				}
-					
-				// STACK CARDS ?
-				/** /
-				if ( c.lot != card.lot && card.controller == c.controller )
-				{
-					if ( !card.lot.isEmpty )
-						c.faceDown = card.lot.getFirstCard().faceDown;
-					card.lot.addCard( c );
-				} /**/
 			}
 		}
 		
@@ -426,32 +432,32 @@ package duel
 		
 		public function endTurn():void
 		{
-			processes.startChain_TurnEnd( currentPlayer );
+			processes.append_TurnEnd( currentPlayer );
 		}
 		
 		public function performCardSummon( c:Card, field:CreatureField ):void
 		{
-			processes.startChain_SummonHere( c, field );
+			processes.append_SummonHere( c, field );
 		}
 		
 		public function performRelocation( c:Card, field:CreatureField ):void
 		{
-			processes.startChain_Relocation( c, field );
+			processes.append_Relocation( c, field );
 		}
 		
 		public function performTrapSet( c:Card, field:TrapField ):void
 		{
-			processes.startChain_TrapSet( c, field );
+			processes.append_TrapSet( c, field );
 		}
 		
 		public function performCardAttack( c:Card ):void
 		{
-			processes.startChain_Attack( c );
+			processes.append_Attack( c );
 		}
 		
 		public function performSafeFlip( c:Card ):void
 		{
-			processes.startChain_SafeFlip( c );
+			processes.prepend_SafeFlip( c );
 		}
 		
 		//

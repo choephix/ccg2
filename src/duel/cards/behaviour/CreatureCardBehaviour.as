@@ -2,6 +2,7 @@ package duel.cards.behaviour
 {
 	import duel.Damage;
 	import duel.DamageType;
+	import duel.otherlogic.SpecialEffect;
 	/**
 	 * ...
 	 * @author choephix
@@ -17,8 +18,8 @@ package duel.cards.behaviour
 		public var swift:Boolean = false; 		// CAN ATTACK AND MOVE SAME TURN
 		public var berserk:Boolean = false;		// ATTACKS AUTOMATICALLY
 		
-		public var inplaySpecialConditionFunc:Function;
-		public var inplaySpecialActivateFunc:Function;
+		public var inplaySpecial:SpecialEffect = new SpecialEffect();
+		
 		public var inplayOngoingFunc:Function;
 		
 		public var onCombatFlipFunc:Function;
@@ -35,7 +36,7 @@ package duel.cards.behaviour
 		{ return onMagicFlipFunc != null; }
 		
 		public function get hasInPlaySpecialEffect():Boolean
-		{ return inplaySpecialActivateFunc != null; }
+		{ return inplaySpecial != null; }
 		
 		public function get hasInPlayOngoingEffect():Boolean
 		{ return inplayOngoingFunc != null; }
