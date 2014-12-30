@@ -505,7 +505,7 @@ package duel
 		public function canSelect( card:Card ):Boolean {
 			if ( card.controller != currentPlayer ) return false;
 			if ( card.type.isTrap && card.isInPlay ) return false;
-			if ( card.exhausted ) return false;
+			if ( card.type.isCreature && card.exhausted ) return false;
 			if ( card.field && card.field.type.isGraveyard ) return false;
 			if ( card.field && card.field.type.isDeck ) return false;
 			return true;

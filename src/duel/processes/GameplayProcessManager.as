@@ -132,8 +132,6 @@ package duel.processes
 			{
 				field.addCard( c );
 				c.faceDown = c.behaviour.startFaceDown;
-				
-				c.sprite.animSummon();
 			}
 			
 			pro = pro.chain( gen( GameplayProcess.ENTER_PLAY_COMPLETE, null, c, field ) );
@@ -142,8 +140,8 @@ package duel.processes
 			
 			function complete( c:Card, field:CreatureField ):void
 			{
-				if ( c.isInPlay )
-					c.exhausted ||= !c.behaviourC.haste;
+				c.summonedThisTurn = true;
+				c.sprite.animSummon();
 			}
 			
 			function onAbort( c:Card ):void
@@ -217,7 +215,7 @@ package duel.processes
 				if ( c.isInPlay )
 				{
 					c.sprite.animRelocationCompleteOrAbort();
-					c.exhausted = true;
+					c.actionsRelocate++;
 				}
 			}
 		}
@@ -395,8 +393,7 @@ package duel.processes
 			
 			function completeOrAbort( c:Card ):void
 			{
-				if ( c.isInPlay )
-					c.exhausted = true;
+				c.actionsAttack++;
 			}
 		}
 		
@@ -563,11 +560,7 @@ package duel.processes
 			
 			function onEnd( c:Card ):void
 			{
-				if ( c.isInPlay )
-				{
-					c.exhausted = false;
-					c.sprite.exhaustClock.alpha = 0.0;
-				}
+				c.resetState();
 				c.owner.grave.addCard( c );
 			}
 			
@@ -596,6 +589,7 @@ package duel.processes
 			
 			function onEnd( c:Card, p:Player ):void 
 			{
+				c.resetState();
 				p.hand.addCard( c );
 				c.faceDown = false;
 			}

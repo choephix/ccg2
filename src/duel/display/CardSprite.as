@@ -22,7 +22,7 @@ package duel.display {
 	public class CardSprite extends GameSprite implements IAnimatable
 	{
 		public var auraContainer:Sprite;
-		public var exhaustClock:Image;
+		private var exhaustClock:Image;
 		
 		private var front:Sprite;
 		private var back:Image;
@@ -32,6 +32,7 @@ package duel.display {
 		private var tfAttak:TextField;
 		
 		///
+		private var _exhaustClockVisible:Boolean = false;
 		private var _isFaceDown:Boolean = true;
 		private var _flippedness:Number = .0;
 		private var _flipTween:Tween;
@@ -148,10 +149,22 @@ package duel.display {
 		
 		internal function updateData():void 
 		{
-			if ( card.type.isCreature && !card.faceDown ) {
-				tfAttak.text = card.behaviourC.attack + "";
-				tfDescr.text = card.behaviourC.toString();
+			if ( card.type.isCreature )
+			{
+				if ( !card.faceDown ) {
+					tfAttak.text = card.behaviourC.attack + "";
+					tfDescr.text = card.behaviourC.toString();
+				}
+				
+				setExhaustClockVisible( card.exhausted && !card.faceDown );
 			}
+		}
+		
+		private function setExhaustClockVisible( value:Boolean ):void 
+		{
+			if ( _exhaustClockVisible == value ) return;
+			_exhaustClockVisible = value;
+			juggler.xtween( exhaustClock, .500, { alpha : value ? 1.0 : .0 } );
 		}
 		
 		private function onTouch(e:TouchEvent):void 

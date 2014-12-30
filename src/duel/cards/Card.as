@@ -30,8 +30,12 @@ package duel.cards
 		public var owner:Player;
 		public var lot:CardListBase;
 		
+		public var actionsRelocate:int = 0;
+		public var actionsAttack:int = 0;
+		public var summonedThisTurn:Boolean = false;
+		
 		private var _faceDown:Boolean = true;
-		private var _exhausted:Boolean;
+		
 		//
 		public var sprite:CardSprite;
 		
@@ -50,7 +54,8 @@ package duel.cards
 		
 		public function onTurnStart():void
 		{
-			if ( game.currentPlayer == controller ) exhausted = false;
+			if ( game.currentPlayer == controller )
+				resetState();
 		}
 		
 		// -.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'
@@ -121,6 +126,14 @@ package duel.cards
 			
 		}
 		
+		/// This must be called on turn start as well as when the card leaves play
+		public function resetState():void
+		{
+			actionsRelocate = 0;
+			actionsAttack = 0;
+			summonedThisTurn = false;
+		}
+		
 		// 
 		
 		public function die():void 
@@ -167,19 +180,26 @@ package duel.cards
 			_faceDown = value;
 		}
 		
-		public function get exhausted():Boolean {return _exhausted}
-		public function set exhausted(value:Boolean):void 
-		{
-			_exhausted = value;
-			juggler.xtween( sprite.exhaustClock, .500, { alpha : value ? 1 : 0 } );
+		public function get exhausted():Boolean {
+			if ( summonedThisTurn && !behaviourC.haste ) return true;
+			if ( behaviourC.swift ) return actionsAttack > 0 && actionsRelocate > 0;
+			return actionsRelocate + actionsAttack > 0;
 		}
 		
 		// GETTERS & SETTERS - 3
 		public function get canAttack():Boolean { 
-			return type.isCreature && isInPlay && !exhausted && !behaviourC.noattack
+			if ( !type.isCreature ) return false;
+			if ( !isInPlay ) return false;
+			if ( exhausted ) return false;
+			if ( behaviourC.noattack ) return false;
+			return actionsAttack == 0;
 		}
 		public function get canRelocate():Boolean { 
-			return type.isCreature && isInPlay && !exhausted && !behaviourC.nomove
+			if ( !type.isCreature ) return false;
+			if ( !isInPlay ) return false;
+			if ( exhausted ) return false;
+			if ( behaviourC.nomove ) return false;
+			return actionsRelocate == 0;
 		}
 		
 		//

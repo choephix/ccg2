@@ -2,7 +2,6 @@ package duel.cards.behaviour
 {
 	import duel.cards.Card;
 	import duel.otherlogic.SpecialEffect;
-	import duel.processes.ProcessWatcher;
 	/**
 	 * ...
 	 * @author choephix
