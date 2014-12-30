@@ -9,10 +9,9 @@ package duel
 	import duel.display.TableSide;
 	import duel.gui.Gui;
 	import duel.gui.GuiJuggler;
+	import duel.processes.GameplayProcess;
 	import duel.processes.GameplayProcessManager;
-	import duel.processes.Process;
 	import duel.processes.ProcessEvent;
-	import duel.processes.ProcessManager;
 	import duel.table.CreatureField;
 	import duel.table.Field;
 	import duel.table.Hand;
@@ -214,11 +213,11 @@ package duel
 		
 		private function onProcessAdvance( e:ProcessEvent ):void
 		{ 
-			playerInspectProcess( currentPlayer.opponent, e.process );
-			playerInspectProcess( currentPlayer, e.process );
+			playerInspectProcess( currentPlayer.opponent, e.process as GameplayProcess );
+			playerInspectProcess( currentPlayer, e.process as GameplayProcess );
 		}
 		
-		private function playerInspectProcess( player:Player, p:Process ):void
+		private function playerInspectProcess( player:Player, p:GameplayProcess ):void
 		{ 
 			var i:int;
 			var len:int;
@@ -363,7 +362,7 @@ package duel
 				
 				selectCard( null );
 				
-				if ( canSelect( card ) )
+				if ( c != card && canSelect( card ) )
 				{
 					selectCard( card );
 					return;

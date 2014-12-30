@@ -1,6 +1,6 @@
 package duel.cards.behaviour 
 {
-	import duel.processes.Process;
+	import duel.processes.GameplayProcess;
 	/**
 	 * ...
 	 * @author choephix
@@ -25,7 +25,7 @@ package duel.cards.behaviour
 			//watchers.push( pw );
 		//}
 		
-		public function activationConditionMet( p:Process ):Boolean
+		public function activationConditionMet( p:GameplayProcess ):Boolean
 		{
 			//if ( watchers == null ) return false;
 			//for ( var i:int = 0, iMax:int = watchers.length; i < iMax; i++ ) 

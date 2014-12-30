@@ -16,7 +16,7 @@ package duel.processes
 		}
 		
 		/// Returns true if the process was interrupted here, false otherwise
-		public function interruptProcessMaybe( p:Process ):Boolean 
+		public function interruptProcessMaybe( p:GameplayProcess ):Boolean 
 		{
 			if ( p.isInterrupted )
 			{

@@ -1,6 +1,7 @@
 package dev 
 {
-	import duel.processes.Process;
+	import duel.processes.GameplayProcess;
+	import duel.processes.GameplayProcessManager;
 	import duel.processes.ProcessEvent;
 	import duel.processes.ProcessManager;
 	/**
@@ -14,10 +15,10 @@ package dev
 		public static function initTest1( manager:ProcessManager ):void
 		{
 			var proN:int = 0;
-			var p:Process;
+			var p:GameplayProcess;
 			
-			function pro( func:Function = null ):Process
-			{ return ProcessManager.gen( "TEST #" + (++proN), func ) }
+			function pro( func:Function = null ):GameplayProcess
+			{ return GameplayProcessManager.gen( "TEST #" + (++proN), func ) }
 			
 			p = pro();
 			manager.prependProcess( p );
@@ -41,15 +42,15 @@ package dev
 				interruptions_left--;
 				e.process.interrupt();
 				
-				var p:Process = ProcessManager.gen( "declare interruption" );
+				var p:GameplayProcess = GameplayProcessManager.gen( "declare interruption" );
 				manager.prependProcess( p );
 				
-				p = p.chain( ProcessManager.gen( "think a bit about interruption" ) );
-				p = p.chain( ProcessManager.gen( "find resolve for interruption" ) );
-				p = p.chain( ProcessManager.gen( "digress a bit to questions about nature, life and our place in the universe" ) );
-				p = p.chain( ProcessManager.gen( "take a quick piss" ) );
-				p = p.chain( ProcessManager.gen( "perform interruption", function():void { trace("INTERRUPTED, BITCH!") } ) );
-				p = p.chain( ProcessManager.gen( "complete interruption" ) );
+				p = p.chain( GameplayProcessManager.gen( "think a bit about interruption" ) );
+				p = p.chain( GameplayProcessManager.gen( "find resolve for interruption" ) );
+				p = p.chain( GameplayProcessManager.gen( "digress a bit to questions about nature, life and our place in the universe" ) );
+				p = p.chain( GameplayProcessManager.gen( "take a quick piss" ) );
+				p = p.chain( GameplayProcessManager.gen( "perform interruption", function():void { trace("INTERRUPTED, BITCH!") } ) );
+				p = p.chain( GameplayProcessManager.gen( "complete interruption" ) );
 				
 				if ( interruptions_left <= 0 )
 					manager.removeEventListener( ProcessEvent.CURRENT_PROCESS, onP );
@@ -59,8 +60,8 @@ package dev
 		public static function initTest2( manager:ProcessManager ):void
 		{
 			var proN:int = 0;
-			function pro():Process { 
-				var p:Process = ProcessManager.gen( "TEST #" + (++proN) );
+			function pro():GameplayProcess { 
+				var p:GameplayProcess = GameplayProcessManager.gen( "TEST #" + (++proN) );
 				return p;
 			}
 			manager.appendProcess( pro() );

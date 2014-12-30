@@ -60,7 +60,8 @@ package duel.processes
 			CONFIG::development{ log( "interrupted" ) }
 		}
 		
-		public function chain( p:Process ):Process
+		/// Saves selected process for starting immediately after this one. Returns that same argument. Keep in mind that this process's callback will be called after the chained process has been added to the queue.
+		public function chain( p:Process ):*
 		{
 			return next = p;
 		}

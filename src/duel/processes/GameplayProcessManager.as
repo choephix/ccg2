@@ -19,7 +19,7 @@ package duel.processes
 		
 		public function startChain_TurnEnd( p:Player ):void
 		{
-			var pro:Process;
+			var pro:GameplayProcess;
 			pro = gen( "turnEnd", turnEnd, p );
 			pro.delay = .333;
 			appendProcess( pro );
@@ -46,7 +46,7 @@ package duel.processes
 		
 		public function startChain_Draw( p:Player, count:int = 1 ):void
 		{
-			var pro:Process;
+			var pro:GameplayProcess;
 			while ( --count >= 0 )
 			{
 				pro = gen( "drawCard", onComplete, p );
@@ -148,7 +148,7 @@ package duel.processes
 		
 		public function startChain_TrapActivation( c:Card ):void
 		{
-			var interruptedProcess:Process = currentProcess;
+			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
 			
 			prependProcess( gen( "declareTrapActivation", stepDeclare, c ) );
 			
@@ -187,7 +187,7 @@ package duel.processes
 		
 		public function startChain_SpecialActivation( c:Card, func:Function ):void
 		{
-			var interruptedProcess:Process = currentProcess;
+			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
 			
 			//if ( c.faceDown )
 				//appendProcess( gen( "flipUpForRelocation", flipUpForRelocation, c ) );
@@ -501,7 +501,7 @@ package duel.processes
 		
 		public function enterHand( c:Card, p:Player ):void 
 		{
-			var pro:Process;
+			var pro:GameplayProcess;
 			
 			pro = gen( "enterHand", onComplete, c, p );
 			pro.delay = NaN;
@@ -522,8 +522,14 @@ package duel.processes
 			}
 		}
 		
-		
-		
+		public static function gen( name:String, callback:Function = null, ...callbackArgs ):GameplayProcess
+		{
+			var p:GameplayProcess = new GameplayProcess();
+			p.name = name;
+			p.callback = callback;
+			p.callbackArgs = callbackArgs;
+			return p;
+		}
 		
 		//
 		protected function get game():Game { return Game.current }

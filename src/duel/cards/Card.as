@@ -8,7 +8,7 @@ package duel.cards
 	import duel.GameEntity;
 	import duel.GameEvents;
 	import duel.Player;
-	import duel.processes.Process;
+	import duel.processes.GameplayProcess;
 	import duel.table.Field;
 	import duel.table.Hand;
 	import duel.table.IndexedField;
@@ -62,7 +62,7 @@ package duel.cards
 		
 		//
 		
-		public function onGameProcess( p:Process ):void
+		public function onGameProcess( p:GameplayProcess ):void
 		{
 			CONFIG::development { if ( p.isInterrupted ) throw new Error( "HANDLE PROCESS INTERRUPTIONS!" ) }
 			

@@ -1,14 +1,12 @@
 package duel.cards
 {
-	import duel.cards.behaviour.CardBehaviour;
 	import duel.cards.behaviour.CreatureCardBehaviour;
 	import duel.cards.behaviour.TrapCardBehaviour;
 	import duel.cards.Card;
 	import duel.G;
 	import duel.Game;
 	import duel.Player;
-	import duel.processes.Process;
-	import duel.processes.ProcessInterpreter;
+	import duel.processes.GameplayProcess;
 	import duel.table.CreatureField;
 	
 	/**
@@ -41,11 +39,11 @@ package duel.cards
 					c.behaviourC.attack = 9;
 					c.behaviourC.haste = true;
 					
-					c.behaviourC.inplaySpecialConditionFunc = function( p:Process ):Boolean {
+					c.behaviourC.inplaySpecialConditionFunc = function( p:GameplayProcess ):Boolean {
 						if ( "turnEnd" != p.name ) return false;
 						return true;
 					}
-					c.behaviourC.inplaySpecialActivateFunc = function( p:Process ):Boolean {
+					c.behaviourC.inplaySpecialActivateFunc = function( p:GameplayProcess ):Boolean {
 						c.die();
 					}
 				},
@@ -56,7 +54,7 @@ package duel.cards
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 0;
 					
-					c.behaviourC.inplayOngoingFunc = function( p:Process ):Boolean {
+					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):Boolean {
 						c.behaviourC.attack = c.controller.hand.cardsCount * 2;
 					}
 				},
@@ -67,12 +65,12 @@ package duel.cards
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 13;
 					
-					c.behaviourC.handSpecialConditionFunc = function( p:Process ):Boolean {
+					c.behaviourC.handSpecialConditionFunc = function( p:GameplayProcess ):Boolean {
 						if ( "turnEnd" != p.name ) return false;
-						if ( c.controller != ProcessInterpreter.getPlayer( p ) ) return false;
+						if ( c.controller != p.getPlayer() ) return false;
 						return true;
 					}
-					c.behaviourC.handSpecialActivateFunc = function( p:Process ):void {
+					c.behaviourC.handSpecialActivateFunc = function( p:GameplayProcess ):void {
 						Game.current.processes.enterGrave( c );
 					}
 				},
@@ -83,11 +81,11 @@ package duel.cards
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 2;
 					
-					c.behaviourC.graveSpecialConditionFunc = function( p:Process ):Boolean {
+					c.behaviourC.graveSpecialConditionFunc = function( p:GameplayProcess ):Boolean {
 						if ( "turnEnd" != p.name ) return false;
 						return true;
 					}
-					c.behaviourC.graveSpecialActivateFunc = function( p:Process ):void {
+					c.behaviourC.graveSpecialActivateFunc = function( p:GameplayProcess ):void {
 						c.returnToControllerHand();
 					}
 				},
@@ -112,14 +110,14 @@ package duel.cards
 					c.name = "Surprise Motherfucker!";
 					
 					setToTrap( c );						// TRAP - - - - - - //
-					c.behaviourT.activationConditionFunc = function( p:Process ):Boolean {
+					c.behaviourT.activationConditionFunc = function( p:GameplayProcess ):Boolean {
 						if ( "declareAttack" != p.name ) return false;
-						if ( c.indexedField.index != ProcessInterpreter.getIndex( p ) ) return false;
-						if ( c.controller.opponent != ProcessInterpreter.getAttacker( p ).controller ) return false;
+						if ( c.indexedField.index != p.getIndex() ) return false;
+						if ( c.controller.opponent != p.getAttacker().controller ) return false;
 						if ( !c.indexedField.samesideCreatureField.isEmpty ) return false;
 						return true;
 					}
-					c.behaviourT.onActivateFunc = function( p:Process ):void {
+					c.behaviourT.onActivateFunc = function( p:GameplayProcess ):void {
 						if ( c.indexedField.opposingCreature != null )
 						{
 							c.indexedField.opposingCreature.die();
@@ -151,13 +149,13 @@ package duel.cards
 					c.name = "Trap-hole";
 					
 					setToTrap( c );						// TRAP - - - - - - //
-					c.behaviourT.activationConditionFunc = function( p:Process ):Boolean {
+					c.behaviourT.activationConditionFunc = function( p:GameplayProcess ):Boolean {
 						if ( "completeSummon" != p.name ) return false;
-						if ( c.indexedField.index != ProcessInterpreter.getIndex( p ) ) return false;
-						if ( c.controller.opponent != ProcessInterpreter.getSummonedField( p ).owner ) return false;
+						if ( c.indexedField.index != p.getIndex() ) return false;
+						if ( c.controller.opponent != p.getSummonedField().owner ) return false;
 						return true;
 					}
-					c.behaviourT.onActivateFunc = function( p:Process ):void {
+					c.behaviourT.onActivateFunc = function( p:GameplayProcess ):void {
 						if ( c.indexedField.opposingCreature != null )
 						{
 							c.indexedField.opposingCreature.die();
@@ -193,14 +191,14 @@ package duel.cards
 					c.name = "No Flippers!";
 					
 					setToTrap( c );						// TRAP - - - - - - //
-					c.behaviourT.activationConditionFunc = function( p:Process ):Boolean {
+					c.behaviourT.activationConditionFunc = function( p:GameplayProcess ):Boolean {
 						if ( "performCombatFlipEffect" != p.name ) return false;
-						if ( c.indexedField.index != ProcessInterpreter.getIndex( p ) ) return false;
-						if ( c.controller.opponent != ProcessInterpreter.getSourceCard( p ).controller ) return false;
+						if ( c.indexedField.index != p.getIndex() ) return false;
+						if ( c.controller.opponent != p.getSourceCard().controller ) return false;
 						return true;
 					}
-					c.behaviourT.onActivateFunc = function( p:Process ):void {
-						//ProcessInterpreter.getSourceCard( p ).die();
+					c.behaviourT.onActivateFunc = function( p:GameplayProcess ):void {
+						//p.getSourceCard().die();
 						p.abort();
 					}
 					c.descr = "On opp. creature combat-flip effect - negate effect";
@@ -226,14 +224,14 @@ package duel.cards
 					c.name = "Trap-Trap";
 					
 					setToTrap( c );						// TRAP - - - - - - //
-					c.behaviourT.activationConditionFunc = function( p:Process ):Boolean {
+					c.behaviourT.activationConditionFunc = function( p:GameplayProcess ):Boolean {
 						if ( "performTrapActivation" != p.name ) return false;
-						if ( c.indexedField.index != ProcessInterpreter.getIndex( p ) ) return false;
-						if ( c.controller.opponent != ProcessInterpreter.getSourceCard( p ).controller ) return false;
+						if ( c.indexedField.index != p.getIndex() ) return false;
+						if ( c.controller.opponent != p.getSourceCard().controller ) return false;
 						return true;
 					}
-					c.behaviourT.onActivateFunc = function( p:Process ):void {
-						Game.current.processes.enterGrave( ProcessInterpreter.getSourceCard( p ) );
+					c.behaviourT.onActivateFunc = function( p:GameplayProcess ):void {
+						Game.current.processes.enterGrave( p.getSourceCard() );
 					}
 					c.descr = "On opp. trap activation - negate and destroy trap";
 				},
@@ -250,13 +248,13 @@ package duel.cards
 					c.name = "Destiny, Fate, all that Shit";
 					
 					setToTrap( c );						// TRAP - - - - - - //
-					c.behaviourT.activationConditionFunc = function( p:Process ):Boolean {
+					c.behaviourT.activationConditionFunc = function( p:GameplayProcess ):Boolean {
 						if ( "turnStart" != p.name ) return false;
-						if ( c.controller != ProcessInterpreter.getPlayer( p ) ) return false;
+						if ( c.controller != p.getPlayer() ) return false;
 						if ( c.controller.hand.cardsCount > 0 ) return false;
 						return true;
 					}
-					c.behaviourT.onActivateFunc = function( p:Process ):void {
+					c.behaviourT.onActivateFunc = function( p:GameplayProcess ):void {
 						Game.current.performDraw( c.controller, 5 );
 					}
 					c.descr = "On turn start and controller hand is 0 - draw 5 cards";
@@ -269,12 +267,12 @@ package duel.cards
 					c.behaviourC.attack = 7;
 					c.behaviourC.startFaceDown = true;
 					
-					c.behaviourC.inplaySpecialConditionFunc = function( p:Process ):Boolean {
+					c.behaviourC.inplaySpecialConditionFunc = function( p:GameplayProcess ):Boolean {
 						if ( "turnEnd" != p.name ) return false;
 						if ( c.owner.grave.findByName( "Zag" ) == null ) return false;
 						return true;
 					}
-					c.behaviourC.inplaySpecialActivateFunc = function( p:Process ):Boolean {
+					c.behaviourC.inplaySpecialActivateFunc = function( p:GameplayProcess ):Boolean {
 						Game.current.processes.enterHand( c.owner.grave.findByName( "Zag" ), c.owner );
 					}
 				},
@@ -285,12 +283,12 @@ package duel.cards
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 8;
 					
-					c.behaviourC.inplaySpecialConditionFunc = function( p:Process ):Boolean {
+					c.behaviourC.inplaySpecialConditionFunc = function( p:GameplayProcess ):Boolean {
 						if ( "turnEnd" != p.name ) return false;
 						if ( c.owner.grave.findByName( "Zig" ) == null ) return false;
 						return true;
 					}
-					c.behaviourC.inplaySpecialActivateFunc = function( p:Process ):Boolean {
+					c.behaviourC.inplaySpecialActivateFunc = function( p:GameplayProcess ):Boolean {
 						Game.current.processes.enterHand( c.owner.grave.findByName( "Zig" ), c.owner );
 					}
 				},
@@ -301,7 +299,7 @@ package duel.cards
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 5;
 					
-					c.behaviourC.inplayOngoingFunc = function( p:Process ):Boolean {
+					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):Boolean {
 						c.behaviourC.attack = hasAdjacentYin() ? 15 : 5;
 					}
 					function hasAdjacentYin():Boolean {
@@ -320,7 +318,7 @@ package duel.cards
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 6;
 					
-					c.behaviourC.inplayOngoingFunc = function( p:Process ):Boolean {
+					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):Boolean {
 						c.behaviourC.attack = hasAdjacentYang() ? 14 : 6;
 					}
 					function hasAdjacentYang():Boolean {
@@ -337,13 +335,13 @@ package duel.cards
 					c.name = "Smelly sock";
 					
 					setToTrap( c );						// TRAP - - - - - - //
-					c.behaviourT.activationConditionFunc = function( p:Process ):Boolean {
+					c.behaviourT.activationConditionFunc = function( p:GameplayProcess ):Boolean {
 						if ( "performAttack" != p.name ) return false;
-						if ( c.indexedField.index != ProcessInterpreter.getIndex( p ) ) return false;
-						if ( c.controller.opponent != ProcessInterpreter.getAttacker( p ).controller ) return false;
+						if ( c.indexedField.index != p.getIndex() ) return false;
+						if ( c.controller.opponent != p.getAttacker().controller ) return false;
 						return true;
 					}
-					c.behaviourT.onActivateFunc = function( p:Process ):void {
+					c.behaviourT.onActivateFunc = function( p:GameplayProcess ):void {
 						if ( c.indexedField.opposingCreature != null )
 						{
 							c.indexedField.opposingCreature.returnToControllerHand();
@@ -365,13 +363,13 @@ package duel.cards
 					c.name = "Stunner";
 					
 					setToTrap( c );						// TRAP - - - - - - //
-					c.behaviourT.activationConditionFunc = function( p:Process ):Boolean {
+					c.behaviourT.activationConditionFunc = function( p:GameplayProcess ):Boolean {
 						if ( "performAttack" != p.name ) return false;
-						if ( c.indexedField.index != ProcessInterpreter.getIndex( p ) ) return false;
-						if ( c.controller.opponent != ProcessInterpreter.getAttacker( p ).controller ) return false;
+						if ( c.indexedField.index != p.getIndex() ) return false;
+						if ( c.controller.opponent != p.getAttacker().controller ) return false;
 						return true;
 					}
-					c.behaviourT.onActivateFunc = function( p:Process ):void {
+					c.behaviourT.onActivateFunc = function( p:GameplayProcess ):void {
 						if ( c.indexedField.opposingCreature != null )
 						{
 							c.indexedField.opposingCreature.behaviourC.noattack = true;
