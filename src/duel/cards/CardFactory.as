@@ -71,7 +71,7 @@ package duel.cards
 						return true;
 					}
 					c.behaviourC.handSpecialActivateFunc = function( p:GameplayProcess ):void {
-						Game.current.processes.enterGrave( c );
+						Game.current.processes.startChain_Discard( c.controller, c );
 					}
 				},
 				function( c:Card ):void ///		..C		Immortal Bob
