@@ -51,7 +51,7 @@ package duel.cards
 					c.behaviourC.attack = 9;
 					c.behaviourC.haste = true;
 					
-					c.behaviourC.inplaySpecial.watch( "turnEnd" );
+					c.behaviourC.inplaySpecial.watch( GameplayProcess.TURN_END );
 					c.behaviourC.inplaySpecial.funcActivate = function( p:GameplayProcess ):Boolean {
 						c.die();
 					}
@@ -74,7 +74,7 @@ package duel.cards
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 13;
 					
-					c.behaviourC.handSpecial.watch( "turnEnd" );
+					c.behaviourC.handSpecial.watch( GameplayProcess.TURN_END );
 					c.behaviourC.handSpecial.funcCondition = function( p:GameplayProcess ):Boolean {
 						return c.controller == p.getPlayer();
 					}
@@ -89,7 +89,7 @@ package duel.cards
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 2;
 					
-					c.behaviourC.graveSpecial.watch( "turnEnd" );
+					c.behaviourC.graveSpecial.watch( GameplayProcess.TURN_END );
 					c.behaviourC.graveSpecial.funcActivate = function( p:GameplayProcess ):void {
 						c.returnToControllerHand();
 					}
@@ -276,7 +276,7 @@ package duel.cards
 					c.behaviourC.attack = 7;
 					c.behaviourC.startFaceDown = true;
 					
-					c.behaviourC.inplaySpecial.watch( "turnEnd" );
+					c.behaviourC.inplaySpecial.watch( GameplayProcess.TURN_END );
 					c.behaviourC.inplaySpecial.funcCondition = function( p:GameplayProcess ):Boolean {
 						return ( c.owner.grave.findByName( "Zag" ) != null );
 					}
@@ -291,7 +291,7 @@ package duel.cards
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 7;
 					
-					c.behaviourC.inplaySpecial.watch( "turnEnd" );
+					c.behaviourC.inplaySpecial.watch( GameplayProcess.TURN_END );
 					c.behaviourC.inplaySpecial.funcCondition = function( p:GameplayProcess ):Boolean {
 						return ( c.owner.grave.findByName( "Zig" ) != null );
 					}
