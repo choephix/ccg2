@@ -267,7 +267,7 @@ package duel.cards
 						return true;
 					}
 					c.behaviourT.onActivateFunc = function( p:GameplayProcess ):void {
-						Game.current.performDraw( c.controller, 5 );
+						Game.current.processes.startChain_Draw( c.controller, 5 );
 					}
 					c.descr = "On turn start and controller hand is 0 - draw 5 cards";
 				},

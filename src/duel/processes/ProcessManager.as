@@ -39,10 +39,16 @@ package duel.processes
 			
 			var p:Process = queue[ 0 ];
 			
-			p.advanceTimeBefore( time );
+			if ( !p.isStarted )
+			{
+				p.start();
+				return;
+			}
+			
+			p.preAdvanceTime( time );
 			currentProcessEvent.process = p;
 			dispatchEvent( currentProcessEvent );
-			p.advanceTimeAfter( time );
+			p.advanceTime( time );
 			
 			if ( p.isAborted )
 			{
@@ -56,8 +62,7 @@ package duel.processes
 				if ( p.next != null )
 					queue.unshift( p.next );
 				
-				if ( p.callback != null )
-					p.callback.apply( null, p.callbackArgs );
+				p.end();
 			}
 		}
 		
@@ -84,12 +89,12 @@ package duel.processes
 		public function toString():String { return queue.join("\n"); }
 		
 		// // //
-		public static function gen( name:String, callback:Function = null, ...callbackArgs ):Process
+		public static function gen( name:String, onEnd:Function = null, ...args ):Process
 		{
 			var p:Process = new Process();
 			p.name = name;
-			p.callback = callback;
-			p.callbackArgs = callbackArgs;
+			p.onEnd = onEnd;
+			p.args = args;
 			return p;
 		}
 	}

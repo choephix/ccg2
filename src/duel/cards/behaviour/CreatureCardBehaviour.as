@@ -1,5 +1,7 @@
 package duel.cards.behaviour 
 {
+	import duel.Damage;
+	import duel.DamageType;
 	/**
 	 * ...
 	 * @author choephix
@@ -56,6 +58,12 @@ package duel.cards.behaviour
 				onMagicFlipFunc();
 		}
 		
+		public function genAttackDamage():Damage
+		{
+			return new Damage( attack, DamageType.COMBAT, card );
+		}
+		
+		//
 		public function toString():String 
 		{
 			var a:Array = [];

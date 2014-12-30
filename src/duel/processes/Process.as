@@ -11,8 +11,11 @@ package duel.processes
 		private var uid:uint = 0;
 		
 		public var name:String = "unnamed";
-		public var callback:Function = null;
-		public var callbackArgs:Array = null;
+		public var onStart:Function = null;
+		public var onEnd:Function = null;
+		public var onAbort:Function = null;
+		public var abortCheck:Function = null;
+		public var args:Array = null;
 		
 		internal var delay:Number = CONFIG::slowmode ? .500 : NaN;
 		internal var next:Process = null;
@@ -24,18 +27,41 @@ package duel.processes
 			this.uid = ++UID;
 		}
 		
-		internal function advanceTimeBefore( time:Number ):void 
+		internal function start():void 
 		{
 			CONFIG::development { if ( state == ProcessState.WAITING ) log( "started" ) }
 			state = ProcessState.ONGOING;
+				
+			if ( onStart != null )
+				onStart.apply( null, args );
 		}
 		
-		internal function advanceTimeAfter( time:Number ):void 
+		internal function end():void
+		{
+			if ( onEnd != null )
+				onEnd.apply( null, args );
+		}
+		
+		internal function preAdvanceTime( time:Number ):void 
 		{
 			if ( state == ProcessState.INTERRUPTED )
-				return;
+				state = ProcessState.ONGOING;
+		}
+		
+		internal function advanceTime( time:Number ):void 
+		{
+			if ( abortCheck != null )
+				if ( abortCheck.apply( null, args ) )
+					abort();
 			
 			if ( state == ProcessState.ABORTED )
+			{
+				if ( onAbort != null )
+					onAbort.apply( null, args );
+				return;
+			}
+			
+			if ( state == ProcessState.INTERRUPTED )
 				return;
 			
 			if ( !isNaN( delay ) && delay > .0 )
@@ -70,7 +96,7 @@ package duel.processes
 		public function get isStarted():Boolean { return state != ProcessState.WAITING }
 		public function get isComplete():Boolean { return state == ProcessState.COMPLETE }
 		public function get isAborted():Boolean { return state == ProcessState.ABORTED }
-		public function get isInterrupted():Boolean { return state == ProcessState.INTERRUPTED }
+		public function get isInterrupted():Boolean { return state == ProcessState.INTERRUPTED || state == ProcessState.ABORTED }
 		
 		//
 		public function toString():String { 

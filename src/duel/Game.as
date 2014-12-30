@@ -5,6 +5,7 @@ package duel
 	import dev.ProcessTester;
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
+	import duel.cards.CommonCardQuestions;
 	import duel.display.cardlots.HandSprite;
 	import duel.display.TableSide;
 	import duel.gui.Gui;
@@ -54,10 +55,6 @@ package duel
 		public var p2:Player;
 		
 		public var bg:Background;
-		
-		// Useless Debug Shit
-		public var lastPlayedCreature:Card;
-		public var lastPlayedTrap:Card;
 		
 		//
 		public function Game()
@@ -175,8 +172,8 @@ package duel
 			jugglerStrict.delayCall( drawCards, time + .300 );
 			function drawCards():void
 			{
-				performDraw( p1, HAND_SIZE );
-				performDraw( p2, HAND_SIZE );
+				processes.startChain_Draw( p1, HAND_SIZE );
+				processes.startChain_Draw( p2, HAND_SIZE );
 			}
 		}
 		
@@ -213,8 +210,20 @@ package duel
 		
 		private function onProcessAdvance( e:ProcessEvent ):void
 		{ 
-			playerInspectProcess( currentPlayer.opponent, e.process as GameplayProcess );
-			playerInspectProcess( currentPlayer, e.process as GameplayProcess );
+			var p:GameplayProcess = e.process as GameplayProcess;
+			
+			if ( p == null ) 
+				return;
+			
+			gameInspectProcess( p );
+			playerInspectProcess( currentPlayer.opponent, p );
+			playerInspectProcess( currentPlayer, p );
+		}
+		
+		private function gameInspectProcess( p:GameplayProcess ):void
+		{
+			if ( p.name == GameplayProcess.TURN_END ) dispatchEventWith( GameEvents.TURN_END );
+			if ( p.name == GameplayProcess.TURN_START ) dispatchEventWith( GameEvents.TURN_START );
 		}
 		
 		private function playerInspectProcess( player:Player, p:GameplayProcess ):void
@@ -281,14 +290,14 @@ package duel
 				var c:Card = selectedCard;
 				var p:Player = c.controller;
 				
-				if ( currentPlayer.hand.containsCard( c ) )
+				if ( c.isInHand )
 				{
-					if ( c.type.isCreature && field is CreatureField && canPlaceCreatureHere( c, field as CreatureField ) )
+					if ( canSummon() )
 					{
 						performCardSummon( c, field as CreatureField );
 						return;
 					}
-					if ( c.type.isTrap && field is TrapField && canPlaceTrapHere( c, field as TrapField ) )
+					if ( canSetTrap() )
 					{
 						performTrapSet( c, field as TrapField );
 						return;
@@ -297,24 +306,46 @@ package duel
 				
 				selectCard( null );
 				
-				if ( field.type.isGraveyard && field.owner == p )
-				{
-					performDiscard( p, c );
-					return;
-				}
-				
-				if ( c.type.isCreature && field is CreatureField && c.canRelocate && canPlaceCreatureHere( c, field as CreatureField ) )
+				if ( canRelocate() )
 				{
 					performRelocation( c, field as CreatureField );
 					return;
 				}
+				
+				// DEV SHIT
+				CONFIG::development
+				{
+					if ( field.type.isGraveyard && field.owner == p )
+						processes.startChain_Discard( p, c );
+				}
 			}
 			else
 			{
-				if ( field.type.isDeck )
+				// DEV SHIT
+				CONFIG::development
 				{
-					performDraw( currentPlayer, 5 );
+					if ( field.type.isDeck )
+						processes.startChain_Draw( p, 5 );
 				}
+			}
+			
+			function canSummon():Boolean
+			{
+				if ( !c.type.isCreature ) return false;
+				if ( field as CreatureField == null ) return false;
+				return CommonCardQuestions.canSummonHere( c, field as CreatureField );
+			}
+			function canSetTrap():Boolean
+			{
+				if ( !c.type.isTrap ) return false;
+				if ( field == null ) return false;
+				return CommonCardQuestions.canPlaceTrapHere( c, field as TrapField );
+			}
+			function canRelocate():Boolean
+			{
+				if ( !c.type.isCreature ) return false;
+				if ( field as CreatureField == null ) return false;
+				return CommonCardQuestions.canRelocateHere( c, field as CreatureField );
 			}
 		}
 		
@@ -327,20 +358,6 @@ package duel
 					if ( card.lot is Hand )
 					{
 						if ( canSelect( card ) ) selectCard( selectedCard == card ? null : card );
-						return;
-					}
-					else
-					if ( currentPlayer.deck.containsCard( card ) )
-					{
-						performDraw( currentPlayer );
-						return;
-					}
-					else
-					if ( card.field.type.isGraveyard )
-					{
-						trace( "RESURRECT" );
-						currentPlayer.grave.removeCard( card );
-						processes.enterHand( card, currentPlayer );
 						return;
 					}
 					else
@@ -412,20 +429,9 @@ package duel
 			processes.startChain_TurnEnd( currentPlayer );
 		}
 		
-		public function performDraw( p:Player, count:int = 1 ):void
-		{
-			processes.startChain_Draw( p, count );
-		}
-		
-		public function performDiscard( p:Player, c:Card ):void
-		{
-			processes.startChain_Discard( p, c );
-		}
-		
 		public function performCardSummon( c:Card, field:CreatureField ):void
 		{
-			processes.startChain_Summon( c, field );
-			lastPlayedCreature = c;
+			processes.startChain_SummonHere( c, field );
 		}
 		
 		public function performRelocation( c:Card, field:CreatureField ):void
@@ -436,10 +442,6 @@ package duel
 		public function performTrapSet( c:Card, field:TrapField ):void
 		{
 			processes.startChain_TrapSet( c, field );
-			
-			//c.sprite.animFaceDownSet();
-			
-			lastPlayedTrap = c;
 		}
 		
 		public function performCardAttack( c:Card ):void
@@ -493,21 +495,6 @@ package duel
 		}
 		
 		// QUESTIONS
-		public function canPlaceCreatureHere( card:Card, field:CreatureField ):Boolean
-		{
-			if ( !card.type.isCreature ) throw new ArgumentError( "How do you summon a non creature, dickface?" );
-			if ( card.controller != field.owner ) return false;
-			if ( !field.isEmpty ) return false;
-			return true;
-		}
-		
-		public function canPlaceTrapHere( card:Card, field:TrapField ):Boolean
-		{
-			if ( !card.type.isTrap ) throw new ArgumentError( "How do you trap-set a non trap, assface?" );
-			if ( card.controller != field.owner ) return false;
-			if ( !field.isEmpty ) return false;
-			return true;
-		}
 		
 		public function canSelect( card:Card ):Boolean {
 			if ( card.controller != currentPlayer ) return false;

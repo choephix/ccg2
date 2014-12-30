@@ -253,7 +253,7 @@ package duel.display {
 				} );
 		}
 		
-		public function animRelocation():void 
+		animation function animRelocation():void 
 		{
 			jugglerStrict.tween( this, .600,
 				{ 
@@ -263,7 +263,7 @@ package duel.display {
 				} );
 		}
 		
-		public function animRelocationCompleteOrAbort():void 
+		animation function animRelocationCompleteOrAbort():void 
 		{
 			this.scaleX = 1.0;
 			this.scaleY = 1.0;
@@ -319,6 +319,48 @@ package duel.display {
 				} );
 		}
 		
+		animation function animSpecialEffect():void
+		{
+			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFFFFFF );
+			addChild( q );
+			q.alignPivot();
+			q.alpha = .999;
+			jugglerStrict.tween( q, .500,
+				{ 
+					alpha: .0, 
+					onComplete : q.removeFromParent,
+					onCompleteArgs : [true]
+				} );
+		}
+		
+		animation function animDamageOnly():void
+		{
+			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFF8000 );
+			addChild( q );
+			q.alignPivot();
+			q.alpha = .999;
+			jugglerStrict.tween( q, .150,
+				{ 
+					alpha: .0, 
+					onComplete : q.removeFromParent,
+					onCompleteArgs : [true]
+				} );
+		}
+		
+		animation function animDamageAbort():void
+		{
+			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0x00FFFF );
+			addChild( q );
+			q.alignPivot();
+			q.alpha = .999;
+			jugglerStrict.tween( q, .333,
+				{ 
+					alpha: .0, 
+					onComplete : q.removeFromParent,
+					onCompleteArgs : [true]
+				} );
+		}
+		
 		/// Plays ste standard flip-up animation, but in a way that pauses gameplay processes during it
 		animation function animSpecialFlip():void
 		{
@@ -327,6 +369,7 @@ package duel.display {
 		
 		animation function resetAnimState():void
 		{
+			destroyAnimAttackSprite();
 			jugglerStrict.removeTweens( this );
 			this.scaleX = 1.0;
 			this.scaleY = 1.0;

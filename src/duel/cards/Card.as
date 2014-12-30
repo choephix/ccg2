@@ -68,7 +68,7 @@ package duel.cards
 				if ( behaviourC.hasHandSpecial && behaviour.handSpecialConditionFunc( p ) )
 				{
 					p.interrupt();
-					processes.startChain_SpecialActivation( this, behaviour.handSpecialActivateFunc );
+					processes.startChain_InHandSpecialActivation( this );
 					return;
 				}
 			}
@@ -78,7 +78,7 @@ package duel.cards
 				if ( behaviourC.hasGraveSpecial && behaviour.graveSpecialConditionFunc( p ) )
 				{
 					p.interrupt();
-					processes.startChain_SpecialActivation( this, behaviour.graveSpecialActivateFunc );
+					processes.startChain_InGraveSpecialActivation( this );
 					return;
 				}
 			}
@@ -88,10 +88,10 @@ package duel.cards
 			if ( !isInPlay )
 				return;
 			
-			if ( p.name == "turnStart" )
+			if ( p.name == GameplayProcess.TURN_START )
 				onTurnStart();
 			
-			if ( p.name == "turnEnd" )
+			if ( p.name == GameplayProcess.TURN_END )
 				onTurnEnd();
 			
 			if ( type.isTrap )
@@ -114,7 +114,7 @@ package duel.cards
 				if ( behaviourC.hasInPlaySpecialEffect && behaviourC.inplaySpecialConditionFunc( p ) )
 				{
 					p.interrupt();
-					processes.startChain_SpecialActivation( this, behaviourC.inplaySpecialActivateFunc );
+					processes.startChain_InPlaySpecialActivation( this );
 					return;
 				}
 			}
@@ -180,9 +180,6 @@ package duel.cards
 		}
 		public function get canRelocate():Boolean { 
 			return type.isCreature && isInPlay && !exhausted && !behaviourC.nomove
-		}
-		public function get canActivate():Boolean { 
-			return type.isTrap && isInPlay
 		}
 	}
 }

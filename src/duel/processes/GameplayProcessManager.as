@@ -1,9 +1,11 @@
 package duel.processes
 {
 	import duel.cards.Card;
+	import duel.cards.CommonCardQuestions;
+	import duel.Damage;
+	import duel.DamageType;
 	import duel.display.animation;
 	import duel.Game;
-	import duel.GameEvents;
 	import duel.Player;
 	import duel.table.CreatureField;
 	import duel.table.TrapField;
@@ -21,14 +23,13 @@ package duel.processes
 		{
 			var pro:GameplayProcess;
 			
-			pro = gen( "turnEnd", turnEnd, p );
+			pro = gen( GameplayProcess.TURN_END, turnEnd, p );
 			pro.delay = .333;
 			
 			appendProcess( pro );
 			
 			function turnEnd( p:Player ):void
 			{
-				game.dispatchEventWith( GameEvents.TURN_END );
 				startChain_TurnStart( p.opponent );
 			}
 		}
@@ -37,22 +38,20 @@ package duel.processes
 		{
 			var pro:GameplayProcess;
 			
-			pro = gen( "turnStart", turnStart, p );
+			pro = gen( GameplayProcess.TURN_START, null, p );
+			pro.onStart = onStart;
+			pro.onEnd = onEnd;
 			pro.delay = .333;
 			
 			appendProcess( pro );
 			
-			function turnStart( p:Player ):void
+			function onStart( p:Player ):void
 			{
 				game.currentPlayer = p;
-				appendProcess( pro );
 			}
 			
-			pro = pro.chain( gen( "completeTurnStart", completeTurnStart, p ) );
-			
-			function completeTurnStart( p:Player ):void
+			function onEnd( p:Player ):void
 			{
-				game.dispatchEventWith( GameEvents.TURN_START );
 				startChain_Draw( p, 1 );
 			}
 		}
@@ -64,26 +63,27 @@ package duel.processes
 			var pro:GameplayProcess;
 			while ( --count >= 0 )
 			{
-				pro = gen( "drawCard", onComplete, p );
+				pro = gen( GameplayProcess.DRAW_CARD, onComplete, p );
 				pro.delay = NaN;
-				prependProcess( pro )
+				prependProcess( pro );
 			}
 			
 			function onComplete( p:Player ):void 
 			{
 				if ( p.deck.isEmpty )
 				{
-					dealEffectDamageDirect( p, 1 );
+					dealDirectDamage( p, new Damage( 1, DamageType.SPECIAL, null ) );
 					return;
 				}
 				
 				var c:Card = p.deck.getFirstCard();
 				p.deck.removeCard( c );
 				
-				enterHand( c, p );
-				
-				pro = pro.chain( gen( "completeDrawCard", null, p, c ) );
+				pro = gen( GameplayProcess.DRAW_CARD_COMPLETE, null, p, c );
 				pro.delay = NaN;
+				prependProcess( pro );
+				
+				enterHand( c, p );
 			}
 		}
 		
@@ -91,260 +91,311 @@ package duel.processes
 		{
 			var pro:GameplayProcess;
 			
-			pro = gen( "discardCard", discardCard, p, c );
+			pro = gen( GameplayProcess.DISCARD_CARD, discardCard, p, c );
+			pro.abortCheck = abortCheck;
 			pro.delay = .333;
 			
 			appendProcess( pro );
 			
+			function abortCheck( p:Player, c:Card ):Boolean
+			{
+				return !p.hand.containsCard( c );
+			}
+				
 			function discardCard( p:Player, c:Card ):void
 			{
-				if ( !p.hand.containsCard( c ) )
-				{
-					appendProcess( gen( "abortDiscardCard", null, p, c ) );
-					return;
-				}
 				p.hand.removeCard( c );
 				enterGrave( c );
-				appendProcess( gen( "completeDiscardCard", null, p, c ) );
 			}
+				
+			pro = pro.chain( gen( GameplayProcess.DISCARD_CARD_COMPLETE, null, p, c ) );
 		}
 		
 		// SUMMON
 		
-		public function startChain_Summon( c:Card, field:CreatureField ):void
+		public function startChain_SummonHere( c:Card, field:CreatureField ):void
 		{
-			appendProcess( gen( "declareSummon", declareSummon, c, field ) );
+			var pro:GameplayProcess;
 			
-			function declareSummon( c:Card, field:CreatureField ):void
+			pro = gen( GameplayProcess.SUMMON, null, c, field );
+			pro.abortCheck = CommonCardQuestions.cannotSummonHere;
+			pro.onAbort = onAbort;
+			
+			appendProcess( pro );
+			
+			pro = pro.chain( gen( GameplayProcess.ENTER_PLAY, onEnter, c, field ) );
+			pro.abortCheck = CommonCardQuestions.cannotPlaceCreatureHere;
+			pro.onAbort = onAbort;
+			
+			function onEnter( c:Card, field:CreatureField ):void
 			{
-				appendProcess( gen( "performSummon", performSummon, c, field ) );
-			}
-			function performSummon( c:Card, field:CreatureField ):void
-			{
-				if ( !game.canPlaceCreatureHere( c, field ) )
-				{
-					appendProcess( gen( "abortSummon", null, c, field ) );
-					return;
-				}
-				
 				field.addCard( c );
 				c.faceDown = c.behaviour.startFaceDown;
 				
 				c.sprite.animSummon();
-				
-				appendProcess( gen( "completeSummon", completeSummon, c, field ) );
 			}
-			function completeSummon( c:Card, field:CreatureField ):void
+			
+			pro = pro.chain( gen( GameplayProcess.ENTER_PLAY_COMPLETE, null, c, field ) );
+			
+			pro = pro.chain( gen( GameplayProcess.SUMMON_COMPLETE, complete, c, field ) );
+			
+			function complete( c:Card, field:CreatureField ):void
 			{
 				if ( c.isInPlay )
 					c.exhausted ||= !c.behaviourC.haste;
 			}
+			
+			function onAbort( c:Card ):void
+			{
+				if ( c.isInPlay )
+					enterGrave( c );
+			}
+			
 		}
 		
+		public function startChain_ResurrectHere( c:Card, field:CreatureField ):void	//TODO  USE THIS SHIT (zig&zag)
+		{
+			var pro:GameplayProcess;
+			
+			pro = gen( GameplayProcess.RESURRECT, onEnd, c, field );
+			pro.abortCheck = abortCheck;
+			pro.onAbort = onAbort;
+			
+			appendProcess( pro );
+			
+			function abortCheck( c:Card, field:CreatureField ):Boolean
+			{
+				if ( !c.isInGrave ) return true;
+				return CommonCardQuestions.cannotPlaceCreatureHere( c, field );
+			}
+			
+			function onAbort( c:Card ):void
+			{
+				if ( c.isInPlay )
+					enterGrave( c );
+			}
+			
+			function onEnd( c:Card, field:CreatureField ):void
+			{
+				c.lot.removeCard( c );
+				startChain_SummonHere( c, field );
+			}
+			
+			appendProcess( gen( GameplayProcess.RESURRECT_COMPLETE, null, c, field ) );
+		}
+		
+		// RELOCATION
+		
+		public function startChain_Relocation( c:Card, field:CreatureField ):void
+		{
+			var pro:GameplayProcess;
+			
+			if ( c.faceDown )
+				startChain_SafeFlip( c );
+			
+			pro = gen( GameplayProcess.RELOCATE, null, c, field );
+			pro.abortCheck = CommonCardQuestions.cannotRelocateHere;
+			pro.onAbort = completeOrAbort;
+			pro.onStart = onStart;
+			pro.onEnd = onEnd;
+			
+			appendProcess( pro );
+			
+			function onStart( c:Card, field:CreatureField ):void
+			{
+				c.sprite.animRelocation();
+			}
+			function onEnd( c:Card, field:CreatureField ):void
+			{
+				field.addCard( c );
+			}
+			
+			pro = pro.chain( gen( GameplayProcess.RELOCATE_COMPLETE, completeOrAbort, c, field ) );
+			
+			function completeOrAbort( c:Card, field:CreatureField ):void {
+				if ( c.isInPlay )
+				{
+					c.sprite.animRelocationCompleteOrAbort();
+					c.exhausted = true;
+				}
+			}
+		}
 		
 		// TRAPS
 		
 		public function startChain_TrapSet( c:Card, field:TrapField ):void 
 		{
-			appendProcess( gen( "declareTrapSet", stepDeclare, c, field ) );
+			var pro:GameplayProcess;
 			
-			function stepDeclare( c:Card, field:TrapField ):void
-			{
-				appendProcess( gen( "performTrapSet", stepPerform, c, field ) );
-			}
-			function stepPerform( c:Card, field:TrapField ):void
-			{
-				if ( !game.canPlaceTrapHere( c, field ) )
-				{
-					appendProcess( gen( "abortTrapSet", null, c, field ) );
-					return;
-				}
-				
-				field.addCard( c );
-				c.faceDown = c.behaviour.startFaceDown;
-				
-				appendProcess( gen( "completeTrapSet", null, c, field ) );
-			}
-		}
-		
-		
-		public function startChain_TrapActivation( c:Card ):void
-		{
-			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
+			pro = gen( GameplayProcess.SET_TRAP, onEnd, c, field );
+			pro.abortCheck = CommonCardQuestions.cannotPlaceTrapHere;
+			pro.onAbort = onAbort;
 			
-			prependProcess( gen( "declareTrapActivation", stepDeclare, c ) );
-			
-			function stepDeclare( c:Card ):void
-			{
-				c.faceDown = false;
-				c.sprite.animSpecialFlip();
-				prependProcess( gen( "performTrapActivation", stepPerform, c ) );
-				
-				trace ( c + " interrupted process " + interruptedProcess );
-			}
-			function stepPerform( c:Card ):void
-			{
-				if ( !c.canActivate )
-				{
-					prependProcess( gen( "abortTrapActivation", abortTrapActivation, c ) );
-					return;
-				}
-				
-				prependProcess( gen( "completeTrapActivation", completeTrapActivation, c ) );
-				
-				c.sprite.animFlipEffect();
-				c.behaviourT.onActivateFunc( interruptedProcess );
-			}
-			function abortTrapActivation( c:Card ):void
+			function onAbort( c:Card ):void
 			{
 				if ( c.isInPlay )
 					enterGrave( c );
 			}
-			function completeTrapActivation( c:Card ):void
+			
+			appendProcess( pro );
+			
+			function onEnd( c:Card, field:TrapField ):void
+			{
+				field.addCard( c );
+				c.faceDown = c.behaviour.startFaceDown;
+			}
+			
+			pro = pro.chain( gen( GameplayProcess.SET_TRAP_COMPLETE, null, c, field ) );
+		}
+		
+		public function startChain_TrapActivation( c:Card ):void
+		{
+			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
+			var pro:GameplayProcess;
+			
+			pro = gen( GameplayProcess.ACTIVATE_TRAP, null, c );
+			pro.abortCheck = CommonCardQuestions.isInPlay;
+			pro.onAbort = onAbort;
+			pro.onStart = onStart;
+			pro.onEnd = onEnd;
+			
+			function onAbort( c:Card ):void
+			{
+				if ( c.isInPlay )
+					enterGrave( c );
+			}
+			
+			prependProcess( pro );
+			
+			function onStart( c:Card ):void
+			{
+				c.faceDown = false;
+				c.sprite.animSpecialFlip();
+				trace ( c + " interrupted process " + interruptedProcess );
+			}
+			
+			function onEnd( c:Card ):void
+			{
+				c.sprite.animFlipEffect();
+				c.behaviourT.onActivateFunc( interruptedProcess );
+			}
+			
+			pro = pro.chain( gen( GameplayProcess.ACTIVATE_TRAP_COMPLETE, onComplete, c ) );
+			
+			function onComplete( c:Card ):void
 			{
 				if ( c.isInPlay && !c.behaviourT.persistent )
 					enterGrave( c );
 			}
 		}
 		
-		public function startChain_SpecialActivation( c:Card, func:Function ):void
+		// SPECIAL EFFECTS
+		
+		public function startChain_InPlaySpecialActivation( c:Card ):void
+		{
+			startChain_SpecialActivation( c,
+					c.behaviourC.inplaySpecialActivateFunc, 
+					c.behaviourC.inplaySpecialConditionFunc, 
+					CommonCardQuestions.isNotInPlay );
+		}
+		
+		public function startChain_InGraveSpecialActivation( c:Card ):void
+		{
+			startChain_SpecialActivation( c,
+					c.behaviourC.graveSpecialActivateFunc, 
+					c.behaviourC.graveSpecialConditionFunc, 
+					CommonCardQuestions.isNotInGrave );
+		}
+		
+		public function startChain_InHandSpecialActivation( c:Card ):void
+		{
+			startChain_SpecialActivation( c,
+					c.behaviourC.handSpecialActivateFunc, 
+					c.behaviourC.handSpecialConditionFunc, 
+					CommonCardQuestions.isNotInHand );
+		}
+		
+		private function startChain_SpecialActivation( c:Card, func:Function, abortCheckFunc:Function, abortCheck2:Function ):void
 		{
 			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
+			var pro:GameplayProcess;
 			
-			//if ( c.faceDown )
-				//appendProcess( gen( "flipUpForRelocation", flipUpForRelocation, c ) );
-			//else
-				//appendProcess( gen( "declareRelocation", declareRelocation, c, field ) );
-			//function prepareForSpecial( c:Card ):void
-			//{
-				//startChain_SafeFlip( c );
-				//appendProcess( gen( "declareRelocation", declareRelocation, c, field ) );
-			//}
+			pro = gen( GameplayProcess.ACTIVATE_SPECIAL, null, c );
+			pro.abortCheck = abortCheck;
+			pro.onStart = onStart;
+			pro.onEnd = onEnd;
 			
-			prependProcess( gen( "declareSpecialActivation", declare, c ) );
+			prependProcess( pro );
 			
-			function declare( c:Card ):void
+			function abortCheck( c:Card ):Boolean
+			{ 
+				return abortCheck2( c ) || abortCheckFunc( interruptedProcess );
+			}
+			
+			function onStart( c:Card ):void
 			{
 				c.lot.moveCardToTop( c );
 				
-				prependProcess( gen( "performSpecialActivation", perform, c ) );
 				if ( c.faceDown )
-					startChain_MagicFlip( c );
+					startChain_SilentFlip( c );
 				
 				trace ( c + " interrupted process " + interruptedProcess );
 			}
-			function perform( c:Card ):void
+			
+			function onEnd( c:Card ):void
 			{
-				//TODO must recheck conditions here
-				prependProcess( gen( "completeSpecialActivation", null, c ) );
-				
-				c.sprite.animFlipEffect();
+				c.sprite.animSpecialEffect();
 				func( interruptedProcess );
 			}
-		}
-		
-		
-		// RELOCATION
-		
-		public function startChain_Relocation( c:Card, field:CreatureField ):void
-		{
-			if ( c.faceDown )
-				appendProcess( gen( "flipUpForRelocation", flipUpForRelocation, c ) );
-			else
-				appendProcess( gen( "declareRelocation", declareRelocation, c, field ) );
 			
-			function flipUpForRelocation( c:Card ):void
-			{
-				startChain_SafeFlip( c );
-				appendProcess( gen( "declareRelocation", declareRelocation, c, field ) );
-			}
-			
-			function declareRelocation( c:Card, field:CreatureField ):void
-			{
-				if ( !c.canRelocate )
-					return;
-				
-				c.sprite.animRelocation();
-				
-				appendProcess( gen( "performRelocation", performRelocation, c, field ) );
-			}
-			function performRelocation( c:Card, field:CreatureField ):void
-			{
-				if ( !c.canRelocate )
-				{
-					appendProcess( gen( "abortRelocation", completeOrAbortRelocation, c, field ) );
-					return;
-				}
-				
-				field.addCard( c );
-				
-				appendProcess( gen( "completeRelocation", completeOrAbortRelocation, c, field ) );
-			}
-			function completeOrAbortRelocation():void {
-				
-				c.sprite.animRelocationCompleteOrAbort()
-				
-				if ( c.isInPlay )
-					c.exhausted = true;
-			}
+			pro = pro.chain( gen( GameplayProcess.ACTIVATE_SPECIAL_COMPLETE, null, c ) );
 		}
 		
 		// ATTACK
 		
 		public function startChain_Attack( c:Card ):void
 		{
-			if ( c.faceDown )
-				appendProcess( gen( "flipUpForAttack", flipUpForAttack, c ) );
-			else
-				appendProcess( gen( "declareAttack", declareAttack, c ) );
+			var pro:GameplayProcess;
 			
-			function flipUpForAttack( c:Card ):void
-			{
+			if ( c.faceDown )
 				startChain_SafeFlip( c );
-				appendProcess( gen( "declareAttack", declareAttack, c ) );
-			}
-				
-			function declareAttack( c:Card ):void
+			
+			pro = gen( GameplayProcess.ATTACK, null, c );
+			pro.abortCheck = CommonCardQuestions.cannotPerformAttack;
+			pro.onAbort = completeOrAbort;
+			pro.onStart = onStart;
+			pro.onEnd = onEnd;
+			
+			appendProcess( pro );
+			
+			function onStart( c:Card ):void
 			{
-				if ( !c.canAttack )
-				{
-					appendProcess( gen( "abortAttack", null, c ) );
-					return;
-				}
 				c.sprite.animAttackPrepare();
-				appendProcess( gen( "performAttack", performAttack, c ) );
+				
+				if ( c.indexedField.opposingCreature != null )
+					if ( c.indexedField.opposingCreature.faceDown )
+						startChain_CombatFlip( c.indexedField.opposingCreature );
 			}
-			function performAttack( c:Card ):void
+			
+			function onEnd( c:Card ):void
 			{
-				if ( !c.canAttack )
-				{
-					appendProcess( gen( "abortAttack", completeOrAbortAttack, c ) );
-					c.sprite.animAttackAbort();
-					return;
-				}
+				c.sprite.animAttackPerform();
 				
 				if ( c.indexedField.opposingCreature == null )
 				{
-					c.sprite.animAttackPerform();
-					dealCombatDamageDirect( c, c.controller.opponent );
+					dealDirectDamage( c.controller.opponent, c.behaviourC.genAttackDamage() );
 				}
 				else
 				{
-					if ( c.indexedField.opposingCreature.faceDown )
-					{
-						startChain_CombatFlip( c.indexedField.opposingCreature );
-						appendProcess( gen( "performAttack", performAttack, c ) );
-						return;
-					}
-					
-					c.sprite.animAttackPerform();
 					c.indexedField.opposingCreature.sprite.animAttackPerform();
-					dealCombatDamage( c, c.indexedField.opposingCreature );
-					dealCombatDamage( c.indexedField.opposingCreature, c );
+					dealCreatureDamage( c, c.indexedField.opposingCreature.behaviourC.genAttackDamage() );
+					dealCreatureDamage( c.indexedField.opposingCreature, c.behaviourC.genAttackDamage() );
 				}
-				appendProcess( gen( "completeAttack", completeOrAbortAttack, c ) );
 			}
-			function completeOrAbortAttack( c:Card ):void
+			
+			pro = pro.chain( gen( GameplayProcess.ATTACK_COMPLETE, completeOrAbort, c ) );
+			
+			function completeOrAbort( c:Card ):void
 			{
 				if ( c.isInPlay )
 					c.exhausted = true;
@@ -353,51 +404,86 @@ package duel.processes
 		
 		// DAMAGE & DEATH
 		
-		private function dealCombatDamage( attacker:Card, attackee:Card ):void
+		private function dealCreatureDamage( c:Card, dmg:Damage ):void
 		{
-			appendProcess( gen( "dealCombatDamage", onComplete, attacker, attackee ) );
+			var pro:GameplayProcess;
 			
-			function onComplete( attacker:Card, attackee:Card ):void
+			pro = gen( GameplayProcess.CREATURE_DAMAGE, null, c, dmg );
+			pro.abortCheck = CommonCardQuestions.cannotTakeDamage;
+			pro.onAbort = onAbort;
+			pro.onStart = onStart;
+			pro.onEnd = onEnd;
+			
+			prependProcess( pro );
+			
+			function onAbort( c:Card, dmg:Damage ):void
 			{
-				if ( attackee.behaviourC.attack <= attacker.behaviourC.attack )
-					startChain_death( attackee );
+				if ( c.isInPlay )
+					c.sprite.animDamageAbort();
 			}
-		}
-		
-		private function dealCombatDamageDirect( attacker:Card, attackee:Player ):void
-		{
-			appendProcess( gen( "dealCombatDamageDirect", dealDamageDirect, attackee, attacker.behaviourC.attack ) );
-		}
-		
-		private function dealEffectDamageDirect( p:Player, amount:int ):void 
-		{
-			prependProcess( gen( "dealEffectDamageDirect", dealDamageDirect, p, amount ) );
-		}
-		
-		private function dealDamageDirect( p:Player, amount:int ):void 
-		{
-			prependProcess( gen( "dealDamageDirect", onComplete, p, amount ) );
-			function onComplete( p:Player, amount:int ):void 
+			
+			function onStart( c:Card, dmg:Damage ):void
 			{
-				p.lp -= amount;
+				if ( c.faceDown )
+					startChain_SilentFlip( c );
 			}
+			
+			function onEnd( c:Card, dmg:Damage ):void
+			{
+				if ( !c.isInPlay ) 
+					return;
+				
+				if ( c.behaviourC.attack <= dmg.amount )
+					startChain_death( c );
+				else
+					c.sprite.animDamageOnly();
+			}
+			
+			pro = pro.chain( gen( GameplayProcess.CREATURE_DAMAGE_COMPLETE, null, c, dmg ) );
+		}
+		
+		private function dealDirectDamage( p:Player, dmg:Damage ):void
+		{
+			var pro:GameplayProcess;
+			
+			pro = gen( GameplayProcess.DIRECT_DAMAGE, onEnd, p, dmg );
+			
+			prependProcess( pro );
+			
+			function onEnd( p:Player, dmg:Damage ):void
+			{
+				p.lp -= dmg.amount;
+			}
+			
+			pro = pro.chain( gen( GameplayProcess.DIRECT_DAMAGE_COMPLETE, null, p, dmg ) );
+			pro.delay = .440;
 		}
 		
 		public function startChain_death( c:Card ):void 
 		{
-			prependProcess( gen( "declareDeath", declareDeath, c ) );
-			function declareDeath( c:Card ):void 
+			var pro:GameplayProcess;
+			
+			pro = gen( GameplayProcess.DIE, null, c );
+			pro.abortCheck = CommonCardQuestions.cannotDie;
+			pro.onStart = onStart;
+			pro.onEnd = onEnd;
+			
+			prependProcess( pro );
+			
+			function onStart( c:Card ):void
 			{
-				prependProcess( gen( "performDeath", performDeath, c ) );
 				if ( c.faceDown )
-					startChain_MagicFlip( c );
+					startChain_SilentFlip( c );
 			}
-			function performDeath( c:Card ):void 
+			
+			function onEnd( c:Card ):void
 			{
 				c.sprite.animDie();
-				prependProcess( gen( "completeDeath", completeDeath, c ) );
 			}
-			function completeDeath( c:Card ):void 
+			
+			pro = pro.chain( gen( GameplayProcess.DIE_COMPLETE, complete, c ) );
+			
+			function complete( c:Card ):void 
 			{
 				enterGrave( c );
 			}
@@ -407,117 +493,91 @@ package duel.processes
 		
 		private function startChain_CombatFlip( c:Card ):void
 		{
-			prependProcess( gen( "performCombatFlip", performCombatFlip, c ) );
-			function performCombatFlip( c:Card ):void
+			var pro:GameplayProcess;
+			
+			pro = gen( GameplayProcess.COMBAT_FLIP, onEnd, c );
+			pro.abortCheck = CommonCardQuestions.cannotFlipInPlay;
+			
+			prependProcess( pro );
+			
+			function onEnd( c:Card ):void
 			{
 				c.faceDown = false;
 				c.sprite.animSpecialFlip();
-				if ( c.behaviourC.hasCombatFlipEffect )
-					startChain_CombatFlipEffect( c );
-				else
-					prependProcess( gen( "completeCombatFlip", null, c ) );
 			}
 			
-			// EFFECT
-			function startChain_CombatFlipEffect( c:Card ):void
+			pro = pro.chain( gen( GameplayProcess.COMBAT_FLIP_COMPLETE, onComplete, c ) );
+			
+			function onComplete( c:Card ):void
 			{
-				prependProcess( gen( "declareCombatFlipEffect", declareCombatFlipEffect, c ) );
+				if ( !c.behaviourC.hasCombatFlipEffect )
+					return;
+					
+				var proE:GameplayProcess;
+				proE = gen( GameplayProcess.COMBAT_FLIP_EFFECT, null, c );
+				proE.abortCheck = effectAbortCheck;
+				proE.onStart = effectStart;
+				proE.onEnd = effectEnd;
+				prependProcess( proE );
+				proE = proE.chain( gen( GameplayProcess.COMBAT_FLIP_EFFECT_COMPLETE, null, c ) );
 			}
-			function declareCombatFlipEffect( c:Card ):void
+			
+			function effectAbortCheck( c:Card ):Boolean
+			{
+				return !c.isInPlay || !c.behaviourC.hasCombatFlipEffect;
+			}
+			
+			function effectStart( c:Card ):void
 			{
 				c.sprite.animFlipEffect();
-				prependProcess( gen( "performCombatFlipEffect", performCombatFlipEffect, c ) );
 			}
-			function performCombatFlipEffect( c:Card ):void
+			
+			function effectEnd( c:Card ):void
 			{
-				if ( !c.isInPlay )
-				{
-					appendProcess( gen( "abortCombatFlipEffect", null, c ) );
-					return;
-				}
-				if ( c.behaviourC.onCombatFlipFunc != null )
-					c.behaviourC.onCombatFlip();
-				prependProcess( gen( "completeCombatFlipEffect", null, c ) );
+				c.behaviourC.onCombatFlip();
 			}
 		}
 		
 		public function startChain_SafeFlip( c:Card ):void
 		{
-			prependProcess( gen( "performSafeFlip", performSafeFlip, c ) );
-			function performSafeFlip( c:Card ):void
-			{
-				c.faceDown = false;
-				c.sprite.animSpecialFlip();
-				if ( c.behaviourC.hasSafeFlipEffect )
-					startChain_SafeFlipEffect( c );
-				else
-					prependProcess( gen( "completeSafeFlip", null, c ) );
-			}
-			
-			// EFFECT
-			function startChain_SafeFlipEffect( c:Card ):void
-			{
-				prependProcess( gen( "declareSafeFlipEffect", declareSafeFlipEffect, c ) );
-			}
-			function declareSafeFlipEffect( c:Card ):void
-			{
-				c.sprite.animFlipEffect();
-				prependProcess( gen( "performSafeFlipEffect", performSafeFlipEffect, c ) );
-			}
-			function performSafeFlipEffect( c:Card ):void
-			{
-				if ( c.behaviourC.onSafeFlipFunc != null )
-					c.behaviourC.onSafeFlip();
-				prependProcess( gen( "completeSafeFlipEffect", null, c ) );
-			}
+			/// ...
 		}
 		
-		public function startChain_MagicFlip( c:Card ):void
+		public function startChain_SilentFlip( c:Card ):void
 		{
-			prependProcess( gen( "performMagicFlip", performMagicFlip, c ) );
-			function performMagicFlip( c:Card ):void
-			{
-				c.faceDown = false;
-				c.sprite.animSpecialFlip();
-				if ( c.behaviourC.hasMagicFlipEffect )
-					startChain_MagicFlipEffect( c );
-				else
-					prependProcess( gen( "completeMagicFlip", null, c ) );
-			}
-			
-			// EFFECT
-			function startChain_MagicFlipEffect( c:Card ):void
-			{
-				prependProcess( gen( "declareMagicFlipEffect", declareMagicFlipEffect, c ) );
-			}
-			function declareMagicFlipEffect( c:Card ):void
-			{
-				c.sprite.animFlipEffect();
-				prependProcess( gen( "performMagicFlipEffect", performMagicFlipEffect, c ) );
-			}
-			function performMagicFlipEffect( c:Card ):void
-			{
-				if ( c.behaviourC.hasMagicFlipEffect )
-					c.behaviourC.onMagicFlip();
-				prependProcess( gen( "completeMagicFlipEffect", null, c ) );
-			}
+			/// ...
 		}
 		
 		// CHAINGING CARD CONTAINERS
 		public function enterGrave( c:Card ):void 
 		{
-			prependProcess( gen( "enterGrave", onComplete, c ) );
-			function onComplete( c:Card ):void 
+			var pro:GameplayProcess;
+			
+			pro = gen( GameplayProcess.ENTER_GRAVE, onEnd, c );
+			pro.abortCheck = abortCheck;
+			
+			prependProcess( pro );
+			
+			function abortCheck( c:Card ):Boolean
+			{
+				return c.isInGrave;
+			}
+			
+			function onEnd( c:Card ):void
 			{
 				if ( c.isInPlay )
 				{
 					c.exhausted = false;
 					c.sprite.exhaustClock.alpha = 0.0;
 				}
-				//c.controller = c.owner;
 				c.owner.grave.addCard( c );
+			}
+			
+			pro = pro.chain( gen( GameplayProcess.ENTER_GRAVE_COMPLETE, complete, c ) );
+			
+			function complete( c:Card ):void 
+			{
 				c.faceDown = false;
-				prependProcess( gen( "enterGraveComplete", null, c ) );
 			}
 		}
 		
@@ -525,46 +585,44 @@ package duel.processes
 		{
 			var pro:GameplayProcess;
 			
-			pro = gen( "enterHand", onComplete, c, p );
-			
+			pro = gen( GameplayProcess.ENTER_HAND, onEnd, c, p );
+			pro.abortCheck = abortCheck;
 			pro.delay = NaN;
+			
 			prependProcess( pro );
 			
-			function onComplete( c:Card, p:Player ):void 
+			function abortCheck( c:Card, p:Player ):Boolean
 			{
-				if ( c.isInPlay )
-				{
-					c.exhausted = false;
-					c.sprite.exhaustClock.alpha = 0.0;
-				}
+				return p.hand.containsCard( c );
+			}
+			
+			function onEnd( c:Card, p:Player ):void 
+			{
 				p.hand.addCard( c );
 				c.faceDown = false;
 			}
 			
-			pro = pro.chain( gen( "enterHandComplete", null, c, p ) );
+			pro = pro.chain( gen( GameplayProcess.ENTER_HAND_COMPLETE, null, c, p ) );
 			pro.delay = NaN;
 		}
 		
-		public static function gen( name:String, callback:Function = null, ...callbackArgs ):GameplayProcess
+		
+		
+		//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+		////\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+		//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+		////\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+		//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+		
+		public static function gen( name:String, onEnd:Function = null, ...args ):GameplayProcess
 		{
 			var p:GameplayProcess = new GameplayProcess();
 			p.name = name;
-			p.callback = callback;
-			p.callbackArgs = callbackArgs;
+			p.onEnd = onEnd;
+			p.args = args;
 			return p;
 		}
 		
-		public static function genDelayed( name:String, delay:Number, callback:Function = null, ...callbackArgs ):GameplayProcess
-		{
-			var p:GameplayProcess = new GameplayProcess();
-			p.name = name;
-			p.delay = delay;
-			p.callback = callback;
-			p.callbackArgs = callbackArgs;
-			return p;
-		}
-		
-		//
 		protected function get game():Game { return Game.current }
 	}
 
