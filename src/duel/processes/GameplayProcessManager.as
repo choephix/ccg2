@@ -20,21 +20,36 @@ package duel.processes
 		public function startChain_TurnEnd( p:Player ):void
 		{
 			var pro:GameplayProcess;
+			
 			pro = gen( "turnEnd", turnEnd, p );
 			pro.delay = .333;
+			
 			appendProcess( pro );
+			
 			function turnEnd( p:Player ):void
 			{
 				game.dispatchEventWith( GameEvents.TURN_END );
-				turnStart( p.opponent );
+				startChain_TurnStart( p.opponent );
 			}
+		}
+		
+		public function startChain_TurnStart( p:Player ):void
+		{
+			var pro:GameplayProcess;
+			
+			pro = gen( "turnStart", turnStart, p );
+			pro.delay = .333;
+			
+			appendProcess( pro );
+			
 			function turnStart( p:Player ):void
 			{
 				game.currentPlayer = p;
-				pro = gen( "turnStart", completeTurnStart, p );
-				pro.delay = .333;
 				appendProcess( pro );
 			}
+			
+			pro = pro.chain( gen( "completeTurnStart", completeTurnStart, p ) );
+			
 			function completeTurnStart( p:Player ):void
 			{
 				game.dispatchEventWith( GameEvents.TURN_START );
@@ -61,20 +76,27 @@ package duel.processes
 					dealEffectDamageDirect( p, 1 );
 					return;
 				}
+				
 				var c:Card = p.deck.getFirstCard();
 				p.deck.removeCard( c );
 				
 				enterHand( c, p );
-				pro = gen( "completeDrawCard", null, p, c );
+				
+				pro = pro.chain( gen( "completeDrawCard", null, p, c ) );
 				pro.delay = NaN;
-				prependProcess( pro )
 			}
 		}
 		
 		public function startChain_Discard( p:Player, c:Card ):void 
 		{
-			appendProcess( gen( "discardCard", onComplete, p, c ) );
-			function onComplete():void
+			var pro:GameplayProcess;
+			
+			pro = gen( "discardCard", discardCard, p, c );
+			pro.delay = .333;
+			
+			appendProcess( pro );
+			
+			function discardCard( p:Player, c:Card ):void
 			{
 				if ( !p.hand.containsCard( c ) )
 				{
@@ -504,8 +526,10 @@ package duel.processes
 			var pro:GameplayProcess;
 			
 			pro = gen( "enterHand", onComplete, c, p );
+			
 			pro.delay = NaN;
 			prependProcess( pro );
+			
 			function onComplete( c:Card, p:Player ):void 
 			{
 				if ( c.isInPlay )
@@ -515,17 +539,26 @@ package duel.processes
 				}
 				p.hand.addCard( c );
 				c.faceDown = false;
-				
-				pro = gen( "enterHandComplete", null, c, p );
-				pro.delay = NaN;
-				prependProcess( pro );
 			}
+			
+			pro = pro.chain( gen( "enterHandComplete", null, c, p ) );
+			pro.delay = NaN;
 		}
 		
 		public static function gen( name:String, callback:Function = null, ...callbackArgs ):GameplayProcess
 		{
 			var p:GameplayProcess = new GameplayProcess();
 			p.name = name;
+			p.callback = callback;
+			p.callbackArgs = callbackArgs;
+			return p;
+		}
+		
+		public static function genDelayed( name:String, delay:Number, callback:Function = null, ...callbackArgs ):GameplayProcess
+		{
+			var p:GameplayProcess = new GameplayProcess();
+			p.name = name;
+			p.delay = delay;
 			p.callback = callback;
 			p.callbackArgs = callbackArgs;
 			return p;
