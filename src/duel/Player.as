@@ -70,6 +70,24 @@ package duel {
 		
 		// CARD ACTIONS
 		
+		// QUESTIONS
+		
+		public function get creatureCount():int
+		{ 
+			var r:int = 0;
+			for ( var i:int = 0; i < G.FIELD_COLUMNS; i++ ) 
+				if ( fieldsC[ i ].topCard != null && fieldsC[ i ].topCard.type.isCreature ) r++;
+			return r;
+		}
+		
+		public function get trapCount():int
+		{ 
+			var r:int = 0;
+			for ( var i:int = 0; i < G.FIELD_COLUMNS; i++ ) 
+				if ( !fieldsT[ i ].isEmpty ) r++;
+			return r;
+		}
+		
 		// BATTLE ENTITIES
 		public function getCreatureAt( index:int ):Creature { return creatures[ index ]; }
 		public function setCreatureAt( index:int, o:Creature ):void { creatures[ index ] = o; }
