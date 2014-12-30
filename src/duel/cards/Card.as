@@ -109,7 +109,7 @@ package duel.cards
 			
 			if ( type.isTrap )
 			{
-				if ( behaviourT.activationConditionMet( p ) )
+				if ( behaviourT.effect.mustInterrupt( p ) )
 				{
 					p.interrupt();
 					processes.prepend_TrapActivation( this );

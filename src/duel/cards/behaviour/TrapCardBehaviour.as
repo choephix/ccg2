@@ -1,5 +1,6 @@
 package duel.cards.behaviour 
 {
+	import duel.otherlogic.SpecialEffect;
 	import duel.processes.GameplayProcess;
 	/**
 	 * ...
@@ -7,17 +8,12 @@ package duel.cards.behaviour
 	 */
 	public class TrapCardBehaviour extends CardBehaviour 
 	{
-		/// must accept one arg of type Process and return Boolean
-		public var activationConditionFunc:Function;
-		public var onActivateFunc:Function;
+		/// Must accept one arg of type Process and return Boolean
+		public var effect:SpecialEffect = new SpecialEffect();
 		
-		public var persistent:Boolean = false;
+		/// If true, the trap will not leave the field after activation.
+		public var persistent:Boolean = false; //TODO add ongoing effect tot this
 		
 		public function TrapCardBehaviour() { startFaceDown = true }
-		
-		public function activationConditionMet( p:GameplayProcess ):Boolean
-		{
-			return activationConditionFunc == null ? false : activationConditionFunc( p );
-		}
 	}
 }

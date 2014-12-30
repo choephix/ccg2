@@ -7,7 +7,9 @@ package duel.otherlogic
 	 */
 	public class SpecialEffect 
 	{
+		/// must accept one arg of type Process and return Boolean
 		public var funcCondition:Function = TRUTH;
+		/// must accept one arg of type Process
 		public var funcActivate:Function = ERROR;
 		
 		private var processNames:Array = [];

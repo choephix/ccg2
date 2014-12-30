@@ -276,7 +276,7 @@ package duel.processes
 			function onEnd( c:Card ):void
 			{
 				c.sprite.animFlipEffect();
-				c.behaviourT.onActivateFunc( interruptedProcess );
+				c.behaviourT.effect.activateNow( interruptedProcess );
 			}
 			
 			pro = pro.chain( gen( GameplayProcess.ACTIVATE_TRAP_COMPLETE, onComplete, c ) );
