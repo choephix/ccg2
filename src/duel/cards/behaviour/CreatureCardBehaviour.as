@@ -7,6 +7,7 @@ package duel.cards.behaviour
 	public class CreatureCardBehaviour extends CardBehaviour 
 	{
 		public var attack:int = 0;
+		public var tributes:int = 0;
 		
 		public var haste:Boolean = false; 		// CAN ATTACK OR MOVE FIRST TURN
 		public var noattack:Boolean = false; 	// CANNOT ATTACK
