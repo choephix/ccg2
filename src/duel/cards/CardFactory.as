@@ -40,11 +40,11 @@ package duel.cards
 					
 					c.behaviourC.inplaySpecial.watch( GameplayProcess.TURN_START );
 					c.behaviourC.inplaySpecial.funcCondition = function( p:GameplayProcess ):Boolean {
-						if ( c.field.opposingCreature == null ) return false;
+						if ( c.indexedField.opposingCreature == null ) return false;
 						return c.controller.opponent == p.getPlayer();
 					}
 					c.behaviourC.inplaySpecial.funcActivate = function( p:GameplayProcess ):Boolean {
-						Game.current.processes.append_Attack( c.field.opposingCreature );
+						Game.current.processes.append_Attack( c.indexedField.opposingCreature );
 					}
 				},
 				function( c:Card ):void ///		..C		Berserker
@@ -68,7 +68,7 @@ package duel.cards
 					
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 0;
-					c.behaviourC.tributes = 1;
+					c.behaviourC.needsTribute = true;
 					
 					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):Boolean {
 						c.behaviourC.attack = c.controller.opponent.creatureCount * 5;
