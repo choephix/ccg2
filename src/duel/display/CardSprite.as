@@ -156,7 +156,7 @@ package duel.display {
 					tfDescr.text = card.behaviourC.toString();
 				}
 				
-				setExhaustClockVisible( card.exhausted && !card.faceDown );
+				setExhaustClockVisible( card.isInPlay && card.exhausted && !card.faceDown );
 			}
 		}
 		
