@@ -33,6 +33,18 @@ package duel.cards
 				}, 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 				function( c:Card ):void ///		..C		Taunter
 				{
+					c.name = "Spying Joe";
+					
+					setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 7;
+					
+					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):void {
+						if ( c.controller.opponent.deck.topCard == null ) return;
+						c.controller.opponent.deck.topCard.faceDown = false;
+					}
+				},
+				function( c:Card ):void ///		..C		Taunter
+				{
 					c.name = "Taunter";
 					
 					setToCreature( c );					// - - - - - CREATURE //
@@ -70,7 +82,7 @@ package duel.cards
 					c.behaviourC.attack = 0;
 					c.behaviourC.needsTribute = true;
 					
-					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):Boolean {
+					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):void {
 						c.behaviourC.attack = c.controller.opponent.creatureCount * 5;
 					}
 				},
@@ -94,7 +106,7 @@ package duel.cards
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 0;
 					
-					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):Boolean {
+					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):void {
 						c.behaviourC.attack = c.controller.hand.cardsCount * 2;
 					}
 				},
@@ -337,7 +349,7 @@ package duel.cards
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 5;
 					
-					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):Boolean {
+					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):void {
 						c.behaviourC.attack = hasAdjacentYin() ? 15 : 5;
 					}
 					function hasAdjacentYin():Boolean {
@@ -356,7 +368,7 @@ package duel.cards
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 6;
 					
-					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):Boolean {
+					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):void {
 						c.behaviourC.attack = hasAdjacentYang() ? 14 : 6;
 					}
 					function hasAdjacentYang():Boolean {

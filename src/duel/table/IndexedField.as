@@ -22,8 +22,6 @@ package duel.table
 		}
 		
 		//
-		public function get topCard():Card { return isEmpty ? null : getFirstCard() }
-		
 		public function get opposingCreatureField():IndexedField { return owner.opponent.fieldsC[index] }
 		public function get opposingTrapField():IndexedField { return owner.opponent.fieldsT[index] }
 		public function get samesideCreatureField():IndexedField { return owner.fieldsC[index] }
