@@ -3,6 +3,7 @@ package duel.display {
 	import chimichanga.global.utils.Colors;
 	import duel.cards.Card;
 	import duel.cards.CardType;
+	import duel.display.utils.ColorScheme;
 	import duel.G;
 	import duel.GameSprite;
 	import starling.animation.IAnimatable;
@@ -76,17 +77,15 @@ package duel.display {
 			{
 				if ( card.type.isCreature )
 				{
-					return !card.behaviour.startFaceDown
-							?
-							Colors.fromRGB( 1, .7 + Math.random() * 0.15, .4 )
-							:
-							Colors.fromRGB( 1, .5 + Math.random() * 0.10, .3 )
-							;
+					if ( card.behaviourC.needsTribute ) 
+						return ColorScheme.getColorForCreatureNeedsTribute( true );
+					if ( card.behaviour.startFaceDown ) 
+						return ColorScheme.getColorForCreatureFlippable( true );
+					return ColorScheme.getColorForCreature( true );
 				}
-				if ( card.type.isTrap ) 		
-					//return Colors.fromRGB( 1, .3, .3+Math.random()*0.2 );
-					return Colors.fromRGB( .7+Math.random()*0.2, .4, .5+Math.random()*0.3 );
-				return 0xFFFFFF;
+				if ( card.type.isTrap )
+					return ColorScheme.getColorForTrap( true );	
+				return 0x0;
 			}
 			
 			tfTitle = new TextField( 500, G.CARD_H, card.name, "Arial Black", 24, 0x53001B );
