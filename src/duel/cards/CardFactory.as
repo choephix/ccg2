@@ -31,6 +31,38 @@ package duel.cards
 						c.behaviourC.attack = c.controller.opponent.hand.cardsCount * 3;
 					}
 				}, 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+				function( c:Card ):void ///		..C		Taunter
+				{
+					c.name = "Taunter";
+					
+					setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 8;
+					
+					c.behaviourC.inplaySpecial.watch( GameplayProcess.TURN_START );
+					c.behaviourC.inplaySpecial.funcCondition = function( p:GameplayProcess ):Boolean {
+						if ( c.field.opposingCreature == null ) return false;
+						return c.controller.opponent == p.getPlayer();
+					}
+					c.behaviourC.inplaySpecial.funcActivate = function( p:GameplayProcess ):Boolean {
+						Game.current.processes.append_Attack( c.field.opposingCreature );
+					}
+				},
+				function( c:Card ):void ///		..C		Berserker
+				{
+					c.name = "Berserker";
+					
+					setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 9;
+					
+					c.behaviourC.inplaySpecial.watch( GameplayProcess.TURN_START );
+					c.behaviourC.inplaySpecial.funcCondition = function( p:GameplayProcess ):Boolean {
+						if ( c.field.opposingCreature == null ) return false;
+						return c.controller == p.getPlayer();
+					}
+					c.behaviourC.inplaySpecial.funcActivate = function( p:GameplayProcess ):Boolean {
+						Game.current.processes.append_Attack( c );
+					}
+				},
 				function( c:Card ):void ///		..C		Mr Miracle
 				{
 					c.name = "Mr Miracle";
