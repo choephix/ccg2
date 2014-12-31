@@ -237,7 +237,7 @@ package duel.cards
 					}
 					c.behaviourT.effect.funcActivate = function( p:GameplayProcess ):void {
 						p.abort();
-						//Game.current.processes.prepend_EnterGrave( p.getSourceCard() );
+						Game.current.processes.prepend_EnterGrave( p.getSourceCard() );
 					}
 					
 					c.descr = "On opp. trap activation - negate and destroy trap";
