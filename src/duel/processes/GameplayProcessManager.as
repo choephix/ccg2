@@ -55,6 +55,9 @@ package duel.processes
 			{
 				prepend_Draw( p, 1 );
 			}
+			
+			pro = pro.chain( gen( GameplayProcess.TURN_START_COMPLETE, null, p ) );
+			pro.delay = .333;
 		}
 		
 		// DRAW & DISCARD

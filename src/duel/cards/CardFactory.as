@@ -50,7 +50,7 @@ package duel.cards
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 8;
 					
-					c.behaviourC.inplaySpecial.watch( GameplayProcess.TURN_START );
+					c.behaviourC.inplaySpecial.watch( GameplayProcess.TURN_START_COMPLETE );
 					c.behaviourC.inplaySpecial.funcCondition = function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.opposingCreature == null ) return false;
 						return c.controller.opponent == p.getPlayer();
@@ -66,7 +66,7 @@ package duel.cards
 					setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 9;
 					
-					c.behaviourC.inplaySpecial.watch( GameplayProcess.TURN_START );
+					c.behaviourC.inplaySpecial.watch( GameplayProcess.TURN_START_COMPLETE );
 					c.behaviourC.inplaySpecial.funcCondition = function( p:GameplayProcess ):Boolean {
 						return c.controller == p.getPlayer();
 					}

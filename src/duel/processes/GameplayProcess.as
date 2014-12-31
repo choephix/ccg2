@@ -12,6 +12,7 @@ package duel.processes
 	{
 		static public const TURN_END:String		= "turnEnd";
 		static public const TURN_START:String	= "turnStart";
+		static public const TURN_START_COMPLETE:String	= "turnStartComplete";
 		static public const DRAW_CARD:String	= "drawCard";
 		static public const DRAW_CARD_COMPLETE:String = "drawCardComplete";
 		static public const DISCARD_CARD:String = "discardCard";
