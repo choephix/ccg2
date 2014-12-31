@@ -56,7 +56,6 @@ package duel.cards
 					
 					c.behaviourC.inplaySpecial.watch( GameplayProcess.TURN_START );
 					c.behaviourC.inplaySpecial.funcCondition = function( p:GameplayProcess ):Boolean {
-						if ( c.field.opposingCreature == null ) return false;
 						return c.controller == p.getPlayer();
 					}
 					c.behaviourC.inplaySpecial.funcActivate = function( p:GameplayProcess ):Boolean {

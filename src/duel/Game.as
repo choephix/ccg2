@@ -280,11 +280,6 @@ package duel
 		// INTERACTION
 		public function onFieldClicked( field:Field ):void
 		{
-			if ( field is IndexedField && !field.isEmpty )
-			{
-				onCardClicked( IndexedField( field ).topCard );
-			}
-			else
 			if ( selectedCard )
 			{
 				var c:Card = selectedCard;
@@ -318,6 +313,11 @@ package duel
 					if ( field.type.isGraveyard && field.owner == p )
 						processes.prepend_Discard( p, c );
 				}
+			}
+			else
+			if ( field is IndexedField && !field.isEmpty )
+			{
+				onCardClicked( IndexedField( field ).topCard );
 			}
 			else
 			{

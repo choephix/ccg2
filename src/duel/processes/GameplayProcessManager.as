@@ -121,7 +121,7 @@ package duel.processes
 			pro = gen( GameplayProcess.SUMMON, null, c, field );
 			pro.abortCheck = CommonCardQuestions.cannotSummonHere;
 			pro.onAbort = onAbort;
-			pro.onStart = onSummon;
+			pro.onEnd = onSummon;
 			
 			appendProcess( pro );
 			
