@@ -10,7 +10,7 @@ package duel.cards.behaviour
 	public class CreatureCardBehaviour extends CardBehaviour 
 	{
 		public var attack:int = 0;
-		public var tributes:int = 0;
+		public var needsTribute:Boolean = false;
 		
 		public var haste:Boolean = false; 		// CAN ATTACK OR MOVE FIRST TURN
 		public var noattack:Boolean = false; 	// CANNOT ATTACK
@@ -65,6 +65,7 @@ package duel.cards.behaviour
 		public function toString():String 
 		{
 			var a:Array = [];
+			if ( needsTribute )	a.push( "tributes 1" );
 			if ( haste )	a.push( "haste" );
 			if ( noattack )	a.push( "no attack" );
 			if ( nomove )	a.push( "no move" );

@@ -121,8 +121,15 @@ package duel.processes
 			pro = gen( GameplayProcess.SUMMON, null, c, field );
 			pro.abortCheck = CommonCardQuestions.cannotSummonHere;
 			pro.onAbort = onAbort;
+			pro.onStart = onSummon;
 			
 			appendProcess( pro );
+			
+			function onSummon( c:Card, field:CreatureField ):void
+			{
+				if ( !field.isEmpty )
+					prepend_Death( field.topCard );
+			}
 			
 			pro = pro.chain( gen( GameplayProcess.ENTER_PLAY, onEnter, c, field ) );
 			pro.abortCheck = CommonCardQuestions.cannotPlaceCreatureHere;

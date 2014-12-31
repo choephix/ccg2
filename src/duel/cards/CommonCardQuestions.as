@@ -36,6 +36,15 @@ package duel.cards
 		public static function canSummonHere( c:Card, field:CreatureField ):Boolean
 		{ 
 			if ( c.isInPlay ) return false;
+			
+			if ( c.behaviourC.needsTribute )
+			{
+				if ( c.isInGrave ) return false;
+				if ( c.controller != field.owner ) return false;
+				if ( field.isEmpty ) return false; //TODO remove this for riders and combinatrons
+				return true;
+			}
+			
 			return canPlaceCreatureHere( c, field );
 		}
 		public static function cannotSummonHere( c:Card, field:CreatureField ):Boolean
