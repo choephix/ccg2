@@ -128,6 +128,12 @@ package duel.processes
 			pro.abortCheck = CommonCardQuestions.cannotPlaceCreatureHere;
 			pro.onAbort = onAbort;
 			
+			function onAbort( c:Card ):void
+			{
+				if ( c.isInPlay )
+					prepend_EnterGrave( c );
+			}
+			
 			function onEnter( c:Card, field:CreatureField ):void
 			{
 				field.addCard( c );
@@ -137,17 +143,17 @@ package duel.processes
 			pro = pro.chain( gen( GameplayProcess.ENTER_PLAY_COMPLETE, null, c, field ) );
 			
 			pro = pro.chain( gen( GameplayProcess.SUMMON_COMPLETE, complete, c, field ) );
+			pro.abortCheck = completeAbortCheck;
+			
+			function completeAbortCheck( c:Card, field:CreatureField ):Boolean
+			{
+				return !c.isInPlay;
+			}
 			
 			function complete( c:Card, field:CreatureField ):void
 			{
 				c.summonedThisTurn = true;
 				c.sprite.animSummon();
-			}
-			
-			function onAbort( c:Card ):void
-			{
-				if ( c.isInPlay )
-					prepend_EnterGrave( c );
 			}
 			
 		}
