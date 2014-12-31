@@ -490,7 +490,7 @@ package duel
 		{
 			var p:Player = new Player();
 			p.name = name;
-			p.lp = INIT_LP;
+			p.lp = G.INIT_LP;
 			return p;
 		}
 		
