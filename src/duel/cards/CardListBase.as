@@ -46,7 +46,7 @@ package duel.cards {
 			return _list.indexOf( card ) >= 0;
 		}
 		
-		public function addCard( card:Card, toBottom:Boolean = false ):void
+		public function addCard( card:Card, toBottom:Boolean = false ):Card
 		{
 			if ( card.lot != null ) 
 				card.lot.removeCard( card );
@@ -60,9 +60,11 @@ package duel.cards {
 				_list.unshift( card );
 			
 			onCardAdded( card );
+			
+			return card;
 		}
 		
-		public function removeCard( card:Card ):void
+		public function removeCard( card:Card ):Card
 		{
 			card.lot = null;
 			
@@ -70,6 +72,8 @@ package duel.cards {
 			_list.splice( _list.indexOf( card ), 1 );
 			
 			onCardRemoved( card );
+			
+			return card;
 		}
 		
 		////
