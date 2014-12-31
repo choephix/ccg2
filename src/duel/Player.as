@@ -78,6 +78,14 @@ package duel {
 		public function takeDirectDamage( amount:int ):void
 		{
 			_lp -= amount;
+			
+			if ( _lp <= 0 )
+				die();
+		}
+		
+		public function die():void 
+		{
+			trace( this + " is dead" );
 		}
 		
 		// QUESTIONS
