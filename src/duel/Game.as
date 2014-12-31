@@ -163,7 +163,7 @@ package duel
 			for ( i = 0; i < DECK_SIZE_2; i++ ) 
 			{
 				time += .010;
-				c = CardFactory.produceCard( ( 12 + i ) % CardFactory.MAX );
+				c = CardFactory.produceCard( ( HAND_SIZE + i ) % CardFactory.MAX );
 				c.owner = p2;
 				c.faceDown = true;
 				jugglerStrict.delayCall( p2.deck.addCard, time, c, true );
