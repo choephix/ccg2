@@ -40,7 +40,7 @@ package duel.cards
 					c.behaviourC.tributes = 1;
 					
 					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):Boolean {
-						c.behaviourC.attack = c.controller.creatureCount * 5;
+						c.behaviourC.attack = c.controller.opponent.creatureCount * 5;
 					}
 				},
 				function( c:Card ):void ///		..C		Pao the Confused
