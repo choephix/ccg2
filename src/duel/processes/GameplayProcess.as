@@ -36,14 +36,20 @@ package duel.processes
 		static public const DIRECT_DAMAGE_COMPLETE:String = "directDamageComplete";
 		static public const DIE:String = "die";
 		static public const DIE_COMPLETE:String = "dieComplete";
+		
 		static public const COMBAT_FLIP:String = "combatFlip";
 		static public const COMBAT_FLIP_COMPLETE:String = "combatFlipComplete";
 		static public const COMBAT_FLIP_EFFECT:String = "combatFlipEffect";
 		static public const COMBAT_FLIP_EFFECT_COMPLETE:String = "combatFlipEffectComplete";
+		
 		static public const SAFE_FLIP:String = "safeFlip";
 		static public const SAFE_FLIP_COMPLETE:String = "safeFlipComplete";
+		static public const SAFE_FLIP_EFFECT:String = "safeFlipEffect";
+		static public const SAFE_FLIP_EFFECT_COMPLETE:String = "safeFlipEffectComplete";
+		
 		static public const SILENT_FLIP:String = "silentFlip";
 		static public const SILENT_FLIP_COMPLETE:String = "silentFlipComplete";
+		
 		static public const ENTER_GRAVE:String = "enterGrave";
 		static public const ENTER_GRAVE_COMPLETE:String = "enterGraveComplete";
 		static public const ENTER_HAND:String = "enterHand";
