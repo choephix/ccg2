@@ -535,12 +535,67 @@ package duel.processes
 		
 		public function prepend_SafeFlip( c:Card ):void
 		{
-			/// ...
+			var pro:GameplayProcess;
+			
+			pro = gen( GameplayProcess.SAFE_FLIP, onEnd, c );
+			pro.abortCheck = CommonCardQuestions.cannotFlipInPlay;
+			
+			prependProcess( pro );
+			
+			function onEnd( c:Card ):void
+			{
+				c.faceDown = false;
+				c.sprite.animSpecialFlip();
+			}
+			
+			pro = pro.chain( gen( GameplayProcess.SAFE_FLIP_COMPLETE, onComplete, c ) );
+			
+			function onComplete( c:Card ):void
+			{
+				if ( !c.behaviourC.hasSafeFlipEffect )
+					return;
+					
+				var proE:GameplayProcess;
+				proE = gen( GameplayProcess.SAFE_FLIP_EFFECT, null, c );
+				proE.abortCheck = effectAbortCheck;
+				proE.onStart = effectStart;
+				proE.onEnd = effectEnd;
+				prependProcess( proE );
+				proE = proE.chain( gen( GameplayProcess.SAFE_FLIP_EFFECT_COMPLETE, null, c ) );
+			}
+			
+			function effectAbortCheck( c:Card ):Boolean
+			{
+				return !c.isInPlay || !c.behaviourC.hasSafeFlipEffect;
+			}
+			
+			function effectStart( c:Card ):void
+			{
+				c.sprite.animFlipEffect();
+			}
+			
+			function effectEnd( c:Card ):void
+			{
+				c.behaviourC.onSafeFlip();
+			}
 		}
 		
 		public function prepend_SilentFlip( c:Card ):void
 		{
-			/// ...
+			var pro:GameplayProcess;
+			
+			pro = gen( GameplayProcess.SILENT_FLIP, onEnd, c );
+			pro.abortCheck = CommonCardQuestions.cannotFlipInPlay;
+			
+			prependProcess( pro );
+			
+			function onEnd( c:Card ):void
+			{
+				c.faceDown = false;
+				c.sprite.animSpecialFlip();
+			}
+			
+			pro = pro.chain( gen( GameplayProcess.SILENT_FLIP_COMPLETE, null, c ) );
 		}
 		
 		// CHAINGING CARD CONTAINERS
