@@ -16,10 +16,10 @@ package duel.cards.behaviour
 		public var handSpecial:SpecialEffect = new SpecialEffect();
 		
 		public function get hasGraveSpecial():Boolean 
-		{ return graveSpecial != null }
+		{ return graveSpecial != null && !graveSpecial.isNone }
 		
 		public function get hasHandSpecial():Boolean 
-		{ return handSpecial != null }
+		{ return handSpecial != null && !handSpecial.isNone  }
 	}
 
 }

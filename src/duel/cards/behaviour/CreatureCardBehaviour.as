@@ -18,28 +18,21 @@ package duel.cards.behaviour
 		public var swift:Boolean = false; 		// CAN ATTACK AND MOVE SAME TURN
 		public var berserk:Boolean = false;		// ATTACKS AUTOMATICALLY
 		
+		
+		// SPECIAL
 		public var inplaySpecial:SpecialEffect = new SpecialEffect();
-		
-		public var inplayOngoingFunc:Function;
-		
-		public var onCombatFlipFunc:Function;
-		public var onSafeFlipFunc:Function;
-		public var onMagicFlipFunc:Function;
-		
-		public function get hasCombatFlipEffect():Boolean
-		{ return onCombatFlipFunc != null; }
-		
-		public function get hasSafeFlipEffect():Boolean
-		{ return onSafeFlipFunc != null; }
-		
-		public function get hasMagicFlipEffect():Boolean
-		{ return onMagicFlipFunc != null; }
-		
 		public function get hasInPlaySpecialEffect():Boolean
-		{ return inplaySpecial != null; }
+		{ return inplaySpecial != null && !inplaySpecial.isNone; }
 		
+		// ONGOING
+		public var inplayOngoingFunc:Function;
 		public function get hasInPlayOngoingEffect():Boolean
 		{ return inplayOngoingFunc != null; }
+		
+		// COMBAT FLIP
+		public var onCombatFlipFunc:Function;
+		public function get hasCombatFlipEffect():Boolean
+		{ return onCombatFlipFunc != null; }
 		
 		public function onCombatFlip():void
 		{
@@ -47,18 +40,22 @@ package duel.cards.behaviour
 				onCombatFlipFunc();
 		}
 		
+		// SAFE FLIP
+		public var onSafeFlipFunc:Function;
+		public function get hasSafeFlipEffect():Boolean
+		{ return onSafeFlipFunc != null; }
+		
 		public function onSafeFlip():void
 		{
 			if ( onSafeFlipFunc != null )
 				onSafeFlipFunc();
 		}
 		
-		public function onMagicFlip():void
-		{
-			if ( onMagicFlipFunc != null )
-				onMagicFlipFunc();
-		}
+		//
 		
+		//
+		
+		//
 		public function genAttackDamage():Damage
 		{
 			return new Damage( attack, DamageType.COMBAT, card );
@@ -75,7 +72,8 @@ package duel.cards.behaviour
 			if ( berserk )	a.push( "berserk" );
 			if ( hasCombatFlipEffect )	a.push( "combat-flip" );
 			if ( hasSafeFlipEffect )	a.push( "safe-flip" );
-			if ( hasMagicFlipEffect )	a.push( "magic-flip" );
+			if ( hasHandSpecial )	a.push( "inhand" );
+			if ( hasGraveSpecial )	a.push( "ingrave" );
 			if ( hasInPlaySpecialEffect )	a.push( "special" );
 			if ( hasInPlayOngoingEffect )	a.push( "ongoing" );
 			return a.join( "\n" );

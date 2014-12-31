@@ -54,6 +54,9 @@ package duel.otherlogic
 			funcActivate( p );
 		}
 		
+		public function get isNone():Boolean
+		{ return _pncount == 0 }
+		
 		//
 		private static function TRUTH( p:GameplayProcess ):Boolean 
 		{ return true }
