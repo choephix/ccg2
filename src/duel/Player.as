@@ -17,9 +17,6 @@ package duel {
 	{
 		public var opponent:Player;
 		
-		public var name:String;
-		public var lp:int;
-		
 		public var controllable:Boolean = true;
 		
 		public var hand:Hand;
@@ -31,6 +28,9 @@ package duel {
 		public var creatures:Vector.<Creature>;
 		public var traps:Vector.<Trap>;
 		
+		protected var _name:String;
+		protected var _lp:int;
+		
 		//VISUAL
 		
 		public var tableSide:TableSide;
@@ -39,7 +39,7 @@ package duel {
 		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
 		
 		// CONSTRUCTION
-		public function Player() 
+		public function Player( name:String, lifePoints:int )
 		{
 			hand = new Hand();
 			deck = new Field( FieldType.DECK );
@@ -52,6 +52,9 @@ package duel {
 			
 			creatures = new Vector.<Creature>( G.FIELD_COLUMNS );
 			traps = new Vector.<Trap>( G.FIELD_COLUMNS );
+			
+			_name = name;
+			_lp = lifePoints;
 			
 			setAsFieldsOwner();
 		}
@@ -70,6 +73,13 @@ package duel {
 		
 		// CARD ACTIONS
 		
+		// GAMELPLAY
+		
+		public function takeDirectDamage( amount:int ):void
+		{
+			_lp -= amount;
+		}
+		
 		// QUESTIONS
 		
 		public function get creatureCount():int
@@ -86,6 +96,16 @@ package duel {
 			for ( var i:int = 0; i < G.FIELD_COLUMNS; i++ ) 
 				if ( !fieldsT[ i ].isEmpty ) r++;
 			return r;
+		}
+		
+		public function get lifePoints():int
+		{ 
+			return _lp;
+		}
+		
+		public function get name():String
+		{ 
+			return _name;
 		}
 		
 		// BATTLE ENTITIES

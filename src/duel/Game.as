@@ -488,10 +488,7 @@ package duel
 		//
 		private function generatePlayer( name:String ):Player
 		{
-			var p:Player = new Player();
-			p.name = name;
-			p.lp = G.INIT_LP;
-			return p;
+			return new Player( name, G.INIT_LP );
 		}
 		
 		//

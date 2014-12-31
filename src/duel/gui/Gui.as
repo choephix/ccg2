@@ -107,7 +107,7 @@ package duel.gui
 		
 		private function updateTf( t:AnimatedTextField, p:Player, time:Number ):void
 		{
-			t.targetValue = p.lp;
+			t.targetValue = p.lifePoints;
 			t.color = p == game.currentPlayer ? 0xFFEE22 : 0xF37618;
 			t.advanceTime( time );
 		}

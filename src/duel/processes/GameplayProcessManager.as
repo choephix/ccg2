@@ -463,7 +463,7 @@ package duel.processes
 			
 			function onEnd( p:Player, dmg:Damage ):void
 			{
-				p.lp -= dmg.amount;
+				p.takeDirectDamage( dmg.amount );
 			}
 			
 			pro = pro.chain( gen( GameplayProcess.DIRECT_DAMAGE_COMPLETE, null, p, dmg ) );
