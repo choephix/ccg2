@@ -4,6 +4,8 @@ package duel {
 	import duel.display.TableSide;
 	import duel.table.CreatureField;
 	import duel.table.Field;
+	import duel.table.fieldlists.CreatureFieldsRow;
+	import duel.table.fieldlists.TrapFieldsRow;
 	import duel.table.Hand;
 	import duel.table.TrapField;
 	import duel.cards.Card;
@@ -22,8 +24,8 @@ package duel {
 		public var hand:Hand;
 		public var deck:Field;
 		public var grave:Field;
-		public var fieldsC:Vector.<CreatureField>;
-		public var fieldsT:Vector.<TrapField>;
+		public var fieldsC:CreatureFieldsRow;
+		public var fieldsT:TrapFieldsRow;
 		
 		public var creatures:Vector.<Creature>;
 		public var traps:Vector.<Trap>;
@@ -45,10 +47,8 @@ package duel {
 			deck = new Field( FieldType.DECK );
 			grave = new Field( FieldType.GRAVEYARD );
 			
-			fieldsC = new Vector.<CreatureField>();
-			while ( fieldsC.length < G.FIELD_COLUMNS ) fieldsC.push( new CreatureField( fieldsC.length ) );
-			fieldsT = new Vector.<TrapField>();
-			while ( fieldsT.length < G.FIELD_COLUMNS ) fieldsT.push( new TrapField( fieldsT.length ) );
+			fieldsC = new CreatureFieldsRow( G.FIELD_COLUMNS );
+			fieldsT = new TrapFieldsRow( G.FIELD_COLUMNS );
 			
 			creatures = new Vector.<Creature>( G.FIELD_COLUMNS );
 			traps = new Vector.<Trap>( G.FIELD_COLUMNS );
@@ -66,9 +66,11 @@ package duel {
 			deck.owner = this;
 			grave.owner = this;
 			
-			var f:Field;
-			for each ( f in fieldsC ) f.owner = this;
-			for each ( f in fieldsT ) f.owner = this;
+			var i:int;
+			i = fieldsC.count;
+			while ( --i >= 0 ) fieldsC.getAt( i ).owner = this;
+			i = fieldsT.count;
+			while ( --i >= 0 ) fieldsT.getAt( i ).owner = this;
 		}
 		
 		// CARD ACTIONS
@@ -92,18 +94,12 @@ package duel {
 		
 		public function get creatureCount():int
 		{ 
-			var r:int = 0;
-			for ( var i:int = 0; i < G.FIELD_COLUMNS; i++ ) 
-				if ( fieldsC[ i ].topCard != null && fieldsC[ i ].topCard.type.isCreature ) r++;
-			return r;
+			return fieldsC.countOccupied;
 		}
 		
 		public function get trapCount():int
 		{ 
-			var r:int = 0;
-			for ( var i:int = 0; i < G.FIELD_COLUMNS; i++ ) 
-				if ( !fieldsT[ i ].isEmpty ) r++;
-			return r;
+			return fieldsT.countOccupied;
 		}
 		
 		public function get lifePoints():int

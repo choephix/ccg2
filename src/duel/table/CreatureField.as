@@ -13,15 +13,12 @@ package duel.table {
 		
 		public function get adjacentLeft():CreatureField
 		{
-			if ( index <= 0 ) return null;
-			return owner.fieldsC[ index - 1 ];
+			return owner.fieldsC.getAt( index - 1 );
 		}
 		
 		public function get adjacentRight():CreatureField
 		{
-			if ( index < 0 ) return null;
-			if ( index >= G.FIELD_COLUMNS -1 ) return null;
-			return owner.fieldsC[ index + 1 ];
+			return owner.fieldsC.getAt( index + 1 );
 		}
 	}
 }

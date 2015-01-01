@@ -261,37 +261,33 @@ package duel
 		private function playerInspectProcess( player:Player, p:GameplayProcess ):void
 		{
 			var i:int;
-			var len:int;
 			
 			if ( p.isInterrupted )
 				return;
 			
-			len = player.fieldsT.length;
-			for ( i = 0; i < len; i++ )
+			for ( i = 0; i < player.fieldsT.count; i++ )
 			{
-				if ( player.fieldsT[ i ].isEmpty )
+				if ( player.fieldsT.getAt( i ).isEmpty )
 					continue;
 				
-				player.fieldsT[ i ].topCard.onGameProcess( p );
+				player.fieldsT.getAt( i ).topCard.onGameProcess( p );
 				
 				if ( p.isInterrupted )
 					return;
 			}
 			
-			len = player.fieldsC.length;
-			for ( i = 0; i < len; i++ )
+			for ( i = 0; i < player.fieldsC.count; i++ )
 			{
-				if ( player.fieldsC[ i ].isEmpty )
+				if ( player.fieldsC.getAt( i ).isEmpty )
 					continue;
 				
-				player.fieldsC[ i ].topCard.onGameProcess( p );
+				player.fieldsC.getAt( i ).topCard.onGameProcess( p );
 				
 				if ( p.isInterrupted )
 					return;
 			}
 			
-			len = player.hand.cardsCount;
-			for ( i = 0; i < len; i++ )
+			for ( i = 0; i < player.hand.cardsCount; i++ )
 			{
 				player.hand.getCardAt( i ).onGameProcess( p );
 				
@@ -299,8 +295,7 @@ package duel
 					return;
 			}
 			
-			len = player.grave.cardsCount;
-			for ( i = 0; i < len; i++ )
+			for ( i = 0; i < player.grave.cardsCount; i++ )
 			{
 				player.grave.getCardAt( i ).onGameProcess( p );
 				

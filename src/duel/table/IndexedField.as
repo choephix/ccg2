@@ -22,10 +22,10 @@ package duel.table
 		}
 		
 		//
-		public function get opposingCreatureField():IndexedField { return owner.opponent.fieldsC[index] }
-		public function get opposingTrapField():IndexedField { return owner.opponent.fieldsT[index] }
-		public function get samesideCreatureField():IndexedField { return owner.fieldsC[index] }
-		public function get samesideTrapField():IndexedField { return owner.fieldsT[index] }
+		public function get opposingCreatureField():IndexedField { return owner.opponent.fieldsC.getAt( index ) }
+		public function get opposingTrapField():IndexedField { return owner.opponent.fieldsT.getAt( index ) }
+		public function get samesideCreatureField():IndexedField { return owner.fieldsC.getAt( index ) }
+		public function get samesideTrapField():IndexedField { return owner.fieldsT.getAt( index ) }
 		
 		public function get opposingCreature():Card { return opposingCreatureField.topCard }
 		public function get opposingTrap():Card { return opposingTrapField.topCard }

@@ -37,22 +37,22 @@ package duel.display {
 			var f:FieldSprite;
 			var i:int;
 			var len:int;
-			for ( i = 0, len = player.fieldsC.length; i < len; i++ )
+			for ( i = 0, len = player.fieldsC.count; i < len; i++ )
 			{
 				f = new FieldSprite();
 				f.x = i * ( G.CARD_W + FIELD_SPACING_X );
 				f.y = ( flip ? 1.0 : -1.0 ) * 80;
 				tableContainer.addChild( f );
-				f.initialize( player.fieldsC[ i ], ColorScheme.getColorForCreatureField() );
+				f.initialize( player.fieldsC.getAt( i ), ColorScheme.getColorForCreatureField() );
 					temp();
 			}
-			for ( i = 0, len = player.fieldsT.length; i < len; i++ )
+			for ( i = 0, len = player.fieldsT.count; i < len; i++ )
 			{
 				f = new FieldSprite();
 				f.x = i * ( G.CARD_W + FIELD_SPACING_X );
 				f.y = ( flip ? -1.0 : 1.0 ) * 80;
 				tableContainer.addChild( f );
-				f.initialize( player.fieldsT[ i ], ColorScheme.getColorForTrapField() );
+				f.initialize( player.fieldsT.getAt( i ), ColorScheme.getColorForTrapField() );
 					temp();
 			}
 			
@@ -74,7 +74,7 @@ package duel.display {
 			
 			alignPivot();
 			
-			function temp():void
+			function temp():void //TODO REMOVE
 			{
 				f.cardsContainer.cardsParent = cardsParent;
 				cardsContainer.addChild( f.cardsContainer );
