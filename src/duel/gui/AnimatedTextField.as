@@ -14,6 +14,7 @@ package duel.gui
 	{
 		public static const DEFAULT_MARKER:String = "%%VALUE%%";
 		
+		public var duration:Number = .350;
 		public var markerString:String = DEFAULT_MARKER;
 		public var rawText:String = markerString;
 		private var _currentValue:Number = 0.0;
@@ -69,7 +70,7 @@ package duel.gui
 			
 			_targetValue = value;
 			
-			_valueTween.reset( this, 0.350, Transitions.LINEAR );
+			_valueTween.reset( this, duration, Transitions.LINEAR );
 			_valueTween.animate( "currentValue", value );
 			_valueTween.roundToInt = true;
 		}
@@ -84,7 +85,7 @@ package duel.gui
 			_currentValue = value;
 			update();
 		}
-	
+		
 	}
-
+	
 }

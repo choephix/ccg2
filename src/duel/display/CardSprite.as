@@ -6,6 +6,7 @@ package duel.display {
 	import duel.display.utils.ColorScheme;
 	import duel.G;
 	import duel.GameSprite;
+	import duel.gui.AnimatedTextField;
 	import starling.animation.IAnimatable;
 	import starling.animation.Transitions;
 	import starling.animation.Tween;
@@ -31,7 +32,7 @@ package duel.display {
 		private var pad:Image;
 		private var tfDescr:TextField;
 		private var tfTitle:TextField;
-		private var tfAttak:TextField;
+		private var tfAttak:AnimatedTextField;
 		
 		///
 		private var _exhaustClockVisible:Boolean = false;
@@ -106,10 +107,6 @@ package duel.display {
 			tfDescr.autoScale = true;
 			front.addChild( tfDescr );
 			
-			tfAttak = new TextField( G.CARD_W, G.CARD_H, "", "", 16, 0x330011 );
-			tfAttak.touchable = false;
-			front.addChild( tfAttak );
-			
 			switch( card.type )
 			{
 				case CardType.CREATURE:
@@ -117,9 +114,16 @@ package duel.display {
 					tfDescr.hAlign = "right";
 					tfDescr.vAlign = "center";
 					tfDescr.fontSize = 14;
-					tfAttak.fontName = "Impact";
+			
+					tfAttak = new AnimatedTextField( 
+									G.CARD_W, G.CARD_H,
+									AnimatedTextField.DEFAULT_MARKER,
+									"Impact", 72, 0x330011 );
+					tfAttak.touchable = false;
 					tfAttak.hAlign = "left";
-					tfAttak.fontSize = 64;
+					tfAttak.duration = .450;
+					tfAttak.currentValue = card.behaviourC.attack;
+					front.addChild( tfAttak );
 					break;
 				case CardType.TRAP:
 					tfDescr.text = card.descr == null ? "?" : card.descr;
@@ -142,6 +146,9 @@ package duel.display {
 			
 			updateData();
 			
+			if ( tfAttak != null )
+				tfAttak.advanceTime( time );
+			
 			if ( _isFaceDown != card.faceDown )
 			{
 				setFaceDown( card.faceDown, false );
@@ -153,7 +160,7 @@ package duel.display {
 			if ( card.type.isCreature )
 			{
 				if ( !card.faceDown ) {
-					tfAttak.text = card.behaviourC.attack + "";
+					tfAttak.targetValue = card.behaviourC.attack;
 					tfDescr.text = card.behaviourC.toString();
 				}
 				
