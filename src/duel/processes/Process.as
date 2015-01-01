@@ -1,5 +1,6 @@
 package duel.processes 
 {
+	import chimichanga.debug.logging.error;
 	import duel.Game;
 	/**
 	 * ...
@@ -37,7 +38,7 @@ package duel.processes
 			if ( !abortable && ( onAbort != null || abortCheck != null ) )
 			{
 				CONFIG::development
-				{ throw new Error( name + " should be abortable!" ) }
+				{ error( name + " should be abortable!" ) }
 				abortable = true;
 			}
 			
