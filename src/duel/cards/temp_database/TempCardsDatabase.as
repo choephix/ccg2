@@ -27,6 +27,7 @@ package duel.cards.temp_database
 					c.behaviourC.attack = G.INIT_LP;
 					c.behaviourC.haste = true;
 					c.behaviourC.startFaceDown = true;
+					c.behaviourC.needsTribute = true;
 					
 					///		_COMPLETE
 					///		
@@ -132,6 +133,26 @@ package duel.cards.temp_database
 					}
 					c.behaviourC.handSpecial.funcActivate = function( p:GameplayProcess ):void {
 						TempDatabaseUtils.doReturToDeck( c, false );
+					}
+				},
+				/* * */
+				function( c:Card ):void ///		..C		Ragnarok
+				{
+					c.name = "Ragnarok";
+					
+					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 0;
+					c.behaviourC.needsTribute = true;
+					
+					c.behaviourC.inplaySpecial.watch( GameplayProcess.ENTER_PLAY_COMPLETE );
+					c.behaviourC.inplaySpecial.funcCondition = function( p:GameplayProcess ):Boolean {
+						return c == p.getSourceCard();
+					}
+					c.behaviourC.inplaySpecial.funcActivate = function( p:GameplayProcess ):Boolean {
+						c.controller.fieldsC.forEachCreature( TempDatabaseUtils.doPutToGrave );
+						c.controller.opponent.fieldsC.forEachCreature( TempDatabaseUtils.doPutToGrave );
+						c.controller.fieldsT.forEachTrap( TempDatabaseUtils.doPutToGrave );
+						c.controller.opponent.fieldsT.forEachTrap( TempDatabaseUtils.doPutToGrave );
 					}
 				},
 				/* * */
