@@ -1,8 +1,7 @@
 package duel.cards
 {
 	import duel.cards.Card;
-	import duel.cards.temp_database.TempDatabasePack1;
-	import duel.cards.temp_database.TempDatabasePack2;
+	import duel.cards.temp_database.TempCardsDatabase;
 	
 	/**
 	 * ...
@@ -20,10 +19,7 @@ package duel.cards
 			
 			c.id = id;
 			
-			if ( id >= 1000 )
-				TempDatabasePack2.F[ id - 1000 ]( c );
-			else
-				TempDatabasePack1.F[ id ]( c );
+			TempCardsDatabase.F[ id ]( c );
 			
 			c.initialize();
 			return c;

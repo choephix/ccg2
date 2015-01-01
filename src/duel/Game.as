@@ -5,8 +5,7 @@ package duel
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
 	import duel.cards.CommonCardQuestions;
-	import duel.cards.temp_database.TempDatabasePack1;
-	import duel.cards.temp_database.TempDatabasePack2;
+	import duel.cards.temp_database.TempCardsDatabase;
 	import duel.display.cardlots.HandSprite;
 	import duel.display.TableSide;
 	import duel.gui.Gui;
@@ -25,13 +24,14 @@ package duel
 	import starling.display.Image;
 	import starling.display.Quad;
 	
-	[Event(name="turnStart", type="duel.GameEvents")] 
-	[Event(name="turnEnd", type="duel.GameEvents")] 
-	[Event(name="select", type="duel.GameEvents")] 
-	[Event(name="deselect", type="duel.GameEvents")] 
-	[Event(name="hover", type="duel.GameEvents")] 
-	[Event(name="unhover", type="duel.GameEvents")] 
-	[Event(name="destroy", type="duel.GameEvents")] 
+	[Event( name="turnStart",type="duel.GameEvents" )]
+	[Event( name="turnEnd",type="duel.GameEvents" )]
+	[Event( name="select",type="duel.GameEvents" )]
+	[Event( name="deselect",type="duel.GameEvents" )]
+	[Event( name="hover",type="duel.GameEvents" )]
+	[Event( name="unhover",type="duel.GameEvents" )]
+	[Event( name="destroy",type="duel.GameEvents" )]
+	
 	/**
 	 * ...
 	 * @author choephix
@@ -102,7 +102,7 @@ package duel
 			char2.x = 0;
 			char2.y = CHAR_MARGIN_Y;
 			char2.scaleX = -CHAR_SCALE;
-			char2.scaleY =  CHAR_SCALE;
+			char2.scaleY = CHAR_SCALE;
 			addChild( char2 );
 			
 			p2.tableSide = new TableSide( p2, true );
@@ -133,38 +133,67 @@ package duel
 			addChild( p2.handSprite );
 			
 			// START GAME
-			currentPlayer	= p1;
+			currentPlayer = p1;
 			currentPlayer.opponent = p2;
 			
-			CONFIG::development {
-			var pmi:ProcessManagementInspector = new ProcessManagementInspector( processes );
-			addChild( pmi );
-			pmi.x = 200;
-			pmi.y = 400;
+			CONFIG::development
+			{
+				var pmi:ProcessManagementInspector = new ProcessManagementInspector( processes );
+				addChild( pmi );
+				pmi.x = 200;
+				pmi.y = 400;
 			/** / ProcessTester.initTest1( processes ); return /**/
 			}
-			  
+			
+			//
+			
+			// PREPARE DECKS
+			const DECK1:Array = [];
+			const DECK2:Array = [];
+			
+			var i:int;
+			
+			i = 0;
+			
+			do
+			{
+				DECK1.push( i );
+			} while ( TempCardsDatabase.F[ ++i ] != null )
+			
+			++i
+			
+			do
+			{
+				DECK2.push( i );
+			} while ( TempCardsDatabase.F[ ++i ] != null )
+			
+			++i
+			
+			do
+			{
+				DECK1.push( i );
+				DECK2.push( i );
+			} while ( TempCardsDatabase.F[ ++i ] != null )
+			
 			// PREPARE GAMEPLAY
-			const DECK_SIZE_1:uint	= TempDatabasePack1.COUNT; /// 52 22 16 8 10 128
-			const DECK_SIZE_2:uint	= TempDatabasePack2.COUNT; /// CardFactory.MAX
-			const HAND_SIZE:uint	= 8; /// 12 6 5 7 8 2
+			const DECK1_SIZE:uint = Math.min( DECK1.length, G.MAX_DECK_SIZE );
+			const DECK2_SIZE:uint = Math.min( DECK2.length, G.MAX_DECK_SIZE );
 			
 			var time:Number = 0.7;
 			var c:Card;
-			var i:int;
-			for ( i = 0; i < DECK_SIZE_1; i++ ) 
+			for ( i = 0; i < DECK1_SIZE; i++ )
 			{
 				time += .010;
-				c = CardFactory.produceCard( i );
+				c = CardFactory.produceCard( DECK1[ i ] );
 				c.owner = p1;
 				c.faceDown = true;
 				jugglerStrict.delayCall( p1.deck.addCard, time, c, true );
 			}
 			
-			for ( i = 0; i < DECK_SIZE_2; i++ ) 
+			for ( i = 0; i < DECK2_SIZE; i++ )
 			{
 				time += .010;
-				c = CardFactory.produceCard( i + 1000 );
+				c = CardFactory.produceCard( DECK2[ i ] );
 				c.owner = p2;
 				c.faceDown = true;
 				jugglerStrict.delayCall( p2.deck.addCard, time, c, true );
@@ -173,12 +202,12 @@ package duel
 			jugglerStrict.delayCall( drawCards, time + .300 );
 			function drawCards():void
 			{
-				processes.prepend_Draw( p1, HAND_SIZE );
-				processes.prepend_Draw( p2, HAND_SIZE );
+				processes.prepend_Draw( p1, G.INIT_HAND_SIZE );
+				processes.prepend_Draw( p2, G.INIT_HAND_SIZE );
 			}
 		}
 		
-		public function destroy():void 
+		public function destroy():void
 		{
 			dispatchEventWith( GameEvents.DESTROY );
 			Starling.juggler.remove( this );
@@ -210,10 +239,10 @@ package duel
 		// PROCESSES
 		
 		private function onProcessAdvance( e:ProcessEvent ):void
-		{ 
+		{
 			var p:GameplayProcess = e.process as GameplayProcess;
 			
-			if ( p == null ) 
+			if ( p == null )
 				return;
 			
 			gameInspectProcess( p );
@@ -223,12 +252,14 @@ package duel
 		
 		private function gameInspectProcess( p:GameplayProcess ):void
 		{
-			if ( p.name == GameplayProcess.TURN_END ) dispatchEventWith( GameEvents.TURN_END );
-			if ( p.name == GameplayProcess.TURN_START ) dispatchEventWith( GameEvents.TURN_START );
+			if ( p.name == GameplayProcess.TURN_END )
+				dispatchEventWith( GameEvents.TURN_END );
+			if ( p.name == GameplayProcess.TURN_START )
+				dispatchEventWith( GameEvents.TURN_START );
 		}
 		
 		private function playerInspectProcess( player:Player, p:GameplayProcess ):void
-		{ 
+		{
 			var i:int;
 			var len:int;
 			
@@ -236,7 +267,7 @@ package duel
 				return;
 			
 			len = player.fieldsT.length;
-			for ( i = 0; i < len; i++ ) 
+			for ( i = 0; i < len; i++ )
 			{
 				if ( player.fieldsT[ i ].isEmpty )
 					continue;
@@ -248,7 +279,7 @@ package duel
 			}
 			
 			len = player.fieldsC.length;
-			for ( i = 0; i < len; i++ ) 
+			for ( i = 0; i < len; i++ )
 			{
 				if ( player.fieldsC[ i ].isEmpty )
 					continue;
@@ -260,7 +291,7 @@ package duel
 			}
 			
 			len = player.hand.cardsCount;
-			for ( i = 0; i < len; i++ ) 
+			for ( i = 0; i < len; i++ )
 			{
 				player.hand.getCardAt( i ).onGameProcess( p );
 				
@@ -269,7 +300,7 @@ package duel
 			}
 			
 			len = player.grave.cardsCount;
-			for ( i = 0; i < len; i++ ) 
+			for ( i = 0; i < len; i++ )
 			{
 				player.grave.getCardAt( i ).onGameProcess( p );
 				
@@ -315,8 +346,7 @@ package duel
 						processes.prepend_Discard( p, c );
 				}
 			}
-			else
-			if ( field is IndexedField && !field.isEmpty )
+			else if ( field is IndexedField && !field.isEmpty )
 			{
 				onCardClicked( IndexedField( field ).topCard );
 			}
@@ -332,20 +362,26 @@ package duel
 			
 			function canSummon():Boolean
 			{
-				if ( !c.type.isCreature ) return false;
-				if ( field as CreatureField == null ) return false;
+				if ( !c.type.isCreature )
+					return false;
+				if ( field as CreatureField == null )
+					return false;
 				return CommonCardQuestions.canSummonHere( c, field as CreatureField );
 			}
 			function canSetTrap():Boolean
 			{
-				if ( !c.type.isTrap ) return false;
-				if ( field as TrapField == null ) return false;
+				if ( !c.type.isTrap )
+					return false;
+				if ( field as TrapField == null )
+					return false;
 				return CommonCardQuestions.canPlaceTrapHere( c, field as TrapField );
 			}
 			function canRelocate():Boolean
 			{
-				if ( !c.type.isCreature ) return false;
-				if ( field as CreatureField == null ) return false;
+				if ( !c.type.isCreature )
+					return false;
+				if ( field as CreatureField == null )
+					return false;
 				return CommonCardQuestions.canRelocateHere( c, field as CreatureField );
 			}
 		}
@@ -358,11 +394,11 @@ package duel
 				{
 					if ( card.lot is Hand )
 					{
-						if ( canSelect( card ) ) selectCard( selectedCard == card ? null : card );
+						if ( canSelect( card ) )
+							selectCard( selectedCard == card ? null : card );
 						return;
 					}
-					else
-					if ( canSelect( card ) )
+					else if ( canSelect( card ) )
 					{
 						selectCard( card );
 					}
@@ -390,37 +426,41 @@ package duel
 				
 				CONFIG::development
 				{
-					/** /
-					// MANUALLY ADD TO GRAVE
-					if ( currentPlayer.grave.containsCard( card ) )
-					{
-						processes.enterGrave( c );
-						return;
-					}
-					/** /
-					// STACK CARDS LIKE IT'S NOTHING
-					if ( c.lot != card.lot && card.controller == c.controller )
-					{
-						if ( !card.lot.isEmpty )
-							c.faceDown = card.lot.getFirstCard().faceDown;
-						card.lot.addCard( c );
-					}
-					/**/
+				/** /
+				   // MANUALLY ADD TO GRAVE
+				   if ( currentPlayer.grave.containsCard( card ) )
+				   {
+				   processes.enterGrave( c );
+				   return;
+				   }
+				   /** /
+				   // STACK CARDS LIKE IT'S NOTHING
+				   if ( c.lot != card.lot && card.controller == c.controller )
+				   {
+				   if ( !card.lot.isEmpty )
+				   c.faceDown = card.lot.getFirstCard().faceDown;
+				   card.lot.addCard( c );
+				   }
+				 /**/
 				}
 			}
 		}
 		
 		public function onCardRollOver( card:Card ):void
 		{
-			if ( !interactable ) return;
-			if ( card.controller.controllable ) card.sprite.peekIn();
+			if ( !interactable )
+				return;
+			if ( card.controller.controllable )
+				card.sprite.peekIn();
 			dispatchEventWith( GameEvents.HOVER, false, card );
 		}
 		
 		public function onCardRollOut( card:Card ):void
 		{
-			if ( !interactable ) return;
-			if ( card.controller.controllable ) card.sprite.peekOut();
+			if ( !interactable )
+				return;
+			if ( card.controller.controllable )
+				card.sprite.peekOut();
 			dispatchEventWith( GameEvents.UNHOVER, false, card );
 		}
 		
@@ -470,11 +510,12 @@ package duel
 			touchable = false;
 			
 			Starling.juggler.remove( this );
-			Starling.juggler.tween( q, .440, { alpha : 1.0, onComplete : destroy } );
+			Starling.juggler.tween( q, .440, { alpha: 1.0, onComplete: destroy } );
 		}
 		
 		//
-		public function selectCard( card:Card ):void {
+		public function selectCard( card:Card ):void
+		{
 			if ( selectedCard != null )
 				dispatchEventWith( GameEvents.DESELECT, false, selectedCard );
 			
@@ -484,7 +525,10 @@ package duel
 				dispatchEventWith( GameEvents.SELECT, false, selectedCard );
 		}
 		
-		public function get selectedCard():Card { return selection.selectedCard }
+		public function get selectedCard():Card
+		{
+			return selection.selectedCard
+		}
 		
 		//
 		private function generatePlayer( name:String ):Player
@@ -500,12 +544,18 @@ package duel
 		
 		// QUESTIONS
 		
-		public function canSelect( card:Card ):Boolean {
-			if ( card.controller != currentPlayer ) return false;
-			if ( card.type.isTrap && card.isInPlay ) return false;
-			if ( card.type.isCreature && card.exhausted ) return false;
-			if ( card.field && card.field.type.isGraveyard ) return false;
-			if ( card.field && card.field.type.isDeck ) return false;
+		public function canSelect( card:Card ):Boolean
+		{
+			if ( card.controller != currentPlayer )
+				return false;
+			if ( card.type.isTrap && card.isInPlay )
+				return false;
+			if ( card.type.isCreature && card.exhausted )
+				return false;
+			if ( card.field && card.field.type.isGraveyard )
+				return false;
+			if ( card.field && card.field.type.isDeck )
+				return false;
 			return true;
 		}
 		
