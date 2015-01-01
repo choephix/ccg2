@@ -115,6 +115,24 @@ package duel.cards.temp_database
 				/* * */
 				
 				/* * */
+				function( c:Card ):void ///		..C		Insistent Goeff
+				{
+					c.name = "Insistent Goeff";
+					
+					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 14;
+					c.behaviourC.needsTribute = true;
+					
+					///		grave special
+					c.behaviourC.handSpecial.watch( GameplayProcess.TURN_END );
+					c.behaviourC.handSpecial.funcCondition = function( p:GameplayProcess ):Boolean {
+						return c.controller == p.getPlayer();
+					}
+					c.behaviourC.handSpecial.funcActivate = function( p:GameplayProcess ):void {
+						TempDatabaseUtils.doReturToDeck( c, false );
+					}
+				},
+				/* * */
 				function( c:Card ):void ///		..C		Bozo
 				{
 					c.name = "Bozo";

@@ -57,6 +57,11 @@ package duel.cards.temp_database
 			Game.current.processes.append_Attack( c );
 		}
 		
+		static public function doReturToDeck( c:Card, p:Player ):void
+		{
+			Game.current.processes.prepend_AddToDeck( c, p );
+		}
+		
 	}
 
 }
