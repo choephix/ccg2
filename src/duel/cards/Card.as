@@ -150,7 +150,7 @@ package duel.cards
 		
 		public function returnToControllerHand():void 
 		{
-			processes.prepend_EnterHand( this, controller );
+			processes.prepend_AddToHand( this, controller );
 		}
 		
 		// -.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'

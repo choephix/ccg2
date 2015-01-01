@@ -44,12 +44,12 @@ package duel.cards.temp_database
 		
 		static public function doPutToGrave( c:Card ):void
 		{
-			Game.current.processes.prepend_EnterGrave( c );
+			Game.current.processes.prepend_AddToGrave( c );
 		}
 		
 		static public function doPutInHand( c:Card, p:Player ):void
 		{
-			Game.current.processes.prepend_EnterHand( c, p );
+			Game.current.processes.prepend_AddToHand( c, p );
 		}
 		
 		static public function doForceAttack( c:Card ):void

@@ -87,7 +87,7 @@ package duel.processes
 				pro.delay = NaN;
 				prependProcess( pro );
 				
-				prepend_EnterHand( c, p );
+				prepend_AddToHand( c, p );
 			}
 		}
 		
@@ -108,7 +108,7 @@ package duel.processes
 			function discardCard( p:Player, c:Card ):void
 			{
 				p.hand.removeCard( c );
-				prepend_EnterGrave( c );
+				prepend_AddToGrave( c );
 			}
 				
 			pro = pro.chain( gen( GameplayProcess.DISCARD_CARD_COMPLETE, null, p, c ) );
@@ -140,7 +140,7 @@ package duel.processes
 			function onAbort( c:Card ):void
 			{
 				if ( c.isInPlay )
-					prepend_EnterGrave( c );
+					prepend_AddToGrave( c );
 			}
 			
 			function onEnter( c:Card, field:CreatureField ):void
@@ -186,7 +186,7 @@ package duel.processes
 			function onAbort( c:Card ):void
 			{
 				if ( c.isInPlay )
-					prepend_EnterGrave( c );
+					prepend_AddToGrave( c );
 			}
 			
 			function onEnd( c:Card, field:CreatureField ):void
@@ -248,7 +248,7 @@ package duel.processes
 			function onAbort( c:Card ):void
 			{
 				if ( c.isInPlay )
-					prepend_EnterGrave( c );
+					prepend_AddToGrave( c );
 			}
 			
 			appendProcess( pro );
@@ -276,7 +276,7 @@ package duel.processes
 			function onAbort( c:Card ):void
 			{
 				if ( c.isInPlay )
-					prepend_EnterGrave( c );
+					prepend_AddToGrave( c );
 			}
 			
 			prependProcess( pro );
@@ -299,7 +299,7 @@ package duel.processes
 			function onComplete( c:Card ):void
 			{
 				if ( c.isInPlay && !c.behaviourT.persistent )
-					prepend_EnterGrave( c );
+					prepend_AddToGrave( c );
 			}
 		}
 		
@@ -495,7 +495,7 @@ package duel.processes
 			
 			function complete( c:Card ):void 
 			{
-				prepend_EnterGrave( c );
+				prepend_AddToGrave( c );
 			}
 		}
 		
@@ -614,7 +614,7 @@ package duel.processes
 		}
 		
 		// CHAINGING CARD CONTAINERS
-		public function prepend_EnterGrave( c:Card ):void 
+		public function prepend_AddToGrave( c:Card ):void 
 		{
 			var pro:GameplayProcess;
 			
@@ -640,9 +640,13 @@ package duel.processes
 			{
 				c.faceDown = false;
 			}
+			
+			//PREPEND LEAVE PLAY
+			if ( c.isInPlay )
+				prepend_LeavePlay( c );
 		}
 		
-		public function prepend_EnterHand( c:Card, p:Player ):void 
+		public function prepend_AddToHand( c:Card, p:Player ):void 
 		{
 			var pro:GameplayProcess;
 			
@@ -666,6 +670,66 @@ package duel.processes
 			
 			pro = pro.chain( gen( GameplayProcess.ENTER_HAND_COMPLETE, null, c, p ) );
 			pro.delay = NaN;
+			
+			//PREPEND LEAVE PLAY
+			if ( c.isInPlay )
+				prepend_LeavePlay( c );
+		}
+		
+		public function prepend_AddToDeck( c:Card, p:Player, faceDown:Boolean ):void 
+		{
+			var pro:GameplayProcess;
+			
+			pro = gen( GameplayProcess.ENTER_DECK, onEnd, c, p );
+			pro.abortCheck = abortCheck;
+			pro.delay = NaN;
+			
+			prependProcess( pro );
+			
+			function abortCheck( c:Card, p:Player ):Boolean
+			{
+				return p.deck.containsCard( c );
+			}
+			
+			function onEnd( c:Card, p:Player ):void 
+			{
+				c.resetState();
+				p.deck.addCard( c );
+				c.faceDown = faceDown;
+			}
+			
+			pro = pro.chain( gen( GameplayProcess.ENTER_DECK_COMPLETE, null, c, p ) );
+			pro.delay = NaN;
+			
+			//PREPEND LEAVE PLAY
+			if ( c.isInPlay )
+				prepend_LeavePlay( c );
+		}
+		
+		public function prepend_LeavePlay( c:Card ):void 
+		{
+			var pro:GameplayProcess;
+			
+			pro = gen( GameplayProcess.LEAVE_PLAY, onEnd );
+			pro.abortCheck = CommonCardQuestions.isNotInPlay;
+			
+			prependProcess( pro );
+			
+			function onEnd( c:Card, p:Player ):void 
+			{
+				c.resetState();
+				
+				if ( c.indexedField == null ) 
+				{
+					CONFIG::development 
+					{ throw new Error( "c.indexField is NULL during leave play" ) }
+					return;
+				}
+				
+				c.indexedField.removeCard( c );
+			}
+			
+			pro = pro.chain( gen( GameplayProcess.LEAVE_PLAY_COMPLETE, null, c ) );
 		}
 		
 		
