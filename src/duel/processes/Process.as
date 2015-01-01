@@ -90,7 +90,7 @@ package duel.processes
 		
 		public function abort():void
 		{
-			if ( abortable )
+			if ( !abortable )
 			{
 				CONFIG::development
 				{ throw new Error( "CANNOT ABORT THIS PROCESS!" ) }

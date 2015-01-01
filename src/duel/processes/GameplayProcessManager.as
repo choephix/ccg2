@@ -795,7 +795,7 @@ package duel.processes
 			p.name = name;
 			p.onEnd = onEnd;
 			p.args = args;
-			p.abortable = name.substr( -8 ) == "Complete";
+			p.abortable = name.substr( -8 ) != "Complete";
 			return p;
 		}
 		
