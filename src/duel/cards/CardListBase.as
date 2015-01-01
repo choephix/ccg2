@@ -82,6 +82,16 @@ package duel.cards {
 			return _list.indexOf( searchElement, fromIndex );
 		}
 		
+		public function forEachCard( f:Function ):void
+		{
+			for ( var i:int = 0; i < _count; i++ )
+			{
+				f( _list[ i ] );
+			}
+		}
+		
+		////
+		
 		public function reverseCards():void
 		{
 			_list.reverse();

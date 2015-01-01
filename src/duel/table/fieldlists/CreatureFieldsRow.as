@@ -23,6 +23,17 @@ package duel.table.fieldlists
 			return _list[ i ] as CreatureField;
 		}
 		
+		public function forEachCreature( f:Function ):void
+		{ 
+			for ( var i:int = 0; i < _count; i++ )
+			{
+				if ( _list[ i ].isEmpty )
+					continue;
+				
+				_list[ i ].forEachCard( f );
+			}
+		}
+		
 		public function get count():int 
 		{ return _count }
 		
