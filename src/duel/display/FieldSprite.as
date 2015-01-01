@@ -47,7 +47,6 @@ package duel.display {
 				cardsContainer = new StackSprite( field );
 			
 			cardsContainer.touchable = false;
-			addChild( cardsContainer );
 			
 			this.field = field;
 			field.sprite = this;
