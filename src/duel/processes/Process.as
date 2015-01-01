@@ -11,6 +11,8 @@ package duel.processes
 		private var uid:uint = 0;
 		
 		public var name:String = "unnamed";
+		public var abortable:Boolean = true;
+		
 		public var onStart:Function = null;
 		public var onEnd:Function = null;
 		public var onAbort:Function = null;
@@ -71,25 +73,42 @@ package duel.processes
 			}
 				
 			state = ProcessState.COMPLETE;
-			CONFIG::development{ log( "completed" ) }
+			
+			CONFIG::development
+			{ log( "completed" ) }
 		}
 		
 		public function abort():void
 		{
+			if ( abortable )
+			{
+				CONFIG::development
+				{ throw new Error( "CANNOT ABORT THIS PROCESS!" ) }
+				return;
+			}
 			state = ProcessState.ABORTED
-			CONFIG::development{ log( "aborted" ) }
+			
+			CONFIG::development
+			{ log( "aborted" ) }
 		}
 		
 		public function interrupt():void
 		{
 			state = ProcessState.INTERRUPTED
-			CONFIG::development{ log( "interrupted" ) }
+			
+			CONFIG::development
+			{ log( "interrupted" ) }
 		}
 		
-		/// Saves selected process for starting immediately after this one. Returns that same argument. Keep in mind that this process's callback will be called after the chained process has been added to the queue.
+		/** Saves selected process for starting immediately after this one. 
+		 *  Returns the new end of the chain (which will be either the argument process, or if it has others chained, the tail of that chain)
+		 *  NOTE: Keep in mind that this process's callback will be called after the chained process has been added to the queue. **/
 		public function chain( p:Process ):*
 		{
-			return next = p;
+			next = p;
+			while ( p.next != null ) 
+				p = p.next;
+			return p;
 		}
 		
 		//
