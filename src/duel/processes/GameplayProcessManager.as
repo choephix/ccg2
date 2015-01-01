@@ -716,51 +716,68 @@ package duel.processes
 		{
 			var pro:GameplayProcess;
 			
-			pro = gen( GameplayProcess.LEAVE_PLAY, onEnd );
+			/// LEAVE_PLAY
+			pro = gen( GameplayProcess.LEAVE_PLAY, null, c );
 			pro.abortCheck = CommonCardQuestions.isNotInPlay;
-			
 			prependProcess( pro );
 			
-			function onEnd( c:Card ):void 
+			/// LEAVE_INDEXED_FIELD
+			pro = pro.chain( process_LeaveIndexedField( c, c.indexedField ) );
+			
+			/// LEAVE_PLAY_COMPLETE
+			pro = pro.chain( gen( GameplayProcess.LEAVE_PLAY_COMPLETE, null, c ) );
+			pro.onEnd = function onEnd( c:Card ):void 
 			{
 				c.resetState();
-				
-				if ( c.indexedField == null ) 
-				{
-					CONFIG::development 
-					{ throw new Error( "c.indexField is NULL during leave play" ) }
-					return;
-				}
-				
-				c.indexedField.removeCard( c );
 			}
-			
-			pro = pro.chain( gen( GameplayProcess.LEAVE_PLAY_COMPLETE, null, c ) );
 		}
 		
-		public function process_EnterIndexedField( c:Card, field:IndexedField ):GameplayProcess 
+		private function process_EnterIndexedField( c:Card, field:IndexedField ):GameplayProcess 
 		{
-			return gen( GameplayProcess.ENTER_INDEXED_FIELD, onEnd, c, field );
-			function onEnd( c:Card, field:IndexedField ):void 
+			var pro:GameplayProcess;
+			
+			/// ENTER_INDEXED_FIELD
+			pro = gen( GameplayProcess.ENTER_INDEXED_FIELD, null, c, field );
+			pro.abortable = false;
+			pro.onEnd = function onEnd( c:Card, field:IndexedField ):void 
 			{
 				field.addCard( c );
 			}
+			
+			/// ENTER_INDEXED_FIELD_COMPLETE
+			pro.chain( gen( GameplayProcess.ENTER_INDEXED_FIELD_COMPLETE, null, c, field ) );
+			
+			/// returns ENTER_INDEXED_FIELD (the chain head)
+			return pro;
 		}
 		
-		public function process_LeaveIndexedField( c:Card, field:IndexedField ):GameplayProcess 
+		private function process_LeaveIndexedField( c:Card, field:IndexedField ):GameplayProcess 
 		{
-			return gen( GameplayProcess.LEAVE_INDEXED_FIELD, onEnd, c, field );
+			var pro:GameplayProcess;
+			
+			/// LEAVE_INDEXED_FIELD
+			pro = gen( GameplayProcess.LEAVE_INDEXED_FIELD, null, c, field );
+			pro.abortCheck = function abortCheck( c:Card, field:IndexedField ):Boolean
+			{
+				return !field.containsCard( c );
+			}
+			
+			/// LEAVE_INDEXED_FIELD_COMPLETE
+			pro.chain( gen( GameplayProcess.LEAVE_INDEXED_FIELD_COMPLETE, onEnd, c, field ) );
 			function onEnd( c:Card, field:IndexedField ):void 
 			{
 				c.resetState();
 				if ( !field.containsCard( c ) ) 
 				{
 					CONFIG::development 
-					{ throw new Error( "!field.containsCard( c )" ) }
+					{ throw new Error( "process_LeaveIndexedField: !field.containsCard" ) }
 					return;
 				}
 				c.indexedField.removeCard( c );
 			}
+			
+			/// returns LEAVE_INDEXED_FIELD (the chain head)
+			return pro;
 		}
 		
 		
