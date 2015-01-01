@@ -40,6 +40,7 @@ package duel.display {
 		private var _flipTween:Tween;
 		
 		private var __attackSprite:Quad;
+		private var __bloodSprite:Quad;
 		
 		//
 		private var card:Card;
@@ -311,6 +312,18 @@ package duel.display {
 		animation function animDie():void 
 		{
 			animBlink( true, 0xB00000 ).blendMode = BlendMode.MULTIPLY;
+			
+			__bloodSprite = assets.generateImage( "card-blood" );
+			__bloodSprite.alignPivot();
+			__bloodSprite.blendMode = BlendMode.MULTIPLY;
+			addChild( __bloodSprite );
+			juggler.xtween( __bloodSprite, 8.0,
+				{ 
+					delay: 4.0,
+					alpha: .0, 
+					onComplete : __bloodSprite.removeFromParent,
+					onCompleteArgs : [true]
+				} );
 			
 			juggler.xtween( this, .200, { 
 					y : y - 50 * ( isTopSide ? 1.0 : -1.0 ),
