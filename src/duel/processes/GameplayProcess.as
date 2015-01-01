@@ -54,12 +54,18 @@ package duel.processes
 		static public const SILENT_FLIP:String = "silentFlip";
 		static public const SILENT_FLIP_COMPLETE:String = "silentFlipComplete";
 		
-		static public const ENTER_GRAVE:String = "enterGrave";
-		static public const ENTER_GRAVE_COMPLETE:String = "enterGraveComplete";
+		static public const ENTER_DECK:String = "enterDeck";
+		static public const ENTER_DECK_COMPLETE:String = "enterDeckComplete";
 		static public const ENTER_HAND:String = "enterHand";
 		static public const ENTER_HAND_COMPLETE:String = "enterHandComplete";
+		static public const ENTER_GRAVE:String = "enterGrave";
+		static public const ENTER_GRAVE_COMPLETE:String = "enterGraveComplete";
 		static public const ENTER_PLAY:String = "enterPlay";
 		static public const ENTER_PLAY_COMPLETE:String = "enterPlayComplete";
+		static public const ENTER_INDEXED_FIELD:String = "enterIndexedField";
+		static public const LEAVE_INDEXED_FIELD:String = "leaveIndexedField";
+		static public const LEAVE_PLAY:String = "leavePlay";
+		static public const LEAVE_PLAY_COMPLETE:String = "leavePlayComplete";
 		
 		//LEAVE_PLAY
 		//LEAVE_PLAY_COMPLETE

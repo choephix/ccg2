@@ -677,7 +677,7 @@ package duel.processes
 				prepend_LeavePlay( c );
 		}
 		
-		public function prepend_AddToDeck( c:Card, p:Player, faceDown:Boolean ):void 
+		public function prepend_AddToDeck( c:Card, p:Player, faceDown:Boolean, shuffle:Boolean ):void 
 		{
 			var pro:GameplayProcess;
 			
@@ -701,6 +701,11 @@ package duel.processes
 			
 			pro = pro.chain( gen( GameplayProcess.ENTER_DECK_COMPLETE, null, c, p ) );
 			pro.delay = NaN;
+			
+			if ( shuffle )
+			{
+				CONFIG::development { throw UninitializedError( "Deck shuffling not yet implemented" ) }
+			}
 			
 			//PREPEND LEAVE PLAY
 			if ( c.isInPlay )
@@ -733,7 +738,7 @@ package duel.processes
 			pro = pro.chain( gen( GameplayProcess.LEAVE_PLAY_COMPLETE, null, c ) );
 		}
 		
-		public function process_EnterIndexedField( c:Card, field:IndexedField ):void 
+		public function process_EnterIndexedField( c:Card, field:IndexedField ):GameplayProcess 
 		{
 			return gen( GameplayProcess.ENTER_INDEXED_FIELD, onEnd, c, field );
 			function onEnd( c:Card, field:IndexedField ):void 

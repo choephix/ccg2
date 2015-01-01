@@ -59,7 +59,7 @@ package duel.cards.temp_database
 					///		grave special
 					c.behaviourC.handSpecial.watch( GameplayProcess.TURN_END );
 					c.behaviourC.handSpecial.funcActivate = function( p:GameplayProcess ):void {
-						TempDatabaseUtils.doDealDirectDamage( p, new Damage( 5, DamageType.SPECIAL, c ) );
+						TempDatabaseUtils.doDealDirectDamage( c.controller, 5, c );
 					}
 					
 					///		combat-flip
@@ -132,7 +132,7 @@ package duel.cards.temp_database
 						return c.controller == p.getPlayer();
 					}
 					c.behaviourC.handSpecial.funcActivate = function( p:GameplayProcess ):void {
-						TempDatabaseUtils.doReturToDeck( c, false );
+						TempDatabaseUtils.doPutInDeck( c, c.controller, false, false );
 					}
 				},
 				/* * */
@@ -153,6 +153,7 @@ package duel.cards.temp_database
 						c.controller.opponent.fieldsC.forEachCreature( TempDatabaseUtils.doPutToGrave );
 						c.controller.fieldsT.forEachTrap( TempDatabaseUtils.doPutToGrave );
 						c.controller.opponent.fieldsT.forEachTrap( TempDatabaseUtils.doPutToGrave );
+						TempDatabaseUtils.doDealDirectDamage( c.controller, c.controller.lifePoints / 2, c );
 					}
 				},
 				/* * */

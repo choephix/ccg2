@@ -5,6 +5,7 @@ package duel.cards.temp_database
 	import duel.cards.Card;
 	import duel.cards.CardType;
 	import duel.Damage;
+	import duel.DamageType;
 	import duel.Game;
 	import duel.Player;
 	/**
@@ -53,19 +54,20 @@ package duel.cards.temp_database
 			Game.current.processes.prepend_AddToHand( c, p );
 		}
 		
+		static public function doPutInDeck( c:Card, p:Player, faceDown:Boolean, shuffle:Boolean ):void
+		{
+			Game.current.processes.prepend_AddToDeck( c, p, faceDown, shuffle );
+		}
+		
 		static public function doForceAttack( c:Card ):void
 		{
 			Game.current.processes.append_Attack( c );
 		}
 		
-		static public function doReturToDeck( c:Card, p:Player ):void
+		static public function doDealDirectDamage( p:Player, amount:int, source:* ):void
 		{
-			Game.current.processes.prepend_AddToDeck( c, p );
-		}
-		
-		static public function doDealDirectDamage( p:Player, dmg:Damage ):void
-		{
-			Game.current.processes.prepend_DirectDamage( p, dmg ); 
+			Game.current.processes.prepend_DirectDamage( p, 
+					new Damage( amount, DamageType.SPECIAL, source ) );
 		}
 		
 	}
