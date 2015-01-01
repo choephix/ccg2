@@ -24,17 +24,6 @@ package duel.display {
 		
 		public function initialize( field:Field, color:uint ):void
 		{
-			/** /
-			var color:uint = 0xFFFFFF;
-			switch( field.type )
-			{
-				case FieldType.CREATURE:	color = 0x440011; break;
-				case FieldType.TRAP:		color = 0x07274B; break;
-				case FieldType.DECK:		color = 0x222222; break;
-				case FieldType.GRAVEYARD:	color = 0x221139; break;
-			}
-			/**/
-			
 			image = assets.generateImage( "field", true, true );
 			addChild( image );
 			
