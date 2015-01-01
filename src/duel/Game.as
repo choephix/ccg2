@@ -2,10 +2,11 @@ package duel
 {
 	import chimichanga.common.assets.AdvancedAssetManager;
 	import dev.ProcessManagementInspector;
-	import dev.ProcessTester;
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
 	import duel.cards.CommonCardQuestions;
+	import duel.cards.temp_database.TempDatabasePack1;
+	import duel.cards.temp_database.TempDatabasePack2;
 	import duel.display.cardlots.HandSprite;
 	import duel.display.TableSide;
 	import duel.gui.Gui;
@@ -144,8 +145,8 @@ package duel
 			}
 			  
 			// PREPARE GAMEPLAY
-			const DECK_SIZE_1:uint	= CardFactory.MAX; /// 52 22 16 8 10 128
-			const DECK_SIZE_2:uint	= Number.min( CardFactory.MAX, 18 ); /// CardFactory.MAX
+			const DECK_SIZE_1:uint	= TempDatabasePack1.COUNT; /// 52 22 16 8 10 128
+			const DECK_SIZE_2:uint	= TempDatabasePack2.COUNT; /// CardFactory.MAX
 			const HAND_SIZE:uint	= 8; /// 12 6 5 7 8 2
 			
 			var time:Number = 0.7;
@@ -154,7 +155,7 @@ package duel
 			for ( i = 0; i < DECK_SIZE_1; i++ ) 
 			{
 				time += .010;
-				c = CardFactory.produceCard( i % CardFactory.MAX );
+				c = CardFactory.produceCard( i );
 				c.owner = p1;
 				c.faceDown = true;
 				jugglerStrict.delayCall( p1.deck.addCard, time, c, true );
@@ -163,7 +164,7 @@ package duel
 			for ( i = 0; i < DECK_SIZE_2; i++ ) 
 			{
 				time += .010;
-				c = CardFactory.produceCard( ( HAND_SIZE + i ) % CardFactory.MAX );
+				c = CardFactory.produceCard( i + 1000 );
 				c.owner = p2;
 				c.faceDown = true;
 				jugglerStrict.delayCall( p2.deck.addCard, time, c, true );

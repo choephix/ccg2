@@ -18,7 +18,6 @@ package duel.cards.behaviour
 		public var swift:Boolean = false; 		// CAN ATTACK AND MOVE SAME TURN
 		public var berserk:Boolean = false;		// ATTACKS AUTOMATICALLY
 		
-		
 		// SPECIAL
 		public var inplaySpecial:SpecialEffect = new SpecialEffect();
 		public function get hasInPlaySpecialEffect():Boolean
