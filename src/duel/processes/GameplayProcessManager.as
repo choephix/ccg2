@@ -452,7 +452,7 @@ package duel.processes
 			pro = pro.chain( gen( GameplayProcess.CREATURE_DAMAGE_COMPLETE, null, c, dmg ) );
 		}
 		
-		private function prepend_DirectDamage( p:Player, dmg:Damage ):void
+		public function prepend_DirectDamage( p:Player, dmg:Damage ):void
 		{
 			var pro:GameplayProcess;
 			

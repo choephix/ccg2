@@ -1,6 +1,8 @@
 package duel.cards.temp_database 
 {
 	import duel.cards.Card;
+	import duel.Damage;
+	import duel.DamageType;
 	import duel.G;
 	import duel.Player;
 	import duel.processes.GameplayProcess;
@@ -56,7 +58,7 @@ package duel.cards.temp_database
 					///		grave special
 					c.behaviourC.handSpecial.watch( GameplayProcess.TURN_END );
 					c.behaviourC.handSpecial.funcActivate = function( p:GameplayProcess ):void {
-						c.controller.takeDirectDamage( 1 );
+						TempDatabaseUtils.doDealDirectDamage( p, new Damage( 5, DamageType.SPECIAL, c ) );
 					}
 					
 					///		combat-flip
@@ -179,7 +181,7 @@ package duel.cards.temp_database
 					
 					c.behaviourC.graveSpecial.watch( GameplayProcess.TURN_END );
 					c.behaviourC.graveSpecial.funcActivate = function( p:GameplayProcess ):void {
-						c.returnToControllerHand();
+						TempDatabaseUtils.doPutInHand( c, c.controller );
 					}
 				},
 				/* * */

@@ -4,6 +4,7 @@ package duel.cards.temp_database
 	import duel.cards.behaviour.TrapCardBehaviour;
 	import duel.cards.Card;
 	import duel.cards.CardType;
+	import duel.Damage;
 	import duel.Game;
 	import duel.Player;
 	/**
@@ -60,6 +61,11 @@ package duel.cards.temp_database
 		static public function doReturToDeck( c:Card, p:Player ):void
 		{
 			Game.current.processes.prepend_AddToDeck( c, p );
+		}
+		
+		static public function doDealDirectDamage( p:Player, dmg:Damage ):void
+		{
+			Game.current.processes.prepend_DirectDamage( p, dmg ); 
 		}
 		
 	}
