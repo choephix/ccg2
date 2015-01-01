@@ -121,8 +121,7 @@ package duel.cards
 			{
 				if ( behaviourC.hasInPlayOngoingEffect )
 				{
-					behaviourC.inplayOngoingFunc( p );
-					return;
+					behaviourC.inplayOngoing.update( p );
 				}
 				if ( behaviourC.hasInPlaySpecialEffect && behaviourC.inplaySpecial.mustInterrupt( p ) )
 				{

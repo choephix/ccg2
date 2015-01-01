@@ -2,6 +2,7 @@ package duel.cards.behaviour
 {
 	import duel.Damage;
 	import duel.DamageType;
+	import duel.otherlogic.OngoingEffect;
 	import duel.otherlogic.SpecialEffect;
 	/**
 	 * ...
@@ -21,12 +22,12 @@ package duel.cards.behaviour
 		// SPECIAL
 		public var inplaySpecial:SpecialEffect = new SpecialEffect();
 		public function get hasInPlaySpecialEffect():Boolean
-		{ return inplaySpecial != null && !inplaySpecial.isNone; }
+		{ return inplaySpecial != null && !inplaySpecial.isNone }
 		
 		// ONGOING
-		public var inplayOngoingFunc:Function;
+		public var inplayOngoing:OngoingEffect = new OngoingEffect();
 		public function get hasInPlayOngoingEffect():Boolean
-		{ return inplayOngoingFunc != null; }
+		{ return inplayOngoing != null && !inplayOngoing.isNone }
 		
 		// COMBAT FLIP
 		public var onCombatFlipFunc:Function;

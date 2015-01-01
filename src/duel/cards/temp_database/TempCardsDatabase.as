@@ -80,7 +80,7 @@ package duel.cards.temp_database
 					}
 					
 					///		inplay ongoing
-					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):Boolean {
+					c.behaviourC.inplayOngoing.funcUpdate = function( p:GameplayProcess ):Boolean {
 						trace ( p );
 					}
 				},
@@ -306,7 +306,7 @@ package duel.cards.temp_database
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 7;
 					
-					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):void {
+					c.behaviourC.inplayOngoing.funcUpdate = function( p:GameplayProcess ):void {
 						if ( c.controller.opponent.deck.topCard == null ) return;
 						c.controller.opponent.deck.topCard.faceDown = false;
 					}
@@ -353,7 +353,7 @@ package duel.cards.temp_database
 					c.behaviourC.attack = 0;
 					c.behaviourC.needsTribute = true;
 					
-					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):void {
+					c.behaviourC.inplayOngoing.funcUpdate = function( p:GameplayProcess ):void {
 						c.behaviourC.attack = c.controller.opponent.creatureCount * 5;
 					}
 				},
@@ -365,7 +365,7 @@ package duel.cards.temp_database
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 0;
 					
-					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):void {
+					c.behaviourC.inplayOngoing.funcUpdate = function( p:GameplayProcess ):void {
 						c.behaviourC.attack = c.controller.hand.cardsCount * 2;
 					}
 				},
@@ -393,7 +393,7 @@ package duel.cards.temp_database
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 5;
 					
-					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):void {
+					c.behaviourC.inplayOngoing.funcUpdate = function( p:GameplayProcess ):void {
 						c.behaviourC.attack = hasAdjacentYin() ? 15 : 5;
 					}
 					function hasAdjacentYin():Boolean {
@@ -413,7 +413,7 @@ package duel.cards.temp_database
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = 6;
 					
-					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):void {
+					c.behaviourC.inplayOngoing.funcUpdate = function( p:GameplayProcess ):void {
 						c.behaviourC.attack = hasAdjacentYang() ? 14 : 6;
 					}
 					function hasAdjacentYang():Boolean {
