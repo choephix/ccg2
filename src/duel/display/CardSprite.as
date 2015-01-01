@@ -9,6 +9,7 @@ package duel.display {
 	import starling.animation.IAnimatable;
 	import starling.animation.Transitions;
 	import starling.animation.Tween;
+	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.events.Touch;
@@ -282,95 +283,42 @@ package duel.display {
 			this.alpha = 1.0;
 		}
 		
-		animation function animDie():void 
-		{
-			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFF0000 );
-			addChild( q );
-			q.alignPivot();
-			q.alpha = .99;
-			jugglerStrict.tween( q, .400,
-				{ 
-					alpha: .0, 
-					onComplete : q.removeFromParent,
-					onCompleteArgs : [true]
-				} );
-			jugglerStrict.tween( this, .400,
-				{ 
-					delay: .2, 
-					alpha: .0
-				} );
-			
-			destroyAnimAttackSprite();
-		}
-		
 		animation function animFlipEffect():void
 		{
-			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFFFFFF );
-			addChild( q );
-			q.alignPivot();
-			q.alpha = .999;
-			jugglerStrict.tween( q, .500,
-				{ 
-					alpha: .0, 
-					onComplete : q.removeFromParent,
-					onCompleteArgs : [true]
-				} );
+			animBlink( true, 0xFF8030 );
 		}
 		
 		animation function animTrapEffect():void
 		{
-			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFFFFFF );
-			addChild( q );
-			q.alignPivot();
-			q.alpha = .999;
-			jugglerStrict.tween( q, .500,
-				{ 
-					alpha: .0, 
-					onComplete : q.removeFromParent,
-					onCompleteArgs : [true]
-				} );
+			animBlink( true, 0x60B0FF );
 		}
 		
 		animation function animSpecialEffect():void
 		{
-			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFFFFFF );
-			addChild( q );
-			q.alignPivot();
-			q.alpha = .50;
-			jugglerStrict.tween( q, .600,
-				{ 
-					alpha: .0, 
-					onComplete : q.removeFromParent,
-					onCompleteArgs : [true]
-				} );
-		}
-		
-		animation function animDamageOnly():void
-		{
-			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0xFF8000 );
-			addChild( q );
-			q.alignPivot();
-			q.alpha = .999;
-			jugglerStrict.tween( q, .150,
-				{ 
-					alpha: .0, 
-					onComplete : q.removeFromParent,
-					onCompleteArgs : [true]
-				} );
+			animBlink( true, 0xFFD060 );
 		}
 		
 		animation function animDamageAbort():void
 		{
-			var q:Quad = new Quad( G.CARD_W, G.CARD_H, 0x00FFFF );
-			addChild( q );
-			q.alignPivot();
-			q.alpha = .999;
-			jugglerStrict.tween( q, .333,
-				{ 
-					alpha: .0, 
-					onComplete : q.removeFromParent,
-					onCompleteArgs : [true]
+			animBlink( true, 0x104050 );
+		}
+		
+		animation function animDamageOnly():void
+		{
+			animBlink( false, 0xFFAEAE ).blendMode = BlendMode.MULTIPLY;
+		}
+		
+		animation function animDie():void 
+		{
+			animBlink( true, 0xB00000 ).blendMode = BlendMode.MULTIPLY;
+			
+			juggler.xtween( this, .200, { 
+					y : y - 50 * ( isTopSide ? 1.0 : -1.0 ),
+					rotation : Math.random() - .5,
+					transition : Transitions.EASE_OUT
 				} );
+			
+			destroyAnimAttackSprite();
 		}
 		
 		/// Plays ste standard flip-up animation, but in a way that pauses gameplay processes during it
@@ -386,6 +334,23 @@ package duel.display {
 			this.scaleX = 1.0;
 			this.scaleY = 1.0;
 			this.alpha = 1.0;
+		}
+		
+		private function animBlink( strict:Boolean, color:uint = 0xFFFFFF ):Quad
+		{
+			var q:Quad = assets.generateImage( "card-glow" );
+			addChild( q );
+			q.alignPivot();
+			q.blendMode = BlendMode.ADD;
+			q.color = color;
+			q.alpha = .999;
+			jugglerStrict.tween( q, .750,
+				{ 
+					alpha: .0, 
+					onComplete : q.removeFromParent,
+					onCompleteArgs : [true]
+				} );
+			return q;
 		}
 		
 		// FLIPPING
