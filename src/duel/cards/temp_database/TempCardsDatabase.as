@@ -25,6 +25,7 @@ package duel.cards.temp_database
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
 					c.behaviourC.attack = G.INIT_LP;
 					c.behaviourC.haste = true;
+					c.behaviourC.startFaceDown = true;
 					
 					///		_COMPLETE
 					///		
@@ -57,6 +58,25 @@ package duel.cards.temp_database
 					c.behaviourC.handSpecial.watch( GameplayProcess.TURN_END );
 					c.behaviourC.handSpecial.funcActivate = function( p:GameplayProcess ):void {
 						c.controller.takeDirectDamage( 1 );
+					}
+					
+					///		combat-flip
+					c.behaviourC.onCombatFlipFunc = function():void {
+						if ( c.indexedField.opposingCreature != null )
+						{
+							c.die();
+							c.indexedField.opposingCreature.die();
+							return;
+						}
+					}
+					
+					///		safe-flip
+					c.behaviourC.onCombatFlipFunc = function():void {
+						if ( c.indexedField.opposingCreature != null )
+						{
+							c.behaviourC.attack++;
+							return;
+						}
 					}
 					
 					///		inplay ongoing
