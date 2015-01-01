@@ -1,4 +1,5 @@
-package duel.display.cardlots {
+package duel.display.cardlots
+{
 	import chimichanga.global.utils.MathF;
 	import duel.cards.Card;
 	import duel.cards.CardListBase;
@@ -6,6 +7,7 @@ package duel.display.cardlots {
 	import starling.animation.Transitions;
 	import starling.animation.Tween;
 	import starling.display.DisplayObject;
+	import starling.display.DisplayObjectContainer;
 	import starling.events.Event;
 	
 	/**
@@ -16,8 +18,6 @@ package duel.display.cardlots {
 	{
 		public var cardSpacing:Number = 10;
 		
-		protected var _fallingCardTween:Tween;
-		
 		public function StackSprite( list:CardListBase )
 		{
 			if ( list == null )
@@ -25,19 +25,10 @@ package duel.display.cardlots {
 			
 			setTargetList( list );
 			juggler.add( this );
-			
-			_fallingCardTween = new Tween( null, .0 );
 		}
 		
-		override public function arrange():void 
+		override protected function arrangeAll():void
 		{
-			super.arrange();
-		}
-		
-		public function quickArrange():void 
-		{
-			removeChildren();
-			
 			var o:CardSprite;
 			var i:int = list.cardsCount;
 			var j:int = 0;
@@ -45,94 +36,37 @@ package duel.display.cardlots {
 			{
 				o = list.getCardAt( i ).sprite;
 				o.alpha = 1.0;
-				o.x = 0;
-				o.y = -cardSpacing * j;
-				addCardChild( o );
+				o.x = x;
+				o.y = y - cardSpacing * j;
+				cardsParent.addChild( o );
+			
+				o.touchable = false;
+				o.useHandCursor = false;
 				j++;
 			}
 		}
 		
-		override protected function onCardAdded( e:Event ):void 
+		override protected function tweenToPlace( o:CardSprite ):void
 		{
-			if ( !_fallingCardTween.isComplete )
-				_fallingCardTween.advanceTime( Number.MAX_VALUE );
+			const TARGET_Y:Number = y - cardSpacing * ( cardsCount - 1 );
 			
-			if ( list.indexOfCard( e.data as Card ) != 0 )
-				quickArrange();
-			else
-			{
-				animFallingCard( e.data.sprite as CardSprite );
-			}
-		}
-		
-		protected function animFallingCard( o:CardSprite ):void
-		{
-			addCardChild( o );
-			
-			const TARGET_Y:Number = -cardSpacing * ( cardsCount - 1 );
-			
-			o.visible = true;
-			o.scaleX = 1.0;
-			o.scaleY = 1.0;
-			o.x = 0.0;
-			o.y = TARGET_Y;
-			o.alpha = 1.0;
-			
-			/** /
-			_fallingCardTween.reset( o, .250, Transitions.EASE_OUT ); // EASE_OUT EASE_IN
-			_fallingCardTween.animate( "y", TARGET_Y );
-			o.y = TARGET_Y - 40;
-			/** /
-			_fallingCardTween.reset( o, .660, Transitions.EASE_OUT_BOUNCE );
-			_fallingCardTween.animate( "y", TARGET_Y );
-			o.y = TARGET_Y - 40;
-			/**/
-			_fallingCardTween.reset( o, .880, Transitions.EASE_OUT_BOUNCE );
-			_fallingCardTween.animate( "scaleX", 1.0 );
-			_fallingCardTween.animate( "scaleY", 1.0 );
-			o.scaleX = 1.4;
-			o.scaleY = 1.4;
-			o.rotation = MathF.randSign * MathF.random( .025 );
-			/**/
-			
-			jugglerStrict.add( _fallingCardTween );
-		}
-		
-		override protected function onCardRemoved( e:Event ):void 
-		{
-			if ( !_fallingCardTween.isComplete )
-				_fallingCardTween.advanceTime( Number.MAX_VALUE );
-			
-			quickArrange();
-		}
-		
-		override protected function onCardsReordered(e:Event):void 
-		{
-			if ( !_fallingCardTween.isComplete )
-				_fallingCardTween.advanceTime( Number.MAX_VALUE );
-			
-			quickArrange();
-		}
-		
-		public function animBunch():void
-		{
-			var o:DisplayObject;
-			for ( var i:int = 0, iMax:int = numChildren; i < iMax; i++ ) 
-			{
-				o = getChildAt( i );
-				o.x = .0;
-				o.y = -50 * ( i + 1 );
-				o.rotation = Math.random() * 0.2 - 0.1;
-				jugglerStrict.xtween( o, 0.8, { 
-					x: .0,
-					y: -cardSpacing * i,
-					//rotation: 0.0,
-					rotation: Math.random() * 0.2 - 0.1,
-					transition: Transitions.EASE_OUT_BOUNCE
+			juggler.xtween( o, .150,
+				{
+					alpha : 1.0,
+					x : x,
+					y : TARGET_Y,
+					scaleX : 1.0,
+					scaleY : 1.0,
+					rotation : MathF.randSign * MathF.random( .025 ),
+					transition : Transitions.EASE_OUT
 				} );
-			}
+				
+			cardsParent.addChild( o );
+			
+			o.touchable = false;
+			o.useHandCursor = false;
 		}
 		
 	}
-
+	
 }

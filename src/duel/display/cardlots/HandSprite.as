@@ -36,10 +36,18 @@ package duel.display.cardlots {
 			//game.addEventListener( GameEvents.UNHOVER, onCardDeselected );
 		}
 		
-		override public function arrange():void
+		override protected function arrangeAll():void 
 		{
-			removeChildren();
-			
+			arrange();
+		}
+		
+		override protected function tweenToPlace( cs:CardSprite ):void 
+		{
+			arrange();
+		}
+		
+		public function arrange():void
+		{
 			/** /
 			if ( selectedIndex >= 0 )
 			{
@@ -69,7 +77,6 @@ package duel.display.cardlots {
 			{
 				o = list.getCardAt( i ).sprite;
 				
-				addCardChild( o );
 				x = x + theD( W );
 				y = ( flipped ? -1.0 : 1.0 ) * 50;
 				if ( _active )
@@ -83,10 +90,16 @@ package duel.display.cardlots {
 				jugglerGui.tween( o, 0.250, // .850 .250
 					{ 
 						alpha: 1.0,
-						x: x, y: y, 
+						x: this.x + x, 
+						y: this.y + y, 
 						transition: Transitions.EASE_OUT // EASE_OUT EASE_OUT_BACK EASE_OUT_ELASTIC
 					} );
-					
+				
+				o.parent.setChildIndex( o, jj );
+				
+				o.touchable = true;
+				o.useHandCursor = true;
+				
 				jj++;
 			}
 		}
@@ -149,7 +162,7 @@ package duel.display.cardlots {
 			var c:Card = e.data as Card;
 			jugglerGui.removeTweens( c.sprite );
 			selectedIndex = -1;
-			dirty = true;
+			arrange();
 		}
 		
 		private function onTurnStart(e:Event):void 
@@ -181,13 +194,13 @@ package duel.display.cardlots {
 		public function show( c:Card ):void
 		{
 			selectedIndex = list.indexOfCard( c );
-			dirty = true;
+			arrange();
 		}
 		
 		public function unshow( c:Card ):void
 		{
 			selectedIndex = -1;
-			dirty = true;
+			arrange();
 		}
 		
 		//
@@ -199,7 +212,7 @@ package duel.display.cardlots {
 		public function set active(value:Boolean):void 
 		{
 			_active = value;
-			dirty = true;
+			arrange();
 		}
 	
 	}

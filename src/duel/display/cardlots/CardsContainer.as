@@ -5,6 +5,7 @@ package duel.display.cardlots
 	import duel.GameSprite;
 	import starling.animation.IAnimatable;
 	import starling.display.DisplayObject;
+	import starling.display.DisplayObjectContainer;
 	import starling.events.Event;
 	
 	/**
@@ -13,20 +14,11 @@ package duel.display.cardlots
 	 */
 	public class CardsContainer extends GameSprite implements IAnimatable
 	{
+		public var cardsParent:DisplayObjectContainer;
+		
 		protected var list:CardListBase;
-		protected var dirty:Boolean;
 		
-		public function advanceTime( time:Number ):void
-		{
-			if ( dirty )
-			{
-				dirty = false;
-				arrange();
-			}
-		}
-		
-		/// empty method
-		public function arrange():void{}
+		public function advanceTime( time:Number ):void {}
 		
 		public function setTargetList( target:CardListBase ):void
 		{
@@ -38,7 +30,6 @@ package duel.display.cardlots
 			}
 			
 			list = target;
-			dirty = true;
 			
 			if ( list )
 			{
@@ -46,33 +37,34 @@ package duel.display.cardlots
 				list.addEventListener( Event.ADDED, onCardAdded );
 				list.addEventListener( Event.REMOVED, onCardRemoved );
 			}
+			
+			arrangeAll();
 		}
 		
 		protected function onCardsReordered( e:Event ):void
-		{
-			dirty = true;
-		}
+		{ arrangeAll() }
 		
 		/// empty method
-		protected function onCardAdded( e:Event ):void {
-			dirty = true;
-		}
+		protected function onCardAdded( e:Event ):void
+		{ tweenToPlace( e.data.sprite as CardSprite ) }
 		
 		/// empty method
-		protected function onCardRemoved( e:Event ):void {
-			dirty = true;
-		}
+		protected function onCardRemoved( e:Event ):void
+		{ arrangeAll() }
+		
+		protected function arrangeAll():void {}
+		protected function tweenToPlace( o:CardSprite ):void {}
 		
 		//
-		protected function addCardChild( child:CardSprite ):void
-		{
-			super.addChild( child );
-		}
 		
-		//override public function addChild( child:DisplayObject ):DisplayObject 
-		//{
-			//throw new Error( "NEVER USE ADDCHILD ON STACK" );
-		//}
+		override public function addChild( child:DisplayObject ):DisplayObject 
+		{ throw new Error( "NEVER USE addChild() ON STACK" ); }
+		
+		override public function removeChild( child:DisplayObject, dispose:Boolean=false ):DisplayObject 
+		{ throw new Error( "NEVER USE removeChild() ON STACK" ); }
+		
+		override public function removeChildren( beginIndex:int=0, endIndex:int=-1, dispose:Boolean=false ):void
+		{ throw new Error( "NEVER USE removeChildren() ON STACK" ); }
 		
 		//
 		public function get cardsCount():int { return list.cardsCount }

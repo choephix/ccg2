@@ -122,15 +122,15 @@ package duel
 			selection = new Selection();
 			
 			p1.handSprite = new HandSprite( p1.hand );
-			p1.handSprite.x = ( App.W - p1.handSprite.maxWidth ) * 0.5;
-			p1.handSprite.y = App.H;
-			addChild( p1.handSprite );
+			p1.handSprite.x = -360 + ( App.W - p1.handSprite.maxWidth ) * 0.5;
+			p1.handSprite.y = -p1.tableSide.y + App.H;
+			p1.tableSide.addChild( p1.handSprite );
 			
 			p2.handSprite = new HandSprite( p2.hand );
-			p2.handSprite.y = 0;
-			p2.handSprite.x = ( App.W - p2.handSprite.maxWidth ) * 0.5;
+			p2.handSprite.x = -360 + ( App.W - p2.handSprite.maxWidth ) * 0.5;
+			p2.handSprite.y = -p2.tableSide.y;
 			p2.handSprite.flipped = true;
-			addChild( p2.handSprite );
+			p2.tableSide.addChild( p2.handSprite );
 			
 			// START GAME
 			currentPlayer = p1;
