@@ -153,6 +153,7 @@ package duel.processes
 			pro = pro.chain( gen( GameplayProcess.ENTER_PLAY_COMPLETE, null, c, field ) );
 			
 			pro = pro.chain( gen( GameplayProcess.SUMMON_COMPLETE, complete, c, field ) );
+			pro.abortable = true;
 			pro.abortCheck = completeAbortCheck;
 			
 			function completeAbortCheck( c:Card, field:CreatureField ):Boolean

@@ -31,7 +31,16 @@ package duel.processes
 		
 		internal function start():void 
 		{
-			CONFIG::development { if ( state == ProcessState.WAITING ) log( "started" ) }
+			CONFIG::development
+			{ if ( state == ProcessState.WAITING ) log( "started" ) }
+			
+			if ( !abortable && ( onAbort != null || abortCheck != null ) )
+			{
+				CONFIG::development
+				{ throw new Error( name + " should be abortable!" ) }
+				abortable = true;
+			}
+			
 			state = ProcessState.ONGOING;
 				
 			if ( onStart != null )
