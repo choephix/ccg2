@@ -9,6 +9,7 @@ package duel.processes
 	import duel.otherlogic.SpecialEffect;
 	import duel.Player;
 	import duel.table.CreatureField;
+	import duel.table.IndexedField;
 	import duel.table.TrapField;
 	
 	use namespace animation;
@@ -706,7 +707,7 @@ package duel.processes
 				prepend_LeavePlay( c );
 		}
 		
-		public function prepend_LeavePlay( c:Card ):void 
+		private function prepend_LeavePlay( c:Card ):void 
 		{
 			var pro:GameplayProcess;
 			
@@ -715,7 +716,7 @@ package duel.processes
 			
 			prependProcess( pro );
 			
-			function onEnd( c:Card, p:Player ):void 
+			function onEnd( c:Card ):void 
 			{
 				c.resetState();
 				
@@ -730,6 +731,31 @@ package duel.processes
 			}
 			
 			pro = pro.chain( gen( GameplayProcess.LEAVE_PLAY_COMPLETE, null, c ) );
+		}
+		
+		public function process_EnterIndexedField( c:Card, field:IndexedField ):void 
+		{
+			return gen( GameplayProcess.ENTER_INDEXED_FIELD, onEnd, c, field );
+			function onEnd( c:Card, field:IndexedField ):void 
+			{
+				field.addCard( c );
+			}
+		}
+		
+		public function process_LeaveIndexedField( c:Card, field:IndexedField ):GameplayProcess 
+		{
+			return gen( GameplayProcess.LEAVE_INDEXED_FIELD, onEnd, c, field );
+			function onEnd( c:Card, field:IndexedField ):void 
+			{
+				c.resetState();
+				if ( !field.containsCard( c ) ) 
+				{
+					CONFIG::development 
+					{ throw new Error( "!field.containsCard( c )" ) }
+					return;
+				}
+				c.indexedField.removeCard( c );
+			}
 		}
 		
 		
