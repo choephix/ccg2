@@ -97,7 +97,6 @@ package duel.processes
 			
 			pro = gen( GameplayProcess.DISCARD_CARD, discardCard, p, c );
 			pro.abortCheck = abortCheck;
-			pro.delay = .333;
 			
 			prependProcess( pro );
 			

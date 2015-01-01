@@ -14,18 +14,87 @@ package duel.cards.temp_database
 	{
 		static public const F:Array = [
 				/* * * /
-				function( c:Card ):void ///		..C		TEST
+				
+					PLAYER 1
+				
+				/* * */
+				function( c:Card ):void ///		..C		TEST CREATURE
 				{
-					c.name = "TEST";
+					c.name = "TEST TEST TEST TEST TEST";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 0;
+					c.behaviourC.attack = G.INIT_LP;
 					c.behaviourC.haste = true;
 					
-					c.behaviourC.inplayOngoingFunc = function( p:Process ):Boolean {
-						c.behaviourC.attack = c.controller.opponent.hand.cardsCount * 3;
+					///		_COMPLETE
+					///		
+					///		TURN_END		TURN_START			TURN_START_COMPLETE
+					///		DRAW_CARD		DISCARD_CARD		
+					///		SUMMON			ENTER_PLAY			LEAVE_PLAY
+					///		ATTACK			CREATURE_DAMAGE		DIRECT_DAMAGE
+					///		RELOCATE		RELOCATE_COMPLETE	DIE
+					///		SET_TRAP		ACTIVATE_TRAP		ACTIVATE_TRAP_COMPLETE
+					///		COMBAT_FLIP		SAFE_FLIP			ACTIVATE_SPECIAL
+					
+					///		inplay special
+					c.behaviourC.inplaySpecial.watch( GameplayProcess.SUMMON );
+					c.behaviourC.inplaySpecial.funcCondition = function( p:GameplayProcess ):Boolean {
+						//if ( c.indexedField.opposingCreature == null ) return false;
+						//if ( c.controller.opponent != p.getPlayer() ) return false;
+						return true;
+					}
+					c.behaviourC.inplaySpecial.funcActivate = function( p:GameplayProcess ):Boolean {
+						c.die();
+					}
+					
+					///		grave special
+					c.behaviourC.graveSpecial.watch( GameplayProcess.TURN_START );
+					c.behaviourC.graveSpecial.funcActivate = function( p:GameplayProcess ):void {
+						c.returnToControllerHand();
+					}
+					
+					///		grave special
+					c.behaviourC.handSpecial.watch( GameplayProcess.TURN_END );
+					c.behaviourC.handSpecial.funcActivate = function( p:GameplayProcess ):void {
+						c.controller.takeDirectDamage( 1 );
+					}
+					
+					///		inplay ongoing
+					c.behaviourC.inplayOngoingFunc = function( p:GameplayProcess ):Boolean {
+						trace ( p );
 					}
 				},
+				/* * * /
+				function( c:Card ):void ///		..C		TEST TRAP
+				{
+					c.name = "TURAPO TESUTO";
+					
+					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
+					
+					///		_COMPLETE
+					///		
+					///		TURN_END		TURN_START			TURN_START_COMPLETE
+					///		DRAW_CARD		DISCARD_CARD		
+					///		SUMMON			ENTER_PLAY			LEAVE_PLAY
+					///		ATTACK			CREATURE_DAMAGE		DIRECT_DAMAGE
+					///		RELOCATE		RELOCATE_COMPLETE	DIE
+					///		SET_TRAP		ACTIVATE_TRAP		ACTIVATE_TRAP_COMPLETE
+					///		COMBAT_FLIP		SAFE_FLIP			ACTIVATE_SPECIAL
+					
+					c.behaviourT.effect.watch( GameplayProcess.SUMMON );
+					c.behaviourT.effect.funcCondition = function( p:GameplayProcess ):Boolean {
+						//if ( c.indexedField.index != p.getIndex() ) return false;
+						//if ( c.controller.opponent != p.getSourceCard().controller ) return false;
+						return true;
+					}
+					c.behaviourT.effect.funcActivate = function( p:GameplayProcess ):void {
+						p.abort();
+					}
+					
+					c.descr = ". . .";
+				},
+				/* * */
+				
 				/* * */
 				function( c:Card ):void ///		..C		Bozo
 				{
@@ -99,18 +168,9 @@ package duel.cards.temp_database
 				/* * */
 				null,
 				/* * * /
-				function( c:Card ):void ///		..C		TEST
-				{
-					c.name = "TEST";
-					
-					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 0;
-					c.behaviourC.haste = true;
-					
-					c.behaviourC.inplayOngoingFunc = function( p:Process ):Boolean {
-						c.behaviourC.attack = c.controller.opponent.hand.cardsCount * 3;
-					}
-				},
+				
+					PLAYER 2
+				
 				/* * */
 				function( c:Card ):void ///		T..		Destiny 
 				{
@@ -214,6 +274,10 @@ package duel.cards.temp_database
 				},
 				/* * */
 				null,
+				/* * * /
+				
+					BOTH PLAYERS
+				
 				/* * */
 				function( c:Card ):void ///		..C		Spying Joe
 				{
