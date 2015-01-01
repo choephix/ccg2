@@ -2,7 +2,6 @@ package duel.cards.temp_database
 {
 	import duel.cards.Card;
 	import duel.G;
-	import duel.Game;
 	import duel.Player;
 	import duel.processes.GameplayProcess;
 	import duel.table.CreatureField;
@@ -205,7 +204,7 @@ package duel.cards.temp_database
 						return true;
 					}
 					c.behaviourT.effect.funcActivate = function( p:GameplayProcess ):void {
-						Game.current.processes.prepend_Draw( c.controller, 5 );
+						TempDatabaseUtils.doDraw( c.controller, 3 );
 					}
 					
 					c.descr = "On turn start and controller hand is 0 - draw 5 cards";
@@ -259,7 +258,7 @@ package duel.cards.temp_database
 					}
 					c.behaviourT.effect.funcActivate = function( p:GameplayProcess ):void {
 						p.abort();
-						Game.current.processes.prepend_EnterGrave( p.getSourceCard() );
+						TempDatabaseUtils.doPutToGrave( p.getSourceCard() );
 					}
 					
 					c.descr = "On opp. trap activation - negate and destroy trap";
@@ -325,7 +324,7 @@ package duel.cards.temp_database
 						return c.controller.opponent == p.getPlayer();
 					}
 					c.behaviourC.inplaySpecial.funcActivate = function( p:GameplayProcess ):Boolean {
-						Game.current.processes.append_Attack( c.indexedField.opposingCreature );
+						TempDatabaseUtils.doPutToGrave( c.indexedField.opposingCreature );
 					}
 				},
 				/* * */
@@ -341,7 +340,7 @@ package duel.cards.temp_database
 						return c.controller == p.getPlayer();
 					}
 					c.behaviourC.inplaySpecial.funcActivate = function( p:GameplayProcess ):Boolean {
-						Game.current.processes.append_Attack( c );
+						TempDatabaseUtils.doPutToGrave( c );
 					}
 				},
 				/* * */
@@ -382,7 +381,7 @@ package duel.cards.temp_database
 						return c.controller == p.getPlayer();
 					}
 					c.behaviourC.handSpecial.funcActivate = function( p:GameplayProcess ):void {
-						Game.current.processes.prepend_Discard( c.controller, c );
+						TempDatabaseUtils.doDiscard( c.controller, c );
 					}
 				},
 				/* * */
@@ -482,7 +481,7 @@ package duel.cards.temp_database
 						return ( c.owner.grave.findByName( "Zag" ) != null );
 					}
 					c.behaviourC.inplaySpecial.funcActivate = function( p:GameplayProcess ):Boolean {
-						Game.current.processes.prepend_EnterHand( c.owner.grave.findByName( "Zag" ), c.owner );
+						TempDatabaseUtils.doPutInHand( c.owner.grave.findByName( "Zag" ), c.owner );
 					}
 				},
 				/* * */
@@ -498,7 +497,7 @@ package duel.cards.temp_database
 						return ( c.owner.grave.findByName( "Zig" ) != null );
 					}
 					c.behaviourC.inplaySpecial.funcActivate = function( p:GameplayProcess ):Boolean {
-						Game.current.processes.prepend_EnterHand( c.owner.grave.findByName( "Zig" ), c.owner );
+						TempDatabaseUtils.doPutInHand( c.owner.grave.findByName( "Zig" ), c.owner );
 					}
 				},
 				/* * */
