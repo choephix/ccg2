@@ -15,7 +15,7 @@ package duel.display.cardlots {
 	{
 		static public const SEL_SPACE:Number = 100;
 		
-		public var maxWidth:Number = 500;
+		public var maxWidth:Number = 800;
 		public var flipped:Boolean = false;
 		
 		private var _active:Boolean = true;
@@ -130,7 +130,7 @@ package duel.display.cardlots {
 					d = Math.min( W / cardsCount, G.CARD_W );
 			}
 			/**/
-			d = Math.min( W / cardsCount, G.CARD_W );
+			d = Math.min( ( W - G.CARD_W*.5 ) / cardsCount, G.CARD_W );
 			/**/
 			
 			return d;
