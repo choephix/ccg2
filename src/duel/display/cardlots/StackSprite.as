@@ -12,13 +12,13 @@ package duel.display.cardlots {
 	 * ...
 	 * @author choephix
 	 */
-	public class CardsStackSprite extends CardsContainer
+	public class StackSprite extends CardsContainer
 	{
 		public var cardSpacing:Number = 10;
 		
-		private var _fallingCardTween:Tween;
+		protected var _fallingCardTween:Tween;
 		
-		public function CardsStackSprite( list:CardListBase )
+		public function StackSprite( list:CardListBase )
 		{
 			if ( list == null )
 				throw new ArgumentError( "Why is list NULL, bitch? WHY?" );
@@ -65,7 +65,7 @@ package duel.display.cardlots {
 			}
 		}
 		
-		private function animFallingCard( o:CardSprite ):void
+		protected function animFallingCard( o:CardSprite ):void
 		{
 			addCardChild( o );
 			
@@ -79,20 +79,20 @@ package duel.display.cardlots {
 			o.alpha = 1.0;
 			
 			/** /
-				_fallingCardTween.reset( o, .250, Transitions.EASE_OUT ); // EASE_OUT EASE_IN
-				_fallingCardTween.animate( "y", TARGET_Y );
-				o.y = TARGET_Y - 40;
+			_fallingCardTween.reset( o, .250, Transitions.EASE_OUT ); // EASE_OUT EASE_IN
+			_fallingCardTween.animate( "y", TARGET_Y );
+			o.y = TARGET_Y - 40;
 			/** /
-				_fallingCardTween.reset( o, .660, Transitions.EASE_OUT_BOUNCE );
-				_fallingCardTween.animate( "y", TARGET_Y );
-				o.y = TARGET_Y - 40;
+			_fallingCardTween.reset( o, .660, Transitions.EASE_OUT_BOUNCE );
+			_fallingCardTween.animate( "y", TARGET_Y );
+			o.y = TARGET_Y - 40;
 			/**/
-				_fallingCardTween.reset( o, .880, Transitions.EASE_OUT_BOUNCE );
-				_fallingCardTween.animate( "scaleX", 1.0 );
-				_fallingCardTween.animate( "scaleY", 1.0 );
-				o.scaleX = 1.4;
-				o.scaleY = 1.4;
-				o.rotation = MathF.randSign * MathF.random( .025 );
+			_fallingCardTween.reset( o, .880, Transitions.EASE_OUT_BOUNCE );
+			_fallingCardTween.animate( "scaleX", 1.0 );
+			_fallingCardTween.animate( "scaleY", 1.0 );
+			o.scaleX = 1.4;
+			o.scaleY = 1.4;
+			o.rotation = MathF.randSign * MathF.random( .025 );
 			/**/
 			
 			jugglerStrict.add( _fallingCardTween );

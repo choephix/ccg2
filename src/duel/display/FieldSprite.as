@@ -1,7 +1,7 @@
 package duel.display {
-	import duel.display.cardlots.CardsStackSprite;
-	import duel.G;
-	import duel.Game;
+	import duel.display.cardlots.DeckStackSprite;
+	import duel.display.cardlots.GraveStackSprite;
+	import duel.display.cardlots.StackSprite;
 	import duel.GameSprite;
 	import duel.table.Field;
 	import starling.display.Image;
@@ -15,7 +15,7 @@ package duel.display {
 	 */
 	public class FieldSprite extends GameSprite 
 	{
-		public var cardsContainer:CardsStackSprite;
+		public var cardsContainer:StackSprite;
 		public var image:Image;
 		
 		public var field:Field;
@@ -38,7 +38,14 @@ package duel.display {
 			image = assets.generateImage( "field", true, true );
 			addChild( image );
 			
-			cardsContainer = new CardsStackSprite( field );
+			if ( field.type.isGraveyard )
+				cardsContainer = new GraveStackSprite( field );
+			else
+			if ( field.type.isDeck )
+				cardsContainer = new DeckStackSprite( field );
+			else
+				cardsContainer = new StackSprite( field );
+			
 			cardsContainer.touchable = false;
 			addChild( cardsContainer );
 			
