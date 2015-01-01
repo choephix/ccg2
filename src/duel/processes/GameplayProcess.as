@@ -13,20 +13,14 @@ package duel.processes
 		static public const TURN_END:String		= "turnEnd";
 		static public const TURN_START:String	= "turnStart";
 		static public const TURN_START_COMPLETE:String	= "turnStartComplete";
+		
 		static public const DRAW_CARD:String	= "drawCard";
 		static public const DRAW_CARD_COMPLETE:String = "drawCardComplete";
 		static public const DISCARD_CARD:String = "discardCard";
 		static public const DISCARD_CARD_COMPLETE:String = "discardCardComplete";
+		
 		static public const SUMMON:String = "summon";
 		static public const SUMMON_COMPLETE:String = "summonComplete";
-		static public const RESURRECT:String = "resurrect";
-		static public const RESURRECT_COMPLETE:String = "resurrectComplete";
-		static public const SET_TRAP:String = "setTrap";
-		static public const SET_TRAP_COMPLETE:String = "setTrapComplete";
-		static public const ACTIVATE_TRAP:String = "activateTrap";
-		static public const ACTIVATE_TRAP_COMPLETE:String = "activateTrapComplete";
-		static public const ACTIVATE_SPECIAL:String = "activateSpecial";
-		static public const ACTIVATE_SPECIAL_COMPLETE:String = "activateSpecialComplete";
 		static public const RELOCATE:String = "relocate";
 		static public const RELOCATE_COMPLETE:String = "relocateComplete";
 		static public const ATTACK:String = "attack";
@@ -37,6 +31,15 @@ package duel.processes
 		static public const DIRECT_DAMAGE_COMPLETE:String = "directDamageComplete";
 		static public const DIE:String = "die";
 		static public const DIE_COMPLETE:String = "dieComplete";
+		static public const RESURRECT:String = "resurrect";
+		static public const RESURRECT_COMPLETE:String = "resurrectComplete";
+		
+		static public const SET_TRAP:String = "setTrap";
+		static public const SET_TRAP_COMPLETE:String = "setTrapComplete";
+		static public const ACTIVATE_TRAP:String = "activateTrap";
+		static public const ACTIVATE_TRAP_COMPLETE:String = "activateTrapComplete";
+		static public const ACTIVATE_SPECIAL:String = "activateSpecial";
+		static public const ACTIVATE_SPECIAL_COMPLETE:String = "activateSpecialComplete";
 		
 		static public const COMBAT_FLIP:String = "combatFlip";
 		static public const COMBAT_FLIP_COMPLETE:String = "combatFlipComplete";
