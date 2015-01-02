@@ -135,6 +135,8 @@ package duel.display {
 			// ..
 			addEventListener( TouchEvent.TOUCH, onTouch );
 			
+			alpha = .0;
+			
 			updateData();
 			setFaceDown( card.faceDown, false );
 		}

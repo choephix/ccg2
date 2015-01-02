@@ -38,40 +38,37 @@ package duel.display {
 				f = new FieldSprite();
 				f.x = i * ( G.CARD_W + FIELD_SPACING_X );
 				f.y = ( flip ? 1.0 : -1.0 ) * 80;
-				tableContainer.addChild( f );
 				f.initialize( player.fieldsC.getAt( i ), ColorScheme.getColorForCreatureField() );
-					temp();
+				prepFieldSprite( f );
 			}
 			for ( i = 0, len = player.fieldsT.count; i < len; i++ )
 			{
 				f = new FieldSprite();
 				f.x = i * ( G.CARD_W + FIELD_SPACING_X );
 				f.y = ( flip ? -1.0 : 1.0 ) * 80;
-				tableContainer.addChild( f );
 				f.initialize( player.fieldsT.getAt( i ), ColorScheme.getColorForTrapField() );
-					temp();
+				prepFieldSprite( f );
 			}
 			
 			f = new FieldSprite();
 			f.x = -( G.CARD_W + FIELD_SPACING_X );
 			f.y = ( flip ? 1.0 : -1.0 ) * 40;
-			tableContainer.addChild( f );
 			f.initialize( player.deck, ColorScheme.getColorForDeckField() );
 			f.cardsContainer.cardSpacing = 2;
-				temp();
+			prepFieldSprite( f );
 			
 			f = new FieldSprite();
 			f.x = ( G.CARD_W + FIELD_SPACING_X ) * G.FIELD_COLUMNS;
 			f.y = ( flip ? 1.0 : -1.0 ) * 40;
-			tableContainer.addChild( f );
 			f.initialize( player.grave, ColorScheme.getColorForGraveField() );
 			f.cardsContainer.cardSpacing = 3;
-				temp();
+			prepFieldSprite( f );
 			
 			alignPivot();
 			
-			function temp():void //TODO REMOVE
+			function prepFieldSprite( f:FieldSprite ):void
 			{
+				tableContainer.addChild( f );
 				f.cardsContainer.cardsParent = cardsParent;
 				f.cardsContainer.x = f.x;
 				f.cardsContainer.y = f.y;
