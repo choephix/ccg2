@@ -316,7 +316,7 @@ package duel.display {
 		
 		animation function animDamageOnly():void
 		{
-			animBlink( false, 0xFFAEAE ).blendMode = BlendMode.MULTIPLY;
+			//animBlink( false, 0xFFAEAE ).blendMode = BlendMode.MULTIPLY;
 		}
 		
 		animation function animDie():void 

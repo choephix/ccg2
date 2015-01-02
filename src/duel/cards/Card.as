@@ -197,7 +197,7 @@ package duel.cards
 		}
 		
 		public function get exhausted():Boolean {
-			if ( summonedThisTurn && !behaviourC.haste ) return true;
+			if ( !CONFIG::sandbox && summonedThisTurn && !behaviourC.haste ) return true;
 			if ( behaviourC.swift ) return actionsAttack > 0 && actionsRelocate > 0;
 			return actionsRelocate + actionsAttack > 0;
 		}
