@@ -336,8 +336,13 @@ package duel.processes
 			function onComplete( c:Card ):void
 			{
 				if ( c.isInPlay && !c.behaviourT.isPersistent )
-					prepend_AddToGrave( c );
+					prepend_TrapDeactivation( c );
 			}
+		}
+		
+		public function prepend_TrapDeactivation( c:Card ):void
+		{
+			prepend_AddToGrave( c );
 		}
 		
 		//}
