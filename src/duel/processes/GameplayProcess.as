@@ -64,7 +64,7 @@ package duel.processes
 		static public const ENTER_PLAY_COMPLETE:String = "enterPlayComplete";
 		
 		static public const ENTER_INDEXED_FIELD:String = "enterIndexedField";
-		static public const ENTER_INDEXED_FIELD_COMPLETE:String = "enterIndexedField";
+		static public const ENTER_INDEXED_FIELD_COMPLETE:String = "enterIndexedFieldComplete";
 		static public const LEAVE_INDEXED_FIELD:String = "leaveIndexedField";
 		static public const LEAVE_INDEXED_FIELD_COMPLETE:String = "leaveIndexedFieldComplete"
 		
