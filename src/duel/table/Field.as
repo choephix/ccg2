@@ -12,11 +12,16 @@ package duel.table {
 		public var sprite:FieldSprite;
 		
 		private var _type:FieldType = FieldType.UNKNOWN;
-		public function get type():FieldType { return _type }
+		public function get type():FieldType
+		{ return _type }
 		
-		public function Field( type:FieldType ) { _type = type; }
+		public function Field( type:FieldType )
+		{ _type = type; }
 		
-		public function get topCard():Card { return isEmpty ? null : getFirstCard() }
+		public function get topCard():Card
+		{ return isEmpty ? null : getFirstCard() }
+		
+		override public function toString():String 
+		{ return type.toString() + "_FIELD" }
 	}
-
 }
