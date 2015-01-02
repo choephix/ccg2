@@ -335,7 +335,7 @@ package duel.processes
 			
 			function onComplete( c:Card ):void
 			{
-				if ( c.isInPlay && !c.behaviourT.persistent )
+				if ( c.isInPlay && !c.behaviourT.isPersistent )
 					prepend_AddToGrave( c );
 			}
 		}

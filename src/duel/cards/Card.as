@@ -109,6 +109,19 @@ package duel.cards
 			
 			if ( type.isTrap )
 			{
+				if ( behaviourT.isPersistent && behaviourT.persistentEffect.isActive )
+				{
+					if ( behaviourT.persistentEffect.mustEnd( p ) )
+					{
+						p.interrupt();
+						behaviourT.persistentEffect.end( p );
+						die();
+						return;
+					}
+					else
+						behaviourT.persistentEffect.update( p );
+				}
+				else
 				if ( behaviourT.effect.mustInterrupt( p ) )
 				{
 					p.interrupt();
@@ -122,6 +135,7 @@ package duel.cards
 				if ( behaviourC.hasInPlayOngoingEffect )
 				{
 					behaviourC.inplayOngoing.update( p );
+					return;
 				}
 				if ( behaviourC.hasInPlaySpecialEffect && behaviourC.inplaySpecial.mustInterrupt( p ) )
 				{
