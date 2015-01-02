@@ -324,7 +324,7 @@ package duel.display {
 			__bloodSprite.alignPivot();
 			__bloodSprite.blendMode = BlendMode.MULTIPLY;
 			addChild( __bloodSprite );
-			juggler.xtween( __bloodSprite, 8.0,
+			juggler.xtween( __bloodSprite, 12.0,
 				{ 
 					delay: 4.0,
 					alpha: .0, 
