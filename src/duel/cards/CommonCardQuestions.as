@@ -63,19 +63,19 @@ package duel.cards
 		public static function canPlaceCreatureHere( c:Card, field:CreatureField ):Boolean
 		{
 			if ( c.isInGrave ) return false;
-			if ( c.controller != field.owner ) return false;
 			if ( field.isLocked ) return false;
+			if ( !CONFIG::sandbox && c.controller != field.owner ) return false;
 			if ( !field.isEmpty ) return false; //TODO remove this for riders and combinatrons
 			return true;
 		}
 		public static function cannotPlaceCreatureHere( c:Card, field:CreatureField ):Boolean
 		{ return !canPlaceCreatureHere( c, field ) }
 		
-		public static function canPlaceTrapHere( card:Card, field:TrapField ):Boolean
+		public static function canPlaceTrapHere( c:Card, field:TrapField ):Boolean
 		{
-			if ( card.isInGrave ) return false;
+			if ( c.isInGrave ) return false;
 			if ( field.isLocked ) return false;
-			if ( card.controller != field.owner ) return false;
+			if ( !CONFIG::sandbox && c.controller != field.owner ) return false;
 			return true;
 		}
 		public static function cannotPlaceTrapHere( c:Card, field:TrapField ):Boolean
