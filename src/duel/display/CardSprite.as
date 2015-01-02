@@ -238,10 +238,12 @@ package duel.display {
 		animation function animAttackPerform():void 
 		{
 			assertAnimAttackSpriteExists();
-			jugglerStrict.tween( __attackSprite, .240,
+			jugglerStrict.tween( __attackSprite, .330,
 				{
-					transition : Transitions.EASE_IN,
+					transition : Transitions.EASE_IN_BACK, // EASE_IN EASE_IN_BACK
 					y : __attackSprite.y + 200 * ( isTopSide ? 1.0 : -1.0 ),
+					scaleX : 2.0,
+					scaleY : 2.0,
 					alpha : .0,
 					onComplete : destroyAnimAttackSprite
 				} );
