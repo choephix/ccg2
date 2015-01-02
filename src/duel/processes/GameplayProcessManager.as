@@ -19,7 +19,7 @@ package duel.processes
 	 */
 	public class GameplayProcessManager extends ProcessManager
 	{
-		// TURN LOGIC
+		//{ TURN LOGIC
 		
 		public function append_TurnEnd( p:Player ):void
 		{
@@ -61,7 +61,8 @@ package duel.processes
 			pro.delay = .333;
 		}
 		
-		// DRAW & DISCARD
+		//}
+		//{ DRAW & DISCARD
 		
 		public function prepend_Draw( p:Player, count:int = 1 ):void
 		{
@@ -115,15 +116,16 @@ package duel.processes
 			pro = pro.chain( gen( GameplayProcess.DISCARD_CARD_COMPLETE, null, p, c ) );
 		}
 		
-		// SUMMON
+		//}
+		//{ SUMMON
 		
 		public function append_SummonHere( c:Card, field:CreatureField ):void
 		{
 			var pro:GameplayProcess;
 			
+			/// SUMMON
 			pro = gen( GameplayProcess.SUMMON, null, c, field );
 			pro.abortCheck = CommonCardQuestions.cannotSummonHere;
-			pro.onAbort = onAbort;
 			pro.onEnd = onSummon;
 			
 			appendProcess( pro );
@@ -134,24 +136,10 @@ package duel.processes
 					prepend_Death( field.topCard );
 			}
 			
-			pro = pro.chain( gen( GameplayProcess.ENTER_PLAY, onEnter, c, field ) );
-			pro.abortCheck = CommonCardQuestions.cannotPlaceCreatureHere;
-			pro.onAbort = onAbort;
+			/// ENTER_PLAY
+			pro = pro.chain( process_EnterPlay( c, field, c.behaviourC.startFaceDown ) );
 			
-			function onAbort( c:Card ):void
-			{
-				if ( c.isInPlay )
-					prepend_AddToGrave( c );
-			}
-			
-			function onEnter( c:Card, field:CreatureField ):void
-			{
-				field.addCard( c );
-				c.faceDown = c.behaviour.startFaceDown;
-			}
-			
-			pro = pro.chain( gen( GameplayProcess.ENTER_PLAY_COMPLETE, null, c, field ) );
-			
+			/// SUMMON_COMPLETE
 			pro = pro.chain( gen( GameplayProcess.SUMMON_COMPLETE, complete, c, field ) );
 			pro.abortable = true;
 			pro.abortCheck = completeAbortCheck;
@@ -200,7 +188,8 @@ package duel.processes
 			appendProcess( gen( GameplayProcess.RESURRECT_COMPLETE, null, c, field ) );
 		}
 		
-		// RELOCATION
+		//}
+		//{ RELOCATION
 		
 		public function append_Relocation( c:Card, field:CreatureField ):void
 		{
@@ -237,7 +226,8 @@ package duel.processes
 			}
 		}
 		
-		// TRAPS
+		//}
+		//{ TRAPS
 		
 		public function append_TrapSet( c:Card, field:TrapField ):void 
 		{
@@ -305,7 +295,8 @@ package duel.processes
 			}
 		}
 		
-		// SPECIAL EFFECTS
+		//}
+		//{ SPECIAL EFFECTS
 		
 		public function prepend_InPlaySpecialActivation( c:Card ):void
 		{
@@ -364,7 +355,8 @@ package duel.processes
 			pro = pro.chain( gen( GameplayProcess.ACTIVATE_SPECIAL_COMPLETE, null, c ) );
 		}
 		
-		// ATTACK
+		//}
+		//{ ATTACK
 		
 		public function append_Attack( c:Card ):void
 		{
@@ -414,7 +406,8 @@ package duel.processes
 			}
 		}
 		
-		// DAMAGE & DEATH
+		//}
+		//{ DAMAGE & DEATH
 		
 		private function prepend_CreatureDamage( c:Card, dmg:Damage ):void
 		{
@@ -501,7 +494,8 @@ package duel.processes
 			}
 		}
 		
-		// COMBAT FLIP & SAFE FLIP & MAGIC FLIP
+		//}
+		//{ COMBAT FLIP & SAFE FLIP & MAGIC FLIP
 		
 		private function prepend_CombatFlip( c:Card ):void
 		{
@@ -615,7 +609,9 @@ package duel.processes
 			pro = pro.chain( gen( GameplayProcess.SILENT_FLIP_COMPLETE, null, c ) );
 		}
 		
-		// CHAINGING CARD CONTAINERS
+		//}
+		//{ CHAINGING CARD CONTAINERS I
+		
 		public function prepend_AddToGrave( c:Card ):void 
 		{
 			var pro:GameplayProcess;
@@ -713,6 +709,26 @@ package duel.processes
 				prepend_LeavePlay( c );
 		}
 		
+		//}
+		//{ CHAINGING CARD CONTAINERS II
+		
+		private function process_EnterPlay( c:Card, field:CreatureField, faceDown:Boolean ):GameplayProcess 
+		{
+			var pro:GameplayProcess;
+			
+			/// ENTER_PLAY
+			pro = gen( GameplayProcess.ENTER_PLAY, null, c, field );
+			pro.abortable = false;
+			
+			/// ENTER_INDEXED_FIELD
+			pro
+				.chain( process_EnterIndexedField( c, field, c.behaviour.startFaceDown ) )
+				.chain( gen( GameplayProcess.ENTER_PLAY_COMPLETE, null, c, field ) );
+			
+			/// returns ENTER_INDEXED_FIELD (the chain head)
+			return pro;
+		}
+		
 		private function prepend_LeavePlay( c:Card ):void 
 		{
 			var pro:GameplayProcess;
@@ -733,7 +749,7 @@ package duel.processes
 			}
 		}
 		
-		private function process_EnterIndexedField( c:Card, field:IndexedField ):GameplayProcess 
+		private function process_EnterIndexedField( c:Card, field:IndexedField, faceDown:Boolean ):GameplayProcess 
 		{
 			var pro:GameplayProcess;
 			
@@ -743,6 +759,7 @@ package duel.processes
 			pro.onEnd = function onEnd( c:Card, field:IndexedField ):void 
 			{
 				field.addCard( c );
+				c.faceDown = faceDown;
 			}
 			
 			/// ENTER_INDEXED_FIELD_COMPLETE
@@ -780,6 +797,8 @@ package duel.processes
 			/// returns LEAVE_INDEXED_FIELD (the chain head)
 			return pro;
 		}
+		
+		//}
 		
 		//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 		////\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
