@@ -1,6 +1,7 @@
 package duel
 {
 	import chimichanga.common.assets.AdvancedAssetManager;
+	import chimichanga.common.display.Sprite;
 	import dev.ProcessManagementInspector;
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
@@ -18,11 +19,13 @@ package duel
 	import duel.table.Hand;
 	import duel.table.IndexedField;
 	import duel.table.TrapField;
+	import flash.geom.Point;
 	import starling.animation.IAnimatable;
 	import starling.core.Starling;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Quad;
+	import starling.text.TextField;
 	
 	[Event( name="turnStart",type="duel.GameEvents" )]
 	[Event( name="turnEnd",type="duel.GameEvents" )]
@@ -547,6 +550,33 @@ package duel
 		public function get interactable():Boolean
 		{
 			return jugglerStrict.isIdle && jugglerGui.isIdle && processes.isIdle;
+		}
+		
+		// FX
+		
+		public function showFloatyText( p:Point, text:String, color:uint ):void
+		{
+			var o:Sprite = new Sprite();
+			addChild( o );
+			
+			var t:TextField = new TextField( 500, 100, text, "Impact", 36, color, false );
+			t.alignPivot();
+			
+			var q:Quad = new Quad( t.textBounds.width, t.textBounds.height, 0x0 );
+			q.alignPivot();
+			q.alpha = .6;
+			
+			o.addChild( q );
+			o.addChild( t );
+			o.x = p.x;
+			o.y = p.y;
+			juggler.tween( o, 2.5,
+				{
+					delay : .500,
+					alpha : .0,
+					onComplete : o.removeFromParent,
+					onCompleteArgs : [true]
+				} );
 		}
 		
 		// QUESTIONS

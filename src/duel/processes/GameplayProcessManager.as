@@ -12,6 +12,7 @@ package duel.processes
 	import duel.table.CreatureField;
 	import duel.table.IndexedField;
 	import duel.table.TrapField;
+	import flash.geom.Point;
 	
 	use namespace animation;
 	/**
@@ -505,9 +506,17 @@ package duel.processes
 					return;
 				
 				if ( c.behaviourC.attack <= dmg.amount )
+				{
 					prepend_Death( c );
+					game.showFloatyText( c.sprite.localToGlobal( new Point() ), 
+						c.behaviourC.attack + "-" + dmg.amount + "=DEATH!", 0xFF0000 );
+				}
 				else
+				{
 					c.sprite.animDamageOnly();
+					game.showFloatyText( c.sprite.localToGlobal( new Point() ), 
+						c.behaviourC.attack + "-" + dmg.amount + "=" + (c.behaviourC.attack - dmg.amount), 0x00FFFF );
+				}
 			}
 			pro.onAbort =
 			function onAbort( c:Card, dmg:Damage ):void
