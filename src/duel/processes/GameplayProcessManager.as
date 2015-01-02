@@ -163,7 +163,7 @@ package duel.processes
 			{
 				return !c.isInPlay;
 			}
-			pro.onStart = 
+			pro.onEnd = 
 			function complete( c:Card, field:CreatureField ):void
 			{
 				c.summonedThisTurn = true;
