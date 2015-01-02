@@ -21,24 +21,24 @@ package duel.display.cardlots
 		{
 			const TARGET_Y:Number = y - cardSpacing * ( cardsCount - 1 );
 			
-			//o.visible = true;
-			//o.scaleX = 1.0;
-			//o.scaleY = 1.0;
-			//o.y = TARGET_Y + cardSpacing;
-			//o.alpha = .0;
+			/* * */
+			if ( o.alpha < .1 )
+			{
+				quickPlaceAt( o, cardsCount - 1 );
+				o.alpha = .0;
+				o.y += cardSpacing;
+				juggler.xtween( o, .550,
+					{
+						delay : 0.550,
+						alpha : 1.0,
+						y : TARGET_Y,
+						transition : Transitions.EASE_OUT
+					} );
+				return;
+			}
+			/* * */
 			
-			juggler.xtween( o, .250,
-				{ 
-					alpha: 1.0,
-					x: x, 
-					y: TARGET_Y, 
-					scaleX: 1.0, 
-					scaleY: 1.0, 
-					rotation: MathF.randSign * MathF.random( .025 ), 
-					transition: Transitions.EASE_OUT
-				} );
-				
-			cardsParent.addChild( o );
+			super.tweenToPlace( o );
 		}
 		
 	}
