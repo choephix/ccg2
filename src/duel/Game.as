@@ -122,11 +122,13 @@ package duel
 			selection = new Selection();
 			
 			p1.handSprite = new HandSprite( p1.hand );
-			p1.handSprite.x = -360 + ( App.W - p1.handSprite.maxWidth ) * 0.5;
+			p1.handSprite.maxWidth = 1000;
+			p1.handSprite.x = -450 + ( App.W - p1.handSprite.maxWidth ) * 0.5;
 			p1.handSprite.y = -p1.tableSide.y + App.H;
 			
 			p2.handSprite = new HandSprite( p2.hand );
-			p2.handSprite.x = -360 + ( App.W - p2.handSprite.maxWidth ) * 0.5;
+			p2.handSprite.maxWidth = 950;
+			p2.handSprite.x = -300 + ( App.W - p2.handSprite.maxWidth ) * 0.5;
 			p2.handSprite.y = -p2.tableSide.y;
 			p2.handSprite.flipped = true;
 			
