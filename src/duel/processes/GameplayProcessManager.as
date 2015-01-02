@@ -127,14 +127,19 @@ package duel.processes
 			/// SUMMON
 			pro = gen( GameplayProcess.SUMMON, null, c, field );
 			pro.abortCheck = CommonCardQuestions.cannotSummonHere;
-			pro.onEnd = onSummon;
 			
 			appendProcess( pro );
 			
-			function onSummon( c:Card, field:CreatureField ):void
+			/// TRIBUTE_CREATURE
+			if ( c.behaviourC.needsTribute )
 			{
-				if ( !field.isEmpty )
-					prepend_Death( field.topCard );
+				if ( field.topCard )
+					pro = pro.chain( process_TributeCreature( field.topCard ) );
+				else
+				{
+					CONFIG::development
+					{ error( "Where's my tribute?" ) }
+				}
 			}
 			
 			/// ENTER_PLAY
@@ -157,6 +162,29 @@ package duel.processes
 			}
 			
 		}
+		
+		private function process_TributeCreature( c:Card ):GameplayProcess 
+		{
+			var pro:GameplayProcess;
+			
+			/// TRIBUTE_CREATURE
+			pro = gen( GameplayProcess.TRIBUTE_CREATURE, null, c );
+			pro.abortCheck = CommonCardQuestions.isNotInPlay;
+			pro.onEnd = onEnd;
+			
+			function onEnd( c:Card ):void 
+			{
+				c.resetState();
+				prepend_Death( c );
+			}
+			
+			/// TRIBUTE_CREATURE_COMPLETE
+			pro.chain( gen( GameplayProcess.TRIBUTE_CREATURE_COMPLETE, null, c ) );
+			
+			/// returns TRIBUTE_CREATURE (the chain head)
+			return pro;
+		}
+		
 		
 		public function prepend_ResurrectHere( c:Card, field:CreatureField ):void	//TODO  USE THIS SHIT (zig&zag)
 		{
@@ -742,7 +770,7 @@ package duel.processes
 				.chain( process_EnterIndexedField( c, field, c.behaviour.startFaceDown ) )
 				.chain( gen( GameplayProcess.ENTER_PLAY_COMPLETE, null, c, field ) );
 			
-			/// returns ENTER_INDEXED_FIELD (the chain head)
+			/// returns ENTER_PLAY (the chain head)
 			return pro;
 		}
 		

@@ -69,7 +69,10 @@ package duel.processes
 		static public const LEAVE_INDEXED_FIELD_COMPLETE:String = "leaveIndexedFieldComplete"
 		
 		static public const LEAVE_PLAY:String = "leavePlay";
-		static public const LEAVE_PLAY_COMPLETE:String = "leavePlayComplete";;
+		static public const LEAVE_PLAY_COMPLETE:String = "leavePlayComplete";
+		
+		static public const TRIBUTE_CREATURE:String = "tributeCreature";
+		static public const TRIBUTE_CREATURE_COMPLETE:String = "tributeCreatureComplete";
 		
 		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //
 		  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
