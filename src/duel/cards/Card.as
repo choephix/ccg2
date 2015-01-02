@@ -5,6 +5,7 @@ package duel.cards
 	import duel.cards.behaviour.TrapCardBehaviour;
 	import duel.cards.CardListBase;
 	import duel.display.CardSprite;
+	import duel.Game;
 	import duel.GameEntity;
 	import duel.GameEvents;
 	import duel.Player;
@@ -197,7 +198,7 @@ package duel.cards
 		}
 		
 		public function get exhausted():Boolean {
-			if ( !CONFIG::sandbox && summonedThisTurn && !behaviourC.haste ) return true;
+			if ( !Game.GODMODE && summonedThisTurn && !behaviourC.haste ) return true;
 			if ( behaviourC.swift ) return actionsAttack > 0 && actionsRelocate > 0;
 			return actionsRelocate + actionsAttack > 0;
 		}

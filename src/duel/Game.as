@@ -44,6 +44,9 @@ package duel
 		public static var current:Game;
 		public static var frameNum:int = 0;
 		
+		CONFIG::development
+		public static var GODMODE:Boolean;
+		
 		public var currentPlayer:Player;
 		public var processes:GameplayProcessManager;
 		
@@ -341,7 +344,7 @@ package duel
 				// DEV SHIT
 				CONFIG::development
 				{
-					if ( field.type.isGraveyard && field.owner == p )
+					if ( GODMODE && field.type.isGraveyard && field.owner == p )
 						processes.prepend_Discard( p, c );
 				}
 			}
@@ -354,8 +357,17 @@ package duel
 				// DEV SHIT
 				CONFIG::development
 				{
-					if ( field.type.isDeck )
+					if ( GODMODE && field.type.isDeck )
+					{
 						processes.prepend_Draw( field.owner, 5 );
+						return;
+					}
+				}
+				
+				if ( field.type.isDeck && field.owner == currentPlayer )
+				{
+					processes.prepend_Draw( field.owner, 1 );
+					return;
 				}
 			}
 			

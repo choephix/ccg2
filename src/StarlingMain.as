@@ -43,7 +43,9 @@ package {
 		}
 		
 		private function onLoadingAppComplete():void {
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, onkey);
+			CONFIG::development
+			{ stage.addEventListener(KeyboardEvent.KEY_DOWN, onkey); }
+			
 			startGame();
 		}
 		
@@ -59,25 +61,19 @@ package {
 			Starling.juggler.delayCall( startGame, .250 );
 		}
 		
+		CONFIG::development
 		private function onkey( e:KeyboardEvent ):void {
+			if ( !g.interactable )
+				return;
+			
 			if ( e.keyCode == Keyboard.ESCAPE ) {
 				g.endGame();
 			}
 			if ( e.keyCode == Keyboard.SPACE ) {
 				g.endTurn();
 			}
-			if ( e.keyCode == Keyboard.Z ) {
-				g.juggler.speed = g.juggler.speed < 1.0 ? 1.0 : 0.2;
-				g.jugglerStrict.speed = g.juggler.speed;
-			}
-			if ( e.keyCode == Keyboard.Q ) {
-				g.processes.appendProcess( ProcessManager.gen( "test <<" ) );
-			}
-			if ( e.keyCode == Keyboard.W ) {
-				g.processes.prependProcess( ProcessManager.gen( "test >>" ) );
-			}
-			if ( e.keyCode == Keyboard.E ) {
-				g.jugglerStrict.delayCall( trace, 1 );
+			if ( e.keyCode == Keyboard.CAPS_LOCK ) {
+				Game.GODMODE = !Game.GODMODE;
 			}
 		}
 	}

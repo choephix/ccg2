@@ -1,6 +1,7 @@
 package duel.cards 
 {
 	import duel.Damage;
+	import duel.Game;
 	import duel.table.CreatureField;
 	import duel.table.Hand;
 	import duel.table.TrapField;
@@ -64,7 +65,7 @@ package duel.cards
 		{
 			if ( c.isInGrave ) return false;
 			if ( field.isLocked ) return false;
-			if ( !CONFIG::sandbox && c.controller != field.owner ) return false;
+			if ( !Game.GODMODE && c.controller != field.owner ) return false;
 			if ( !field.isEmpty ) return false; //TODO remove this for riders and combinatrons
 			return true;
 		}
@@ -75,7 +76,7 @@ package duel.cards
 		{
 			if ( c.isInGrave ) return false;
 			if ( field.isLocked ) return false;
-			if ( !CONFIG::sandbox && c.controller != field.owner ) return false;
+			if ( !Game.GODMODE && c.controller != field.owner ) return false;
 			return true;
 		}
 		public static function cannotPlaceTrapHere( c:Card, field:TrapField ):Boolean
