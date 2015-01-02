@@ -22,7 +22,7 @@ package duel.otherlogic
 			_pncount = _pnames.push.apply( null, names );
 		}
 		
-		public function isWatched( p:GameplayProcess ):Boolean
+		protected function isWatched( p:GameplayProcess ):Boolean
 		{
 			if ( _pncount <= 0 ) return false;
 			if ( _pncount == 1 ) return _pnames[0] == p.name;
