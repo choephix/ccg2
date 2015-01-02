@@ -86,7 +86,7 @@ package duel.cards.temp_database
 						trace ( p );
 					}
 				},
-				/* * * /
+				/* * */
 				function( c:Card ):void ///		..C		TEST TRAP
 				{
 					c.name = "TURAPO TESUTO";
@@ -366,7 +366,7 @@ package duel.cards.temp_database
 						return c.controller.opponent == p.getPlayer();
 					}
 					c.behaviourC.inplaySpecial.funcActivate = function( p:GameplayProcess ):Boolean {
-						TempDatabaseUtils.doPutToGrave( c.indexedField.opposingCreature );
+						TempDatabaseUtils.doForceAttack( c.indexedField.opposingCreature );
 					}
 				},
 				/* * */
