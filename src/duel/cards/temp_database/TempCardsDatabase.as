@@ -456,7 +456,7 @@ package duel.cards.temp_database
 					}
 					c.behaviourC.inplaySpecial.funcActivate =
 					function( p:GameplayProcess ):Boolean {
-						TempDatabaseUtils.doPutToGrave( c );
+						TempDatabaseUtils.doForceAttack( c, false );
 					}
 				},
 				/* * */
