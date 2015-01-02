@@ -118,6 +118,19 @@ package duel.cards.temp_database
 				/* * */
 				
 				/* * */
+				function( c:Card ):void ///		..C		The Producer
+				{
+					c.name = "The Producer";
+					
+					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
+					c.behaviourC.attack = 0;
+					
+					c.behaviourC.inplayOngoing.funcUpdate =
+					function( p:GameplayProcess ):void {
+						c.behaviourC.attack = c.controller.hand.cardsCount * 2;
+					}
+				},
+				/* * */
 				function( c:Card ):void ///		..C		Insistent Goeff
 				{
 					c.name = "Insistent Goeff";
@@ -458,19 +471,6 @@ package duel.cards.temp_database
 					c.behaviourC.inplayOngoing.funcUpdate =
 					function( p:GameplayProcess ):void {
 						c.behaviourC.attack = c.controller.opponent.creatureCount * 5;
-					}
-				},
-				/* * */
-				function( c:Card ):void ///		..C		The Producer
-				{
-					c.name = "The Producer";
-					
-					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 0;
-					
-					c.behaviourC.inplayOngoing.funcUpdate =
-					function( p:GameplayProcess ):void {
-						c.behaviourC.attack = c.controller.hand.cardsCount * 2;
 					}
 				},
 				/* * */

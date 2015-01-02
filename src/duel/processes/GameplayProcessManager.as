@@ -685,7 +685,7 @@ package duel.processes
 		{
 			var pro:GameplayProcess;
 			
-			pro = gen( GameplayProcess.ENTER_GRAVE, onEnd, c );
+			pro = gen( GameplayProcess.ENTER_GRAVE, null, c );
 			pro.abortCheck = abortCheck;
 			
 			prependProcess( pro );
@@ -882,6 +882,7 @@ package duel.processes
 		////\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 		//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 		
+		//{
 		public static function gen( name:String, onEnd:Function = null, ...args ):GameplayProcess
 		{
 			var p:GameplayProcess = new GameplayProcess();
@@ -893,6 +894,8 @@ package duel.processes
 		}
 		
 		protected function get game():Game { return Game.current }
+		//}
+		
 	}
 
 }
