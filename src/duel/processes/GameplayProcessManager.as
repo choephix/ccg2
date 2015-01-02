@@ -365,6 +365,11 @@ package duel.processes
 			}
 		}
 		
+		public function prepend_DestroyTrap( c:Card ):void
+		{
+			processes.prepend_AddToGrave( c );
+		}
+		
 		//}
 		//{ SPECIAL EFFECTS
 		

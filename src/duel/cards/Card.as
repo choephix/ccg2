@@ -113,7 +113,7 @@ package duel.cards
 				{
 					p.interrupt();
 					if ( behaviourT.isPersistent && behaviourT.effect.isActive )
-						processes.prepend_AddToGrave( this );
+						processes.prepend_DestroyTrap( this );
 					else
 						processes.prepend_TrapActivation( this );
 					return;
