@@ -126,19 +126,23 @@ package duel.processes
 			
 			/// SUMMON
 			pro = gen( GameplayProcess.SUMMON, null, c, field );
+			pro.onStart = onStart;
 			pro.abortCheck = CommonCardQuestions.cannotSummonHere;
 			
 			appendProcess( pro );
 			
-			/// TRIBUTE_CREATURE
-			if ( c.behaviourC.needsTribute )
+			function onStart( c:Card, field:CreatureField ):void
 			{
-				if ( field.topCard )
-					pro = pro.chain( process_TributeCreature( field.topCard ) );
-				else
+				/// TRIBUTE_CREATURE
+				if ( c.behaviourC.needsTribute )
 				{
-					CONFIG::development
-					{ error( "Where's my tribute?" ) }
+					if ( field.topCard )
+						prependProcess( process_TributeCreature( field.topCard ) );
+					else
+					{
+						CONFIG::development
+						{ error( "Where's my tribute?" ) }
+					}
 				}
 			}
 			
