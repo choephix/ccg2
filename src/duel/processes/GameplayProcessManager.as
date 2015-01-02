@@ -127,7 +127,13 @@ package duel.processes
 			/// SUMMON
 			pro = gen( GameplayProcess.SUMMON, null, c, field );
 			pro.onStart = onStart;
-			pro.abortCheck = CommonCardQuestions.cannotSummonHere;
+			pro.abortCheck = abortCheck;
+			
+			function abortCheck( c:Card, field:CreatureField ):Boolean
+			{
+				if ( c.isInPlay ) return true;
+				if ( field.isLocked ) return false;
+			}
 			
 			appendProcess( pro );
 			
