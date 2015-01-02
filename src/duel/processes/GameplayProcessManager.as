@@ -524,7 +524,6 @@ package duel.processes
 			}
 			
 			pro = pro.chain( gen( GameplayProcess.DIRECT_DAMAGE_COMPLETE, null, p, dmg ) );
-			pro.delay = .440;
 		}
 		
 		public function prepend_Death( c:Card ):void 
