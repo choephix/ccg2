@@ -120,7 +120,7 @@ package duel.processes
 		//}
 		//{ SUMMON
 		
-		public function append_SummonHere( c:Card, field:CreatureField ):void
+		public function append_SummonHere( c:Card, field:CreatureField, isManual:Boolean ):void
 		{
 			var pro:GameplayProcess;
 			
@@ -140,7 +140,7 @@ package duel.processes
 			function onStart( c:Card, field:CreatureField ):void
 			{
 				/// TRIBUTE_CREATURE
-				if ( c.behaviourC.needsTribute )
+				if ( isManual && c.behaviourC.needsTribute )
 				{
 					if ( field.topCard )
 						prependProcess( process_TributeCreature( field.topCard ) );
@@ -224,7 +224,7 @@ package duel.processes
 				c.lot.removeCard( c );
 				
 				/// SUMMON
-				append_SummonHere( c, field );
+				append_SummonHere( c, field, false );
 			}
 			
 			/// RESURRECT_COMPLETE

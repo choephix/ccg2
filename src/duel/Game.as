@@ -485,7 +485,7 @@ package duel
 		
 		public function performCardSummon( c:Card, field:CreatureField ):void
 		{
-			processes.append_SummonHere( c, field );
+			processes.append_SummonHere( c, field, true );
 		}
 		
 		public function performRelocation( c:Card, field:CreatureField ):void
