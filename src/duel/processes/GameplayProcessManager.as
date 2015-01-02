@@ -128,8 +128,8 @@ package duel.processes
 			
 			/// SUMMON
 			pro = chain( pro, gen( GameplayProcess.SUMMON, c, field ) );
-			pro.onStart = 
-			function onStart( c:Card, field:CreatureField ):void
+			pro.onEnd = 
+			function onEnd( c:Card, field:CreatureField ):void
 			{
 				/// TRIBUTE_CREATURE
 				if ( isManual && c.behaviourC.needsTribute )
@@ -157,6 +157,7 @@ package duel.processes
 			
 			/// SUMMON_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.SUMMON_COMPLETE, c, field ) );
+			pro.abortable = true; //was false by default, cuz' "complete"
 			pro.abortCheck =
 			function completeAbortCheck( c:Card, field:CreatureField ):Boolean
 			{
