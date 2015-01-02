@@ -92,10 +92,11 @@ package duel.display.cardlots {
 						alpha: 1.0,
 						x: this.x + x, 
 						y: this.y + y, 
-						transition: Transitions.EASE_OUT // EASE_OUT EASE_OUT_BACK EASE_OUT_ELASTIC
+						transition: Transitions.EASE_OUT 
+						// EASE_OUT EASE_OUT_BACK EASE_OUT_ELASTIC
 					} );
 				
-				o.parent.setChildIndex( o, jj );
+				o.parent.setChildIndex( o, o.parent.numChildren - 1 );
 				
 				o.touchable = true;
 				o.useHandCursor = true;
@@ -162,6 +163,7 @@ package duel.display.cardlots {
 			var c:Card = e.data as Card;
 			jugglerGui.removeTweens( c.sprite );
 			selectedIndex = -1;
+			
 			arrange();
 		}
 		
