@@ -241,7 +241,8 @@ package duel.display {
 			jugglerStrict.tween( __attackSprite, .240,
 				{
 					transition : Transitions.EASE_IN,
-					y : __attackSprite.y + 200 * ( isTopSide ? 1.0 : -1.0 ), 
+					y : __attackSprite.y + 200 * ( isTopSide ? 1.0 : -1.0 ),
+					alpha : .0,
 					onComplete : destroyAnimAttackSprite
 				} );
 		}
@@ -318,7 +319,9 @@ package duel.display {
 		
 		animation function animDie():void 
 		{
-			animBlink( true, 0xB00000 ).blendMode = BlendMode.MULTIPLY;
+			setAsTopChild();
+			
+			animBlink( true, 0xB00000 ).blendMode = BlendMode.NORMAL;
 			
 			__bloodSprite = assets.generateImage( "card-blood" );
 			__bloodSprite.alignPivot();
@@ -371,6 +374,11 @@ package duel.display {
 					onCompleteArgs : [true]
 				} );
 			return q;
+		}
+		
+		public function setAsTopChild():void
+		{
+			parent.setChildIndex( this, parent.numChildren - 1 );
 		}
 		
 		// FLIPPING
