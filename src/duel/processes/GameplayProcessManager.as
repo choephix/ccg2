@@ -257,7 +257,7 @@ package duel.processes
 			}
 			
 			/// LEAVE_INDEXED_FIELD
-			pro = pro.chain( process_LeaveIndexedField( c, c.indexedField ) );
+			pro = pro.chain( process_LeaveIndexedField( c ) );
 			
 			/// ENTER_INDEXED_FIELD
 			pro = pro.chain( process_EnterIndexedField( c, field, false ) );
@@ -805,10 +805,15 @@ package duel.processes
 			/// LEAVE_PLAY
 			pro = gen( GameplayProcess.LEAVE_PLAY, null, c );
 			pro.abortCheck = CommonCardQuestions.isNotInPlay;
+			pro.onStart = function onStart( c:Card ):void 
+			{
+				if ( c.behaviourT && c.behaviourT.isPersistent && c.behaviourT.effect.isActive )
+					prepend_TrapDeactivation( c );
+			}
 			prependProcess( pro );
 			
 			/// LEAVE_INDEXED_FIELD
-			pro = pro.chain( process_LeaveIndexedField( c, c.indexedField ) );
+			pro = pro.chain( process_LeaveIndexedField( c ) );
 			
 			/// LEAVE_PLAY_COMPLETE
 			pro = pro.chain( gen( GameplayProcess.LEAVE_PLAY_COMPLETE, null, c ) );
@@ -816,9 +821,6 @@ package duel.processes
 			{
 				c.resetState();
 			}
-			
-			if ( c.behaviourT && c.behaviourT.isPersistent && c.behaviourT.effect.isActive )
-				prepend_TrapDeactivation( c );
 		}
 		
 		private function process_EnterIndexedField( c:Card, field:IndexedField, faceDown:Boolean ):GameplayProcess 
@@ -841,20 +843,19 @@ package duel.processes
 			return pro;
 		}
 		
-		private function process_LeaveIndexedField( c:Card, field:IndexedField ):GameplayProcess 
+		private function process_LeaveIndexedField( c:Card ):GameplayProcess 
 		{
 			var pro:GameplayProcess;
 			
 			/// LEAVE_INDEXED_FIELD
-			pro = gen( GameplayProcess.LEAVE_INDEXED_FIELD, null, c, field );
+			pro = gen( GameplayProcess.LEAVE_INDEXED_FIELD, null, c, c.indexedField );
 			pro.abortCheck = function abortCheck( c:Card, field:IndexedField ):Boolean
 			{
 				return !field.containsCard( c );
 			}
-			
-			/// LEAVE_INDEXED_FIELD_COMPLETE
-			pro.chain( gen( GameplayProcess.LEAVE_INDEXED_FIELD_COMPLETE, onEnd, c, field ) );
-			function onEnd( c:Card, field:IndexedField ):void 
+			//pro.onStart = leave;
+			pro.onEnd = leave;
+			function leave( c:Card, field:IndexedField ):void 
 			{
 				c.resetState();
 				if ( !field.containsCard( c ) ) 
@@ -865,6 +866,9 @@ package duel.processes
 				}
 				c.indexedField.removeCard( c );
 			}
+			
+			/// LEAVE_INDEXED_FIELD_COMPLETE
+			pro.chain( gen( GameplayProcess.LEAVE_INDEXED_FIELD_COMPLETE, null, c, c.indexedField ) );
 			
 			/// returns LEAVE_INDEXED_FIELD (the chain head)
 			return pro;
