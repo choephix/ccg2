@@ -278,7 +278,7 @@ package duel.cards.temp_database
 						c.indexedField.opposingCreatureField.removeLock();
 					}
 					
-					c.descr = ". . .";
+					c.descr = "Lock opposing creature field until the start of your next turn.";
 				},
 				/* * */
 				function( c:Card ):void ///		T..		Destiny 
