@@ -29,21 +29,21 @@ package duel.display.cardlots
 		
 		override protected function arrangeAll():void
 		{
-			var o:CardSprite;
 			var i:int = list.cardsCount;
 			var j:int = 0;
 			while ( --i >= 0 )
-			{
-				o = list.getCardAt( i ).sprite;
-				o.alpha = 1.0;
-				o.x = x;
-				o.y = y - cardSpacing * j;
-				cardsParent.addChild( o );
-			
-				o.touchable = false;
-				o.useHandCursor = false;
-				j++;
-			}
+				quickPlaceAt( list.getCardAt( i ).sprite, j++ );
+		}
+		
+		protected function quickPlaceAt( o:CardSprite, bottomUpIndex:int ):void
+		{
+			o.alpha = 1.0;
+			o.x = x;
+			o.y = y - cardSpacing * bottomUpIndex;
+			cardsParent.addChild( o );
+		
+			o.touchable = false;
+			o.useHandCursor = false;
 		}
 		
 		override protected function tweenToPlace( o:CardSprite ):void
