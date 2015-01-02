@@ -4,7 +4,7 @@ package duel.cards.temp_database
 	import duel.Damage;
 	import duel.DamageType;
 	import duel.G;
-	import duel.otherlogic.PersistentTrapEffect;
+	import duel.otherlogic.TrapEffect;
 	import duel.Player;
 	import duel.processes.GameplayProcess;
 	import duel.table.CreatureField;
@@ -101,18 +101,8 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
 					
-					///		_COMPLETE
-					///		
-					///		TURN_END		TURN_START			TURN_START_COMPLETE
-					///		DRAW_CARD		DISCARD_CARD		
-					///		SUMMON			ENTER_PLAY			LEAVE_PLAY
-					///		ATTACK			CREATURE_DAMAGE		DIRECT_DAMAGE
-					///		RELOCATE		RELOCATE_COMPLETE	DIE
-					///		SET_TRAP		ACTIVATE_TRAP		ACTIVATE_TRAP_COMPLETE
-					///		COMBAT_FLIP		SAFE_FLIP			ACTIVATE_SPECIAL
-					
-					c.behaviourT.effect.watch( GameplayProcess.SUMMON );
-					c.behaviourT.effect.funcCondition =
+					c.behaviourT.effect.watchForActivation( GameplayProcess.SUMMON );
+					c.behaviourT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
 						//if ( c.indexedField.index != p.getIndex() ) return false;
 						//if ( c.controller.opponent != p.getSourceCard().controller ) return false;
@@ -127,57 +117,6 @@ package duel.cards.temp_database
 				},
 				/* * */
 				
-				/* * */
-				function( c:Card ):void ///		..C		Field Lock
-				{
-					c.name = "Field Lock";
-					
-					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
-					
-					///		_COMPLETE
-					///		
-					///		TURN_END		TURN_START			TURN_START_COMPLETE
-					///		DRAW_CARD		DISCARD_CARD		
-					///		SUMMON			ENTER_PLAY			LEAVE_PLAY
-					///		ATTACK			CREATURE_DAMAGE		DIRECT_DAMAGE
-					///		RELOCATE		RELOCATE_COMPLETE	DIE
-					///		SET_TRAP		ACTIVATE_TRAP		ACTIVATE_TRAP_COMPLETE
-					///		COMBAT_FLIP		SAFE_FLIP			ACTIVATE_SPECIAL
-					
-					c.behaviourT.effect.watch( GameplayProcess.SUMMON );
-					c.behaviourT.effect.funcCondition =
-					function( p:GameplayProcess ):Boolean {
-						var i:int = p.getIndex();
-						if ( c.indexedField.index != p.getSummonedField().index ) return false;
-						return true;
-					}
-					c.behaviourT.effect.funcActivate =
-					function( p:GameplayProcess ):void {
-						c.behaviourT.persistentEffect.start( p );
-					}
-					
-					c.behaviourT.persistentEffect = new PersistentTrapEffect();
-					c.behaviourT.persistentEffect.funcDeactivateCondition =
-					function( p:GameplayProcess ):Boolean{
-						return GameplayProcess.TURN_END == p.name;
-					}
-					c.behaviourT.persistentEffect.funcActivate =
-					function( p:GameplayProcess ):void {
-						trace( "START at " + p );
-						c.indexedField.samesideCreatureField.addLock();
-					}
-					c.behaviourT.persistentEffect.funcUpdate =
-					function( p:GameplayProcess ):void {
-						trace( "UPDATE at "+p );
-					}
-					c.behaviourT.persistentEffect.funcDeactivate =
-					function( p:GameplayProcess ):void {
-						trace( "END at "+p );
-						c.indexedField.samesideCreatureField.removeLock();
-					}
-					
-					c.descr = ". . .";
-				},
 				/* * */
 				function( c:Card ):void ///		..C		Insistent Goeff
 				{
@@ -237,8 +176,8 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
 					
-					c.behaviourT.effect.watch( GameplayProcess.COMBAT_FLIP_EFFECT );
-					c.behaviourT.effect.funcCondition =
+					c.behaviourT.effect.watchForActivation( GameplayProcess.COMBAT_FLIP_EFFECT );
+					c.behaviourT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.index != p.getIndex() ) return false;
 						if ( c.controller.opponent != p.getSourceCard().controller ) return false;
@@ -281,8 +220,8 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
 					
-					c.behaviourT.effect.watch( GameplayProcess.ATTACK );
-					c.behaviourT.effect.funcCondition =
+					c.behaviourT.effect.watchForActivation( GameplayProcess.ATTACK );
+					c.behaviourT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.index != p.getIndex() ) return false;
 						if ( c.controller.opponent != p.getAttacker().controller ) return false;
@@ -303,14 +242,53 @@ package duel.cards.temp_database
 					PLAYER 2
 				
 				/* * */
+				function( c:Card ):void ///		..C		Field Lock
+				{
+					c.name = "Field Lock";
+					
+					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
+					
+					// ACTIVATION
+					c.behaviourT.effect.watchForActivation( GameplayProcess.SUMMON );
+					c.behaviourT.effect.funcActivateCondition =
+					function( p:GameplayProcess ):Boolean {
+						if ( c.indexedField.samesideCreature != null ) return false;
+						if ( c.indexedField.opposingCreature != null ) return false;
+						if ( c.indexedField.index != p.getSummonedField().index ) return false;
+						return c.controller.opponent == p.getSummonedField().owner;
+					}
+					c.behaviourT.effect.funcActivate =
+					function( p:GameplayProcess ):void {
+						c.indexedField.opposingCreatureField.addLock();
+					}
+					
+					// UPDATE
+					c.behaviourT.effect.funcUpdate =
+					function( p:GameplayProcess ):void {
+					}
+					
+					// DEACTIVATION
+					c.behaviourT.effect.watchForDeactivation( GameplayProcess.TURN_START );
+					c.behaviourT.effect.funcDeactivateCondition =
+					function( p:GameplayProcess ):Boolean{
+						return c.controller == p.getPlayer();
+					}
+					c.behaviourT.effect.funcDeactivate =
+					function( p:GameplayProcess ):void {
+						c.indexedField.opposingCreatureField.removeLock();
+					}
+					
+					c.descr = ". . .";
+				},
+				/* * */
 				function( c:Card ):void ///		T..		Destiny 
 				{
 					c.name = "Destiny, Fate, all that Shit";
 					
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
 					
-					c.behaviourT.effect.watch( GameplayProcess.TURN_START );
-					c.behaviourT.effect.funcCondition =
+					c.behaviourT.effect.watchForActivation( GameplayProcess.TURN_START );
+					c.behaviourT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.controller != p.getPlayer() ) return false;
 						if ( c.controller.hand.cardsCount > 0 ) return false;
@@ -366,8 +344,8 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
 					
-					c.behaviourT.effect.watch( GameplayProcess.ACTIVATE_TRAP );
-					c.behaviourT.effect.funcCondition =
+					c.behaviourT.effect.watchForActivation( GameplayProcess.ACTIVATE_TRAP );
+					c.behaviourT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.index != p.getIndex() ) return false;
 						if ( c.controller.opponent != p.getSourceCard().controller ) return false;
@@ -388,8 +366,8 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
 					
-					c.behaviourT.effect.watch( GameplayProcess.SUMMON_COMPLETE );
-					c.behaviourT.effect.funcCondition =
+					c.behaviourT.effect.watchForActivation( GameplayProcess.SUMMON_COMPLETE );
+					c.behaviourT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.index != p.getIndex() ) return false;
 						if ( c.controller.opponent != p.getSummonedField().owner ) return false;
@@ -643,8 +621,8 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
 					
-					c.behaviourT.effect.watch( GameplayProcess.ATTACK );
-					c.behaviourT.effect.funcCondition =
+					c.behaviourT.effect.watchForActivation( GameplayProcess.ATTACK );
+					c.behaviourT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.index != p.getIndex() ) return false;
 						if ( c.controller.opponent != p.getAttacker().controller ) return false;
@@ -675,8 +653,8 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
 					
-					c.behaviourT.effect.watch( GameplayProcess.ATTACK );
-					c.behaviourT.effect.funcCondition =
+					c.behaviourT.effect.watchForActivation( GameplayProcess.ATTACK );
+					c.behaviourT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.index != p.getIndex() ) return false;
 						if ( c.controller.opponent != p.getAttacker().controller ) return false;

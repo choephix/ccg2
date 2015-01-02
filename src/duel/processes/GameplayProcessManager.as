@@ -332,7 +332,7 @@ package duel.processes
 			function onEnd( c:Card ):void
 			{
 				c.sprite.animFlipEffect();
-				c.behaviourT.effect.activateNow( interruptedProcess );
+				c.behaviourT.effect.activate( interruptedProcess );
 			}
 			
 			pro = pro.chain( gen( GameplayProcess.ACTIVATE_TRAP_COMPLETE, onComplete, c ) );
@@ -340,13 +340,22 @@ package duel.processes
 			function onComplete( c:Card ):void
 			{
 				if ( c.isInPlay && !c.behaviourT.isPersistent )
-					prepend_TrapDeactivation( c );
+					prepend_AddToGrave( c );
 			}
 		}
 		
 		public function prepend_TrapDeactivation( c:Card ):void
 		{
-			prepend_AddToGrave( c );
+			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
+			var pro:GameplayProcess;
+			
+			pro = gen( GameplayProcess.DEACTIVATE_TRAP, onEnd, c );
+			prependProcess( pro );
+			
+			function onEnd( c:Card ):void
+			{
+				c.behaviourT.effect.deactivate( interruptedProcess );
+			}
 		}
 		
 		//}
@@ -664,7 +673,7 @@ package duel.processes
 		}
 		
 		//}
-		//{ CHAINGING CARD CONTAINERS I
+		//{ CHAINGING CARD CONTAINERS I   ( ADD   TO   GRAVE / HAND / DECK )
 		
 		public function prepend_AddToGrave( c:Card ):void 
 		{
@@ -764,7 +773,7 @@ package duel.processes
 		}
 		
 		//}
-		//{ CHAINGING CARD CONTAINERS II
+		//{ CHAINGING CARD CONTAINERS II   ( ENTER / LEAVE   PLAY / FIELD )
 		
 		private function process_EnterPlay( c:Card, field:CreatureField, faceDown:Boolean ):GameplayProcess 
 		{
@@ -801,6 +810,9 @@ package duel.processes
 			{
 				c.resetState();
 			}
+			
+			if ( c.behaviourT && c.behaviourT.isPersistent && c.behaviourT.effect.isActive )
+				prepend_TrapDeactivation( c );
 		}
 		
 		private function process_EnterIndexedField( c:Card, field:IndexedField, faceDown:Boolean ):GameplayProcess 

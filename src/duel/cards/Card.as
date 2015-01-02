@@ -109,24 +109,19 @@ package duel.cards
 			
 			if ( type.isTrap )
 			{
-				if ( behaviourT.isPersistent && behaviourT.persistentEffect.isActive )
-				{
-					if ( behaviourT.persistentEffect.mustEnd( p ) )
-					{
-						p.interrupt();
-						behaviourT.persistentEffect.end( p );
-						die();
-						return;
-					}
-					else
-						behaviourT.persistentEffect.update( p );
-				}
-				else
 				if ( behaviourT.effect.mustInterrupt( p ) )
 				{
 					p.interrupt();
-					processes.prepend_TrapActivation( this );
+					if ( behaviourT.isPersistent && behaviourT.effect.isActive )
+						processes.prepend_AddToGrave( this );
+					else
+						processes.prepend_TrapActivation( this );
 					return;
+				}
+				else
+				if ( behaviourT.isPersistent && behaviourT.effect.isActive )
+				{
+					behaviourT.effect.update( p );
 				}
 			}
 			else
