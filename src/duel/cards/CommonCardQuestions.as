@@ -74,7 +74,6 @@ package duel.cards
 		public static function canPlaceTrapHere( card:Card, field:TrapField ):Boolean
 		{
 			if ( card.isInGrave ) return false;
-			if ( !field.isEmpty ) return false;
 			if ( field.isLocked ) return false;
 			if ( card.controller != field.owner ) return false;
 			return true;

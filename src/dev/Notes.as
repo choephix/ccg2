@@ -13,9 +13,9 @@ package dev
 		//	TRAP: resurrect dead monster
 		//	CREATURE: resurrect first other dead monster
 		//	
+		//	CREATURE: haste if alone
 		//	
-		//	
-		//	
+		//	CREATURE: antisocial hero
 		//	
 		//	
 		//	

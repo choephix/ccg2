@@ -495,7 +495,7 @@ package duel
 		
 		public function performTrapSet( c:Card, field:TrapField ):void
 		{
-			processes.append_TrapSet( c, field );
+			processes.append_TrapSet( c, field, true );
 		}
 		
 		public function performCardAttack( c:Card ):void

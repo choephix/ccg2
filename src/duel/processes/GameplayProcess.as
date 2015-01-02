@@ -41,6 +41,7 @@ package duel.processes
 		static public const ACTIVATE_SPECIAL:String = "activateSpecial";
 		static public const ACTIVATE_SPECIAL_COMPLETE:String = "activateSpecialComplete";
 		static public const DEACTIVATE_TRAP:String = "deactivateTrap";
+		static public const DEACTIVATE_TRAP_COMPLETE:String = "deactivateTrapComplete";
 		
 		static public const COMBAT_FLIP:String = "combatFlip";
 		static public const COMBAT_FLIP_COMPLETE:String = "combatFlipComplete";

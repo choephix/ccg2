@@ -26,12 +26,10 @@ package duel.processes
 		{
 			var pro:GameplayProcess;
 			
-			pro = gen( GameplayProcess.TURN_END, turnEnd, p );
+			/// TURN_END
+			pro = chain( pro, gen( GameplayProcess.TURN_END, p ) );
 			pro.delay = .333;
-			
-			appendProcess( pro );
-			
-			function turnEnd( p:Player ):void
+			pro.onEnd = function turnEnd( p:Player ):void
 			{
 				append_TurnStart( p.opponent );
 			}
@@ -41,24 +39,24 @@ package duel.processes
 		{
 			var pro:GameplayProcess;
 			
-			pro = gen( GameplayProcess.TURN_START, null, p );
-			pro.onStart = onStart;
-			pro.onEnd = onEnd;
+			/// TURN_START
+			pro = chain( pro, gen( GameplayProcess.TURN_START, p ) );
 			pro.delay = .333;
 			
-			appendProcess( pro );
-			
+			pro.onStart = 
 			function onStart( p:Player ):void
 			{
 				game.currentPlayer = p;
 			}
 			
+			pro.onEnd = 
 			function onEnd( p:Player ):void
 			{
 				prepend_Draw( p, 1 );
 			}
 			
-			pro = pro.chain( gen( GameplayProcess.TURN_START_COMPLETE, null, p ) );
+			/// TURN_START_COMPLETE
+			pro = chain ( pro, gen( GameplayProcess.TURN_START_COMPLETE, p ) );
 			pro.delay = .333;
 		}
 		
@@ -70,9 +68,10 @@ package duel.processes
 			var pro:GameplayProcess;
 			while ( --count >= 0 )
 			{
-				pro = gen( GameplayProcess.DRAW_CARD, onComplete, p );
+				/// SiNGLE DRAW_CARD
+				pro = chain( pro, gen( GameplayProcess.DRAW_CARD, p ) );
+				pro.onEnd = onComplete;
 				pro.delay = NaN;
-				prependProcess( pro );
 			}
 			
 			function onComplete( p:Player ):void 
@@ -86,10 +85,11 @@ package duel.processes
 				var c:Card = p.deck.getFirstCard();
 				p.deck.removeCard( c );
 				
-				pro = gen( GameplayProcess.DRAW_CARD_COMPLETE, null, p, c );
-				pro.delay = NaN;
-				prependProcess( pro );
+				/// SiNGLE DRAW_CARD_COMPLETE
 				
+				var proComplete:GameplayProcess = gen( GameplayProcess.DRAW_CARD_COMPLETE, p, c );
+				proComplete.delay = NaN;
+				prependProcess( proComplete );
 				prepend_AddToHand( c, p );
 			}
 		}
@@ -98,23 +98,24 @@ package duel.processes
 		{
 			var pro:GameplayProcess;
 			
-			pro = gen( GameplayProcess.DISCARD_CARD, discardCard, p, c );
-			pro.abortCheck = abortCheck;
+			/// DISCARD_CARD
+			pro = chain( pro, gen( GameplayProcess.DISCARD_CARD, p, c ) );
 			
-			prependProcess( pro );
-			
+			pro.abortCheck = 
 			function abortCheck( p:Player, c:Card ):Boolean
 			{
 				return !p.hand.containsCard( c );
 			}
-				
+			
+			pro.onEnd = 
 			function discardCard( p:Player, c:Card ):void
 			{
 				p.hand.removeCard( c );
 				prepend_AddToGrave( c );
 			}
 				
-			pro = pro.chain( gen( GameplayProcess.DISCARD_CARD_COMPLETE, null, p, c ) );
+			/// DISCARD_CARD_COMPLETE
+			pro = chain ( pro, gen( GameplayProcess.DISCARD_CARD_COMPLETE, p, c ) );
 		}
 		
 		//}
@@ -125,47 +126,42 @@ package duel.processes
 			var pro:GameplayProcess;
 			
 			/// SUMMON
-			pro = gen( GameplayProcess.SUMMON, null, c, field );
-			pro.onStart = onStart;
-			pro.abortCheck = abortCheck;
-			
-			function abortCheck( c:Card, field:CreatureField ):Boolean
-			{
-				if ( c.isInPlay ) return true;
-				if ( field.isLocked ) return true;
-				return false;
-			}
-			
-			appendProcess( pro );
-			
+			pro = chain( pro, gen( GameplayProcess.SUMMON, c, field ) );
+			pro.onStart = 
 			function onStart( c:Card, field:CreatureField ):void
 			{
 				/// TRIBUTE_CREATURE
 				if ( isManual && c.behaviourC.needsTribute )
 				{
-					if ( field.topCard )
-						prependProcess( process_TributeCreature( field.topCard ) );
-					else
+					if ( field.topCard == null )
 					{
 						CONFIG::development
 						{ error( "Where's my tribute?" ) }
+						return;
 					}
+					prepend_TributeCreature( field.topCard );
 				}
+			}
+			pro.abortCheck = 
+			function abortCheck( c:Card, field:CreatureField ):Boolean
+			{
+				if ( c.isInPlay ) return true;
+				if ( field.isLocked ) return true;
+				if ( isManual && c.behaviourC.needsTribute && field.topCard == null ) return true;
+				return false;
 			}
 			
 			/// ENTER_PLAY
-			pro = pro.chain( process_EnterPlay( c, field, c.behaviourC.startFaceDown ) );
+			pro = chain( pro, process_EnterPlay( c, field, c.behaviourC.startFaceDown ) );
 			
 			/// SUMMON_COMPLETE
-			pro = pro.chain( gen( GameplayProcess.SUMMON_COMPLETE, complete, c, field ) );
-			pro.abortable = true;
-			pro.abortCheck = completeAbortCheck;
-			
+			pro = chain( pro, gen( GameplayProcess.SUMMON_COMPLETE, c, field ) );
+			pro.abortCheck =
 			function completeAbortCheck( c:Card, field:CreatureField ):Boolean
 			{
 				return !c.isInPlay;
 			}
-			
+			pro.onStart = 
 			function complete( c:Card, field:CreatureField ):void
 			{
 				c.summonedThisTurn = true;
@@ -174,15 +170,14 @@ package duel.processes
 			
 		}
 		
-		private function process_TributeCreature( c:Card ):GameplayProcess 
+		private function prepend_TributeCreature( c:Card ):GameplayProcess 
 		{
 			var pro:GameplayProcess;
 			
 			/// TRIBUTE_CREATURE
-			pro = gen( GameplayProcess.TRIBUTE_CREATURE, null, c );
+			pro = chain( pro, gen( GameplayProcess.TRIBUTE_CREATURE, c ) );
 			pro.abortCheck = CommonCardQuestions.isNotInPlay;
-			pro.onEnd = onEnd;
-			
+			pro.onEnd = 
 			function onEnd( c:Card ):void 
 			{
 				c.resetState();
@@ -190,7 +185,7 @@ package duel.processes
 			}
 			
 			/// TRIBUTE_CREATURE_COMPLETE
-			pro.chain( gen( GameplayProcess.TRIBUTE_CREATURE_COMPLETE, null, c ) );
+			pro = chain( pro, gen( GameplayProcess.TRIBUTE_CREATURE_COMPLETE, c ) );
 			
 			/// returns TRIBUTE_CREATURE (the chain head)
 			return pro;
@@ -202,24 +197,8 @@ package duel.processes
 			var pro:GameplayProcess;
 			
 			/// RESURRECT
-			pro = gen( GameplayProcess.RESURRECT, onEnd, c, field );
-			pro.abortCheck = abortCheck;
-			pro.onAbort = onAbort;
-			
-			appendProcess( pro );
-			
-			function abortCheck( c:Card, field:CreatureField ):Boolean
-			{
-				if ( !c.isInGrave ) return true;
-				return CommonCardQuestions.cannotPlaceCreatureHere( c, field );
-			}
-			
-			function onAbort( c:Card ):void
-			{
-				if ( c.isInPlay )
-					prepend_AddToGrave( c );
-			}
-			
+			pro = chain( pro, gen( GameplayProcess.RESURRECT, c, field ) );
+			pro.onEnd = 
 			function onEnd( c:Card, field:CreatureField ):void
 			{
 				c.lot.removeCard( c );
@@ -227,9 +206,21 @@ package duel.processes
 				/// SUMMON
 				append_SummonHere( c, field, false );
 			}
+			pro.abortCheck = 
+			function abortCheck( c:Card, field:CreatureField ):Boolean
+			{
+				if ( !c.isInGrave ) return true;
+				return CommonCardQuestions.cannotPlaceCreatureHere( c, field );
+			}
+			pro.onAbort = 
+			function onAbort( c:Card ):void
+			{
+				if ( c.isInPlay )
+					prepend_AddToGrave( c );
+			}
 			
 			/// RESURRECT_COMPLETE
-			appendProcess( gen( GameplayProcess.RESURRECT_COMPLETE, null, c, field ) );
+			pro = chain( pro, gen( GameplayProcess.RESURRECT_COMPLETE, c, field ) );
 		}
 		
 		//}
@@ -240,32 +231,27 @@ package duel.processes
 			var pro:GameplayProcess;
 			var oldField:CreatureField = c.indexedField as CreatureField;
 			
-			/// SAFE_FLIP
-			if ( c.faceDown )
-				prepend_SafeFlip( c );
-			
 			/// RELOCATE
-			pro = gen( GameplayProcess.RELOCATE, null, c, field );
+			pro = chain( pro, gen( GameplayProcess.RELOCATE, c, field ) );
 			pro.abortCheck = CommonCardQuestions.cannotRelocateHere;
-			pro.onAbort = completeOrAbort;
-			pro.onStart = onStart;
-			appendProcess( pro );
-			
+			pro.onStart = 
 			function onStart( c:Card, field:CreatureField ):void
 			{
 				c.sprite.animRelocation();
 			}
+			pro.onAbort = completeOrAbort;
 			
 			/// LEAVE_INDEXED_FIELD
-			pro = pro.chain( process_LeaveIndexedField( c ) );
+			pro = chain( pro, process_LeaveIndexedField( c ) );
 			
 			/// ENTER_INDEXED_FIELD
-			pro = pro.chain( process_EnterIndexedField( c, field, false ) );
+			pro = chain( pro, process_EnterIndexedField( c, field, false ) );
 			
 			/// RELOCATE_COMPLETE
-			pro = pro.chain( gen( GameplayProcess.RELOCATE_COMPLETE, completeOrAbort, c, field ) );
+			pro = chain( pro, gen( GameplayProcess.RELOCATE_COMPLETE, c, field ) );
+			pro.onEnd = completeOrAbort;
 			
-			///
+			/// /// ///
 			function completeOrAbort( c:Card, field:CreatureField ):void {
 				if ( c.isInPlay )
 				{
@@ -280,34 +266,41 @@ package duel.processes
 					c.actionsRelocate++;
 				}
 			}
+			
+			if ( c.faceDown )
+				/// SAFE_FLIP
+				prepend_SafeFlip( c );
 		}
 		
 		//}
 		//{ TRAPS
 		
-		public function append_TrapSet( c:Card, field:TrapField ):void 
+		public function append_TrapSet( c:Card, field:TrapField, isManual:Boolean ):void 
 		{
 			var pro:GameplayProcess;
 			
-			pro = gen( GameplayProcess.SET_TRAP, onEnd, c, field );
+			/// SET_TRAP
+			pro = chain( pro, gen( GameplayProcess.SET_TRAP, c, field ) );
+			pro.onStart = 
+			function onStart( c:Card, field:TrapField ):void
+			{
+				if ( field.topCard )
+					/// DESTROY OLD TRAP
+					prepend_DestroyTrap( field.topCard );
+			}
 			pro.abortCheck = CommonCardQuestions.cannotPlaceTrapHere;
 			pro.onAbort = onAbort;
-			
-			function onAbort( c:Card ):void
+			function onAbort( c:Card, field:TrapField ):void
 			{
 				if ( c.isInPlay )
-					prepend_AddToGrave( c );
+					prepend_DestroyTrap( c );
 			}
 			
-			appendProcess( pro );
+			/// ENTER_PLAY
+			pro = chain( pro, process_EnterPlay( c, field, c.behaviour.startFaceDown ) );
 			
-			function onEnd( c:Card, field:TrapField ):void
-			{
-				field.addCard( c );
-				c.faceDown = c.behaviour.startFaceDown;
-			}
-			
-			pro = pro.chain( gen( GameplayProcess.SET_TRAP_COMPLETE, null, c, field ) );
+			/// SET_TRAP_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.SET_TRAP_COMPLETE, c, field ) );
 		}
 		
 		public function prepend_TrapActivation( c:Card ):void
@@ -315,19 +308,12 @@ package duel.processes
 			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
 			var pro:GameplayProcess;
 			
-			pro = gen( GameplayProcess.ACTIVATE_TRAP, null, c );
-			pro.abortCheck = CommonCardQuestions.isNotInPlay;
-			pro.onAbort = onAbort;
+			/// ACTIVATE_TRAP
+			pro = chain( pro, gen( GameplayProcess.ACTIVATE_TRAP, c ) );
 			pro.onStart = onStart;
 			pro.onEnd = onEnd;
-			
-			function onAbort( c:Card ):void
-			{
-				if ( c.isInPlay )
-					prepend_AddToGrave( c );
-			}
-			
-			prependProcess( pro );
+			pro.onAbort = onAbort;
+			pro.abortCheck = CommonCardQuestions.isNotInPlay;
 			
 			function onStart( c:Card ):void
 			{
@@ -335,15 +321,20 @@ package duel.processes
 				c.sprite.animSpecialFlip();
 				trace ( c + " interrupted process " + interruptedProcess );
 			}
-			
 			function onEnd( c:Card ):void
 			{
 				c.sprite.animFlipEffect();
 				c.behaviourT.effect.activate( interruptedProcess );
 			}
+			function onAbort( c:Card ):void
+			{
+				if ( c.isInPlay )
+					prepend_AddToGrave( c );
+			}
 			
-			pro = pro.chain( gen( GameplayProcess.ACTIVATE_TRAP_COMPLETE, onComplete, c ) );
-			
+			/// ACTIVATE_TRAP_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.ACTIVATE_TRAP_COMPLETE, c ) );
+			pro.onEnd =
 			function onComplete( c:Card ):void
 			{
 				if ( c.isInPlay && !c.behaviourT.isPersistent )
@@ -356,18 +347,21 @@ package duel.processes
 			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
 			var pro:GameplayProcess;
 			
-			pro = gen( GameplayProcess.DEACTIVATE_TRAP, onEnd, c );
-			prependProcess( pro );
-			
+			/// DEACTIVATE_TRAP
+			pro = chain( pro, gen( GameplayProcess.DEACTIVATE_TRAP, c ) );
+			pro.onEnd = 
 			function onEnd( c:Card ):void
 			{
 				c.behaviourT.effect.deactivate( interruptedProcess );
 			}
+			
+			/// DEACTIVATE_TRAP
+			pro = chain( pro, gen( GameplayProcess.DEACTIVATE_TRAP_COMPLETE, c ) );
 		}
 		
 		public function prepend_DestroyTrap( c:Card ):void
 		{
-			processes.prepend_AddToGrave( c );
+			prepend_AddToGrave( c );
 		}
 		
 		//}
@@ -399,35 +393,34 @@ package duel.processes
 			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
 			var pro:GameplayProcess;
 			
-			pro = gen( GameplayProcess.ACTIVATE_SPECIAL, null, c );
+			/// ACTIVATE_SPECIAL
+			pro = chain( pro, gen( GameplayProcess.ACTIVATE_SPECIAL, c ) );
 			pro.abortCheck = abortCheck;
 			pro.onStart = onStart;
 			pro.onEnd = onEnd;
-			
-			prependProcess( pro );
-			
-			function abortCheck( c:Card ):Boolean
-			{ 
-				return extraAbortCheck( c ) || !special.meetsCondition( interruptedProcess );
-			}
 			
 			function onStart( c:Card ):void
 			{
 				c.lot.moveCardToTop( c );
 				
 				if ( c.faceDown )
+					/// SILENT_FLIP
 					prepend_SilentFlip( c );
 				
 				trace ( c + " interrupted process " + interruptedProcess );
 			}
-			
 			function onEnd( c:Card ):void
 			{
 				c.sprite.animSpecialEffect();
 				special.activateNow( interruptedProcess );
 			}
+			function abortCheck( c:Card ):Boolean
+			{ 
+				return extraAbortCheck( c ) || !special.meetsCondition( interruptedProcess );
+			}
 			
-			pro = pro.chain( gen( GameplayProcess.ACTIVATE_SPECIAL_COMPLETE, null, c ) );
+			/// ACTIVATE_SPECIAL_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.ACTIVATE_SPECIAL_COMPLETE, c ) );
 		}
 		
 		//}
@@ -437,17 +430,9 @@ package duel.processes
 		{
 			var pro:GameplayProcess;
 			
-			if ( c.faceDown )
-				prepend_SafeFlip( c );
-			
-			pro = gen( GameplayProcess.ATTACK, null, c );
-			pro.abortCheck = CommonCardQuestions.cannotPerformAttack;
-			pro.onAbort = completeOrAbort;
-			pro.onStart = onStart;
-			pro.onEnd = onEnd;
-			
-			appendProcess( pro );
-			
+			/// ATTACK
+			pro = chain( pro, gen( GameplayProcess.ATTACK, c ) );
+			pro.onStart =
 			function onStart( c:Card ):void
 			{
 				c.sprite.animAttackPrepare();
@@ -456,7 +441,7 @@ package duel.processes
 					if ( c.indexedField.opposingCreature.faceDown )
 						prepend_CombatFlip( c.indexedField.opposingCreature );
 			}
-			
+			pro.onEnd =
 			function onEnd( c:Card ):void
 			{
 				c.sprite.animAttackPerform();
@@ -472,13 +457,22 @@ package duel.processes
 					prepend_CreatureDamage( c.indexedField.opposingCreature, c.behaviourC.genAttackDamage() );
 				}
 			}
+			pro.onAbort = completeOrAbort;
+			pro.abortCheck = CommonCardQuestions.cannotPerformAttack;
 			
-			pro = pro.chain( gen( GameplayProcess.ATTACK_COMPLETE, completeOrAbort, c ) );
+			/// ATTACK_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.ATTACK_COMPLETE, c ) );
+			pro.onStart = completeOrAbort;
 			
+			/// /// ///
 			function completeOrAbort( c:Card ):void
 			{
 				c.actionsAttack++;
 			}
+			
+			if ( c.faceDown )
+				/// SAFE_FLIP
+				prepend_SafeFlip( c );
 		}
 		
 		//}
@@ -488,26 +482,15 @@ package duel.processes
 		{
 			var pro:GameplayProcess;
 			
-			pro = gen( GameplayProcess.CREATURE_DAMAGE, null, c, dmg );
-			pro.abortCheck = CommonCardQuestions.cannotTakeDamage;
-			pro.onAbort = onAbort;
-			pro.onStart = onStart;
-			pro.onEnd = onEnd;
-			
-			prependProcess( pro );
-			
-			function onAbort( c:Card, dmg:Damage ):void
-			{
-				if ( c.isInPlay )
-					c.sprite.animDamageAbort();
-			}
-			
+			/// CREATURE_DAMAGE
+			pro = chain( pro, gen( GameplayProcess.CREATURE_DAMAGE, c, dmg ) );
+			pro.onStart =
 			function onStart( c:Card, dmg:Damage ):void
 			{
 				if ( c.faceDown )
 					prepend_SilentFlip( c );
 			}
-			
+			pro.onEnd =
 			function onEnd( c:Card, dmg:Damage ):void
 			{
 				if ( !c.isInPlay ) 
@@ -518,50 +501,56 @@ package duel.processes
 				else
 					c.sprite.animDamageOnly();
 			}
+			pro.onAbort =
+			function onAbort( c:Card, dmg:Damage ):void
+			{
+				if ( c.isInPlay )
+					c.sprite.animDamageAbort();
+			}
+			pro.abortCheck = CommonCardQuestions.cannotTakeDamage;
 			
-			pro = pro.chain( gen( GameplayProcess.CREATURE_DAMAGE_COMPLETE, null, c, dmg ) );
+			/// CREATURE_DAMAGE_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.CREATURE_DAMAGE_COMPLETE, c, dmg ) );
 		}
 		
 		public function prepend_DirectDamage( p:Player, dmg:Damage ):void
 		{
 			var pro:GameplayProcess;
-			
-			pro = gen( GameplayProcess.DIRECT_DAMAGE, onEnd, p, dmg );
-			
-			prependProcess( pro );
-			
+
+			/// DIRECT_DAMAGE
+			pro = chain( pro, gen( GameplayProcess.DIRECT_DAMAGE, p, dmg ) );
+			pro.onEnd =
 			function onEnd( p:Player, dmg:Damage ):void
 			{
 				p.takeDirectDamage( dmg.amount );
 			}
 			
-			pro = pro.chain( gen( GameplayProcess.DIRECT_DAMAGE_COMPLETE, null, p, dmg ) );
+			/// DIRECT_DAMAGE_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.DIRECT_DAMAGE_COMPLETE, p, dmg ) );
 		}
 		
 		public function prepend_Death( c:Card ):void 
 		{
 			var pro:GameplayProcess;
-			
-			pro = gen( GameplayProcess.DIE, null, c );
-			pro.abortCheck = CommonCardQuestions.cannotDie;
-			pro.onStart = onStart;
-			pro.onEnd = onEnd;
-			
-			prependProcess( pro );
-			
+
+			/// DIE
+			pro = chain( pro, gen( GameplayProcess.DIE, c ) );
+			pro.onStart =
 			function onStart( c:Card ):void
 			{
 				if ( c.faceDown )
 					prepend_SilentFlip( c );
 			}
-			
+			pro.onEnd =
 			function onEnd( c:Card ):void
 			{
 				c.sprite.animDie();
 			}
+			pro.abortCheck = CommonCardQuestions.cannotDie;
 			
-			pro = pro.chain( gen( GameplayProcess.DIE_COMPLETE, complete, c ) );
-			
+			/// DIE_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.DIE_COMPLETE, c ) );
+			pro.onStart =
 			function complete( c:Card ):void 
 			{
 				prepend_AddToGrave( c );
@@ -575,112 +564,105 @@ package duel.processes
 		{
 			var pro:GameplayProcess;
 			
-			pro = gen( GameplayProcess.COMBAT_FLIP, onEnd, c );
-			pro.abortCheck = CommonCardQuestions.cannotFlipInPlay;
-			
-			prependProcess( pro );
-			
+			/// COMBAT_FLIP
+			pro = chain( pro, gen( GameplayProcess.COMBAT_FLIP, c ) );
+			pro.onEnd =
 			function onEnd( c:Card ):void
 			{
 				c.faceDown = false;
 				c.sprite.animSpecialFlip();
 			}
+			pro.abortCheck = CommonCardQuestions.cannotFlipInPlay;
 			
-			pro = pro.chain( gen( GameplayProcess.COMBAT_FLIP_COMPLETE, onComplete, c ) );
+			/// COMBAT_FLIP_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.COMBAT_FLIP_COMPLETE, c ) );
 			
-			function onComplete( c:Card ):void
+			/// /// /// /// /// /// /// /// /// /// /// ///
+			if ( !c.behaviourC.hasCombatFlipEffect ) return;
+			/// /// /// /// /// /// /// /// /// /// /// ///
+			
+			/// COMBAT_FLIP_EFFECT
+			pro = chain( pro, gen( GameplayProcess.COMBAT_FLIP_EFFECT, c ) );
+			pro.onStart =
+			function effectStart( c:Card ):void
 			{
-				if ( !c.behaviourC.hasCombatFlipEffect )
-					return;
-					
-				var proE:GameplayProcess;
-				proE = gen( GameplayProcess.COMBAT_FLIP_EFFECT, null, c );
-				proE.abortCheck = effectAbortCheck;
-				proE.onStart = effectStart;
-				proE.onEnd = effectEnd;
-				prependProcess( proE );
-				proE = proE.chain( gen( GameplayProcess.COMBAT_FLIP_EFFECT_COMPLETE, null, c ) );
+				c.sprite.animFlipEffect();
 			}
-			
+			pro.onEnd =
+			function effectEnd( c:Card ):void
+			{
+				c.behaviourC.onCombatFlip();
+			}
+			pro.abortCheck = 
 			function effectAbortCheck( c:Card ):Boolean
 			{
 				return !c.isInPlay || !c.behaviourC.hasCombatFlipEffect;
 			}
 			
-			function effectStart( c:Card ):void
-			{
-				c.sprite.animFlipEffect();
-			}
-			
-			function effectEnd( c:Card ):void
-			{
-				c.behaviourC.onCombatFlip();
-			}
+			/// COMBAT_FLIP_EFFECT_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.COMBAT_FLIP_EFFECT_COMPLETE, c ) );
 		}
 		
 		public function prepend_SafeFlip( c:Card ):void
 		{
 			var pro:GameplayProcess;
 			
-			pro = gen( GameplayProcess.SAFE_FLIP, onEnd, c );
-			pro.abortCheck = CommonCardQuestions.cannotFlipInPlay;
-			
-			prependProcess( pro );
-			
+			/// SAFE_FLIP
+			pro = chain( pro, gen( GameplayProcess.SAFE_FLIP, c ) );
+			pro.onEnd =
 			function onEnd( c:Card ):void
 			{
 				c.faceDown = false;
 				c.sprite.animSpecialFlip();
 			}
+			pro.abortCheck = CommonCardQuestions.cannotFlipInPlay;
 			
-			pro = pro.chain( gen( GameplayProcess.SAFE_FLIP_COMPLETE, onComplete, c ) );
+			/// SAFE_FLIP_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.SAFE_FLIP_COMPLETE, c ) );
 			
-			function onComplete( c:Card ):void
+			/// /// /// /// /// /// /// /// /// /// /// ///
+			if ( !c.behaviourC.hasSafeFlipEffect ) return;
+			/// /// /// /// /// /// /// /// /// /// /// ///
+			
+			/// SAFE_FLIP_EFFECT
+			pro = chain( pro, gen( GameplayProcess.SAFE_FLIP_EFFECT, c ) );
+			pro.onStart =
+			function effectStart( c:Card ):void
 			{
-				if ( !c.behaviourC.hasSafeFlipEffect )
-					return;
-					
-				var proE:GameplayProcess;
-				proE = gen( GameplayProcess.SAFE_FLIP_EFFECT, null, c );
-				proE.abortCheck = effectAbortCheck;
-				proE.onStart = effectStart;
-				proE.onEnd = effectEnd;
-				prependProcess( proE );
-				proE = proE.chain( gen( GameplayProcess.SAFE_FLIP_EFFECT_COMPLETE, null, c ) );
+				c.sprite.animFlipEffect();
 			}
-			
+			pro.onEnd =
+			function effectEnd( c:Card ):void
+			{
+				c.behaviourC.onSafeFlip();
+			}
+			pro.abortCheck = 
 			function effectAbortCheck( c:Card ):Boolean
 			{
 				return !c.isInPlay || !c.behaviourC.hasSafeFlipEffect;
 			}
 			
-			function effectStart( c:Card ):void
-			{
-				c.sprite.animFlipEffect();
-			}
-			
-			function effectEnd( c:Card ):void
-			{
-				c.behaviourC.onSafeFlip();
-			}
+			/// SAFE_FLIP_EFFECT_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.SAFE_FLIP_EFFECT_COMPLETE, c ) );
 		}
 		
 		public function prepend_SilentFlip( c:Card ):void
 		{
+			
 			var pro:GameplayProcess;
-			
-			pro = gen( GameplayProcess.SILENT_FLIP, onEnd, c );
-			pro.abortCheck = CommonCardQuestions.cannotFlipInPlay;
-			
-			prependProcess( pro );
-			
+
+			/// SILENT_FLIP
+			pro = chain( pro, gen( GameplayProcess.SILENT_FLIP, c ) );
+			pro.abortable = false;
+			pro.onEnd =
 			function onEnd( c:Card ):void
 			{
 				c.faceDown = false;
 				c.sprite.animSpecialFlip();
 			}
 			
-			pro = pro.chain( gen( GameplayProcess.SILENT_FLIP_COMPLETE, null, c ) );
+			/// SILENT_FLIP_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.SILENT_FLIP_COMPLETE, c ) );
 		}
 		
 		//}
@@ -690,159 +672,165 @@ package duel.processes
 		{
 			var pro:GameplayProcess;
 			
-			pro = gen( GameplayProcess.ENTER_GRAVE, null, c );
-			pro.abortCheck = abortCheck;
+			if ( c.isInPlay )
+				/// LEAVE_PLAY
+				pro = chain( pro, process_LeavePlay( c ) );
 			
-			prependProcess( pro );
-			
-			function abortCheck( c:Card ):Boolean
-			{
-				return c.isInGrave;
-			}
-			
+			/// ENTER_GRAVE
+			pro = chain( pro, gen( GameplayProcess.ENTER_GRAVE, c ) );
+			pro.onEnd =
 			function onEnd( c:Card ):void
 			{
 				c.resetState();
 				c.owner.grave.addCard( c );
 			}
+			pro.abortCheck = 
+			function abortCheck( c:Card ):Boolean
+			{
+				return c.isInGrave;
+			}
 			
-			pro = pro.chain( gen( GameplayProcess.ENTER_GRAVE_COMPLETE, complete, c ) );
-			
+			/// ENTER_GRAVE_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.ENTER_GRAVE_COMPLETE, c ) );
+			pro.onEnd =
 			function complete( c:Card ):void 
 			{
 				c.faceDown = false;
 			}
-			
-			//PREPEND LEAVE PLAY
-			if ( c.isInPlay )
-				prepend_LeavePlay( c );
 		}
 		
 		public function prepend_AddToHand( c:Card, p:Player ):void 
 		{
 			var pro:GameplayProcess;
 			
-			pro = gen( GameplayProcess.ENTER_HAND, onEnd, c, p );
-			pro.abortCheck = abortCheck;
+			if ( c.isInPlay )
+				/// LEAVE_PLAY
+				pro = chain( pro, process_LeavePlay( c ) );
+			
+			/// ENTER_HAND
+			pro = chain( pro, gen( GameplayProcess.ENTER_HAND, c, p ) );
 			pro.delay = NaN;
-			
-			prependProcess( pro );
-			
-			function abortCheck( c:Card, p:Player ):Boolean
-			{
-				return p.hand.containsCard( c );
-			}
-			
+			pro.onEnd =
 			function onEnd( c:Card, p:Player ):void 
 			{
 				c.resetState();
 				p.hand.addCard( c );
 				c.faceDown = false;
 			}
+			pro.abortCheck = 
+			function abortCheck( c:Card, p:Player ):Boolean
+			{
+				return p.hand.containsCard( c );
+			}
 			
-			pro = pro.chain( gen( GameplayProcess.ENTER_HAND_COMPLETE, null, c, p ) );
+			/// ENTER_HAND_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.ENTER_HAND_COMPLETE, c, p ) );
 			pro.delay = NaN;
-			
-			//PREPEND LEAVE PLAY
-			if ( c.isInPlay )
-				prepend_LeavePlay( c );
 		}
 		
 		public function prepend_AddToDeck( c:Card, p:Player, faceDown:Boolean, shuffle:Boolean ):void 
 		{
 			var pro:GameplayProcess;
 			
-			pro = gen( GameplayProcess.ENTER_DECK, onEnd, c, p );
-			pro.abortCheck = abortCheck;
+			if ( c.isInPlay )
+				/// LEAVE_PLAY
+				pro = chain( pro, process_LeavePlay( c ) );
+			
+			/// ENTER_DECK
+			pro = chain( pro, gen( GameplayProcess.ENTER_DECK, c, p ) );
 			pro.delay = NaN;
-			
-			prependProcess( pro );
-			
-			function abortCheck( c:Card, p:Player ):Boolean
-			{
-				return p.deck.containsCard( c );
-			}
-			
+			pro.onStart =
+			pro.onEnd =
 			function onEnd( c:Card, p:Player ):void 
 			{
 				c.resetState();
 				p.deck.addCard( c );
 				c.faceDown = faceDown;
 			}
+			pro.onAbort =
+			pro.abortCheck = 
+			function abortCheck( c:Card, p:Player ):Boolean
+			{
+				return p.deck.containsCard( c );
+			}
 			
-			pro = pro.chain( gen( GameplayProcess.ENTER_DECK_COMPLETE, null, c, p ) );
+			/// ENTER_DECK_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.ENTER_DECK_COMPLETE, c, p ) );
 			pro.delay = NaN;
 			
 			if ( shuffle )
 			{
 				CONFIG::development { throw UninitializedError( "Deck shuffling not yet implemented" ) }
 			}
-			
-			//PREPEND LEAVE PLAY
-			if ( c.isInPlay )
-				prepend_LeavePlay( c );
 		}
 		
 		//}
 		//{ CHAINGING CARD CONTAINERS II   ( ENTER / LEAVE   PLAY / FIELD )
 		
-		private function process_EnterPlay( c:Card, field:CreatureField, faceDown:Boolean ):GameplayProcess 
+		private function process_EnterPlay( c:Card, field:IndexedField, faceDown:Boolean ):GameplayProcess 
 		{
 			var pro:GameplayProcess;
 			
 			/// ENTER_PLAY
-			pro = gen( GameplayProcess.ENTER_PLAY, null, c, field );
+			pro = gen( GameplayProcess.ENTER_PLAY, c );
 			pro.abortable = false;
 			
-			/// ENTER_INDEXED_FIELD
 			pro
+				/// ENTER_INDEXED_FIELD
 				.chain( process_EnterIndexedField( c, field, c.behaviour.startFaceDown ) )
-				.chain( gen( GameplayProcess.ENTER_PLAY_COMPLETE, null, c, field ) );
+				/// ENTER_PLAY_COMPLETE
+				.chain( gen( GameplayProcess.ENTER_PLAY_COMPLETE, c, field ) );
 			
 			/// returns ENTER_PLAY (the chain head)
 			return pro;
 		}
 		
-		private function prepend_LeavePlay( c:Card ):void 
+		private function process_LeavePlay( c:Card ):GameplayProcess 
 		{
 			var pro:GameplayProcess;
 			
 			/// LEAVE_PLAY
-			pro = gen( GameplayProcess.LEAVE_PLAY, null, c );
+			pro = gen( GameplayProcess.LEAVE_PLAY, c );
 			pro.abortCheck = CommonCardQuestions.isNotInPlay;
-			pro.onStart = function onStart( c:Card ):void 
+			pro.onStart =
+			function onStart( c:Card ):void 
 			{
 				if ( c.behaviourT && c.behaviourT.isPersistent && c.behaviourT.effect.isActive )
 					prepend_TrapDeactivation( c );
 			}
-			prependProcess( pro );
 			
-			/// LEAVE_INDEXED_FIELD
-			pro = pro.chain( process_LeaveIndexedField( c ) );
+			pro
+				/// LEAVE_INDEXED_FIELD
+				.chain( process_LeaveIndexedField( c ) )
+				/// LEAVE_PLAY_COMPLETE
+				.chain( gen( GameplayProcess.LEAVE_PLAY_COMPLETE, c ) )
+				.onEnd = complete;
 			
-			/// LEAVE_PLAY_COMPLETE
-			pro = pro.chain( gen( GameplayProcess.LEAVE_PLAY_COMPLETE, null, c ) );
-			pro.onEnd = function onEnd( c:Card ):void 
+			function complete( c:Card ):void 
 			{
 				c.resetState();
 			}
+			
+			/// returns LEAVE_PLAY (the chain head)
+			return pro;
 		}
 		
 		private function process_EnterIndexedField( c:Card, field:IndexedField, faceDown:Boolean ):GameplayProcess 
 		{
 			var pro:GameplayProcess;
-			
+
 			/// ENTER_INDEXED_FIELD
-			pro = gen( GameplayProcess.ENTER_INDEXED_FIELD, null, c, field );
+			pro = gen( GameplayProcess.ENTER_INDEXED_FIELD, c, field );
 			pro.abortable = false;
-			pro.onEnd = function onEnd( c:Card, field:IndexedField ):void 
+			pro.onEnd =
+			function onEnd( c:Card, field:IndexedField ):void 
 			{
 				field.addCard( c );
 				c.faceDown = faceDown;
 			}
 			
 			/// ENTER_INDEXED_FIELD_COMPLETE
-			pro.chain( gen( GameplayProcess.ENTER_INDEXED_FIELD_COMPLETE, null, c, field ) );
+			chain( pro, gen( GameplayProcess.ENTER_INDEXED_FIELD_COMPLETE, c, field ) );
 			
 			/// returns ENTER_INDEXED_FIELD (the chain head)
 			return pro;
@@ -851,14 +839,9 @@ package duel.processes
 		private function process_LeaveIndexedField( c:Card ):GameplayProcess 
 		{
 			var pro:GameplayProcess;
-			
+
 			/// LEAVE_INDEXED_FIELD
-			pro = gen( GameplayProcess.LEAVE_INDEXED_FIELD, null, c, c.indexedField );
-			pro.abortCheck = function abortCheck( c:Card, field:IndexedField ):Boolean
-			{
-				return !field.containsCard( c );
-			}
-			//pro.onStart = leave;
+			pro = gen( GameplayProcess.LEAVE_INDEXED_FIELD, c, c.indexedField );
 			pro.onEnd = leave;
 			function leave( c:Card, field:IndexedField ):void 
 			{
@@ -871,9 +854,14 @@ package duel.processes
 				}
 				c.indexedField.removeCard( c );
 			}
+			pro.abortCheck =
+			function abortCheck( c:Card, field:IndexedField ):Boolean
+			{
+				return !field.containsCard( c );
+			}
 			
 			/// LEAVE_INDEXED_FIELD_COMPLETE
-			pro.chain( gen( GameplayProcess.LEAVE_INDEXED_FIELD_COMPLETE, null, c, c.indexedField ) );
+			chain( pro, gen( GameplayProcess.ENTER_INDEXED_FIELD_COMPLETE, c, c.indexedField ) );
 			
 			/// returns LEAVE_INDEXED_FIELD (the chain head)
 			return pro;
@@ -888,11 +876,36 @@ package duel.processes
 		//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 		
 		//{
-		public static function gen( name:String, onEnd:Function = null, ...args ):GameplayProcess
+		public function chain( prev:Process, next:Process ):GameplayProcess
 		{
+			if ( prev != null ) {
+				while ( prev.next != null ) 
+					prev = prev.next;
+				
+				prev.next = next;
+			}
+			else
+				prependProcess( next )
+			
+			while ( next.next != null ) 
+				next = next.next;
+			
+			return next as GameplayProcess;
+		}
+		
+		public static function gen( name:String, ...args ):GameplayProcess
+		{
+			CONFIG::development
+			{ 
+				while ( args[ 0 ] is Function )
+				{
+					args.shift();
+					error( "You left a function here" );
+				}
+			}
+			
 			var p:GameplayProcess = new GameplayProcess();
 			p.name = name;
-			p.onEnd = onEnd;
 			p.args = args;
 			p.abortable = name.substr( -8 ) != "Complete";
 			return p;
