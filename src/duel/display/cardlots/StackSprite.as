@@ -50,7 +50,7 @@ package duel.display.cardlots
 		{
 			const TARGET_Y:Number = y - cardSpacing * ( cardsCount - 1 );
 			
-			juggler.xtween( o, .150,
+			juggler.xtween( o, .250,
 				{
 					alpha : 1.0,
 					x : x,
