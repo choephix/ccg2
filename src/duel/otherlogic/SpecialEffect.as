@@ -12,23 +12,23 @@ package duel.otherlogic
 		/// must accept one arg of type Process
 		public var funcActivate:Function = ERROR;
 		
-		private var processNames:Array = [];
+		private var _pnames:Array = [];
 		private var _pncount:int = 0;
 		
 		private var _lastP:GameplayProcess;
 		
 		public function watch( ...names ):void
 		{
-			_pncount = processNames.push.apply( null, names );
+			_pncount = _pnames.push.apply( null, names );
 		}
 		
 		public function isWatched( p:GameplayProcess ):Boolean
 		{
 			if ( _pncount <= 0 ) return false;
-			if ( _pncount == 1 ) return processNames[0] == p.name;
+			if ( _pncount == 1 ) return _pnames[0] == p.name;
 			var i:int = _pncount;
 			while ( --i >= 0 ) 
-				if ( processNames[0] == p.name ) return true;
+				if ( _pnames[0] == p.name ) return true;
 			return false;
 		}
 		
