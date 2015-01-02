@@ -63,6 +63,7 @@ package duel.cards
 		{
 			if ( c.isInGrave ) return false;
 			if ( c.controller != field.owner ) return false;
+			if ( field.isLocked ) return false;
 			if ( !field.isEmpty ) return false; //TODO remove this for riders and combinatrons
 			return true;
 		}
@@ -73,6 +74,7 @@ package duel.cards
 		{
 			if ( card.isInGrave ) return false;
 			if ( !field.isEmpty ) return false;
+			if ( field.isLocked ) return false;
 			if ( card.controller != field.owner ) return false;
 			return true;
 		}

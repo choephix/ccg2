@@ -16,6 +16,11 @@ package duel.table
 			super(type);
 		}
 		
+		// LOCKING
+		public var locks:int = 0;
+		public function get isLocked():Boolean
+		{ return locks > 0 }
+		
 		// SAME-COLUMN FIELDS
 		public function get opposingCreatureField():IndexedField
 		{ return owner.opponent.fieldsC.getAt( index ) }

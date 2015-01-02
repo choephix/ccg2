@@ -4,6 +4,9 @@ package duel.display {
 	import duel.display.cardlots.StackSprite;
 	import duel.GameSprite;
 	import duel.table.Field;
+	import duel.table.FieldType;
+	import duel.table.IndexedField;
+	import starling.animation.IAnimatable;
 	import starling.display.Image;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
@@ -13,10 +16,11 @@ package duel.display {
 	 * ...
 	 * @author choephix
 	 */
-	public class FieldSprite extends GameSprite 
+	public class FieldSprite extends GameSprite implements IAnimatable
 	{
 		public var cardsContainer:StackSprite;
 		public var image:Image;
+		public var lock:Image;
 		
 		public var field:Field;
 		
@@ -25,24 +29,33 @@ package duel.display {
 		public function initialize( field:Field, color:uint ):void
 		{
 			image = assets.generateImage( "field", true, true );
+			image.color = color; 
 			addChild( image );
 			
-			if ( field.type.isGraveyard )
-				cardsContainer = new GraveStackSprite( field );
-			else
-			if ( field.type.isDeck )
-				cardsContainer = new DeckStackSprite( field );
-			else
-				cardsContainer = new StackSprite( field );
+			if ( field is IndexedField )
+			{
+				lock = assets.generateImage( "iconLock", true, true );
+				addChild( lock );
+			}
 			
+			var CardStackT:Class = GetCardStackClassForFieldType( field.type );
+			cardsContainer = new CardStackT( field );
 			cardsContainer.touchable = false;
 			
 			this.field = field;
 			field.sprite = this;
 			
-			image.color = color; 
+			game.juggler.add( this );
 			
 			addEventListener( TouchEvent.TOUCH, onTouch );
+		}
+		
+		/* INTERFACE starling.animation.IAnimatable */
+		
+		public function advanceTime(time:Number):void 
+		{
+			if ( lock != null )
+				lock.visible = IndexedField( field ).isLocked;
 		}
 		
 		private function onTouch(e:TouchEvent):void 
@@ -69,6 +82,14 @@ package duel.display {
 			if ( t.phase == TouchPhase.ENDED ) {
 				game.onFieldClicked( field );
 			} 
+		}
+		
+		//
+		private static function GetCardStackClassForFieldType( type:FieldType ):Class
+		{
+			if ( type.isGraveyard ) return GraveStackSprite;
+			if ( type.isDeck ) return DeckStackSprite;
+			return StackSprite;
 		}
 		
 	}
