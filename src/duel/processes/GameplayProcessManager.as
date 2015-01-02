@@ -1,5 +1,6 @@
 package duel.processes
 {
+	import chimichanga.debug.logging.error;
 	import duel.cards.Card;
 	import duel.cards.CommonCardQuestions;
 	import duel.Damage;
@@ -161,6 +162,7 @@ package duel.processes
 		{
 			var pro:GameplayProcess;
 			
+			/// RESURRECT
 			pro = gen( GameplayProcess.RESURRECT, onEnd, c, field );
 			pro.abortCheck = abortCheck;
 			pro.onAbort = onAbort;
@@ -182,9 +184,12 @@ package duel.processes
 			function onEnd( c:Card, field:CreatureField ):void
 			{
 				c.lot.removeCard( c );
+				
+				/// SUMMON
 				append_SummonHere( c, field );
 			}
 			
+			/// RESURRECT_COMPLETE
 			appendProcess( gen( GameplayProcess.RESURRECT_COMPLETE, null, c, field ) );
 		}
 		
@@ -194,32 +199,44 @@ package duel.processes
 		public function append_Relocation( c:Card, field:CreatureField ):void
 		{
 			var pro:GameplayProcess;
+			var oldField:CreatureField = c.indexedField as CreatureField;
 			
+			/// SAFE_FLIP
 			if ( c.faceDown )
 				prepend_SafeFlip( c );
 			
+			/// RELOCATE
 			pro = gen( GameplayProcess.RELOCATE, null, c, field );
 			pro.abortCheck = CommonCardQuestions.cannotRelocateHere;
 			pro.onAbort = completeOrAbort;
 			pro.onStart = onStart;
-			pro.onEnd = onEnd;
-			
 			appendProcess( pro );
 			
 			function onStart( c:Card, field:CreatureField ):void
 			{
 				c.sprite.animRelocation();
 			}
-			function onEnd( c:Card, field:CreatureField ):void
-			{
-				field.addCard( c );
-			}
 			
+			/// LEAVE_INDEXED_FIELD
+			pro = pro.chain( process_LeaveIndexedField( c, c.indexedField ) );
+			
+			/// ENTER_INDEXED_FIELD
+			pro = pro.chain( process_EnterIndexedField( c, field, false ) );
+			
+			/// RELOCATE_COMPLETE
 			pro = pro.chain( gen( GameplayProcess.RELOCATE_COMPLETE, completeOrAbort, c, field ) );
 			
+			///
 			function completeOrAbort( c:Card, field:CreatureField ):void {
 				if ( c.isInPlay )
 				{
+					if ( c.lot == null )
+					{
+						CONFIG::development
+						{ error( "RELOCATION ERROR: c.lot is NULL" ) }
+						prependProcess( process_EnterIndexedField( c, oldField, c.faceDown ) );
+					}
+						
 					c.sprite.animRelocationCompleteOrAbort();
 					c.actionsRelocate++;
 				}
