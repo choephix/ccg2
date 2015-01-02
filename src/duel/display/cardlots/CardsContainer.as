@@ -2,7 +2,7 @@ package duel.display.cardlots
 {
 	import duel.cards.CardListBase;
 	import duel.display.CardSprite;
-	import duel.GameSprite;
+	import duel.GameEntity;
 	import starling.animation.IAnimatable;
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
@@ -12,7 +12,7 @@ package duel.display.cardlots
 	 * ...
 	 * @author choephix
 	 */
-	public class CardsContainer extends GameSprite implements IAnimatable
+	public class CardsContainer extends GameEntity implements IAnimatable
 	{
 		public var cardsParent:DisplayObjectContainer;
 		
@@ -57,14 +57,8 @@ package duel.display.cardlots
 		
 		//
 		
-		override public function addChild( child:DisplayObject ):DisplayObject 
-		{ throw new Error( "NEVER USE addChild() ON STACK" ); }
-		
-		override public function removeChild( child:DisplayObject, dispose:Boolean=false ):DisplayObject 
-		{ throw new Error( "NEVER USE removeChild() ON STACK" ); }
-		
-		override public function removeChildren( beginIndex:int=0, endIndex:int=-1, dispose:Boolean=false ):void
-		{ throw new Error( "NEVER USE removeChildren() ON STACK" ); }
+		public var x:Number;
+		public var y:Number;
 		
 		//
 		public function get cardsCount():int { return list.cardsCount }

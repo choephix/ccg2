@@ -43,7 +43,6 @@ package duel.display {
 			
 			var CardStackT:Class = GetCardStackClassForFieldType( field.type );
 			cardsContainer = new CardStackT( field );
-			cardsContainer.touchable = false;
 			
 			this.field = field;
 			field.sprite = this;

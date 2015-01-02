@@ -124,13 +124,11 @@ package duel
 			p1.handSprite = new HandSprite( p1.hand );
 			p1.handSprite.x = -360 + ( App.W - p1.handSprite.maxWidth ) * 0.5;
 			p1.handSprite.y = -p1.tableSide.y + App.H;
-			p1.tableSide.addChild( p1.handSprite );
 			
 			p2.handSprite = new HandSprite( p2.hand );
 			p2.handSprite.x = -360 + ( App.W - p2.handSprite.maxWidth ) * 0.5;
 			p2.handSprite.y = -p2.tableSide.y;
 			p2.handSprite.flipped = true;
-			p2.tableSide.addChild( p2.handSprite );
 			
 			// START GAME
 			currentPlayer = p1;
@@ -205,6 +203,12 @@ package duel
 				processes.prepend_Draw( p1, G.INIT_HAND_SIZE );
 				processes.prepend_Draw( p2, G.INIT_HAND_SIZE );
 			}
+			
+			//time += .999;
+			//jugglerStrict.delayCall( p1.fieldsC.getAt( 1 ).addLock, time+=.100 );
+			//jugglerStrict.delayCall( p1.fieldsT.getAt( 2 ).addLock, time+=.100 );
+			//jugglerStrict.delayCall( p2.fieldsC.getAt( 3 ).addLock, time+=.100 );
+				
 		}
 		
 		public function destroy():void
@@ -307,6 +311,12 @@ package duel
 		// INTERACTION
 		public function onFieldClicked( field:Field ):void
 		{
+			//if ( field is IndexedField )
+			//{
+				//var fi:IndexedField = field as IndexedField;
+				//( fi.isLocked ? fi.removeLock : fi.addLock )();
+			//}
+			
 			if ( selectedCard )
 			{
 				var c:Card = selectedCard;
