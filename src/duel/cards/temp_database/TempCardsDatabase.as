@@ -438,7 +438,7 @@ package duel.cards.temp_database
 					}
 					c.behaviourC.inplaySpecial.funcActivate =
 					function( p:GameplayProcess ):Boolean {
-						TempDatabaseUtils.doForceAttack( c.indexedField.opposingCreature );
+						TempDatabaseUtils.doForceAttack( c.indexedField.opposingCreature, false );
 					}
 				},
 				/* * */

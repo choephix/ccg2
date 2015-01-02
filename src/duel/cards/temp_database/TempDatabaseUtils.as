@@ -59,9 +59,9 @@ package duel.cards.temp_database
 			Game.current.processes.prepend_AddToDeck( c, p, faceDown, shuffle );
 		}
 		
-		static public function doForceAttack( c:Card ):void
+		static public function doForceAttack( c:Card, free:Boolean ):void
 		{
-			Game.current.processes.append_Attack( c );
+			Game.current.processes.append_Attack( c, free );
 		}
 		
 		static public function doDealDirectDamage( p:Player, amount:int, source:* ):void

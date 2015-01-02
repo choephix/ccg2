@@ -226,7 +226,12 @@ package duel.processes
 		//}
 		//{ RELOCATION
 		
-		public function append_Relocation( c:Card, field:CreatureField ):void
+		/** Move creature card/stack from one field to another. Usually costs the creature one action
+		 * @param	c		creature to be relocated
+		 * @param	field	destination field
+		 * @param	free	if true, this relocation will not exhaust the creauture for the turn
+		 */
+		public function append_Relocation( c:Card, field:CreatureField, free:Boolean ):void
 		{
 			var pro:GameplayProcess;
 			var oldField:CreatureField = c.indexedField as CreatureField;
@@ -263,7 +268,9 @@ package duel.processes
 					}
 						
 					c.sprite.animRelocationCompleteOrAbort();
-					c.actionsRelocate++;
+					
+					if ( !free )
+						c.actionsRelocate++;
 				}
 			}
 			
@@ -426,7 +433,7 @@ package duel.processes
 		//}
 		//{ ATTACK
 		
-		public function append_Attack( c:Card ):void
+		public function append_Attack( c:Card, free:Boolean ):void
 		{
 			var pro:GameplayProcess;
 			
@@ -467,7 +474,8 @@ package duel.processes
 			/// /// ///
 			function completeOrAbort( c:Card ):void
 			{
-				c.actionsAttack++;
+				if ( !free )
+					c.actionsAttack++;
 			}
 			
 			if ( c.faceDown )

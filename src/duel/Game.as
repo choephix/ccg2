@@ -490,7 +490,7 @@ package duel
 		
 		public function performRelocation( c:Card, field:CreatureField ):void
 		{
-			processes.append_Relocation( c, field );
+			processes.append_Relocation( c, field, false );
 		}
 		
 		public function performTrapSet( c:Card, field:TrapField ):void
@@ -500,7 +500,7 @@ package duel
 		
 		public function performCardAttack( c:Card ):void
 		{
-			processes.append_Attack( c );
+			processes.append_Attack( c, false );
 		}
 		
 		public function performSafeFlip( c:Card ):void
