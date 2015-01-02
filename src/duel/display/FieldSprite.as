@@ -7,6 +7,7 @@ package duel.display {
 	import duel.table.FieldType;
 	import duel.table.IndexedField;
 	import starling.animation.IAnimatable;
+	import starling.animation.Transitions;
 	import starling.display.Image;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
@@ -20,10 +21,11 @@ package duel.display {
 	{
 		public var cardsContainer:StackSprite;
 		public var image:Image;
-		public var lock:Image;
+		public var lockIcon:Image;
 		
 		public var field:Field;
 		
+		private var _isLocked:Boolean = false;
 		private var _pointerIsOver:Boolean = false;
 		
 		public function initialize( field:Field, color:uint ):void
@@ -34,8 +36,9 @@ package duel.display {
 			
 			if ( field is IndexedField )
 			{
-				lock = assets.generateImage( "iconLock", true, true );
-				addChild( lock );
+				lockIcon = assets.generateImage( "iconLock", false, true );
+				lockIcon.alpha = .0;
+				addChild( lockIcon );
 			}
 			
 			var CardStackT:Class = GetCardStackClassForFieldType( field.type );
@@ -52,10 +55,44 @@ package duel.display {
 		
 		/* INTERFACE starling.animation.IAnimatable */
 		
-		public function advanceTime(time:Number):void 
+		public function advanceTime( time:Number ):void 
 		{
-			if ( lock != null )
-				lock.visible = IndexedField( field ).isLocked;
+			if ( lockIcon != null )
+				setLockIconVisibility( IndexedField( field ).isLocked );
+		}
+		
+		private function setLockIconVisibility( value:Boolean ):void 
+		{
+			if ( value == _isLocked )
+				return;
+			
+			_isLocked = value;
+			
+			if ( value )
+			{
+				lockIcon.alpha = .0;
+				lockIcon.scaleX = .20;
+				lockIcon.scaleY = .20;
+				juggler.xtween( lockIcon, .330,
+					{
+						alpha : 1.0,
+						scaleX : 1.0,
+						scaleY : 1.0,
+						transition : Transitions.EASE_OUT_BACK
+					} );
+			}
+			else
+			{
+				lockIcon.alpha = 1.0;
+				juggler.xtween( lockIcon, .220,
+					{
+						alpha : .0,
+						scaleX : 1.50,
+						scaleY : 1.50,
+						transition : Transitions.EASE_OUT
+						//  EASE_OUT  EASE_IN_BACK
+					} );
+			}
 		}
 		
 		private function onTouch(e:TouchEvent):void 
