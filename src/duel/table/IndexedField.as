@@ -17,9 +17,10 @@ package duel.table
 		}
 		
 		// LOCKING
-		public var locks:int = 0;
-		public function get isLocked():Boolean
-		{ return locks > 0 }
+		private var locks:int = 0;
+		public function addLock():void { locks++ }
+		public function removeLock():void { locks-- }
+		public function get isLocked():Boolean { return locks > 0 }
 		
 		// SAME-COLUMN FIELDS
 		public function get opposingCreatureField():IndexedField
