@@ -132,7 +132,8 @@ package duel.processes
 			function abortCheck( c:Card, field:CreatureField ):Boolean
 			{
 				if ( c.isInPlay ) return true;
-				if ( field.isLocked ) return false;
+				if ( field.isLocked ) return true;
+				return false;
 			}
 			
 			appendProcess( pro );
