@@ -6,6 +6,7 @@ package duel.cards.temp_database
 	import duel.cards.CardType;
 	import duel.Damage;
 	import duel.DamageType;
+	import duel.G;
 	import duel.Game;
 	import duel.Player;
 	/**
@@ -30,6 +31,11 @@ package duel.cards.temp_database
 		// PROCESSES
 		
 		public static function doKill( c:Card ):void
+		{
+			Game.current.processes.prepend_Death( c );
+		}
+		
+		public static function doDestroyTrap( c:Card ):void
 		{
 			Game.current.processes.prepend_Death( c );
 		}
@@ -68,6 +74,46 @@ package duel.cards.temp_database
 		{
 			Game.current.processes.prepend_DirectDamage( p, 
 					new Damage( amount, DamageType.SPECIAL, source ) );
+		}
+		
+		static public function doPutInHandTrapsRow( p:Player ):void
+		{
+			for ( var i:int = 0; i < G.FIELD_COLUMNS; i++ ) 
+			{
+				if ( p.fieldsT.getAt( i ).isEmpty )
+					continue;
+				doPutInHand( p.fieldsT.getAt( i ).topCard, p )
+			}
+		}
+		
+		static public function doPutInHandCreaturesRow( p:Player ):void
+		{
+			for ( var i:int = 0; i < G.FIELD_COLUMNS; i++ ) 
+			{
+				if ( p.fieldsC.getAt( i ).isEmpty )
+					continue;
+				doPutInHand( p.fieldsC.getAt( i ).topCard, p )
+			}
+		}
+		
+		static public function doKillCreaturesRow( p:Player ):void
+		{
+			for ( var i:int = 0; i < G.FIELD_COLUMNS; i++ ) 
+			{
+				if ( p.fieldsC.getAt( i ).isEmpty )
+					continue;
+				doKill( p.fieldsC.getAt( i ).topCard );
+			}
+		}
+		
+		static public function doDestroyTrapsRow( p:Player ):void
+		{
+			for ( var i:int = 0; i < G.FIELD_COLUMNS; i++ ) 
+			{
+				if ( p.fieldsT.getAt( i ).isEmpty )
+					continue;
+				doDestroyTrap( p.fieldsT.getAt( i ).topCard );
+			}
 		}
 		
 	}

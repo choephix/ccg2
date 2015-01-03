@@ -560,12 +560,7 @@ package duel.cards.temp_database
 					c.behaviourC.startFaceDown = true;
 					c.behaviourC.onSafeFlipFunc =
 					function():void {
-						var opp:Player = c.controller.opponent;
-						for ( var i:int = 0; i < G.FIELD_COLUMNS; i++ ) 
-						{
-							if ( opp.fieldsT[ i ].isEmpty ) continue;
-							opp.fieldsT[ i ].topCard.returnToControllerHand();
-						}
+						TempDatabaseUtils.doPutInHandTrapsRow( c.controller.opponent );
 					}
 				},
 				/* * */
