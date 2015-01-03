@@ -343,6 +343,12 @@ package duel
 					return;
 				}
 				
+				if ( c.isInPlay && field.owner == currentPlayer.opponent )
+				{
+					performCardAttack( c );
+					return;
+				}
+				
 				// DEV SHIT
 				CONFIG::development
 				{
@@ -591,8 +597,13 @@ package duel
 				{
 					if ( card.type.isCreature && !card.exhausted )
 					{
-						clr = 0xD71500; cond = canAttack;
-						currentPlayer.opponent.fieldsC.forEachField( setFieldAuraColor );
+						if ( CommonCardQuestions.canPerformAttack( card ) )
+						{
+							clr = 0xD71500; //cond = canAttack;
+							card.indexedField.opposingCreatureField.sprite.setSelectableness( clr )
+							if ( card.indexedField.opposingCreatureField.isEmpty )
+								card.indexedField.opposingTrapField.sprite.setSelectableness( clr )
+						}
 						clr = 0x1050AF; cond = canRelocateTo;
 						currentPlayer.fieldsC.forEachField( setFieldAuraColor );
 					}
@@ -606,8 +617,8 @@ package duel
 			{ return CommonCardQuestions.canSummonHere( card, f ) }
 			
 			/// SELECTED, ON FIELD
-			function canAttack( f:CreatureField ):Boolean
-			{ return CommonCardQuestions.canPerformAttack( card ) && f == card.indexedField.opposingCreatureField }
+			//function canAttack( f:CreatureField ):Boolean
+			//{ return CommonCardQuestions.canPerformAttack( card ) ) }
 			function canRelocateTo( f:CreatureField ):Boolean
 			{ return CommonCardQuestions.canRelocateHere( card, f ) }
 			
