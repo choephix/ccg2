@@ -255,6 +255,8 @@ package duel
 			gameInspectProcess( p );
 			playerInspectProcess( currentPlayer.opponent, p );
 			playerInspectProcess( currentPlayer, p );
+			
+			updateSelectables();
 		}
 		
 		private function gameInspectProcess( p:GameplayProcess ):void
@@ -345,7 +347,7 @@ package duel
 				CONFIG::development
 				{
 					if ( GODMODE && field.type.isGraveyard && field.owner == p )
-						processes.prepend_Discard( p, c );
+						processes.prepend_AddToGrave( c );
 				}
 			}
 			else if ( field is IndexedField && !field.isEmpty )
@@ -484,11 +486,13 @@ package duel
 		
 		public function endTurn():void
 		{
+			selectCard( null );
 			processes.append_TurnEnd( currentPlayer );
 		}
 		
 		public function performCardSummon( c:Card, field:CreatureField ):void
 		{
+			selectCard( null );
 			processes.append_SummonHere( c, field, true );
 		}
 		
@@ -499,6 +503,7 @@ package duel
 		
 		public function performTrapSet( c:Card, field:TrapField ):void
 		{
+			selectCard( null );
 			processes.append_TrapSet( c, field, true );
 		}
 		
@@ -534,6 +539,86 @@ package duel
 			
 			if ( selectedCard != null )
 				dispatchEventWith( GameEvents.SELECT, false, selectedCard );
+			
+			updateSelectables();
+		}
+		
+		public function updateSelectables():void
+		{
+			var card:Card = selectedCard;
+				
+			/// HAND
+			
+			var i:int = 0;
+			for ( 0; i < currentPlayer.hand.cardsCount; i++ )
+				currentPlayer.hand.getCardAt( i ).sprite.isSelectable = 
+					card == null ? canPlayAtAll( currentPlayer.hand.getCardAt( i ) ) : false;
+			for ( 0; i < currentPlayer.opponent.hand.cardsCount; i++ )
+				currentPlayer.opponent.hand.getCardAt( i ).sprite.isSelectable = false;
+			
+			/// COMBAT FIELDS
+			var clr:uint;
+			var cond:Function;
+			
+			clr = 0; cond = null;
+			p1.fieldsC.forEachField( setFieldAuraColor );
+			p1.fieldsT.forEachField( setFieldAuraColor );
+			p2.fieldsC.forEachField( setFieldAuraColor );
+			p2.fieldsT.forEachField( setFieldAuraColor );
+			
+			if ( card == null )
+			{
+				clr = 0xFFFFFF; cond = isSelectable;
+				currentPlayer.fieldsC.forEachField( setFieldAuraColor );
+			}
+			else
+			{
+				if ( card.lot is Hand )
+				{
+					if ( card.type.isTrap )
+					{
+						clr = 0xB062FF; cond = canSetTrapTo;
+						currentPlayer.fieldsT.forEachField( setFieldAuraColor );
+					}
+					if ( card.type.isCreature )
+					{
+						clr = 0xCC530B; cond = canSummonTo;
+						currentPlayer.fieldsC.forEachField( setFieldAuraColor );
+					}
+				}
+				else
+				if ( card.isInPlay )
+				{
+					if ( card.type.isCreature && !card.exhausted )
+					{
+						clr = 0xD71500; cond = canAttack;
+						currentPlayer.opponent.fieldsC.forEachField( setFieldAuraColor );
+						clr = 0x1050AF; cond = canRelocateTo;
+						currentPlayer.fieldsC.forEachField( setFieldAuraColor );
+					}
+				}
+			}
+			
+			/// SLECTED, IN HAND
+			function canSetTrapTo( f:TrapField ):Boolean
+			{ return CommonCardQuestions.canPlaceTrapHere( card, f ) }
+			function canSummonTo( f:CreatureField ):Boolean
+			{ return CommonCardQuestions.canSummonHere( card, f ) }
+			
+			/// SELECTED, ON FIELD
+			function canAttack( f:CreatureField ):Boolean
+			{ return CommonCardQuestions.canPerformAttack( card ) && f == card.indexedField.opposingCreatureField }
+			function canRelocateTo( f:CreatureField ):Boolean
+			{ return CommonCardQuestions.canRelocateHere( card, f ) }
+			
+			/// NOTHING SELECTED
+			function isSelectable( f:Field ):Boolean
+			{ return f.topCard != null && canSelect( f.topCard ) }
+			
+			function setFieldAuraColor( f:Field ):void
+			{
+				f.sprite.setSelectableness( cond == null || cond( f ) ? clr : 0 );
+			}
 		}
 		
 		public function get selectedCard():Card
@@ -595,6 +680,21 @@ package duel
 			if ( card.field && card.field.type.isDeck )
 				return false;
 			return true;
+		}
+		
+		public function canPlayAtAll( c:Card ):Boolean
+		{
+			if ( c.type.isCreature )
+				return currentPlayer.fieldsC.hasAnyFieldThat( canSummonTo );
+			if ( c.type.isTrap )
+				return currentPlayer.fieldsT.hasAnyFieldThat( canSetTrapTo );
+			
+			function canSummonTo( f:CreatureField ):Boolean
+			{ return CommonCardQuestions.canSummonHere( c, f ); }
+			function canSetTrapTo( f:TrapField ):Boolean
+			{ return CommonCardQuestions.canPlaceTrapHere( c, f as TrapField ) }
+			
+			return false;
 		}
 		
 		//

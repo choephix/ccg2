@@ -12,9 +12,9 @@ package duel.display {
 	public class CardAura extends Image 
 	{
 		
-		public function CardAura() 
+		public function CardAura( assetName:String="card-aura" ) 
 		{
-			super( App.assets.getTexture( "card-aura" ) );
+			super( App.assets.getTexture( assetName ) );
 			this.touchable = false;
 			this.useHandCursor = false;
 			alignPivot();

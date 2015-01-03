@@ -2,20 +2,24 @@ package duel
 {
 	import duel.cards.Card;
 	import duel.display.CardAura;
+	import starling.display.BlendMode;
+	import starling.display.Quad;
 	
 	/**
 	 * ...
 	 * @author choephix
 	 */
-	public class Selection
+	public class Selection extends GameEntity
 	{
-		public var selectionAura:CardAura;
+		public var selectionAura:Quad;
 		
 		private var _selectedCard:Card;
 		
 		public function Selection()
 		{
-			selectionAura = new CardAura();
+			//selectionAura = new CardAura();
+			selectionAura = assets.generateImage( "card-selectable", true, true );
+			selectionAura.blendMode = BlendMode.ADD;
 		}
 		
 		public function get selectedCard():Card 
@@ -33,7 +37,8 @@ package duel
 			}
 			
 			_selectedCard.sprite.auraContainer.addChild( selectionAura );
-			selectionAura.color = 0x80FFFF;
+			selectionAura.color = value.type.isCreature ? 0xFFCE5E : 0xCB83FC;
+			selectionAura.rotation = value.sprite.isTopSide ? Math.PI : .0;
 		}
 	}
 }

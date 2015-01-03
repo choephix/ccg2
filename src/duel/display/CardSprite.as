@@ -26,6 +26,7 @@ package duel.display {
 	{
 		public var auraContainer:Sprite;
 		private var exhaustClock:Image;
+		private var selectAura:CardAura;
 		
 		private var front:Sprite;
 		private var back:Image;
@@ -35,6 +36,7 @@ package duel.display {
 		private var tfAttak:AnimatedTextField;
 		
 		///
+		private var _isSelectable:Boolean = false;
 		private var _exhaustClockVisible:Boolean = false;
 		private var _isFaceDown:Boolean = true;
 		private var _flippedness:Number = .0;
@@ -64,6 +66,12 @@ package duel.display {
 			
 			auraContainer = new Sprite();
 			addChild( auraContainer );
+			
+			selectAura = new CardAura();
+			selectAura.visible = false;
+			selectAura.color = 0x22BBDD;
+			selectAura.color = 0x6699EE;
+			addChild( selectAura );
 			
 			exhaustClock = assets.generateImage( "exhaustClock", false, true );
 			exhaustClock.x = G.CARD_W * 0.25;
@@ -143,9 +151,6 @@ package duel.display {
 		
 		public function advanceTime(time:Number):void 
 		{
-			//if ( !_flipTween.isComplete )
-				//_flipTween.advanceTime( time );
-			
 			updateData();
 			
 			if ( tfAttak != null )
@@ -155,6 +160,12 @@ package duel.display {
 			{
 				setFaceDown( card.faceDown, false );
 			}
+			
+			selectAura.visible = 
+				card.controller == game.currentPlayer &&
+				card.isInHand && 
+				_isSelectable && 
+				game.interactable;
 		}
 		
 		internal function updateData():void 
@@ -425,6 +436,13 @@ package duel.display {
 		{
 			return card.controller == game.p2;
 		}
+		
+		//
+		public function get isSelectable():Boolean 
+		{ return _isSelectable }
+		
+		public function set isSelectable(value:Boolean):void 
+		{ _isSelectable = value; }
 		
 	}
 

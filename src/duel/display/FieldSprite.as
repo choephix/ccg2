@@ -20,12 +20,14 @@ package duel.display {
 	public class FieldSprite extends GameSprite implements IAnimatable
 	{
 		public var cardsContainer:StackSprite;
-		public var image:Image;
-		public var lockIcon:Image;
+		private var image:Image;
+		private var lockIcon:Image;
+		private var aura:CardAura;
 		
 		public var field:Field;
 		
 		private var _isLocked:Boolean = false;
+		private var _showAura:Boolean;
 		private var _pointerIsOver:Boolean = false;
 		
 		public function initialize( field:Field, color:uint ):void
@@ -33,6 +35,10 @@ package duel.display {
 			image = assets.generateImage( "field", true, true );
 			image.color = color; 
 			addChild( image );
+			
+			aura = new CardAura( "card-sele2" );
+			aura.visible = false;
+			addChild( aura );
 			
 			if ( field is IndexedField )
 			{
@@ -56,6 +62,8 @@ package duel.display {
 		{
 			if ( lockIcon != null )
 				setLockIconVisibility( IndexedField( field ).isLocked );
+			
+			aura.visible = _showAura && game.interactable;
 		}
 		
 		private function onTouch(e:TouchEvent):void 
@@ -88,11 +96,12 @@ package duel.display {
 		
 		public function setSelectableness( color:uint ):void
 		{
-			aura.visible = color > 0;
-				
-			if ( aura.visible )
+			_showAura = color > 0;
+			if ( _showAura )
 			{
 				aura.color = color;
+				if ( field.topCard )
+					aura.rotation = field.topCard.sprite.rotation;
 			}
 		}
 		
