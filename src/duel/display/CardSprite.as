@@ -1,6 +1,7 @@
 package duel.display {
 	import chimichanga.common.display.Sprite;
 	import chimichanga.global.utils.Colors;
+	import dev.Temp;
 	import duel.cards.Card;
 	import duel.cards.CardType;
 	import duel.display.utils.ColorScheme;
@@ -82,23 +83,8 @@ package duel.display {
 			
 			// MAIN - FRONT
 			pad = assets.generateImage( "card", true, false );
-			pad.color = generateColor();
+			pad.color = Temp.getColorForCard( card );
 			front.addChild( pad );
-			
-			function generateColor():uint 
-			{
-				if ( card.type.isCreature )
-				{
-					if ( card.propsC.needsTribute ) 
-						return ColorScheme.getColorForCreatureNeedsTribute( true );
-					if ( card.props.startFaceDown ) 
-						return ColorScheme.getColorForCreatureFlippable( true );
-					return ColorScheme.getColorForCreature( true );
-				}
-				if ( card.type.isTrap )
-					return ColorScheme.getColorForTrap( true );	
-				return 0x0;
-			}
 			
 			tfTitle = new TextField( 500, G.CARD_H, card.name, "Arial Black", 24, 0x53001B );
 			tfTitle.touchable = false;
@@ -175,7 +161,7 @@ package duel.display {
 			{
 				if ( !card.faceDown ) {
 					tfAttak.targetValue = card.propsC.attack;
-					tfDescr.text = card.propsC.toString();
+					tfDescr.text = card.statusC.toString();
 				}
 				
 				setExhaustClockVisible( card.isInPlay && card.exhausted && !card.faceDown );

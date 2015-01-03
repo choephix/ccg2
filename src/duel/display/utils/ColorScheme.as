@@ -18,6 +18,10 @@ package duel.display.utils
 		{ return ra( 0xAD6185, .10, .0, .15, rand ) }
 		//{ return ra( 0x808080, .50, .50, .50, rand ) }
 		
+		public static function getColorForTrapPersistent( rand:Boolean= true ):uint
+		{ return ra( 0x7657B7, .10, .0, .15, rand ) }
+		//{ return ra( 0x808080, .50, .50, .50, rand ) }
+		
 		public static function getColorForCreature( rand:Boolean= true ):uint
 		{ return ra( 0xEDBA6D, .10, .10, .0, rand ) }
 		
