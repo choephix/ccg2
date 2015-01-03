@@ -1,12 +1,11 @@
-package duel.cards.behaviour 
-{
+package duel.cards.properties {
 	import duel.cards.Card;
 	import duel.otherlogic.SpecialEffect;
 	/**
 	 * ...
 	 * @author choephix
 	 */
-	public class CardBehaviour 
+	public class CardProperties 
 	{
 		public var card:Card;
 		

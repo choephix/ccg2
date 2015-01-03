@@ -1,5 +1,4 @@
-package duel.cards.behaviour 
-{
+package duel.cards.properties {
 	import duel.Damage;
 	import duel.DamageType;
 	import duel.otherlogic.OngoingEffect;
@@ -8,7 +7,7 @@ package duel.cards.behaviour
 	 * ...
 	 * @author choephix
 	 */
-	public class CreatureCardBehaviour extends CardBehaviour 
+	public class CreatureCardProperties extends CardProperties 
 	{
 		public var attack:int = 0;
 		public var needsTribute:Boolean = false;

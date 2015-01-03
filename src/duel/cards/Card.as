@@ -1,8 +1,8 @@
 package duel.cards
 {
-	import duel.cards.behaviour.CardBehaviour;
-	import duel.cards.behaviour.CreatureCardBehaviour;
-	import duel.cards.behaviour.TrapCardBehaviour;
+	import duel.cards.properties.CardProperties;
+	import duel.cards.properties.CreatureCardProperties;
+	import duel.cards.properties.TrapCardProperties;
 	import duel.cards.CardListBase;
 	import duel.display.CardSprite;
 	import duel.Game;
@@ -25,7 +25,7 @@ package duel.cards
 		public var name:String;
 		public var descr:String;
 		public var type:CardType;
-		private var _behaviour:CardBehaviour;
+		private var _props:CardProperties;
 		
 		// BATTLE
 		public var owner:Player;
@@ -47,7 +47,7 @@ package duel.cards
 			{
 				if ( type == null )
 					throw VerifyError( "You left " + this + "'s type = NULL, you cunt." );
-				if ( _behaviour == null )
+				if ( _props == null )
 					throw VerifyError( "You left " + this + "'s behaviour = NULL, you cunt." );
 			}
 			
@@ -77,9 +77,9 @@ package duel.cards
 		{
 			CONFIG::development { if ( p.isInterrupted ) throw new Error( "HANDLE PROCESS INTERRUPTIONS!" ) }
 			
-			if ( lot is Hand && behaviour.hasHandSpecial )
+			if ( lot is Hand && props.hasHandSpecial )
 			{
-				if ( behaviour.hasHandSpecial && behaviour.handSpecial.mustInterrupt( p ) )
+				if ( props.hasHandSpecial && props.handSpecial.mustInterrupt( p ) )
 				{
 					p.interrupt();
 					processes.prepend_InHandSpecialActivation( this );
@@ -87,9 +87,9 @@ package duel.cards
 				}
 			}
 			
-			if ( field && field.type.isGraveyard && behaviour.hasGraveSpecial )
+			if ( field && field.type.isGraveyard && props.hasGraveSpecial )
 			{
-				if ( behaviour.hasGraveSpecial && behaviour.graveSpecial.mustInterrupt( p ) )
+				if ( props.hasGraveSpecial && props.graveSpecial.mustInterrupt( p ) )
 				{
 					p.interrupt();
 					processes.prepend_InGraveSpecialActivation( this );
@@ -110,30 +110,30 @@ package duel.cards
 			
 			if ( type.isTrap )
 			{
-				if ( behaviourT.effect.mustInterrupt( p ) )
+				if ( propsT.effect.mustInterrupt( p ) )
 				{
 					p.interrupt();
-					if ( behaviourT.isPersistent && behaviourT.effect.isActive )
+					if ( propsT.isPersistent && propsT.effect.isActive )
 						processes.prepend_DestroyTrap( this );
 					else
 						processes.prepend_TrapActivation( this );
 					return;
 				}
 				else
-				if ( behaviourT.isPersistent && behaviourT.effect.isActive )
+				if ( propsT.isPersistent && propsT.effect.isActive )
 				{
-					behaviourT.effect.update( p );
+					propsT.effect.update( p );
 				}
 			}
 			else
 			if ( type.isCreature )
 			{
-				if ( behaviourC.hasInPlayOngoingEffect )
+				if ( propsC.hasInPlayOngoingEffect )
 				{
-					behaviourC.inplayOngoing.update( p );
+					propsC.inplayOngoing.update( p );
 					return;
 				}
-				if ( behaviourC.hasInPlaySpecialEffect && behaviourC.inplaySpecial.mustInterrupt( p ) )
+				if ( propsC.hasInPlaySpecialEffect && propsC.inplaySpecial.mustInterrupt( p ) )
 				{
 					p.interrupt();
 					processes.prepend_InPlaySpecialActivation( this );
@@ -169,15 +169,15 @@ package duel.cards
 		
 		// GETTERS & SETTERS - 1
 		
-		public function get behaviour():CardBehaviour { return _behaviour }
-		public function set behaviour(value:CardBehaviour):void 
+		public function get props():CardProperties { return _props }
+		public function set props(value:CardProperties):void 
 		{
-			_behaviour = value;
-			_behaviour.card = this;
+			_props = value;
+			_props.card = this;
 		}
 		
-		public function get behaviourC():CreatureCardBehaviour { return behaviour as CreatureCardBehaviour }
-		public function get behaviourT():TrapCardBehaviour { return behaviour as TrapCardBehaviour }
+		public function get propsC():CreatureCardProperties { return props as CreatureCardProperties }
+		public function get propsT():TrapCardProperties { return props as TrapCardProperties }
 		
 		public function get field():Field { return lot as Field }
 		public function get indexedField():IndexedField { return lot as IndexedField }
@@ -198,8 +198,8 @@ package duel.cards
 		}
 		
 		public function get exhausted():Boolean {
-			if ( !Game.GODMODE && summonedThisTurn && !behaviourC.haste ) return true;
-			if ( behaviourC.swift ) return actionsAttack > 0 && actionsRelocate > 0;
+			if ( !Game.GODMODE && summonedThisTurn && !propsC.haste ) return true;
+			if ( propsC.swift ) return actionsAttack > 0 && actionsRelocate > 0;
 			return actionsRelocate + actionsAttack > 0;
 		}
 		
@@ -208,14 +208,14 @@ package duel.cards
 			if ( !type.isCreature ) return false;
 			if ( !isInPlay ) return false;
 			if ( exhausted ) return false;
-			if ( behaviourC.noattack ) return false;
+			if ( propsC.noattack ) return false;
 			return actionsAttack == 0;
 		}
 		public function get canRelocate():Boolean { 
 			if ( !type.isCreature ) return false;
 			if ( !isInPlay ) return false;
 			if ( exhausted ) return false;
-			if ( behaviourC.nomove ) return false;
+			if ( propsC.nomove ) return false;
 			return actionsRelocate == 0;
 		}
 		

@@ -89,9 +89,9 @@ package duel.display {
 			{
 				if ( card.type.isCreature )
 				{
-					if ( card.behaviourC.needsTribute ) 
+					if ( card.propsC.needsTribute ) 
 						return ColorScheme.getColorForCreatureNeedsTribute( true );
-					if ( card.behaviour.startFaceDown ) 
+					if ( card.props.startFaceDown ) 
 						return ColorScheme.getColorForCreatureFlippable( true );
 					return ColorScheme.getColorForCreature( true );
 				}
@@ -131,7 +131,7 @@ package duel.display {
 					tfAttak.touchable = false;
 					tfAttak.hAlign = "left";
 					tfAttak.duration = .450;
-					tfAttak.currentValue = card.behaviourC.attack;
+					tfAttak.currentValue = card.propsC.attack;
 					front.addChild( tfAttak );
 					break;
 				case CardType.TRAP:
@@ -174,8 +174,8 @@ package duel.display {
 			if ( card.type.isCreature )
 			{
 				if ( !card.faceDown ) {
-					tfAttak.targetValue = card.behaviourC.attack;
-					tfDescr.text = card.behaviourC.toString();
+					tfAttak.targetValue = card.propsC.attack;
+					tfDescr.text = card.propsC.toString();
 				}
 				
 				setExhaustClockVisible( card.isInPlay && card.exhausted && !card.faceDown );

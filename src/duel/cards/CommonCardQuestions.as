@@ -38,7 +38,7 @@ package duel.cards
 		{ 
 			if ( c.isInPlay ) return false;
 			
-			if ( c.behaviourC.needsTribute )
+			if ( c.propsC.needsTribute )
 			{
 				if ( c.isInGrave ) return false;
 				if ( c.controller != field.owner ) return false;

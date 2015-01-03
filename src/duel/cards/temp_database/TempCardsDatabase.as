@@ -25,10 +25,10 @@ package duel.cards.temp_database
 					c.name = "TEST TEST TEST TEST TEST";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = G.INIT_LP;
-					c.behaviourC.haste = true;
-					c.behaviourC.startFaceDown = true;
-					c.behaviourC.needsTribute = true;
+					c.propsC.attack = G.INIT_LP;
+					c.propsC.haste = true;
+					c.propsC.startFaceDown = true;
+					c.propsC.needsTribute = true;
 					
 					///		_COMPLETE
 					///		
@@ -41,34 +41,34 @@ package duel.cards.temp_database
 					///		COMBAT_FLIP		SAFE_FLIP			ACTIVATE_SPECIAL
 					
 					///		inplay special
-					c.behaviourC.inplaySpecial.watch( GameplayProcess.SUMMON );
-					c.behaviourC.inplaySpecial.funcCondition =
+					c.propsC.inplaySpecial.watch( GameplayProcess.SUMMON );
+					c.propsC.inplaySpecial.funcCondition =
 					function( p:GameplayProcess ):Boolean {
 						//if ( c.indexedField.opposingCreature == null ) return false;
 						//if ( c.controller.opponent != p.getPlayer() ) return false;
 						return true;
 					}
-					c.behaviourC.inplaySpecial.funcActivate =
+					c.propsC.inplaySpecial.funcActivate =
 					function( p:GameplayProcess ):Boolean {
 						c.die();
 					}
 					
 					///		grave special
-					c.behaviourC.graveSpecial.watch( GameplayProcess.TURN_START );
-					c.behaviourC.graveSpecial.funcActivate =
+					c.propsC.graveSpecial.watch( GameplayProcess.TURN_START );
+					c.propsC.graveSpecial.funcActivate =
 					function( p:GameplayProcess ):void {
 						c.returnToControllerHand();
 					}
 					
 					///		grave special
-					c.behaviourC.handSpecial.watch( GameplayProcess.TURN_END );
-					c.behaviourC.handSpecial.funcActivate =
+					c.propsC.handSpecial.watch( GameplayProcess.TURN_END );
+					c.propsC.handSpecial.funcActivate =
 					function( p:GameplayProcess ):void {
 						TempDatabaseUtils.doDealDirectDamage( c.controller, 5, c );
 					}
 					
 					///		combat-flip
-					c.behaviourC.onCombatFlipFunc =
+					c.propsC.onCombatFlipFunc =
 					function():void {
 						if ( c.indexedField.opposingCreature != null )
 						{
@@ -79,17 +79,17 @@ package duel.cards.temp_database
 					}
 					
 					///		safe-flip
-					c.behaviourC.onCombatFlipFunc =
+					c.propsC.onCombatFlipFunc =
 					function():void {
 						if ( c.indexedField.opposingCreature != null )
 						{
-							c.behaviourC.attack++;
+							c.propsC.attack++;
 							return;
 						}
 					}
 					
 					///		inplay ongoing
-					c.behaviourC.inplayOngoing.funcUpdate =
+					c.propsC.inplayOngoing.funcUpdate =
 					function( p:GameplayProcess ):Boolean {
 						trace ( p );
 					}
@@ -101,14 +101,14 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
 					
-					c.behaviourT.effect.watchForActivation( GameplayProcess.SUMMON );
-					c.behaviourT.effect.funcActivateCondition =
+					c.propsT.effect.watchForActivation( GameplayProcess.SUMMON );
+					c.propsT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
 						//if ( c.indexedField.index != p.getIndex() ) return false;
 						//if ( c.controller.opponent != p.getSourceCard().controller ) return false;
 						return true;
 					}
-					c.behaviourT.effect.funcActivate =
+					c.propsT.effect.funcActivate =
 					function( p:GameplayProcess ):void {
 						p.abort();
 					}
@@ -123,11 +123,11 @@ package duel.cards.temp_database
 					c.name = "The Producer";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 0;
+					c.propsC.attack = 0;
 					
-					c.behaviourC.inplayOngoing.funcUpdate =
+					c.propsC.inplayOngoing.funcUpdate =
 					function( p:GameplayProcess ):void {
-						c.behaviourC.attack = c.controller.hand.cardsCount * 2;
+						c.propsC.attack = c.controller.hand.cardsCount * 2;
 					}
 				},
 				/* * */
@@ -136,16 +136,16 @@ package duel.cards.temp_database
 					c.name = "Insistent Goeff";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 14;
-					c.behaviourC.needsTribute = true;
+					c.propsC.attack = 14;
+					c.propsC.needsTribute = true;
 					
 					///		grave special
-					c.behaviourC.handSpecial.watch( GameplayProcess.TURN_END );
-					c.behaviourC.handSpecial.funcCondition =
+					c.propsC.handSpecial.watch( GameplayProcess.TURN_END );
+					c.propsC.handSpecial.funcCondition =
 					function( p:GameplayProcess ):Boolean {
 						return c.controller == p.getPlayer();
 					}
-					c.behaviourC.handSpecial.funcActivate =
+					c.propsC.handSpecial.funcActivate =
 					function( p:GameplayProcess ):void {
 						TempDatabaseUtils.doPutInDeck( c, c.controller, false, false );
 					}
@@ -156,15 +156,15 @@ package duel.cards.temp_database
 					c.name = "Ragnarok";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 0;
-					c.behaviourC.needsTribute = true;
+					c.propsC.attack = 0;
+					c.propsC.needsTribute = true;
 					
-					c.behaviourC.inplaySpecial.watch( GameplayProcess.ENTER_PLAY_COMPLETE );
-					c.behaviourC.inplaySpecial.funcCondition =
+					c.propsC.inplaySpecial.watch( GameplayProcess.ENTER_PLAY_COMPLETE );
+					c.propsC.inplaySpecial.funcCondition =
 					function( p:GameplayProcess ):Boolean {
 						return c == p.getSourceCard();
 					}
-					c.behaviourC.inplaySpecial.funcActivate =
+					c.propsC.inplaySpecial.funcActivate =
 					function( p:GameplayProcess ):Boolean {
 						TempDatabaseUtils.doDestroyTrapsRow( c.controller.opponent );
 						TempDatabaseUtils.doDestroyTrapsRow( c.controller );
@@ -179,8 +179,8 @@ package duel.cards.temp_database
 					c.name = "Bozo";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 9;
-					c.behaviourC.startFaceDown = true;
+					c.propsC.attack = 9;
+					c.propsC.startFaceDown = true;
 				},
 				/* * */
 				function( c:Card ):void ///		T..		No Flippers!
@@ -189,14 +189,14 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
 					
-					c.behaviourT.effect.watchForActivation( GameplayProcess.COMBAT_FLIP_EFFECT );
-					c.behaviourT.effect.funcActivateCondition =
+					c.propsT.effect.watchForActivation( GameplayProcess.COMBAT_FLIP_EFFECT );
+					c.propsT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.index != p.getIndex() ) return false;
 						if ( c.controller.opponent != p.getSourceCard().controller ) return false;
 						return true;
 					}
-					c.behaviourT.effect.funcActivate =
+					c.propsT.effect.funcActivate =
 					function( p:GameplayProcess ):void {
 						p.abort();
 					}
@@ -209,8 +209,8 @@ package duel.cards.temp_database
 					c.name = "Gonzales";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 3;
-					c.behaviourC.haste = true;
+					c.propsC.attack = 3;
+					c.propsC.haste = true;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Immortal Bob
@@ -218,10 +218,10 @@ package duel.cards.temp_database
 					c.name = "Immortal Bob";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 2;
+					c.propsC.attack = 2;
 					
-					c.behaviourC.graveSpecial.watch( GameplayProcess.TURN_END );
-					c.behaviourC.graveSpecial.funcActivate =
+					c.propsC.graveSpecial.watch( GameplayProcess.TURN_END );
+					c.propsC.graveSpecial.funcActivate =
 					function( p:GameplayProcess ):void {
 						TempDatabaseUtils.doPutInHand( c, c.controller );
 					}
@@ -233,15 +233,15 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
 					
-					c.behaviourT.effect.watchForActivation( GameplayProcess.ATTACK );
-					c.behaviourT.effect.funcActivateCondition =
+					c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
+					c.propsT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.index != p.getIndex() ) return false;
 						if ( c.controller.opponent != p.getAttacker().controller ) return false;
 						if ( !c.indexedField.samesideCreatureField.isEmpty ) return false;
 						return true;
 					}
-					c.behaviourT.effect.funcActivate =
+					c.propsT.effect.funcActivate =
 					function( p:GameplayProcess ):void {
 						TempDatabaseUtils.doKill( p.getAttacker() );
 					}
@@ -262,31 +262,31 @@ package duel.cards.temp_database
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
 					
 					// ACTIVATION
-					c.behaviourT.effect.watchForActivation( GameplayProcess.SUMMON );
-					c.behaviourT.effect.funcActivateCondition =
+					c.propsT.effect.watchForActivation( GameplayProcess.SUMMON );
+					c.propsT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.samesideCreature != null ) return false;
 						if ( c.indexedField.opposingCreature != null ) return false;
 						if ( c.indexedField.index != p.getSummonedField().index ) return false;
 						return c.controller.opponent == p.getSummonedField().owner;
 					}
-					c.behaviourT.effect.funcActivate =
+					c.propsT.effect.funcActivate =
 					function( p:GameplayProcess ):void {
 						c.indexedField.opposingCreatureField.addLock();
 					}
 					
 					// UPDATE
-					c.behaviourT.effect.funcUpdate =
+					c.propsT.effect.funcUpdate =
 					function( p:GameplayProcess ):void {
 					}
 					
 					// DEACTIVATION
-					c.behaviourT.effect.watchForDeactivation( GameplayProcess.TURN_START );
-					c.behaviourT.effect.funcDeactivateCondition =
+					c.propsT.effect.watchForDeactivation( GameplayProcess.TURN_START );
+					c.propsT.effect.funcDeactivateCondition =
 					function( p:GameplayProcess ):Boolean{
 						return c.controller == p.getPlayer();
 					}
-					c.behaviourT.effect.funcDeactivate =
+					c.propsT.effect.funcDeactivate =
 					function( p:GameplayProcess ):void {
 						c.indexedField.opposingCreatureField.removeLock();
 					}
@@ -300,14 +300,14 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
 					
-					c.behaviourT.effect.watchForActivation( GameplayProcess.TURN_START );
-					c.behaviourT.effect.funcActivateCondition =
+					c.propsT.effect.watchForActivation( GameplayProcess.TURN_START );
+					c.propsT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.controller != p.getPlayer() ) return false;
 						if ( c.controller.hand.cardsCount > 0 ) return false;
 						return true;
 					}
-					c.behaviourT.effect.funcActivate =
+					c.propsT.effect.funcActivate =
 					function( p:GameplayProcess ):void {
 						TempDatabaseUtils.doDraw( c.controller, 3 );
 					}
@@ -320,11 +320,11 @@ package duel.cards.temp_database
 					c.name = "Kamikaze Pao";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 9;
-					c.behaviourC.haste = true;
+					c.propsC.attack = 9;
+					c.propsC.haste = true;
 					
-					c.behaviourC.inplaySpecial.watch( GameplayProcess.TURN_END );
-					c.behaviourC.inplaySpecial.funcActivate =
+					c.propsC.inplaySpecial.watch( GameplayProcess.TURN_END );
+					c.propsC.inplaySpecial.funcActivate =
 					function( p:GameplayProcess ):Boolean {
 						c.die();
 					}
@@ -335,9 +335,9 @@ package duel.cards.temp_database
 					c.name = "Flippers";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 6;
-					c.behaviourC.startFaceDown = true;
-					c.behaviourC.onCombatFlipFunc =
+					c.propsC.attack = 6;
+					c.propsC.startFaceDown = true;
+					c.propsC.onCombatFlipFunc =
 					function():void {
 						if ( c.indexedField.opposingCreature != null )
 						{
@@ -357,14 +357,14 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
 					
-					c.behaviourT.effect.watchForActivation( GameplayProcess.ACTIVATE_TRAP );
-					c.behaviourT.effect.funcActivateCondition =
+					c.propsT.effect.watchForActivation( GameplayProcess.ACTIVATE_TRAP );
+					c.propsT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.index != p.getIndex() ) return false;
 						if ( c.controller.opponent != p.getSourceCard().controller ) return false;
 						return true;
 					}
-					c.behaviourT.effect.funcActivate =
+					c.propsT.effect.funcActivate =
 					function( p:GameplayProcess ):void {
 						p.abort();
 						TempDatabaseUtils.doPutToGrave( p.getSourceCard() );
@@ -379,14 +379,14 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
 					
-					c.behaviourT.effect.watchForActivation( GameplayProcess.SUMMON_COMPLETE );
-					c.behaviourT.effect.funcActivateCondition =
+					c.propsT.effect.watchForActivation( GameplayProcess.SUMMON_COMPLETE );
+					c.propsT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.index != p.getIndex() ) return false;
 						if ( c.controller.opponent != p.getSummonedField().owner ) return false;
 						return true;
 					}
-					c.behaviourT.effect.funcActivate =
+					c.propsT.effect.funcActivate =
 					function( p:GameplayProcess ):void {
 						TempDatabaseUtils.doKill( p.getSourceCard() );
 					}
@@ -399,8 +399,8 @@ package duel.cards.temp_database
 					c.name = "Flappy Bird";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 7;
-					c.behaviourC.swift = true;
+					c.propsC.attack = 7;
+					c.propsC.swift = true;
 				},
 				/* * */
 				null,
@@ -414,9 +414,9 @@ package duel.cards.temp_database
 					c.name = "Spying Joe";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 7;
+					c.propsC.attack = 7;
 					
-					c.behaviourC.inplayOngoing.funcUpdate =
+					c.propsC.inplayOngoing.funcUpdate =
 					function( p:GameplayProcess ):void {
 						if ( c.controller.opponent.deck.topCard == null ) return;
 						c.controller.opponent.deck.topCard.faceDown = false;
@@ -428,15 +428,15 @@ package duel.cards.temp_database
 					c.name = "Taunter";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 8;
+					c.propsC.attack = 8;
 					
-					c.behaviourC.inplaySpecial.watch( GameplayProcess.TURN_START_COMPLETE );
-					c.behaviourC.inplaySpecial.funcCondition =
+					c.propsC.inplaySpecial.watch( GameplayProcess.TURN_START_COMPLETE );
+					c.propsC.inplaySpecial.funcCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.opposingCreature == null ) return false;
 						return c.controller.opponent == p.getPlayer();
 					}
-					c.behaviourC.inplaySpecial.funcActivate =
+					c.propsC.inplaySpecial.funcActivate =
 					function( p:GameplayProcess ):Boolean {
 						TempDatabaseUtils.doForceAttack( c.indexedField.opposingCreature, false );
 					}
@@ -447,14 +447,14 @@ package duel.cards.temp_database
 					c.name = "Berserker";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 9;
+					c.propsC.attack = 9;
 					
-					c.behaviourC.inplaySpecial.watch( GameplayProcess.TURN_START_COMPLETE );
-					c.behaviourC.inplaySpecial.funcCondition =
+					c.propsC.inplaySpecial.watch( GameplayProcess.TURN_START_COMPLETE );
+					c.propsC.inplaySpecial.funcCondition =
 					function( p:GameplayProcess ):Boolean {
 						return c.controller == p.getPlayer();
 					}
-					c.behaviourC.inplaySpecial.funcActivate =
+					c.propsC.inplaySpecial.funcActivate =
 					function( p:GameplayProcess ):Boolean {
 						TempDatabaseUtils.doForceAttack( c, false );
 					}
@@ -465,12 +465,12 @@ package duel.cards.temp_database
 					c.name = "Mr Miracle";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 0;
-					c.behaviourC.needsTribute = true;
+					c.propsC.attack = 0;
+					c.propsC.needsTribute = true;
 					
-					c.behaviourC.inplayOngoing.funcUpdate =
+					c.propsC.inplayOngoing.funcUpdate =
 					function( p:GameplayProcess ):void {
-						c.behaviourC.attack = c.controller.opponent.creatureCount * 5;
+						c.propsC.attack = c.controller.opponent.creatureCount * 5;
 					}
 				},
 				/* * */
@@ -479,14 +479,14 @@ package duel.cards.temp_database
 					c.name = "Impatient Jeff";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 13;
+					c.propsC.attack = 13;
 					
-					c.behaviourC.handSpecial.watch( GameplayProcess.TURN_END );
-					c.behaviourC.handSpecial.funcCondition =
+					c.propsC.handSpecial.watch( GameplayProcess.TURN_END );
+					c.propsC.handSpecial.funcCondition =
 					function( p:GameplayProcess ):Boolean {
 						return c.controller == p.getPlayer();
 					}
-					c.behaviourC.handSpecial.funcActivate =
+					c.propsC.handSpecial.funcActivate =
 					function( p:GameplayProcess ):void {
 						TempDatabaseUtils.doDiscard( c.controller, c );
 					}
@@ -497,11 +497,11 @@ package duel.cards.temp_database
 					c.name = "Yang";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 5;
+					c.propsC.attack = 5;
 					
-					c.behaviourC.inplayOngoing.funcUpdate =
+					c.propsC.inplayOngoing.funcUpdate =
 					function( p:GameplayProcess ):void {
-						c.behaviourC.attack = hasAdjacentYin() ? 15 : 5;
+						c.propsC.attack = hasAdjacentYin() ? 15 : 5;
 					}
 					function hasAdjacentYin():Boolean {
 						var cf:CreatureField;
@@ -518,11 +518,11 @@ package duel.cards.temp_database
 					c.name = "Yin";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 6;
+					c.propsC.attack = 6;
 					
-					c.behaviourC.inplayOngoing.funcUpdate =
+					c.propsC.inplayOngoing.funcUpdate =
 					function( p:GameplayProcess ):void {
-						c.behaviourC.attack = hasAdjacentYang() ? 14 : 6;
+						c.propsC.attack = hasAdjacentYang() ? 14 : 6;
 					}
 					function hasAdjacentYang():Boolean {
 						var cf:CreatureField;
@@ -539,7 +539,7 @@ package duel.cards.temp_database
 					c.name = "Obelix";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 14;
+					c.propsC.attack = 14;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Bro
@@ -547,8 +547,8 @@ package duel.cards.temp_database
 					c.name = "Bro";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 13;
-					c.behaviourC.haste = true;
+					c.propsC.attack = 13;
+					c.propsC.haste = true;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Saboteur
@@ -556,9 +556,9 @@ package duel.cards.temp_database
 					c.name = "Saboteur";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 3;
-					c.behaviourC.startFaceDown = true;
-					c.behaviourC.onSafeFlipFunc =
+					c.propsC.attack = 3;
+					c.propsC.startFaceDown = true;
+					c.propsC.onSafeFlipFunc =
 					function():void {
 						TempDatabaseUtils.doPutInHandTrapsRow( c.controller.opponent );
 					}
@@ -569,8 +569,8 @@ package duel.cards.temp_database
 					c.name = "Hulk";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 16;
-					c.behaviourC.berserk = true;
+					c.propsC.attack = 16;
+					c.propsC.berserk = true;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Zig
@@ -578,15 +578,15 @@ package duel.cards.temp_database
 					c.name = "Zig";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 7;
-					c.behaviourC.startFaceDown = true;
+					c.propsC.attack = 7;
+					c.propsC.startFaceDown = true;
 					
-					c.behaviourC.inplaySpecial.watch( GameplayProcess.TURN_END );
-					c.behaviourC.inplaySpecial.funcCondition =
+					c.propsC.inplaySpecial.watch( GameplayProcess.TURN_END );
+					c.propsC.inplaySpecial.funcCondition =
 					function( p:GameplayProcess ):Boolean {
 						return ( c.owner.grave.findByName( "Zag" ) != null );
 					}
-					c.behaviourC.inplaySpecial.funcActivate =
+					c.propsC.inplaySpecial.funcActivate =
 					function( p:GameplayProcess ):Boolean {
 						TempDatabaseUtils.doPutInHand( c.owner.grave.findByName( "Zag" ), c.owner );
 					}
@@ -597,14 +597,14 @@ package duel.cards.temp_database
 					c.name = "Zag";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 7;
+					c.propsC.attack = 7;
 					
-					c.behaviourC.inplaySpecial.watch( GameplayProcess.TURN_END );
-					c.behaviourC.inplaySpecial.funcCondition =
+					c.propsC.inplaySpecial.watch( GameplayProcess.TURN_END );
+					c.propsC.inplaySpecial.funcCondition =
 					function( p:GameplayProcess ):Boolean {
 						return ( c.owner.grave.findByName( "Zig" ) != null );
 					}
-					c.behaviourC.inplaySpecial.funcActivate =
+					c.propsC.inplaySpecial.funcActivate =
 					function( p:GameplayProcess ):Boolean {
 						TempDatabaseUtils.doPutInHand( c.owner.grave.findByName( "Zig" ), c.owner );
 					}
@@ -616,14 +616,14 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
 					
-					c.behaviourT.effect.watchForActivation( GameplayProcess.ATTACK );
-					c.behaviourT.effect.funcActivateCondition =
+					c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
+					c.propsT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.index != p.getIndex() ) return false;
 						if ( c.controller.opponent != p.getAttacker().controller ) return false;
 						return true;
 					}
-					c.behaviourT.effect.funcActivate =
+					c.propsT.effect.funcActivate =
 					function( p:GameplayProcess ):void {
 						if ( c.indexedField.opposingCreature != null )
 							c.indexedField.opposingCreature.returnToControllerHand();
@@ -637,9 +637,9 @@ package duel.cards.temp_database
 					c.name = "Big Shield";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 17;
-					c.behaviourC.noattack = true;
-					c.behaviourC.startFaceDown = true;
+					c.propsC.attack = 17;
+					c.propsC.noattack = true;
+					c.propsC.startFaceDown = true;
 				},
 				/* * */
 				function( c:Card ):void ///		T..		Stunner
@@ -648,17 +648,17 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
 					
-					c.behaviourT.effect.watchForActivation( GameplayProcess.ATTACK );
-					c.behaviourT.effect.funcActivateCondition =
+					c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
+					c.propsT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.index != p.getIndex() ) return false;
 						if ( c.controller.opponent != p.getAttacker().controller ) return false;
 						return true;
 					}
-					c.behaviourT.effect.funcActivate =
+					c.propsT.effect.funcActivate =
 					function( p:GameplayProcess ):void {
 						if ( c.indexedField.opposingCreature != null )
-							c.indexedField.opposingCreature.behaviourC.noattack = true;
+							c.indexedField.opposingCreature.propsC.noattack = true;
 					}
 					
 					c.descr = "On opp. attack - stun attacking creature forever\n(it's CONCEPT DEMO!)";
@@ -669,7 +669,7 @@ package duel.cards.temp_database
 					c.name = "Random Dude #1";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 8;
+					c.propsC.attack = 8;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Random Dude
@@ -677,7 +677,7 @@ package duel.cards.temp_database
 					c.name = "Random Dude #2";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 8;
+					c.propsC.attack = 8;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Random Dude
@@ -685,7 +685,7 @@ package duel.cards.temp_database
 					c.name = "Random Dude #3";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 8;
+					c.propsC.attack = 8;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Random Dude
@@ -693,7 +693,7 @@ package duel.cards.temp_database
 					c.name = "Random Dude #4";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 8;
+					c.propsC.attack = 8;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Random Dude
@@ -701,7 +701,7 @@ package duel.cards.temp_database
 					c.name = "Random Dude #5";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 8;
+					c.propsC.attack = 8;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Random Dude
@@ -709,7 +709,7 @@ package duel.cards.temp_database
 					c.name = "Random Dude #6";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.behaviourC.attack = 8;
+					c.propsC.attack = 8;
 				},
 				/* * */
 				null,

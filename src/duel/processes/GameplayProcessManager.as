@@ -132,7 +132,7 @@ package duel.processes
 			function onEnd( c:Card, field:CreatureField ):void
 			{
 				/// TRIBUTE_CREATURE
-				if ( isManual && c.behaviourC.needsTribute )
+				if ( isManual && c.propsC.needsTribute )
 				{
 					if ( field.topCard == null )
 					{
@@ -148,12 +148,12 @@ package duel.processes
 			{
 				if ( c.isInPlay ) return true;
 				if ( field.isLocked ) return true;
-				if ( isManual && c.behaviourC.needsTribute && field.topCard == null ) return true;
+				if ( isManual && c.propsC.needsTribute && field.topCard == null ) return true;
 				return false;
 			}
 			
 			/// ENTER_PLAY
-			pro = chain( pro, process_EnterPlay( c, field, c.behaviourC.startFaceDown ) );
+			pro = chain( pro, process_EnterPlay( c, field, c.propsC.startFaceDown ) );
 			
 			/// SUMMON_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.SUMMON_COMPLETE, c, field ) );
@@ -306,7 +306,7 @@ package duel.processes
 			}
 			
 			/// ENTER_PLAY
-			pro = chain( pro, process_EnterPlay( c, field, c.behaviour.startFaceDown ) );
+			pro = chain( pro, process_EnterPlay( c, field, c.props.startFaceDown ) );
 			
 			/// SET_TRAP_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.SET_TRAP_COMPLETE, c, field ) );
@@ -333,7 +333,7 @@ package duel.processes
 			function onEnd( c:Card ):void
 			{
 				c.sprite.animFlipEffect();
-				c.behaviourT.effect.activate( interruptedProcess );
+				c.propsT.effect.activate( interruptedProcess );
 			}
 			function onAbort( c:Card ):void
 			{
@@ -346,7 +346,7 @@ package duel.processes
 			pro.onEnd =
 			function onComplete( c:Card ):void
 			{
-				if ( c.isInPlay && !c.behaviourT.isPersistent )
+				if ( c.isInPlay && !c.propsT.isPersistent )
 					prepend_AddToGrave( c );
 			}
 		}
@@ -361,7 +361,7 @@ package duel.processes
 			pro.onEnd = 
 			function onEnd( c:Card ):void
 			{
-				c.behaviourT.effect.deactivate( interruptedProcess );
+				c.propsT.effect.deactivate( interruptedProcess );
 			}
 			
 			/// DEACTIVATE_TRAP
@@ -379,21 +379,21 @@ package duel.processes
 		public function prepend_InPlaySpecialActivation( c:Card ):void
 		{
 			prepend_SpecialActivation( c,
-					c.behaviourC.inplaySpecial, 
+					c.propsC.inplaySpecial, 
 					CommonCardQuestions.isNotInPlay );
 		}
 		
 		public function prepend_InGraveSpecialActivation( c:Card ):void
 		{
 			prepend_SpecialActivation( c,
-					c.behaviourC.graveSpecial, 
+					c.propsC.graveSpecial, 
 					CommonCardQuestions.isNotInGrave );
 		}
 		
 		public function prepend_InHandSpecialActivation( c:Card ):void
 		{
 			prepend_SpecialActivation( c,
-					c.behaviourC.handSpecial, 
+					c.propsC.handSpecial, 
 					CommonCardQuestions.isNotInHand );
 		}
 		
@@ -457,13 +457,13 @@ package duel.processes
 				
 				if ( c.indexedField.opposingCreature == null )
 				{
-					prepend_DirectDamage( c.controller.opponent, c.behaviourC.genAttackDamage() );
+					prepend_DirectDamage( c.controller.opponent, c.propsC.genAttackDamage() );
 				}
 				else
 				{
 					c.indexedField.opposingCreature.sprite.animAttackPerform();
-					prepend_CreatureDamage( c, c.indexedField.opposingCreature.behaviourC.genAttackDamage() );
-					prepend_CreatureDamage( c.indexedField.opposingCreature, c.behaviourC.genAttackDamage() );
+					prepend_CreatureDamage( c, c.indexedField.opposingCreature.propsC.genAttackDamage() );
+					prepend_CreatureDamage( c.indexedField.opposingCreature, c.propsC.genAttackDamage() );
 				}
 			}
 			pro.onAbort = completeOrAbort;
@@ -506,17 +506,17 @@ package duel.processes
 				if ( !c.isInPlay ) 
 					return;
 				
-				if ( c.behaviourC.attack <= dmg.amount )
+				if ( c.propsC.attack <= dmg.amount )
 				{
 					prepend_Death( c );
 					game.showFloatyText( c.sprite.localToGlobal( new Point() ), 
-						c.behaviourC.attack + "-" + dmg.amount + "=DEATH!", 0xFF0000 );
+						c.propsC.attack + "-" + dmg.amount + "=DEATH!", 0xFF0000 );
 				}
 				else
 				{
 					c.sprite.animDamageOnly();
 					game.showFloatyText( c.sprite.localToGlobal( new Point() ), 
-						c.behaviourC.attack + "-" + dmg.amount + "=" + (c.behaviourC.attack - dmg.amount), 0x00FFFF );
+						c.propsC.attack + "-" + dmg.amount + "=" + (c.propsC.attack - dmg.amount), 0x00FFFF );
 				}
 			}
 			pro.onAbort =
@@ -596,7 +596,7 @@ package duel.processes
 			pro = chain( pro, gen( GameplayProcess.COMBAT_FLIP_COMPLETE, c ) );
 			
 			/// /// /// /// /// /// /// /// /// /// /// ///
-			if ( !c.behaviourC.hasCombatFlipEffect ) return;
+			if ( !c.propsC.hasCombatFlipEffect ) return;
 			/// /// /// /// /// /// /// /// /// /// /// ///
 			
 			/// COMBAT_FLIP_EFFECT
@@ -609,12 +609,12 @@ package duel.processes
 			pro.onEnd =
 			function effectEnd( c:Card ):void
 			{
-				c.behaviourC.onCombatFlip();
+				c.propsC.onCombatFlip();
 			}
 			pro.abortCheck = 
 			function effectAbortCheck( c:Card ):Boolean
 			{
-				return !c.isInPlay || !c.behaviourC.hasCombatFlipEffect;
+				return !c.isInPlay || !c.propsC.hasCombatFlipEffect;
 			}
 			
 			/// COMBAT_FLIP_EFFECT_COMPLETE
@@ -639,7 +639,7 @@ package duel.processes
 			pro = chain( pro, gen( GameplayProcess.SAFE_FLIP_COMPLETE, c ) );
 			
 			/// /// /// /// /// /// /// /// /// /// /// ///
-			if ( !c.behaviourC.hasSafeFlipEffect ) return;
+			if ( !c.propsC.hasSafeFlipEffect ) return;
 			/// /// /// /// /// /// /// /// /// /// /// ///
 			
 			/// SAFE_FLIP_EFFECT
@@ -652,12 +652,12 @@ package duel.processes
 			pro.onEnd =
 			function effectEnd( c:Card ):void
 			{
-				c.behaviourC.onSafeFlip();
+				c.propsC.onSafeFlip();
 			}
 			pro.abortCheck = 
 			function effectAbortCheck( c:Card ):Boolean
 			{
-				return !c.isInPlay || !c.behaviourC.hasSafeFlipEffect;
+				return !c.isInPlay || !c.propsC.hasSafeFlipEffect;
 			}
 			
 			/// SAFE_FLIP_EFFECT_COMPLETE
@@ -795,7 +795,7 @@ package duel.processes
 			
 			pro
 				/// ENTER_INDEXED_FIELD
-				.chain( process_EnterIndexedField( c, field, c.behaviour.startFaceDown ) )
+				.chain( process_EnterIndexedField( c, field, c.props.startFaceDown ) )
 				/// ENTER_PLAY_COMPLETE
 				.chain( gen( GameplayProcess.ENTER_PLAY_COMPLETE, c, field ) );
 			
@@ -813,7 +813,7 @@ package duel.processes
 			pro.onStart =
 			function onStart( c:Card ):void 
 			{
-				if ( c.behaviourT && c.behaviourT.isPersistent && c.behaviourT.effect.isActive )
+				if ( c.propsT && c.propsT.isPersistent && c.propsT.effect.isActive )
 					prepend_TrapDeactivation( c );
 			}
 			

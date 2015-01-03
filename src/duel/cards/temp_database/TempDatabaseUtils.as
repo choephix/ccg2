@@ -1,10 +1,11 @@
 package duel.cards.temp_database 
 {
-	import duel.cards.behaviour.CreatureCardBehaviour;
-	import duel.cards.behaviour.TrapCardBehaviour;
+	import duel.cards.properties.CreatureCardProperties;
+	import duel.cards.properties.TrapCardProperties;
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
 	import duel.cards.CardType;
+	import duel.cards.properties.CreatureCardProperties;
 	import duel.Damage;
 	import duel.DamageType;
 	import duel.G;
@@ -21,13 +22,13 @@ package duel.cards.temp_database
 		public static function setToCreature( c:Card ):void
 		{
 			c.type = CardType.CREATURE;
-			c.behaviour = new CreatureCardBehaviour();
+			c.props = new CreatureCardProperties();
 		}
 			
 		public static function setToTrap( c:Card ):void
 		{
 			c.type = CardType.TRAP;
-			c.behaviour = new TrapCardBehaviour();
+			c.props = new TrapCardProperties();
 		}
 		
 		// PROCESSES

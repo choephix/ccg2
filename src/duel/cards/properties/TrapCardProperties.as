@@ -1,5 +1,4 @@
-package duel.cards.behaviour 
-{
+package duel.cards.properties {
 	import duel.otherlogic.TrapEffect;
 	import duel.otherlogic.SpecialEffect;
 	import duel.processes.GameplayProcess;
@@ -7,14 +6,14 @@ package duel.cards.behaviour
 	 * ...
 	 * @author choephix
 	 */
-	public class TrapCardBehaviour extends CardBehaviour 
+	public class TrapCardProperties extends CardProperties 
 	{
 		/// Must accept one arg of type Process and return Boolean
 		public var effect:TrapEffect = new TrapEffect();
 		public function get isPersistent():Boolean
 		{ return effect.funcUpdate != null }
 		
-		public function TrapCardBehaviour()
+		public function TrapCardProperties()
 		{ startFaceDown = true }
 	}
 }
