@@ -29,12 +29,13 @@ package duel.display.utils
 		
 		public static function getColorForCreatureField():uint
 		//{ return Colors.fromRGB( .25, .15, .10 ) }
-		{ return Colors.fromRGB( .10, .14, .25 ) }
+		//{ return Colors.fromRGB( .10, .14, .25 ) }
+		{ return Colors.fromRGB( .20, .12, .08 ) }
 		
 		public static function getColorForTrapField():uint
 		//{ return Colors.fromRGB( .25, .10, .20 ) }
 		//{ return Colors.fromRGB( .20, .07, .11 ) }
-		{ return Colors.fromRGB( .14, .10, .25 ) }
+		{ return Colors.fromRGB( .12, .08, .23 ) }
 		
 		public static function getColorForDeckField():uint
 		{ return 0x222222 }
