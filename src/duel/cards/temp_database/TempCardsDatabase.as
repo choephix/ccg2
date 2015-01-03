@@ -1,5 +1,6 @@
 package duel.cards.temp_database 
 {
+	import air.update.descriptors.ConfigurationDescriptor;
 	import duel.cards.Card;
 	import duel.Damage;
 	import duel.DamageType;
@@ -326,7 +327,7 @@ package duel.cards.temp_database
 					c.propsC.inplaySpecial.watch( GameplayProcess.TURN_END );
 					c.propsC.inplaySpecial.funcActivate =
 					function( p:GameplayProcess ):Boolean {
-						c.die();
+						TempDatabaseUtils.doKill( c );
 					}
 				},
 				/* * */
@@ -344,8 +345,8 @@ package duel.cards.temp_database
 							//c.indexedField.opposingCreature.returnToControllerHand();
 							//return;
 							
-							c.die();
-							c.indexedField.opposingCreature.die();
+							TempDatabaseUtils.doKill( c );
+							TempDatabaseUtils.doKill( c.indexedField.opposingCreature );
 							return;
 						}
 					}
@@ -625,8 +626,9 @@ package duel.cards.temp_database
 					}
 					c.propsT.effect.funcActivate =
 					function( p:GameplayProcess ):void {
-						if ( c.indexedField.opposingCreature != null )
-							c.indexedField.opposingCreature.returnToControllerHand();
+						var oc:Card = c.indexedField.opposingCreature;
+						if ( oc != null )
+							TempDatabaseUtils.doPutInHand( oc, oc.controller )
 					}
 					
 					c.descr = "On opp. attack - return attacking creature to hand";

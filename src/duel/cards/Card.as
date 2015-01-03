@@ -153,16 +153,6 @@ package duel.cards
 		
 		// 
 		
-		public function die():void 
-		{
-			processes.prepend_Death( this );
-		}
-		
-		public function returnToControllerHand():void 
-		{
-			processes.prepend_AddToHand( this, controller );
-		}
-		
 		// -.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'
 		
 		// GETTERS & SETTERS - 0
