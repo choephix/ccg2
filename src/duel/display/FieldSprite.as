@@ -102,6 +102,8 @@ package duel.display {
 				aura.color = color;
 				if ( field.topCard )
 					aura.rotation = field.topCard.sprite.rotation;
+				else
+					aura.rotation = .0;
 			}
 		}
 		
