@@ -1,5 +1,6 @@
 package duel.display.utils 
 {
+	import chimichanga.common.misc.Color;
 	import chimichanga.global.utils.Colors;
 	/**
 	 * ...
@@ -8,22 +9,23 @@ package duel.display.utils
 	public class ColorScheme 
 	{
 		
-		private static function r( max:Number, on:Boolean ):Number
+		private static function _( max:Number, on:Boolean ):Number
 		{ return ( on ? Math.random() : .5 ) * max }
 		
 		// CARDS
 		
 		public static function getColorForTrap( rand:Boolean= true ):uint
-		{ return Colors.fromRGB( .7 + r( 0.2, rand ), .4, .5 + r( 0.3, rand ) ) }
+		{ return ra( 0xBA548E, .10, .0, .15, rand ) }
+		//{ return ra( 0x808080, .50, .50, .50, rand ) }
 		
 		public static function getColorForCreature( rand:Boolean= true ):uint
-		{ return Colors.fromRGB( 1, .7 + r( 0.15, rand ), .4 ) }
+		{ return ra( 0xE6C175, .10, .10, .0, rand ) }
 		
 		public static function getColorForCreatureNeedsTribute( rand:Boolean= true ):uint
-		{ return Colors.fromRGB( 1, .8 + r( 0.15, rand ), .7 ) }
+		{ return ra( 0xC1684A, .15, .10, .0, rand ) }
 		
 		public static function getColorForCreatureFlippable( rand:Boolean= true ):uint
-		{ return Colors.fromRGB( 1, .5 + r( 0.10, rand ), .3 ) }
+		{ return ra( 0xEBDD92, .10, .10, .0, rand ) }
 		
 		// FIELDS
 		
@@ -43,6 +45,16 @@ package duel.display.utils
 		public static function getColorForGraveField():uint
 		{ return Colors.fromRGB( .12, .08, .19 ) }
 		
+		//
+		private static var sHelperColor1:Color = new Color();
+		private static var sHelperColor2:Color = new Color();
+		private static function ra( base:uint, r:Number, g:Number, b:Number, on:Boolean = true ):uint
+		{
+			sHelperColor1.setHex( base );
+			sHelperColor2.setTo( _(r, on), _(g, on), _(b, on) );
+			sHelperColor1.add( sHelperColor2 );
+			return sHelperColor1.getHex();
+		}
 	}
 
 }

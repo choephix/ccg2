@@ -35,6 +35,14 @@ package chimichanga.common.misc
 			return this;
 		}
 		
+		public function add( c:Color ):Color
+		{
+			this.r = clip( r + c.r );
+			this.g = clip( g + c.g );
+			this.b = clip( b + c.b );
+			return this;
+		}
+		
 		public function getBrightness():Number
 		{
 			return Math.sqrt(( r * r * 0.241 ) + ( g * g * 0.691 ) + ( b * b * 0.068 ) );

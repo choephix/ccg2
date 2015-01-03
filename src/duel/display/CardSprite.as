@@ -69,8 +69,9 @@ package duel.display {
 			
 			selectAura = new CardAura();
 			selectAura.visible = false;
-			selectAura.color = 0x22BBDD;
 			selectAura.color = 0x6699EE;
+			//selectAura.color = 0x1C3ACA;
+			CONFIG::sandbox{ selectAura.color = 0x081122 }
 			addChild( selectAura );
 			
 			exhaustClock = assets.generateImage( "exhaustClock", false, true );
