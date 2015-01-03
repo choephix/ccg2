@@ -12,6 +12,10 @@ package duel.cards.temp_database
 	import duel.Game;
 	import duel.Player;
 	import duel.table.CreatureField;
+	import duel.processes.gameprocessing;
+	
+	use namespace gameprocessing;
+	
 	/**
 	 * ...
 	 * @author choephix

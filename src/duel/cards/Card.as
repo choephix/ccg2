@@ -10,9 +10,12 @@ package duel.cards
 	import duel.GameEvents;
 	import duel.Player;
 	import duel.processes.GameplayProcess;
+	import duel.processes.gameprocessing;
 	import duel.table.Field;
 	import duel.table.Hand;
 	import duel.table.IndexedField;
+	
+	use namespace gameprocessing;
 	
 	/**
 	 * ...

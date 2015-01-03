@@ -15,6 +15,8 @@ package duel.processes
 	import flash.geom.Point;
 	
 	use namespace animation;
+	use namespace gameprocessing;
+	
 	/**
 	 * ...
 	 * @author choephix
@@ -23,7 +25,7 @@ package duel.processes
 	{
 		//{ TURN LOGIC
 		
-		public function append_TurnEnd( p:Player ):void
+		gameprocessing function append_TurnEnd( p:Player ):void
 		{
 			var pro:GameplayProcess;
 			
@@ -36,7 +38,7 @@ package duel.processes
 			}
 		}
 		
-		public function append_TurnStart( p:Player ):void
+		gameprocessing function append_TurnStart( p:Player ):void
 		{
 			var pro:GameplayProcess;
 			
@@ -64,7 +66,7 @@ package duel.processes
 		//}
 		//{ DRAW & DISCARD
 		
-		public function prepend_Draw( p:Player, count:int = 1 ):void
+		gameprocessing function prepend_Draw( p:Player, count:int = 1 ):void
 		{
 			var pro:GameplayProcess;
 			while ( --count >= 0 )
@@ -95,7 +97,7 @@ package duel.processes
 			}
 		}
 		
-		public function prepend_Discard( p:Player, c:Card ):void 
+		gameprocessing function prepend_Discard( p:Player, c:Card ):void 
 		{
 			var pro:GameplayProcess;
 			
@@ -122,7 +124,7 @@ package duel.processes
 		//}
 		//{ SUMMON
 		
-		public function append_SummonHere( c:Card, field:CreatureField, isManual:Boolean ):void
+		gameprocessing function append_SummonHere( c:Card, field:CreatureField, isManual:Boolean ):void
 		{
 			var pro:GameplayProcess;
 			
@@ -194,7 +196,7 @@ package duel.processes
 		}
 		
 		
-		public function prepend_ResurrectHere( c:Card, field:CreatureField ):void	//TODO  USE THIS SHIT (zig&zag)
+		gameprocessing function prepend_ResurrectHere( c:Card, field:CreatureField ):void	//TODO  USE THIS SHIT (zig&zag)
 		{
 			var pro:GameplayProcess;
 			
@@ -233,7 +235,7 @@ package duel.processes
 		 * @param	field	destination field
 		 * @param	free	if true, this relocation will not exhaust the creauture for the turn
 		 */
-		public function append_Relocation( c:Card, field:CreatureField, free:Boolean ):void
+		gameprocessing function append_Relocation( c:Card, field:CreatureField, free:Boolean ):void
 		{
 			var pro:GameplayProcess;
 			var oldField:CreatureField = c.indexedField as CreatureField;
@@ -284,7 +286,7 @@ package duel.processes
 		//}
 		//{ TRAPS
 		
-		public function append_TrapSet( c:Card, field:TrapField, isManual:Boolean ):void 
+		gameprocessing function append_TrapSet( c:Card, field:TrapField, isManual:Boolean ):void 
 		{
 			var pro:GameplayProcess;
 			
@@ -312,7 +314,7 @@ package duel.processes
 			pro = chain( pro, gen( GameplayProcess.SET_TRAP_COMPLETE, c, field ) );
 		}
 		
-		public function prepend_TrapActivation( c:Card ):void
+		gameprocessing function prepend_TrapActivation( c:Card ):void
 		{
 			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
 			var pro:GameplayProcess;
@@ -351,7 +353,7 @@ package duel.processes
 			}
 		}
 		
-		public function prepend_TrapDeactivation( c:Card ):void
+		gameprocessing function prepend_TrapDeactivation( c:Card ):void
 		{
 			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
 			var pro:GameplayProcess;
@@ -368,7 +370,7 @@ package duel.processes
 			pro = chain( pro, gen( GameplayProcess.DEACTIVATE_TRAP_COMPLETE, c ) );
 		}
 		
-		public function prepend_DestroyTrap( c:Card ):void
+		gameprocessing function prepend_DestroyTrap( c:Card ):void
 		{
 			prepend_AddToGrave( c );
 		}
@@ -376,21 +378,21 @@ package duel.processes
 		//}
 		//{ SPECIAL EFFECTS
 		
-		public function prepend_InPlaySpecialActivation( c:Card ):void
+		gameprocessing function prepend_InPlaySpecialActivation( c:Card ):void
 		{
 			prepend_SpecialActivation( c,
 					c.propsC.inplaySpecial, 
 					CommonCardQuestions.isNotInPlay );
 		}
 		
-		public function prepend_InGraveSpecialActivation( c:Card ):void
+		gameprocessing function prepend_InGraveSpecialActivation( c:Card ):void
 		{
 			prepend_SpecialActivation( c,
 					c.propsC.graveSpecial, 
 					CommonCardQuestions.isNotInGrave );
 		}
 		
-		public function prepend_InHandSpecialActivation( c:Card ):void
+		gameprocessing function prepend_InHandSpecialActivation( c:Card ):void
 		{
 			prepend_SpecialActivation( c,
 					c.propsC.handSpecial, 
@@ -435,7 +437,7 @@ package duel.processes
 		//}
 		//{ ATTACK
 		
-		public function append_Attack( c:Card, free:Boolean ):void
+		gameprocessing function append_Attack( c:Card, free:Boolean ):void
 		{
 			var pro:GameplayProcess;
 			
@@ -531,7 +533,7 @@ package duel.processes
 			pro = chain( pro, gen( GameplayProcess.CREATURE_DAMAGE_COMPLETE, c, dmg ) );
 		}
 		
-		public function prepend_DirectDamage( p:Player, dmg:Damage ):void
+		gameprocessing function prepend_DirectDamage( p:Player, dmg:Damage ):void
 		{
 			var pro:GameplayProcess;
 
@@ -547,7 +549,7 @@ package duel.processes
 			pro = chain( pro, gen( GameplayProcess.DIRECT_DAMAGE_COMPLETE, p, dmg ) );
 		}
 		
-		public function prepend_Death( c:Card ):void 
+		gameprocessing function prepend_Death( c:Card ):void 
 		{
 			var pro:GameplayProcess;
 
@@ -621,7 +623,7 @@ package duel.processes
 			pro = chain( pro, gen( GameplayProcess.COMBAT_FLIP_EFFECT_COMPLETE, c ) );
 		}
 		
-		public function prepend_SafeFlip( c:Card ):void
+		gameprocessing function prepend_SafeFlip( c:Card ):void
 		{
 			var pro:GameplayProcess;
 			
@@ -664,7 +666,7 @@ package duel.processes
 			pro = chain( pro, gen( GameplayProcess.SAFE_FLIP_EFFECT_COMPLETE, c ) );
 		}
 		
-		public function prepend_SilentFlip( c:Card ):void
+		gameprocessing function prepend_SilentFlip( c:Card ):void
 		{
 			
 			var pro:GameplayProcess;
@@ -686,7 +688,7 @@ package duel.processes
 		//}
 		//{ CHAINGING CARD CONTAINERS I   ( ADD   TO   GRAVE / HAND / DECK )
 		
-		public function prepend_AddToGrave( c:Card ):void 
+		gameprocessing function prepend_AddToGrave( c:Card ):void 
 		{
 			var pro:GameplayProcess;
 			
@@ -717,7 +719,7 @@ package duel.processes
 			}
 		}
 		
-		public function prepend_AddToHand( c:Card, p:Player ):void 
+		gameprocessing function prepend_AddToHand( c:Card, p:Player ):void 
 		{
 			var pro:GameplayProcess;
 			
@@ -746,7 +748,7 @@ package duel.processes
 			pro.delay = NaN;
 		}
 		
-		public function prepend_AddToDeck( c:Card, p:Player, faceDown:Boolean, shuffle:Boolean ):void 
+		gameprocessing function prepend_AddToDeck( c:Card, p:Player, faceDown:Boolean, shuffle:Boolean ):void 
 		{
 			var pro:GameplayProcess;
 			
@@ -894,7 +896,7 @@ package duel.processes
 		//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 		
 		//{
-		public function chain( prev:Process, next:Process ):GameplayProcess
+		gameprocessing function chain( prev:Process, next:Process ):GameplayProcess
 		{
 			if ( prev != null ) {
 				while ( prev.next != null ) 
@@ -911,7 +913,7 @@ package duel.processes
 			return next as GameplayProcess;
 		}
 		
-		public static function gen( name:String, ...args ):GameplayProcess
+		gameprocessing static function gen( name:String, ...args ):GameplayProcess
 		{
 			CONFIG::development
 			{ 

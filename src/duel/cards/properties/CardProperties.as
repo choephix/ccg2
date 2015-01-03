@@ -20,5 +20,4 @@ package duel.cards.properties {
 		public function get hasHandSpecial():Boolean 
 		{ return handSpecial != null && !handSpecial.isNone  }
 	}
-
 }

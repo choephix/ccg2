@@ -8,11 +8,15 @@ package duel.cards.temp_database
 	import duel.otherlogic.TrapEffect;
 	import duel.Player;
 	import duel.processes.GameplayProcess;
+	import duel.processes.gameprocessgetter;
 	import duel.table.CreatureField;
+	
+	use namespace gameprocessgetter;
 	/**
 	 * ...
 	 * @author choephix
 	 */
+	
 	public class TempCardsDatabase 
 	{
 		static public const F:Array = [

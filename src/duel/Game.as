@@ -13,6 +13,7 @@ package duel
 	import duel.gui.GuiJuggler;
 	import duel.processes.GameplayProcess;
 	import duel.processes.GameplayProcessManager;
+	import duel.processes.gameprocessing;
 	import duel.processes.ProcessEvent;
 	import duel.table.CreatureField;
 	import duel.table.Field;
@@ -26,6 +27,8 @@ package duel
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.text.TextField;
+	
+	use namespace gameprocessing;
 	
 	[Event( name="turnStart",type="duel.GameEvents" )]
 	[Event( name="turnEnd",type="duel.GameEvents" )]

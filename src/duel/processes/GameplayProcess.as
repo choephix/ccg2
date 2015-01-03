@@ -4,6 +4,9 @@ package duel.processes
 	import duel.Player;
 	import duel.table.CreatureField;
 	import duel.table.IndexedField;
+	
+	use namespace gameprocessgetter;
+	
 	/**
 	 * ...
 	 * @author choephix
@@ -82,7 +85,7 @@ package duel.processes
 		  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
 		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //
 		
-		public function getIndex():int
+		gameprocessgetter function getIndex():int
 		{
 			if ( args[ 0 ] is Card ) 
 			{
@@ -96,42 +99,42 @@ package duel.processes
 			throw new ArgumentError( "What to do... ..." );
 		}
 		
-		public function getController():Player
+		gameprocessgetter function getController():Player
 		{
 			if ( args[ 0 ] is Card ) 
 				return Card( args[ 0 ] ).controller;
 			throw new ArgumentError( "What to do... ..." );
 		}
 		
-		public function getPlayer():Player
+		gameprocessgetter function getPlayer():Player
 		{
 			if ( args[ 0 ] is Player ) 
 				return Player( args[ 0 ] );
 			throw new ArgumentError( "What to do... ..." );
 		}
 		
-		public function getSourceCard():Card
+		gameprocessgetter function getSourceCard():Card
 		{
 			if ( args[ 0 ] is Card ) 
 				return Card( args[ 0 ] );
 			throw new ArgumentError( "What to do... ..." );
 		}
 		
-		public function getAttacker():Card
+		gameprocessgetter function getAttacker():Card
 		{
 			if ( args[ 0 ] is Card && Card( args[ 0 ] ).type.isCreature ) 
 				return Card( args[ 0 ] );
 			throw new ArgumentError( "What to do... ..." );
 		}
 		
-		public function getSummoned():Card
+		gameprocessgetter function getSummoned():Card
 		{
 			if ( args[ 0 ] is Card && Card( args[ 0 ] ).type.isCreature ) 
 				return Card( args[ 0 ] );
 			throw new ArgumentError( "What to do... ..." );
 		}
 		
-		public function getSummonedField():CreatureField
+		gameprocessgetter function getSummonedField():CreatureField
 		{
 			if ( args[ 1 ] is CreatureField ) 
 				return CreatureField( args[ 1 ] );
