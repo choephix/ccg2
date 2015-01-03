@@ -34,6 +34,20 @@ package duel.table.fieldlists
 			}
 		}
 		
+		public function forEachField( f:Function ):void
+		{ 
+			for ( var i:int = 0; i < _count; i++ )
+				f( _list[ i ] );
+		}
+		
+		public function hasAnyFieldThat( f:Function ):Boolean 
+		{
+			for ( var i:int = 0; i < _count; i++ )
+				if ( f( _list[ i ] ) )
+					return true;
+			return false;
+		}
+		
 		public function get count():int 
 		{ return _count }
 		
