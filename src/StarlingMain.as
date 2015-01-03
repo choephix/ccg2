@@ -1,23 +1,13 @@
 package {
 	import chimichanga.common.display.Sprite;
-	import duel.cards.behaviour.CreatureCardBehaviour;
-	import duel.GameEvents;
-	import duel.processes.ProcessManager;
-	import ecs.core.World;
-	import ecs.entities.Box;
-	import ecs.entities.Floor;
-	import flash.filesystem.File;
-	import flash.geom.Point;
-	import flash.ui.Keyboard;
 	import duel.Game;
-	import spatula.Trail;
-	import spatula.Trail3;
+	import duel.GameEvents;
+	import flash.filesystem.File;
+	import flash.ui.Keyboard;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
-	import starling.events.Touch;
-	import starling.events.TouchEvent;
 	
 	/**
 	 * ...
