@@ -159,24 +159,41 @@ package duel.cards
 		
 		// GETTERS & SETTERS - 1
 		
-		public function get props():CardProperties { return _props }
+		public function get props():CardProperties
+		{ return _props }
 		public function set props(value:CardProperties):void 
-		{
-			_props = value;
-			_props.card = this;
-		}
+		{ _props = value; _props.card = this; }
 		
-		public function get propsC():CreatureCardProperties { return props as CreatureCardProperties }
-		public function get propsT():TrapCardProperties { return props as TrapCardProperties }
+		public function get propsC():CreatureCardProperties
+		{ return props as CreatureCardProperties }
 		
-		public function get field():Field { return lot as Field }
-		public function get indexedField():IndexedField { return lot as IndexedField }
-		public function get controller():Player { return lot == null ? null : lot.owner }
+		public function get propsT():TrapCardProperties
+		{ return props as TrapCardProperties }
 		
-		public function get isInPlay():Boolean { return lot is IndexedField }
-		public function get isInHand():Boolean { return lot is Hand }
-		public function get isInGrave():Boolean { return field != null && field.type.isGraveyard }
-		public function get isInDeck():Boolean { return field != null && field.type.isDeck }
+		
+		public function get field():Field
+		{ return lot as Field }
+		
+		public function get indexedField():IndexedField
+		{ return lot as IndexedField }
+		
+		public function get controller():Player
+		{ return lot == null ? null : lot.owner }
+		
+		
+		public function get isInPlay():Boolean
+		{ return lot is IndexedField }
+		
+		public function get isInHand():Boolean
+		{ return lot is Hand }
+		
+		public function get isInGrave():Boolean
+		{ return field != null && field.type.isGraveyard }
+		
+		public function get isInDeck():Boolean
+		{ return field != null && field.type.isDeck }
+		
+		
 		
 		// GETTERS & SETTERS - 2
 		public function get faceDown():Boolean{return _faceDown}
