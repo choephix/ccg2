@@ -52,12 +52,48 @@ package duel.display {
 			addEventListener( TouchEvent.TOUCH, onTouch );
 		}
 		
-		/* INTERFACE starling.animation.IAnimatable */
-		
 		public function advanceTime( time:Number ):void 
 		{
 			if ( lockIcon != null )
 				setLockIconVisibility( IndexedField( field ).isLocked );
+		}
+		
+		private function onTouch(e:TouchEvent):void 
+		{
+			var t:Touch = e.getTouch( this );
+			
+			if ( t == null ) {
+				if ( _pointerIsOver ) {
+					_pointerIsOver = false;
+					if ( !field.isEmpty )
+						game.onCardRollOut( field.getCardAt( 0 ) );
+				}
+				return;
+			}
+			else
+			if ( t.phase == TouchPhase.HOVER ) {
+				if ( !_pointerIsOver ) {
+					_pointerIsOver = true;
+					if ( !field.isEmpty )
+						game.onCardRollOver( field.getCardAt( 0 ) );
+				}
+			}
+			else
+			if ( t.phase == TouchPhase.ENDED ) {
+				game.onFieldClicked( field );
+			} 
+		}
+		
+		// VISUALS
+		
+		public function setSelectableness( color:uint ):void
+		{
+			aura.visible = color > 0;
+				
+			if ( aura.visible )
+			{
+				aura.color = color;
+			}
 		}
 		
 		private function setLockIconVisibility( value:Boolean ):void 
@@ -92,32 +128,6 @@ package duel.display {
 						//  EASE_OUT  EASE_IN_BACK
 					} );
 			}
-		}
-		
-		private function onTouch(e:TouchEvent):void 
-		{
-			var t:Touch = e.getTouch( this );
-			
-			if ( t == null ) {
-				if ( _pointerIsOver ) {
-					_pointerIsOver = false;
-					if ( !field.isEmpty )
-						game.onCardRollOut( field.getCardAt( 0 ) );
-				}
-				return;
-			}
-			else
-			if ( t.phase == TouchPhase.HOVER ) {
-				if ( !_pointerIsOver ) {
-					_pointerIsOver = true;
-					if ( !field.isEmpty )
-						game.onCardRollOver( field.getCardAt( 0 ) );
-				}
-			}
-			else
-			if ( t.phase == TouchPhase.ENDED ) {
-				game.onFieldClicked( field );
-			} 
 		}
 		
 		//
