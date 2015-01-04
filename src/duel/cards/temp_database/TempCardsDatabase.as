@@ -166,10 +166,10 @@ package duel.cards.temp_database
 					}
 					c.behaviourC.inplaySpecial.funcActivate =
 					function( p:GameplayProcess ):Boolean {
-						c.controller.fieldsC.forEachCreature( TempDatabaseUtils.doPutToGrave );
-						c.controller.opponent.fieldsC.forEachCreature( TempDatabaseUtils.doPutToGrave );
-						c.controller.fieldsT.forEachTrap( TempDatabaseUtils.doPutToGrave );
-						c.controller.opponent.fieldsT.forEachTrap( TempDatabaseUtils.doPutToGrave );
+						TempDatabaseUtils.doDestroyTrapsRow( c.controller.opponent );
+						TempDatabaseUtils.doDestroyTrapsRow( c.controller );
+						TempDatabaseUtils.doKillCreaturesRow( c.controller.opponent );
+						TempDatabaseUtils.doKillCreaturesRow( c.controller );
 						TempDatabaseUtils.doDealDirectDamage( c.controller, c.controller.lifePoints / 2, c );
 					}
 				},
