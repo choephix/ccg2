@@ -3,12 +3,14 @@ package duel.cards.temp_database
 	import duel.cards.behaviour.CreatureCardBehaviour;
 	import duel.cards.behaviour.TrapCardBehaviour;
 	import duel.cards.Card;
+	import duel.cards.CardFactory;
 	import duel.cards.CardType;
 	import duel.Damage;
 	import duel.DamageType;
 	import duel.G;
 	import duel.Game;
 	import duel.Player;
+	import duel.table.CreatureField;
 	/**
 	 * ...
 	 * @author choephix
@@ -114,6 +116,11 @@ package duel.cards.temp_database
 					continue;
 				doDestroyTrap( p.fieldsT.getAt( i ).topCard );
 			}
+		}
+		
+		static public function doSpawnTokenCreature( field:CreatureField ):void
+		{
+			Game.current.processes.append_SummonHere( CardFactory.produceCard( -1 ), field, false );
 		}
 		
 	}

@@ -19,10 +19,19 @@ package duel.cards
 			
 			c.id = id;
 			
-			TempCardsDatabase.F[ id ]( c );
+			if ( id >= 0 )	/// BUILD CARD FROM DATABASE
+				TempCardsDatabase.F[ id ]( c );
+			else			// BUILD TOKEN CREATURE CARD
+				setToTokenCreature( c );
 			
 			c.initialize();
 			return c;
+		}
+		
+		static private function setToTokenCreature(c:Card):void 
+		{
+			setToCreature( c );
+			c.behaviourC.attack = 0;
 		}
 		
 		//
