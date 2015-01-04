@@ -1,21 +1,21 @@
 package duel.cards
 {
+	import duel.cards.CardListBase;
+	import duel.cards.history.CardHistory;
 	import duel.cards.properties.CardProperties;
 	import duel.cards.properties.CreatureCardProperties;
 	import duel.cards.properties.TrapCardProperties;
-	import duel.cards.CardListBase;
+	import duel.cards.status.CardStatus;
+	import duel.cards.status.CreatureCardStatus;
+	import duel.cards.status.TrapCardStatus;
 	import duel.display.CardSprite;
 	import duel.Game;
 	import duel.GameEntity;
-	import duel.GameEvents;
 	import duel.Player;
 	import duel.processes.GameplayProcess;
-	import duel.processes.gameprocessing;
 	import duel.table.Field;
 	import duel.table.Hand;
 	import duel.table.IndexedField;
-	
-	use namespace gameprocessing;
 	
 	/**
 	 * ...
@@ -28,12 +28,13 @@ package duel.cards
 		public var name:String;
 		public var descr:String;
 		public var type:CardType;
-		public var statusC:CreatureCardStatus;
+		private var _status:CardStatus;
 		private var _props:CardProperties;
+		private var _history:CardHistory;
 		
 		// BATTLE
 		public var owner:Player;
-		public var lot:CardListBase;
+		private var _lot:CardListBase;
 		
 		public var actionsRelocate:int = 0;
 		public var actionsAttack:int = 0;
@@ -50,25 +51,17 @@ package duel.cards
 			CONFIG::development
 			{
 				if ( type == null )
-					throw VerifyError( "You left " + this + "'s type = NULL, you cunt." );
+					throw VerifyError( "You left " + this + "'s type = NULL, you shitcunt." );
 				if ( _props == null )
-					throw VerifyError( "You left " + this + "'s behaviour = NULL, you cunt." );
+					throw VerifyError( "You left " + this + "'s behaviour = NULL, you dickface." );
+				if ( _status == null )
+					throw VerifyError( "You left " + this + "'s status = NULL, you asscunt." );
 			}
+			
+			_history = new CardHistory();
 			
 			sprite = new CardSprite();
 			sprite.initialize( this );
-		}
-		
-		//
-		public function onTurnEnd():void
-		{
-			
-		}
-		
-		public function onTurnStart():void
-		{
-			if ( game.currentPlayer == controller )
-				resetState();
 		}
 		
 		// -.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'
@@ -79,78 +72,15 @@ package duel.cards
 		
 		public function onGameProcess( p:GameplayProcess ):void
 		{
-			CONFIG::development { if ( p.isInterrupted ) throw new Error( "HANDLE PROCESS INTERRUPTIONS!" ) }
+			CONFIG::development
+			{ if ( p.isInterrupted ) throw new Error( "HANDLE PROCESS INTERRUPTIONS!" ) }
 			
-			if ( lot is Hand && props.hasHandSpecial )
-			{
-				if ( props.hasHandSpecial && props.handSpecial.mustInterrupt( p ) )
-				{
-					p.interrupt();
-					processes.prepend_InHandSpecialActivation( this );
-					return;
-				}
-			}
+			if ( isInPlay )
+				if ( p.name == GameplayProcess.TURN_START )
+					if ( game.currentPlayer == controller )
+						resetState();
 			
-			if ( field && field.type.isGraveyard && props.hasGraveSpecial )
-			{
-				if ( props.hasGraveSpecial && props.graveSpecial.mustInterrupt( p ) )
-				{
-					p.interrupt();
-					processes.prepend_InGraveSpecialActivation( this );
-					return;
-				}
-			}
-			
-			// ONLY IN-PLAY CHECKS BEYOND THIS POINT!
-			
-			if ( !isInPlay )
-				return;
-			
-			if ( p.name == GameplayProcess.TURN_START )
-				onTurnStart();
-			
-			if ( p.name == GameplayProcess.TURN_END )
-				onTurnEnd();
-			
-			if ( type.isTrap )
-			{
-				if ( propsT.effect.mustInterrupt( p ) )
-				{
-					p.interrupt();
-					if ( propsT.isPersistent && propsT.effect.isActive )
-						processes.prepend_DestroyTrap( this );
-					else
-						processes.prepend_TrapActivation( this );
-					return;
-				}
-				else
-				if ( propsT.isPersistent && propsT.persistenceLink && !propsT.persistenceLink.isInPlay )
-				{
-					processes.prepend_DestroyTrap( this );
-					return;
-				}
-				else
-				if ( propsT.isPersistent && propsT.effect.isActive )
-				{
-					propsT.effect.update( p );
-				}
-			}
-			else
-			if ( type.isCreature )
-			{
-				if ( propsC.hasInPlayOngoingEffect )
-				{
-					propsC.inplayOngoing.update( p );
-					return;
-				}
-				if ( propsC.hasInPlaySpecialEffect && propsC.inplaySpecial.mustInterrupt( p ) )
-				{
-					p.interrupt();
-					processes.prepend_InPlaySpecialActivation( this );
-					return;
-				}
-			}
-			
+			status.onGameProcess( p );
 		}
 		
 		/// This must be called on turn start as well as when the card leaves play
@@ -165,20 +95,48 @@ package duel.cards
 		
 		// -.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'
 		
-		// GETTERS & SETTERS - 0
+		// GETTERS & SETTERS - PROPERTIES
 		
 		public function get props():CardProperties
 		{ return _props }
 		public function set props(value:CardProperties):void 
-		{ _props = value; _props.card = this; }
+		{ _props = value; value.card = this; }
 		
 		public function get propsC():CreatureCardProperties
-		{ return props as CreatureCardProperties }
+		{ return _props as CreatureCardProperties }
 		
 		public function get propsT():TrapCardProperties
-		{ return props as TrapCardProperties }
+		{ return _props as TrapCardProperties }
+		
+		// GETTERS & SETTERS - STATUS
+		
+		public function get status():CardStatus
+		{ return _status }
+		public function set status(value:CardStatus):void 
+		{ _status = value; value.card = this; value.initialize(); }
+		
+		public function get statusC():CreatureCardStatus
+		{ return _status as CreatureCardStatus }
+		
+		public function get statusT():TrapCardStatus
+		{ return _status as TrapCardStatus }
+		
+		// GETTERS & SETTERS - HISTORY
+		
+		public function get history():CardHistory 
+		{ return _history }
 		
 		// GETTERS & SETTERS - 1
+		
+		public function set lot(value:CardListBase):void 
+		{ 
+			if ( lot is IndexedField )
+				history.lastIndexedField = lot as IndexedField;
+			_lot = value;
+		}
+		
+		public function get lot():CardListBase 
+		{ return _lot }
 		
 		public function get field():Field
 		{ return lot as Field }

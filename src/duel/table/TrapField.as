@@ -1,5 +1,5 @@
 package duel.table {
-	import duel.table.FieldType;
+	import duel.table.CardLotType;
 	/**
 	 * ...
 	 * @author choephix
@@ -8,7 +8,7 @@ package duel.table {
 	{
 		public function TrapField( index:int )
 		{
-			super( FieldType.TRAP, index );
+			super( CardLotType.TRAP_FIELD, index );
 		}
 	}
 

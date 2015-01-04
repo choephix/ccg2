@@ -4,7 +4,7 @@ package duel.display {
 	import duel.display.cardlots.StackSprite;
 	import duel.GameSprite;
 	import duel.table.Field;
-	import duel.table.FieldType;
+	import duel.table.CardLotType;
 	import duel.table.IndexedField;
 	import starling.animation.IAnimatable;
 	import starling.animation.Transitions;
@@ -142,7 +142,7 @@ package duel.display {
 		}
 		
 		//
-		private static function GetCardStackClassForFieldType( type:FieldType ):Class
+		private static function GetCardStackClassForFieldType( type:CardLotType ):Class
 		{
 			if ( type.isGraveyard ) return GraveStackSprite;
 			if ( type.isDeck ) return DeckStackSprite;

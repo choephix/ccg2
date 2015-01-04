@@ -1,6 +1,7 @@
 package duel.cards {
 	import duel.cards.Card;
 	import duel.Player;
+	import duel.table.CardLotType;
 	import flash.display3D.textures.VideoTexture;
 	import starling.events.Event;
 	import starling.events.EventDispatcher;
@@ -13,8 +14,9 @@ package duel.cards {
 	{
 		public var owner:Player;
 		
-		private const _list:Vector.<Card> = new Vector.<Card>();
-		private var _count:int;
+		protected const _list:Vector.<Card> = new Vector.<Card>();
+		protected var _count:int;
+		protected var _type:CardLotType = CardLotType.UNKNOWN;
 		
 		// GETTERS
 		public function getCardAt( index:int ):Card
@@ -32,10 +34,20 @@ package duel.cards {
 			return _list[ _count - 1 ];
 		}
 		
+		// FIND
+		
 		public function findByName( name:String ):Card
 		{
 			for ( var i:int = 0; i < _count; i++ ) 
 				if ( name == _list[ i ].name )
+					return _list[ i ];
+			return null;
+		}
+		
+		public function findFirstCard( f:Function ):Card
+		{
+			for ( var i:int = 0; i < _count; i++ )
+				if ( f( _list[ i ] ) )
 					return _list[ i ];
 			return null;
 		}
@@ -149,14 +161,13 @@ package duel.cards {
 		
 		//// GETTIES 'N SETTIES
 		public function get cardsCount():int
-		{
-			return _count;
-		}
+		{ return _count }
 		
 		public function get isEmpty():Boolean
-		{
-			return _count == 0;
-		}
+		{ return _count == 0 }
+		
+		public function get type():CardLotType
+		{ return _type }
 		
 		//// EVENTS
 		protected function onCardAdded( c:Card ):void

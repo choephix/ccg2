@@ -78,8 +78,8 @@ package duel.processes
 		
 		public function prependProcess( p:Process ):void
 		{
-			if ( queue.length > 0 )
-				queue[ 0 ].interrupt();
+			//if ( queue.length > 0 )
+				//queue[ 0 ].interrupt();
 			queue.unshift( p );
 		}
 		

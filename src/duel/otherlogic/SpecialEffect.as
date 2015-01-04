@@ -1,6 +1,7 @@
 package duel.otherlogic 
 {
 	import duel.processes.GameplayProcess;
+	import duel.table.CardLotType;
 	/**
 	 * ...
 	 * @author choephix
@@ -12,7 +13,10 @@ package duel.otherlogic
 		/// must accept one arg of type Process
 		public var funcActivate:Function = ERROR;
 		
-		private var _pnames:Array = [];
+		private var _ftypes:Vector.<CardLotType> = new <CardLotType>[];
+		private var _ftcount:int = 0;
+		
+		private var _pnames:Vector.<String> = new <String>[];
 		private var _pncount:int = 0;
 		
 		private var _lastP:GameplayProcess;
@@ -22,13 +26,28 @@ package duel.otherlogic
 			_pncount = _pnames.push.apply( null, names );
 		}
 		
+		public function allowIn( ...cardLotTypes ):void
+		{
+			_ftcount = _ftypes.push.apply( null, cardLotTypes );
+		}
+		
+		public function isAllowedInField( fieldType:CardLotType ):Boolean
+		{
+			if ( _ftcount <= 0 ) return false;
+			if ( _ftcount == 1 ) return _ftypes[0] == fieldType;
+			var i:int = _ftcount;
+			while ( --i >= 0 ) 
+				if ( _ftypes[i] == fieldType ) return true;
+			return false;
+		}
+		
 		protected function isWatched( p:GameplayProcess ):Boolean
 		{
 			if ( _pncount <= 0 ) return false;
 			if ( _pncount == 1 ) return _pnames[0] == p.name;
 			var i:int = _pncount;
 			while ( --i >= 0 ) 
-				if ( _pnames[0] == p.name ) return true;
+				if ( _pnames[i] == p.name ) return true;
 			return false;
 		}
 		

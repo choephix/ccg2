@@ -10,7 +10,7 @@ package duel.table
 		
 		protected var _index:int;
 		public function get index():int { return _index }
-		public function IndexedField( type:FieldType, index:int ) 
+		public function IndexedField( type:CardLotType, index:int ) 
 		{
 			_index = index;
 			super(type);

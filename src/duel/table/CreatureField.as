@@ -1,6 +1,6 @@
 package duel.table {
 	import duel.G;
-	import duel.table.FieldType;
+	import duel.table.CardLotType;
 	
 	/**
 	 * ...
@@ -9,7 +9,7 @@ package duel.table {
 	public class CreatureField extends IndexedField
 	{
 		public function CreatureField( index:int )
-		{ super( FieldType.CREATURE, index ) }
+		{ super( CardLotType.CREATURE_FIELD, index ) }
 		
 		public function get adjacentLeft():CreatureField
 		{

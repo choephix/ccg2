@@ -26,14 +26,34 @@ package duel.cards.properties {
 		{ return flippable }
 		
 		// SPECIAL
-		public var inplaySpecial:SpecialEffect = new SpecialEffect();
-		public function get hasInPlaySpecialEffect():Boolean
-		{ return inplaySpecial != null && !inplaySpecial.isNone }
+		public var specialsTriggered:Vector.<SpecialEffect> = new Vector.<SpecialEffect>();
+		
+		public function get specialsTriggeredCount():int
+		{ return specialsTriggered.length }
+		
+		/// Interrupts current process on activation
+		cardprops function addTriggered( special:SpecialEffect = null ):SpecialEffect
+		{
+			if ( special == null )
+				special = new SpecialEffect();
+			specialsTriggered.push( special );
+			return special;
+		}
 		
 		// ONGOING
-		public var inplayOngoing:OngoingEffect = new OngoingEffect();
-		public function get hasInPlayOngoingEffect():Boolean
-		{ return inplayOngoing != null && !inplayOngoing.isNone }
+		public var specialsOngoing:Vector.<OngoingEffect> = new Vector.<OngoingEffect>();
+		
+		public function get specialsOngoingCount():int
+		{ return specialsOngoing.length }
+		
+		/// Activates without interrupting current process
+		cardprops function addOngoing( special:OngoingEffect = null ):OngoingEffect
+		{
+			if ( special == null )
+				special = new OngoingEffect();
+			specialsOngoing.push( special );
+			return special;
+		}
 		
 		// COMBAT FLIP
 		public var onCombatFlipFunc:Function;

@@ -6,6 +6,8 @@ package duel.table {
 	 */
 	public class Hand extends CardListBase 
 	{
+		public function Hand()
+		{ _type = CardLotType.HAND }
 	}
 
 }

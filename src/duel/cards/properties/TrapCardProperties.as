@@ -18,8 +18,6 @@ package duel.cards.properties {
 		
 		public var effect:TrapEffect = new TrapEffect();
 		
-		public var persistenceLink:Card = null;
-		
 		override public function get startFaceDown():Boolean 
 		{ return true }
 	}

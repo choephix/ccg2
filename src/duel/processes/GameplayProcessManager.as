@@ -217,7 +217,7 @@ package duel.processes
 				return CommonCardQuestions.cannotPlaceCreatureHere( c, field );
 			}
 			pro.onAbort = 
-			function onAbort( c:Card ):void
+			function onAbort( c:Card, field:CreatureField ):void
 			{
 				if ( c.isInPlay )
 					prepend_AddToGrave( c );
@@ -372,35 +372,13 @@ package duel.processes
 		
 		gameprocessing function prepend_DestroyTrap( c:Card ):void
 		{
-			c.propsT.persistenceLink == null;
 			prepend_AddToGrave( c );
 		}
 		
 		//}
 		//{ SPECIAL EFFECTS
 		
-		gameprocessing function prepend_InPlaySpecialActivation( c:Card ):void
-		{
-			prepend_SpecialActivation( c,
-					c.propsC.inplaySpecial, 
-					CommonCardQuestions.isNotInPlay );
-		}
-		
-		gameprocessing function prepend_InGraveSpecialActivation( c:Card ):void
-		{
-			prepend_SpecialActivation( c,
-					c.propsC.graveSpecial, 
-					CommonCardQuestions.isNotInGrave );
-		}
-		
-		gameprocessing function prepend_InHandSpecialActivation( c:Card ):void
-		{
-			prepend_SpecialActivation( c,
-					c.propsC.handSpecial, 
-					CommonCardQuestions.isNotInHand );
-		}
-		
-		private function prepend_SpecialActivation( c:Card, special:SpecialEffect, extraAbortCheck:Function ):void
+		gameprocessing function prepend_TriggerSpecial( c:Card, special:SpecialEffect  ):void 
 		{
 			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
 			var pro:GameplayProcess;
@@ -428,7 +406,8 @@ package duel.processes
 			}
 			function abortCheck( c:Card ):Boolean
 			{ 
-				return extraAbortCheck( c ) || !special.meetsCondition( interruptedProcess );
+				return !special.isAllowedInField( c.lot.type ) ||
+					!special.meetsCondition( interruptedProcess );
 			}
 			
 			/// ACTIVATE_SPECIAL_COMPLETE
@@ -583,13 +562,11 @@ package duel.processes
 			pro.onStart =
 			function complete( c:Card, fromCombat:Boolean=false ):void 
 			{
+				c.lot.removeCard( c );
 				if ( c.owner )
 					prepend_AddToGrave( c );
 				else
-				{
-					c.lot.removeCard( c );
 					c.sprite.animFadeToNothing( true );
-				}
 			}
 		}
 		

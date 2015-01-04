@@ -10,7 +10,7 @@ package duel {
 	import duel.table.TrapField;
 	import duel.cards.Card;
 	import duel.display.cardlots.HandSprite;
-	import duel.table.FieldType;
+	import duel.table.CardLotType;
 	/**
 	 * ...
 	 * @author choephix
@@ -44,8 +44,8 @@ package duel {
 		public function Player( name:String, lifePoints:int )
 		{
 			hand = new Hand();
-			deck = new Field( FieldType.DECK );
-			grave = new Field( FieldType.GRAVEYARD );
+			deck = new Field( CardLotType.DECK );
+			grave = new Field( CardLotType.GRAVEYARD );
 			
 			fieldsC = new CreatureFieldsRow( G.FIELD_COLUMNS );
 			fieldsT = new TrapFieldsRow( G.FIELD_COLUMNS );
