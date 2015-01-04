@@ -31,6 +31,9 @@ package duel.display.utils
 		public static function getColorForCreatureFlippable( rand:Boolean= true ):uint
 		{ return ra( 0xC1684A, .15, .10, .0, rand ) }
 		
+		static public function getColorForCreatureToken( rand:Boolean= true ):uint
+		{ return ra( 0x909090, .15, .10, .0, rand ) }
+		
 		// FIELDS
 		
 		public static function getColorForCreatureField():uint

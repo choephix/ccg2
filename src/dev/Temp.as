@@ -15,6 +15,8 @@ package dev
 		{
 			if ( card.type.isCreature )
 			{
+				if ( card.propsC.isToken ) 
+					return ColorScheme.getColorForCreatureToken( true );
 				if ( card.propsC.needTribute ) 
 					return ColorScheme.getColorForCreatureNeedsTribute( true );
 				if ( card.propsC.startFaceDown ) 

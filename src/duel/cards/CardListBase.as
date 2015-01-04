@@ -120,12 +120,13 @@ package duel.cards {
 			var _nu:Vector.<Card> = new Vector.<Card>();
 			var i:int;
 			while ( _list.length > 0 )
+				_nu.push( _list.pop() );
+			while ( _nu.length > 0 )
 			{
-				i = Math.random() * ( _list.length - 1 );
-				_nu[ Math.random() * ( _nu.length - 1 ) ] = _list[ i ];
-				_list.splice( i, 1 );
+				i = Math.random() * ( _nu.length - 1 );
+				_list[ Math.random() * ( _list.length - 1 ) ] = _nu[ i ];
+				_nu.splice( i, 1 );
 			}
-			_list = _nu;
 			
 			/* ** **/
 			

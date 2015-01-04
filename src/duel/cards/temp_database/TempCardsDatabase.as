@@ -126,6 +126,26 @@ package duel.cards.temp_database
 				/* * */
 				
 				/* * */
+				function( c:Card ):void ///		..C		Summoner
+				{
+					c.name = "Summoner";
+					
+					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
+					c.propsC.basePower = 4;
+					
+					//c.propsC.inplaySpecial.watch( GameplayProcess.DIE );
+					c.propsC.inplaySpecial.watch( GameplayProcess.SUMMON_COMPLETE );
+					c.propsC.inplaySpecial.funcCondition =
+					function( p:GameplayProcess ):Boolean {
+						return c == p.getSourceCard();
+					}
+					c.propsC.inplaySpecial.funcActivate =
+					function( p:GameplayProcess ):Boolean {
+						c.controller.fieldsC.forEachField( TempDatabaseUtils.doSpawnTokenCreatureIfEmpty );
+						c.controller.opponent.fieldsC.forEachField( TempDatabaseUtils.doSpawnTokenCreatureIfEmpty );
+					}
+				},
+				/* * */
 				function( c:Card ):void ///		T..		Stunner
 				{
 					c.name = "Stunner";
@@ -181,6 +201,7 @@ package duel.cards.temp_database
 					c.propsC.inplaySpecial.funcCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.opposingCreature == null ) return false;
+						if ( c.indexedField.opposingCreature.canAttack ) return false;
 						return c.controller.opponent == p.getPlayer();
 					}
 					c.propsC.inplaySpecial.funcActivate =

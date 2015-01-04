@@ -125,8 +125,9 @@ package duel.cards.temp_database
 			}
 		}
 		
-		static public function doSpawnTokenCreature( field:CreatureField ):void
+		static public function doSpawnTokenCreatureIfEmpty( field:CreatureField ):void
 		{
+			if ( !field.isEmpty ) return;
 			Game.current.processes.append_SummonHere( CardFactory.produceCard( -1 ), field, false );
 		}
 		

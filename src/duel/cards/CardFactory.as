@@ -2,6 +2,7 @@ package duel.cards
 {
 	import duel.cards.Card;
 	import duel.cards.temp_database.TempCardsDatabase;
+	import duel.cards.temp_database.TokenCards;
 	
 	/**
 	 * ...
@@ -22,16 +23,10 @@ package duel.cards
 			if ( id >= 0 )	/// BUILD CARD FROM DATABASE
 				TempCardsDatabase.F[ id ]( c );
 			else			// BUILD TOKEN CREATURE CARD
-				setToTokenCreature( c );
+				TokenCards.setToTokenCreature( c );
 			
 			c.initialize();
 			return c;
-		}
-		
-		static private function setToTokenCreature(c:Card):void 
-		{
-			setToCreature( c );
-			c.behaviourC.attack = 0;
 		}
 		
 		//
