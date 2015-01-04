@@ -131,6 +131,11 @@ package duel.cards.temp_database
 			Game.current.processes.append_SummonHere( CardFactory.produceCard( -1 ), field, false );
 		}
 		
+		static public function doResurrectCreature( c:Card, field:CreatureField ):void
+		{
+			Game.current.processes.prepend_ResurrectHere( c, field );
+		}
+		
 	}
 
 }
