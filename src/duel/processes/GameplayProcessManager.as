@@ -517,7 +517,7 @@ package duel.processes
 				
 				if ( c.statusC.currentAttackValue <= dmg.amount )
 				{
-					prepend_Death( c );
+					prepend_Death( c, true );
 					game.showFloatyText( c.sprite.localToGlobal( new Point() ), 
 						c.statusC.currentAttackValue + "-" + dmg.amount + "=DEATH!", 0xFF0000 );
 				}
@@ -556,7 +556,7 @@ package duel.processes
 			pro = chain( pro, gen( GameplayProcess.DIRECT_DAMAGE_COMPLETE, p, dmg ) );
 		}
 		
-		gameprocessing function prepend_Death( c:Card ):void 
+		gameprocessing function prepend_Death( c:Card, bloody:Boolean=false ):void 
 		{
 			var pro:GameplayProcess;
 
@@ -571,14 +571,17 @@ package duel.processes
 			pro.onEnd =
 			function onEnd( c:Card ):void
 			{
-				c.sprite.animDie();
+				if ( bloody )
+					c.sprite.animDie();
+				else
+					c.sprite.animFadeToNothing( false );
 			}
 			pro.abortCheck = CommonCardQuestions.cannotDie;
 			
 			/// DIE_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.DIE_COMPLETE, c ) );
-			pro.delay = .500;
-			pro.onStart =
+			pro.delay = bloody ? .480 : .150;
+			pro.onEnd =
 			function complete( c:Card ):void 
 			{
 				if ( c.owner )

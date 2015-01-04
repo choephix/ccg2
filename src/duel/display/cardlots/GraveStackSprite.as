@@ -22,7 +22,7 @@ package duel.display.cardlots
 			const TARGET_Y:Number = y - cardSpacing * ( cardsCount - 1 );
 			
 			/* * */
-			if ( o.alpha < .1 )
+			if ( o.alpha < .5 )
 			{
 				quickPlaceAt( o, cardsCount - 1 );
 				o.alpha = .0;

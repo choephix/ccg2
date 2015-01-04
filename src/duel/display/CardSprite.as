@@ -338,7 +338,7 @@ package duel.display {
 					onCompleteArgs : [true]
 				} );
 			
-			jugglerStrict.xtween( this, .200, { 
+			jugglerStrict.xtween( this, .240, { 
 					y : y - 50 * ( isTopSide ? 1.0 : -1.0 ),
 					rotation : Math.random() - .5,
 					transition : Transitions.EASE_OUT
@@ -355,7 +355,7 @@ package duel.display {
 		
 		public function animFadeToNothing( dispose:Boolean ):void 
 		{
-			juggler.xtween( this, .330, { 
+			juggler.xtween( this, .150, { 
 					y : y - 50,
 					alpha : .0,
 					//transition : Transitions.EASE_IN,
