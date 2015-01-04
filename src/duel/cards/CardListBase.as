@@ -104,6 +104,34 @@ package duel.cards {
 			onCardsReorder();
 		}
 		
+		public function shuffleCards():void
+		{
+			/* ** ** /// METHOD 1
+			
+			_list.sort( compareFunction );
+			
+			function compareFunction( a:Card, b:Card ):Number
+			{
+				return Math.random() < .5 ? -1 : 1;
+			}
+			
+			/* ** **/// METHOD 2
+			
+			var _nu:Vector.<Card> = new Vector.<Card>();
+			var i:int;
+			while ( _list.length > 0 )
+			{
+				i = Math.random() * ( _list.length - 1 );
+				_nu[ Math.random() * ( _nu.length - 1 ) ] = _list[ i ];
+				_list.splice( i, 1 );
+			}
+			_list = _nu;
+			
+			/* ** **/
+			
+			onCardsReorder();
+		}
+		
 		public function moveCardToTop(c:Card):void 
 		{
 			_list.splice( _list.indexOf( c ), 1 );
