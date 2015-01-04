@@ -28,6 +28,7 @@ package duel.processes
 		static public const RELOCATE_COMPLETE:String = "relocateComplete";
 		static public const ATTACK:String = "attack";
 		static public const ATTACK_COMPLETE:String = "attackComplete";
+		static public const ATTACK_ABORT:String = "attackAbort"
 		static public const CREATURE_DAMAGE:String = "creatureDamage";
 		static public const CREATURE_DAMAGE_COMPLETE:String = "creatureDamageComplete";
 		static public const DIRECT_DAMAGE:String = "directDamage";
@@ -77,7 +78,7 @@ package duel.processes
 		static public const LEAVE_PLAY_COMPLETE:String = "leavePlayComplete";
 		
 		static public const TRIBUTE_CREATURE:String = "tributeCreature";
-		static public const TRIBUTE_CREATURE_COMPLETE:String = "tributeCreatureComplete";
+		static public const TRIBUTE_CREATURE_COMPLETE:String = "tributeCreatureComplete";;
 		
 		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //
 		  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //

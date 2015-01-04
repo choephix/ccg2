@@ -15,7 +15,7 @@ package dev
 		{
 			if ( card.type.isCreature )
 			{
-				if ( card.propsC.needsTribute ) 
+				if ( card.propsC.needTribute ) 
 					return ColorScheme.getColorForCreatureNeedsTribute( true );
 				if ( card.propsC.startFaceDown ) 
 					return ColorScheme.getColorForCreatureFlippable( true );

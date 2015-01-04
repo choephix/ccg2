@@ -1,7 +1,9 @@
 package duel.cards.temp_database 
 {
 	import air.update.descriptors.ConfigurationDescriptor;
+	import duel.cards.buffs.Buff;
 	import duel.cards.Card;
+	import duel.cards.properties.cardprops;
 	import duel.Damage;
 	import duel.DamageType;
 	import duel.G;
@@ -12,6 +14,7 @@ package duel.cards.temp_database
 	import duel.table.CreatureField;
 	
 	use namespace gameprocessgetter;
+	use namespace cardprops;
 	/**
 	 * ...
 	 * @author choephix
@@ -30,10 +33,10 @@ package duel.cards.temp_database
 					c.name = "TEST TEST TEST TEST TEST";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = G.INIT_LP;
+					c.propsC.basePower = G.INIT_LP;
 					c.propsC.haste = true;
-					c.propsC.startFaceDown = true;
-					c.propsC.needsTribute = true;
+					c.propsC.flippable = true;
+					c.propsC.needTribute = true;
 					
 					///		_COMPLETE
 					///		
@@ -88,7 +91,7 @@ package duel.cards.temp_database
 					function():void {
 						if ( c.indexedField.opposingCreature != null )
 						{
-							c.propsC.attack++;
+							c.propsC.basePower++;
 							return;
 						}
 					}
@@ -123,16 +126,82 @@ package duel.cards.temp_database
 				/* * */
 				
 				/* * */
+				function( c:Card ):void ///		T..		Stunner
+				{
+					c.name = "Stunner";
+					
+					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
+					
+					var b:Buff = Buff.generateFlagBuff( Buff.NO_ATTACK );
+					var target:Card;
+					
+					c.propsT.persistent = true;
+					
+					// ACTIVATION
+					c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
+					c.propsT.effect.funcActivateCondition =
+					function( p:GameplayProcess ):Boolean {
+						if ( c.indexedField.index != p.getIndex() ) return false;
+						if ( c.controller.opponent != p.getAttacker().controller ) return false;
+						return true;
+					}
+					c.propsT.effect.funcActivate =
+					function( p:GameplayProcess ):void {
+						c.propsT.persistenceLink = 
+						target = c.indexedField.opposingCreature;
+						if ( target != null )
+							target.statusC.addBuff( b );
+					}
+					
+					// DEACTIVATION
+					c.propsT.effect.watchForDeactivation( GameplayProcess.TURN_START );
+					c.propsT.effect.funcDeactivateCondition =
+					function( p:GameplayProcess ):Boolean {
+						return c.controller == p.getPlayer();
+					}
+					c.propsT.effect.funcDeactivate =
+					function( p:GameplayProcess ):void {
+						if ( target != null )
+							target.statusC.removeBuff( b );
+						target = null;
+					}
+					
+					c.descr = "On opp. attack - stun attacking creature forever\n(it's CONCEPT DEMO!)";
+				},
+				/* * */
+				function( c:Card ):void ///		..C		Arch-Taunter
+				{
+					c.name = "Arch-Taunter";
+					
+					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
+					c.propsC.basePower = 8;
+					c.propsC.needTribute = true;
+					
+					c.propsC.inplaySpecial.watch( GameplayProcess.TURN_END );
+					c.propsC.inplaySpecial.funcCondition =
+					function( p:GameplayProcess ):Boolean {
+						if ( c.indexedField.opposingCreature == null ) return false;
+						return c.controller.opponent == p.getPlayer();
+					}
+					c.propsC.inplaySpecial.funcActivate =
+					function( p:GameplayProcess ):Boolean {
+						TempDatabaseUtils.doForceAttack( c.indexedField.opposingCreature, false );
+					}
+				},
+				/* * */
 				function( c:Card ):void ///		..C		The Producer
 				{
 					c.name = "The Producer";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 0;
+					c.propsC.basePower = 0;
+					
+					//var b:Buff = new Buff( Buff.POWER_OFFSET, 0 );
+					//b.sticky = true;
 					
 					c.propsC.inplayOngoing.funcUpdate =
 					function( p:GameplayProcess ):void {
-						c.propsC.attack = c.controller.hand.cardsCount * 2;
+						c.propsC.basePower = c.controller.hand.cardsCount * 2;
 					}
 				},
 				/* * */
@@ -141,8 +210,8 @@ package duel.cards.temp_database
 					c.name = "Insistent Goeff";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 14;
-					c.propsC.needsTribute = true;
+					c.propsC.basePower = 14;
+					c.propsC.needTribute = true;
 					
 					///		grave special
 					c.propsC.handSpecial.watch( GameplayProcess.TURN_END );
@@ -161,8 +230,8 @@ package duel.cards.temp_database
 					c.name = "Ragnarok";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 0;
-					c.propsC.needsTribute = true;
+					c.propsC.basePower = 0;
+					c.propsC.needTribute = true;
 					
 					c.propsC.inplaySpecial.watch( GameplayProcess.ENTER_PLAY_COMPLETE );
 					c.propsC.inplaySpecial.funcCondition =
@@ -184,8 +253,8 @@ package duel.cards.temp_database
 					c.name = "Bozo";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 9;
-					c.propsC.startFaceDown = true;
+					c.propsC.basePower = 9;
+					c.propsC.flippable = true;
 				},
 				/* * */
 				function( c:Card ):void ///		T..		No Flippers!
@@ -214,7 +283,7 @@ package duel.cards.temp_database
 					c.name = "Gonzales";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 3;
+					c.propsC.basePower = 3;
 					c.propsC.haste = true;
 				},
 				/* * */
@@ -223,7 +292,7 @@ package duel.cards.temp_database
 					c.name = "Immortal Bob";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 2;
+					c.propsC.basePower = 2;
 					
 					c.propsC.graveSpecial.watch( GameplayProcess.TURN_END );
 					c.propsC.graveSpecial.funcActivate =
@@ -265,6 +334,8 @@ package duel.cards.temp_database
 					c.name = "Field Lock";
 					
 					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
+					
+					c.propsT.persistent = true;
 					
 					// ACTIVATION
 					c.propsT.effect.watchForActivation( GameplayProcess.SUMMON );
@@ -325,7 +396,7 @@ package duel.cards.temp_database
 					c.name = "Kamikaze Pao";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 9;
+					c.propsC.basePower = 9;
 					c.propsC.haste = true;
 					
 					c.propsC.inplaySpecial.watch( GameplayProcess.TURN_END );
@@ -335,13 +406,33 @@ package duel.cards.temp_database
 					}
 				},
 				/* * */
+				function( c:Card ):void ///		..C		Kamikaze Pao's Apprentice
+				{
+					c.name = "Kamikaze Pao's Apprentice";
+					
+					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
+					c.propsC.basePower = 9;
+					c.propsC.haste = true;
+					
+					c.propsC.inplaySpecial.watch( GameplayProcess.ATTACK_ABORT, GameplayProcess.ATTACK_COMPLETE );
+					c.propsC.inplaySpecial.funcCondition = 
+					function( p:GameplayProcess ):Boolean {
+						if ( !p.getSourceCard().isInPlay ) return false;
+						return c.indexedField.index == p.getSourceCard().indexedField.index;
+					}
+					c.propsC.inplaySpecial.funcActivate =
+					function( p:GameplayProcess ):void {
+						TempDatabaseUtils.doKill( c );
+					}
+				},
+				/* * */
 				function( c:Card ):void ///		..C		Flippers
 				{
 					c.name = "Flippers";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 6;
-					c.propsC.startFaceDown = true;
+					c.propsC.basePower = 6;
+					c.propsC.flippable = true;
 					c.propsC.onCombatFlipFunc =
 					function():void {
 						if ( c.indexedField.opposingCreature != null )
@@ -404,7 +495,7 @@ package duel.cards.temp_database
 					c.name = "Flappy Bird";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 7;
+					c.propsC.basePower = 7;
 					c.propsC.swift = true;
 				},
 				/* * */
@@ -419,7 +510,7 @@ package duel.cards.temp_database
 					c.name = "Spying Joe";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 7;
+					c.propsC.basePower = 7;
 					
 					c.propsC.inplayOngoing.funcUpdate =
 					function( p:GameplayProcess ):void {
@@ -433,7 +524,7 @@ package duel.cards.temp_database
 					c.name = "Taunter";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 8;
+					c.propsC.basePower = 8;
 					
 					c.propsC.inplaySpecial.watch( GameplayProcess.TURN_START_COMPLETE );
 					c.propsC.inplaySpecial.funcCondition =
@@ -452,7 +543,7 @@ package duel.cards.temp_database
 					c.name = "Berserker";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 9;
+					c.propsC.basePower = 9;
 					
 					c.propsC.inplaySpecial.watch( GameplayProcess.TURN_START_COMPLETE );
 					c.propsC.inplaySpecial.funcCondition =
@@ -470,12 +561,12 @@ package duel.cards.temp_database
 					c.name = "Mr Miracle";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 0;
-					c.propsC.needsTribute = true;
+					c.propsC.basePower = 0;
+					c.propsC.needTribute = true;
 					
 					c.propsC.inplayOngoing.funcUpdate =
 					function( p:GameplayProcess ):void {
-						c.propsC.attack = c.controller.opponent.creatureCount * 5;
+						c.propsC.basePower = c.controller.opponent.creatureCount * 5;
 					}
 				},
 				/* * */
@@ -484,7 +575,7 @@ package duel.cards.temp_database
 					c.name = "Impatient Jeff";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 13;
+					c.propsC.basePower = 13;
 					
 					c.propsC.handSpecial.watch( GameplayProcess.TURN_END );
 					c.propsC.handSpecial.funcCondition =
@@ -502,11 +593,11 @@ package duel.cards.temp_database
 					c.name = "Yang";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 5;
+					c.propsC.basePower = 5;
 					
 					c.propsC.inplayOngoing.funcUpdate =
 					function( p:GameplayProcess ):void {
-						c.propsC.attack = hasAdjacentYin() ? 15 : 5;
+						c.propsC.basePower = hasAdjacentYin() ? 15 : 5;
 					}
 					function hasAdjacentYin():Boolean {
 						var cf:CreatureField;
@@ -523,11 +614,11 @@ package duel.cards.temp_database
 					c.name = "Yin";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 6;
+					c.propsC.basePower = 6;
 					
 					c.propsC.inplayOngoing.funcUpdate =
 					function( p:GameplayProcess ):void {
-						c.propsC.attack = hasAdjacentYang() ? 14 : 6;
+						c.propsC.basePower = hasAdjacentYang() ? 14 : 6;
 					}
 					function hasAdjacentYang():Boolean {
 						var cf:CreatureField;
@@ -544,7 +635,7 @@ package duel.cards.temp_database
 					c.name = "Obelix";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 14;
+					c.propsC.basePower = 14;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Bro
@@ -552,7 +643,7 @@ package duel.cards.temp_database
 					c.name = "Bro";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 13;
+					c.propsC.basePower = 13;
 					c.propsC.haste = true;
 				},
 				/* * */
@@ -561,8 +652,8 @@ package duel.cards.temp_database
 					c.name = "Saboteur";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 3;
-					c.propsC.startFaceDown = true;
+					c.propsC.basePower = 3;
+					c.propsC.flippable = true;
 					c.propsC.onSafeFlipFunc =
 					function():void {
 						TempDatabaseUtils.doPutInHandTrapsRow( c.controller.opponent );
@@ -574,8 +665,8 @@ package duel.cards.temp_database
 					c.name = "Hulk";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 16;
-					c.propsC.berserk = true;
+					c.propsC.basePower = 16;
+					c.propsC.needTribute = true;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Zig
@@ -583,8 +674,8 @@ package duel.cards.temp_database
 					c.name = "Zig";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 7;
-					c.propsC.startFaceDown = true;
+					c.propsC.basePower = 7;
+					c.propsC.flippable = true;
 					
 					c.propsC.inplaySpecial.watch( GameplayProcess.TURN_END );
 					c.propsC.inplaySpecial.funcCondition =
@@ -602,7 +693,7 @@ package duel.cards.temp_database
 					c.name = "Zag";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 7;
+					c.propsC.basePower = 7;
 					
 					c.propsC.inplaySpecial.watch( GameplayProcess.TURN_END );
 					c.propsC.inplaySpecial.funcCondition =
@@ -643,31 +734,9 @@ package duel.cards.temp_database
 					c.name = "Big Shield";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 17;
-					c.propsC.noattack = true;
-					c.propsC.startFaceDown = true;
-				},
-				/* * */
-				function( c:Card ):void ///		T..		Stunner
-				{
-					c.name = "Stunner";
-					
-					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
-					
-					c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
-					c.propsT.effect.funcActivateCondition =
-					function( p:GameplayProcess ):Boolean {
-						if ( c.indexedField.index != p.getIndex() ) return false;
-						if ( c.controller.opponent != p.getAttacker().controller ) return false;
-						return true;
-					}
-					c.propsT.effect.funcActivate =
-					function( p:GameplayProcess ):void {
-						if ( c.indexedField.opposingCreature != null )
-							c.indexedField.opposingCreature.propsC.noattack = true;
-					}
-					
-					c.descr = "On opp. attack - stun attacking creature forever\n(it's CONCEPT DEMO!)";
+					c.propsC.basePower = 17;
+					c.propsC.noAttack = true;
+					c.propsC.flippable = true;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Random Dude
@@ -675,7 +744,7 @@ package duel.cards.temp_database
 					c.name = "Random Dude #1";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 8;
+					c.propsC.basePower = 8;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Random Dude
@@ -683,7 +752,7 @@ package duel.cards.temp_database
 					c.name = "Random Dude #2";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 8;
+					c.propsC.basePower = 8;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Random Dude
@@ -691,7 +760,7 @@ package duel.cards.temp_database
 					c.name = "Random Dude #3";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 8;
+					c.propsC.basePower = 8;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Random Dude
@@ -699,7 +768,7 @@ package duel.cards.temp_database
 					c.name = "Random Dude #4";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 8;
+					c.propsC.basePower = 8;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Random Dude
@@ -707,7 +776,7 @@ package duel.cards.temp_database
 					c.name = "Random Dude #5";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 8;
+					c.propsC.basePower = 8;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Random Dude
@@ -715,7 +784,7 @@ package duel.cards.temp_database
 					c.name = "Random Dude #6";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.attack = 8;
+					c.propsC.basePower = 8;
 				},
 				/* * */
 				null,

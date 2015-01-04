@@ -117,7 +117,7 @@ package duel.display {
 					tfAttak.touchable = false;
 					tfAttak.hAlign = "left";
 					tfAttak.duration = .450;
-					tfAttak.currentValue = card.propsC.attack;
+					tfAttak.currentValue = card.statusC.currentPowerValue;
 					front.addChild( tfAttak );
 					break;
 				case CardType.TRAP:
@@ -160,7 +160,7 @@ package duel.display {
 			if ( card.type.isCreature )
 			{
 				if ( !card.faceDown ) {
-					tfAttak.targetValue = card.propsC.attack;
+					tfAttak.targetValue = card.statusC.currentAttackValue;
 					tfDescr.text = card.statusC.toString();
 				}
 				

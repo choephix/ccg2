@@ -1,5 +1,6 @@
 package duel.cards.temp_database 
 {
+	import duel.cards.CreatureCardStatus;
 	import duel.cards.properties.CreatureCardProperties;
 	import duel.cards.properties.TrapCardProperties;
 	import duel.cards.Card;
@@ -27,6 +28,7 @@ package duel.cards.temp_database
 		{
 			c.type = CardType.CREATURE;
 			c.props = new CreatureCardProperties();
+			c.statusC = new CreatureCardStatus( c );
 		}
 			
 		public static function setToTrap( c:Card ):void

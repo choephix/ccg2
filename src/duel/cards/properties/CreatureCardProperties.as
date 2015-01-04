@@ -3,20 +3,25 @@ package duel.cards.properties {
 	import duel.DamageType;
 	import duel.otherlogic.OngoingEffect;
 	import duel.otherlogic.SpecialEffect;
+	
+	use namespace cardprops;
 	/**
 	 * ...
 	 * @author choephix
 	 */
 	public class CreatureCardProperties extends CardProperties 
 	{
-		public var attack:int = 0;
-		public var needsTribute:Boolean = false;
+		cardprops var basePower:int = 0;
+		cardprops var needTribute:Boolean = false;
+		cardprops var flippable:Boolean = false;
 		
-		public var haste:Boolean = false; 		// CAN ATTACK OR MOVE FIRST TURN
-		public var noattack:Boolean = false; 	// CANNOT ATTACK
-		public var nomove:Boolean = false; 		// CANNOT MOVE
-		public var swift:Boolean = false; 		// CAN ATTACK AND MOVE SAME TURN
-		public var berserk:Boolean = false;		// ATTACKS AUTOMATICALLY
+		cardprops var haste:Boolean = false; 		// CAN ATTACK OR MOVE FIRST TURN
+		cardprops var swift:Boolean = false; 		// CAN ATTACK AND MOVE SAME TURN
+		cardprops var noAttack:Boolean = false; 	// CANNOT ATTACK
+		cardprops var noMove:Boolean = false; 		// CANNOT MOVE
+		
+		override public function get startFaceDown():Boolean 
+		{ return flippable }
 		
 		// SPECIAL
 		public var inplaySpecial:SpecialEffect = new SpecialEffect();
@@ -55,28 +60,5 @@ package duel.cards.properties {
 		//
 		
 		//
-		public function genAttackDamage():Damage
-		{
-			return new Damage( attack, DamageType.COMBAT, card );
-		}
-		
-		//
-		public function toString():String 
-		{
-			var a:Array = [];
-			if ( needsTribute )	a.push( "tributes 1" );
-			if ( haste )	a.push( "haste" );
-			if ( noattack )	a.push( "no attack" );
-			if ( nomove )	a.push( "no move" );
-			if ( swift )	a.push( "swift" );
-			if ( berserk )	a.push( "berserk" );
-			if ( hasCombatFlipEffect )	a.push( "combat-flip" );
-			if ( hasSafeFlipEffect )	a.push( "safe-flip" );
-			if ( hasHandSpecial )	a.push( "inhand" );
-			if ( hasGraveSpecial )	a.push( "ingrave" );
-			if ( hasInPlaySpecialEffect )	a.push( "special" );
-			if ( hasInPlayOngoingEffect )	a.push( "ongoing" );
-			return a.join( "\n" );
-		}
 	}
 }

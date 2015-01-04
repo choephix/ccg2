@@ -28,6 +28,7 @@ package duel.cards
 		public var name:String;
 		public var descr:String;
 		public var type:CardType;
+		public var statusC:CreatureCardStatus;
 		private var _props:CardProperties;
 		
 		// BATTLE
@@ -123,6 +124,12 @@ package duel.cards
 					return;
 				}
 				else
+				if ( propsT.isPersistent && propsT.persistenceLink && !propsT.persistenceLink.isInPlay )
+				{
+					processes.prepend_DestroyTrap( this );
+					return;
+				}
+				else
 				if ( propsT.isPersistent && propsT.effect.isActive )
 				{
 					propsT.effect.update( p );
@@ -160,8 +167,6 @@ package duel.cards
 		
 		// GETTERS & SETTERS - 0
 		
-		// GETTERS & SETTERS - 1
-		
 		public function get props():CardProperties
 		{ return _props }
 		public function set props(value:CardProperties):void 
@@ -173,6 +178,7 @@ package duel.cards
 		public function get propsT():TrapCardProperties
 		{ return props as TrapCardProperties }
 		
+		// GETTERS & SETTERS - 1
 		
 		public function get field():Field
 		{ return lot as Field }
@@ -183,6 +189,7 @@ package duel.cards
 		public function get controller():Player
 		{ return lot == null ? null : lot.owner }
 		
+		// GETTERS & SETTERS - 2
 		
 		public function get isInPlay():Boolean
 		{ return lot is IndexedField }
@@ -196,9 +203,7 @@ package duel.cards
 		public function get isInDeck():Boolean
 		{ return field != null && field.type.isDeck }
 		
-		
-		
-		// GETTERS & SETTERS - 2
+		// GETTERS & SETTERS - 3
 		public function get faceDown():Boolean{return _faceDown}
 		public function set faceDown( value:Boolean ):void
 		{
@@ -208,8 +213,8 @@ package duel.cards
 		}
 		
 		public function get exhausted():Boolean {
-			if ( !Game.GODMODE && summonedThisTurn && !propsC.haste ) return true;
-			if ( propsC.swift ) return actionsAttack > 0 && actionsRelocate > 0;
+			if ( !Game.GODMODE && summonedThisTurn && !statusC.hasHaste ) return true;
+			if ( statusC.hasSwift ) return actionsAttack > 0 && actionsRelocate > 0;
 			return actionsRelocate + actionsAttack > 0;
 		}
 		
@@ -218,14 +223,14 @@ package duel.cards
 			if ( !type.isCreature ) return false;
 			if ( !isInPlay ) return false;
 			if ( exhausted ) return false;
-			if ( propsC.noattack ) return false;
+			if ( statusC.hasNoAttack ) return false;
 			return actionsAttack == 0;
 		}
 		public function get canRelocate():Boolean { 
 			if ( !type.isCreature ) return false;
 			if ( !isInPlay ) return false;
 			if ( exhausted ) return false;
-			if ( propsC.nomove ) return false;
+			if ( statusC.hasNoRelocation ) return false;
 			return actionsRelocate == 0;
 		}
 		

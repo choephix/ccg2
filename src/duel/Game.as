@@ -373,6 +373,11 @@ package duel
 						processes.prepend_Draw( field.owner, 5 );
 						return;
 					}
+					if ( GODMODE && field.type.isGraveyard )
+					{
+						processes.prepend_AddToHand( field.topCard, currentPlayer );
+						return;
+					}
 				}
 				
 				if ( field.type.isDeck && field.owner == currentPlayer )
@@ -507,6 +512,7 @@ package duel
 		
 		public function performRelocation( c:Card, field:CreatureField ):void
 		{
+			selectCard( null );
 			processes.append_Relocation( c, field, false );
 		}
 		
@@ -518,11 +524,13 @@ package duel
 		
 		public function performCardAttack( c:Card ):void
 		{
+			selectCard( null );
 			processes.append_Attack( c, false );
 		}
 		
 		public function performSafeFlip( c:Card ):void
 		{
+			selectCard( null );
 			processes.prepend_SafeFlip( c );
 		}
 		

@@ -134,7 +134,7 @@ package duel.processes
 			function onEnd( c:Card, field:CreatureField ):void
 			{
 				/// TRIBUTE_CREATURE
-				if ( isManual && c.propsC.needsTribute )
+				if ( isManual && c.statusC.needTribute )
 				{
 					if ( field.topCard == null )
 					{
@@ -150,7 +150,7 @@ package duel.processes
 			{
 				if ( c.isInPlay ) return true;
 				if ( field.isLocked ) return true;
-				if ( isManual && c.propsC.needsTribute && field.topCard == null ) return true;
+				if ( isManual && c.statusC.needTribute && field.topCard == null ) return true;
 				return false;
 			}
 			
@@ -372,6 +372,7 @@ package duel.processes
 		
 		gameprocessing function prepend_DestroyTrap( c:Card ):void
 		{
+			c.propsT.persistenceLink == null;
 			prepend_AddToGrave( c );
 		}
 		
@@ -459,16 +460,22 @@ package duel.processes
 				
 				if ( c.indexedField.opposingCreature == null )
 				{
-					prepend_DirectDamage( c.controller.opponent, c.propsC.genAttackDamage() );
+					prepend_DirectDamage( c.controller.opponent, c.statusC.generateAttackDamage() );
 				}
 				else
 				{
 					c.indexedField.opposingCreature.sprite.animAttackPerform();
-					prepend_CreatureDamage( c, c.indexedField.opposingCreature.propsC.genAttackDamage() );
-					prepend_CreatureDamage( c.indexedField.opposingCreature, c.propsC.genAttackDamage() );
+					prepend_CreatureDamage( c, c.indexedField.opposingCreature.statusC.generateAttackDamage() );
+					prepend_CreatureDamage( c.indexedField.opposingCreature, c.statusC.generateAttackDamage() );
 				}
 			}
-			pro.onAbort = completeOrAbort;
+			pro.onAbort =
+			function abort():void
+			{
+				c.sprite.animAttackAbort();
+				completeOrAbort( c );
+				prependProcess( gen( GameplayProcess.ATTACK_ABORT, c ) );
+			}
 			pro.abortCheck = CommonCardQuestions.cannotPerformAttack;
 			
 			/// ATTACK_COMPLETE
@@ -508,17 +515,17 @@ package duel.processes
 				if ( !c.isInPlay ) 
 					return;
 				
-				if ( c.propsC.attack <= dmg.amount )
+				if ( c.statusC.currentAttackValue <= dmg.amount )
 				{
 					prepend_Death( c );
 					game.showFloatyText( c.sprite.localToGlobal( new Point() ), 
-						c.propsC.attack + "-" + dmg.amount + "=DEATH!", 0xFF0000 );
+						c.statusC.currentAttackValue + "-" + dmg.amount + "=DEATH!", 0xFF0000 );
 				}
 				else
 				{
 					c.sprite.animDamageOnly();
 					game.showFloatyText( c.sprite.localToGlobal( new Point() ), 
-						c.propsC.attack + "-" + dmg.amount + "=" + (c.propsC.attack - dmg.amount), 0x00FFFF );
+						c.statusC.currentAttackValue + "-" + dmg.amount + "=" + (c.statusC.currentAttackValue - dmg.amount), 0x00FFFF );
 				}
 			}
 			pro.onAbort =
