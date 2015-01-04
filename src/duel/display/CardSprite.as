@@ -267,7 +267,8 @@ package duel.display {
 			q.color = 0xCF873F;
 			q.alpha = .3;
 			card.indexedField.sprite.addChild( q );
-			jugglerStrict.tween( q, .400,
+			//jugglerStrict.tween( q, .400,
+			juggler.tween( q, .400,
 				{ 
 					alpha: .0, 
 					scaleX: 5,
@@ -323,7 +324,7 @@ package duel.display {
 		{
 			setAsTopChild();
 			
-			animBlink( true, 0xB00000 ).blendMode = BlendMode.NORMAL;
+			animBlink( false, 0xB00000 ).blendMode = BlendMode.NORMAL;
 			
 			__bloodSprite = assets.generateImage( "card-blood" );
 			__bloodSprite.alignPivot();
@@ -337,7 +338,7 @@ package duel.display {
 					onCompleteArgs : [true]
 				} );
 			
-			juggler.xtween( this, .200, { 
+			jugglerStrict.xtween( this, .200, { 
 					y : y - 50 * ( isTopSide ? 1.0 : -1.0 ),
 					rotation : Math.random() - .5,
 					transition : Transitions.EASE_OUT
@@ -350,6 +351,22 @@ package duel.display {
 		animation function animSpecialFlip():void
 		{
 			setFaceDown( false, true );
+		}
+		
+		public function animFadeToNothing( dispose:Boolean ):void 
+		{
+			juggler.xtween( this, .330, { 
+					y : y - 50,
+					alpha : .0,
+					//transition : Transitions.EASE_IN,
+					onComplete : onComplete
+				} );
+			function onComplete():void
+			{
+				if ( !dispose )
+					return;
+				removeFromParent( true );
+			}
 		}
 		
 		animation function resetAnimState():void
@@ -369,7 +386,7 @@ package duel.display {
 			q.blendMode = BlendMode.ADD;
 			q.color = color;
 			q.alpha = .999;
-			jugglerStrict.tween( q, .750,
+			( strict ? jugglerStrict : juggler ).tween( q, .500,
 				{ 
 					alpha: .0, 
 					onComplete : q.removeFromParent,

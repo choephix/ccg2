@@ -577,10 +577,17 @@ package duel.processes
 			
 			/// DIE_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.DIE_COMPLETE, c ) );
+			pro.delay = .500;
 			pro.onStart =
 			function complete( c:Card ):void 
 			{
-				prepend_AddToGrave( c );
+				if ( c.owner )
+					prepend_AddToGrave( c );
+				else
+				{
+					c.lot.removeCard( c );
+					c.sprite.animFadeToNothing( true );
+				}
 			}
 		}
 		
