@@ -98,8 +98,9 @@ package duel.processes
 			if ( args[ 0 ] is IndexedField ) 
 				return IndexedField( args[ 0 ] ).index;
 			
-			CONGFIG::development
+			CONFIG::development
 			{ throw new ArgumentError( "What to do... ..." ); }
+			return -1;
 		}
 		
 		gameprocessgetter function getController():Player
@@ -107,8 +108,9 @@ package duel.processes
 			if ( args[ 0 ] is Card ) 
 				return Card( args[ 0 ] ).controller;
 			
-			CONGFIG::development
+			CONFIG::development
 			{ throw new ArgumentError( "What to do... ..." ); }
+			return null;
 		}
 		
 		gameprocessgetter function getPlayer():Player
@@ -116,8 +118,9 @@ package duel.processes
 			if ( args[ 0 ] is Player ) 
 				return Player( args[ 0 ] );
 			
-			CONGFIG::development
+			CONFIG::development
 			{ throw new ArgumentError( "What to do... ..." ); }
+			return null;
 		}
 		
 		gameprocessgetter function getSourceCard():Card
@@ -125,8 +128,9 @@ package duel.processes
 			if ( args[ 0 ] is Card ) 
 				return Card( args[ 0 ] );
 			
-			CONGFIG::development
+			CONFIG::development
 			{ throw new ArgumentError( "What to do... ..." ); }
+			return null;
 		}
 		
 		gameprocessgetter function getAttacker():Card
@@ -134,8 +138,9 @@ package duel.processes
 			if ( args[ 0 ] is Card && Card( args[ 0 ] ).type.isCreature ) 
 				return Card( args[ 0 ] );
 			
-			CONGFIG::development
+			CONFIG::development
 			{ throw new ArgumentError( "What to do... ..." ); }
+			return null;
 		}
 		
 		gameprocessgetter function getSummoned():Card
@@ -143,8 +148,9 @@ package duel.processes
 			if ( args[ 0 ] is Card && Card( args[ 0 ] ).type.isCreature ) 
 				return Card( args[ 0 ] );
 			
-			CONGFIG::development
+			CONFIG::development
 			{ throw new ArgumentError( "What to do... ..." ); }
+			return null;
 		}
 		
 		gameprocessgetter function getSummonedField():CreatureField
@@ -152,8 +158,9 @@ package duel.processes
 			if ( args.length > 1 && args[ 1 ] is CreatureField ) 
 				return CreatureField( args[ 1 ] );
 			
-			CONGFIG::development
+			CONFIG::development
 			{ throw new ArgumentError( "What to do... ..." ); }
+			return null;
 		}
 		
 		gameprocessgetter function getDeathIsFromCombat():Boolean
@@ -161,8 +168,9 @@ package duel.processes
 			if ( args.length > 1 && args[ 1 ] is Boolean )
 				return args[ 1 ] as Boolean;
 			
-			CONGFIG::development
-			{ throw new ArgumentError( "What to do... ..." ); } }
+			CONFIG::development
+			{ throw new ArgumentError( "What to do... ..." ); }
+			return false;
 		}
 		
 		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //

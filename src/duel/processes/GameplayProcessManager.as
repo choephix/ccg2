@@ -580,8 +580,7 @@ package duel.processes
 			
 			/// DIE_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.DIE_COMPLETE, c, fromCombat ) );
-			pro.delay = fromCombat ? .480 : .150;
-			pro.onEnd =
+			pro.onStart =
 			function complete( c:Card, fromCombat:Boolean=false ):void 
 			{
 				if ( c.owner )
@@ -932,15 +931,6 @@ package duel.processes
 		
 		gameprocessing static function gen( name:String, ...args ):GameplayProcess
 		{
-			CONFIG::development
-			{ 
-				while ( args[ 0 ] is Function )
-				{
-					args.shift();
-					error( "You left a function here" );
-				}
-			}
-			
 			var p:GameplayProcess = new GameplayProcess();
 			p.name = name;
 			p.args = args;
