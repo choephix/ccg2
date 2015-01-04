@@ -96,9 +96,9 @@ package duel.cards
 		public static function cannotTakeDamage( c:Card, dmg:Damage ):Boolean
 		{ return !canTakeDamage( c, dmg ) }
 		
-		public static function canDie( c:Card ):Boolean
+		public static function canDie( c:Card, fromCombat:Boolean=false ):Boolean
 		{ return c.isInPlay }
-		public static function cannotDie( c:Card ):Boolean
+		public static function cannotDie( c:Card, fromCombat:Boolean=false ):Boolean
 		{ return !canDie( c ) }
 		
 		public static function canFlipInPlay( c:Card ):Boolean
