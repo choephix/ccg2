@@ -97,49 +97,72 @@ package duel.processes
 			}
 			if ( args[ 0 ] is IndexedField ) 
 				return IndexedField( args[ 0 ] ).index;
-			throw new ArgumentError( "What to do... ..." );
+			
+			CONGFIG::development
+			{ throw new ArgumentError( "What to do... ..." ); }
 		}
 		
 		gameprocessgetter function getController():Player
 		{
 			if ( args[ 0 ] is Card ) 
 				return Card( args[ 0 ] ).controller;
-			throw new ArgumentError( "What to do... ..." );
+			
+			CONGFIG::development
+			{ throw new ArgumentError( "What to do... ..." ); }
 		}
 		
 		gameprocessgetter function getPlayer():Player
 		{
 			if ( args[ 0 ] is Player ) 
 				return Player( args[ 0 ] );
-			throw new ArgumentError( "What to do... ..." );
+			
+			CONGFIG::development
+			{ throw new ArgumentError( "What to do... ..." ); }
 		}
 		
 		gameprocessgetter function getSourceCard():Card
 		{
 			if ( args[ 0 ] is Card ) 
 				return Card( args[ 0 ] );
-			throw new ArgumentError( "What to do... ..." );
+			
+			CONGFIG::development
+			{ throw new ArgumentError( "What to do... ..." ); }
 		}
 		
 		gameprocessgetter function getAttacker():Card
 		{
 			if ( args[ 0 ] is Card && Card( args[ 0 ] ).type.isCreature ) 
 				return Card( args[ 0 ] );
-			throw new ArgumentError( "What to do... ..." );
+			
+			CONGFIG::development
+			{ throw new ArgumentError( "What to do... ..." ); }
 		}
 		
 		gameprocessgetter function getSummoned():Card
 		{
 			if ( args[ 0 ] is Card && Card( args[ 0 ] ).type.isCreature ) 
 				return Card( args[ 0 ] );
-			throw new ArgumentError( "What to do... ..." );
+			
+			CONGFIG::development
+			{ throw new ArgumentError( "What to do... ..." ); }
 		}
 		
 		gameprocessgetter function getSummonedField():CreatureField
 		{
-			if ( args[ 1 ] is CreatureField ) 
+			if ( args.length > 1 && args[ 1 ] is CreatureField ) 
 				return CreatureField( args[ 1 ] );
-			throw new ArgumentError( "What to do... ..." );
+			
+			CONGFIG::development
+			{ throw new ArgumentError( "What to do... ..." ); }
+		}
+		
+		gameprocessgetter function getDeathIsFromCombat():Boolean
+		{
+			if ( args.length > 1 && args[ 1 ] is Boolean )
+				return args[ 1 ] as Boolean;
+			
+			CONGFIG::development
+			{ throw new ArgumentError( "What to do... ..." ); } }
 		}
 		
 		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //

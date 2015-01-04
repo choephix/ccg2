@@ -556,22 +556,22 @@ package duel.processes
 			pro = chain( pro, gen( GameplayProcess.DIRECT_DAMAGE_COMPLETE, p, dmg ) );
 		}
 		
-		gameprocessing function prepend_Death( c:Card, bloody:Boolean=false ):void 
+		gameprocessing function prepend_Death( c:Card, fromCombat:Boolean=false ):void 
 		{
 			var pro:GameplayProcess;
 
 			/// DIE
-			pro = chain( pro, gen( GameplayProcess.DIE, c ) );
+			pro = chain( pro, gen( GameplayProcess.DIE, c, fromCombat ) );
 			pro.onStart =
-			function onStart( c:Card ):void
+			function onStart( c:Card, fromCombat:Boolean=false ):void
 			{
 				if ( c.faceDown )
 					prepend_SilentFlip( c );
 			}
 			pro.onEnd =
-			function onEnd( c:Card ):void
+			function onEnd( c:Card, fromCombat:Boolean=false ):void
 			{
-				if ( bloody )
+				if ( fromCombat )
 					c.sprite.animDie();
 				else
 					c.sprite.animFadeToNothing( false );
@@ -579,10 +579,10 @@ package duel.processes
 			pro.abortCheck = CommonCardQuestions.cannotDie;
 			
 			/// DIE_COMPLETE
-			pro = chain( pro, gen( GameplayProcess.DIE_COMPLETE, c ) );
-			pro.delay = bloody ? .480 : .150;
+			pro = chain( pro, gen( GameplayProcess.DIE_COMPLETE, c, fromCombat ) );
+			pro.delay = fromCombat ? .480 : .150;
 			pro.onEnd =
-			function complete( c:Card ):void 
+			function complete( c:Card, fromCombat:Boolean=false ):void 
 			{
 				if ( c.owner )
 					prepend_AddToGrave( c );
