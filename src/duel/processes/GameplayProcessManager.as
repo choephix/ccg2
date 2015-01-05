@@ -8,7 +8,7 @@ package duel.processes
 	import duel.display.animation;
 	import duel.Game;
 	import duel.otherlogic.SpecialEffect;
-	import duel.Player;
+	import duel.players.Player;
 	import duel.table.CreatureField;
 	import duel.table.IndexedField;
 	import duel.table.TrapField;

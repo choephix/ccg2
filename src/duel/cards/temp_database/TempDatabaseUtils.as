@@ -12,7 +12,7 @@ package duel.cards.temp_database
 	import duel.DamageType;
 	import duel.G;
 	import duel.Game;
-	import duel.Player;
+	import duel.players.Player;
 	import duel.table.CreatureField;
 	import duel.processes.gameprocessing;
 	

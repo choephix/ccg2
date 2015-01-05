@@ -11,6 +11,7 @@ package duel
 	import duel.display.TableSide;
 	import duel.gui.Gui;
 	import duel.gui.GuiJuggler;
+	import duel.players.Player;
 	import duel.processes.GameplayProcess;
 	import duel.processes.GameplayProcessManager;
 	import duel.processes.gameprocessing;

@@ -4,7 +4,7 @@ package duel.display {
 	import duel.display.utils.ColorScheme;
 	import duel.G;
 	import duel.GameSprite;
-	import duel.Player;
+	import duel.players.Player;
 	
 	/**
 	 * ...

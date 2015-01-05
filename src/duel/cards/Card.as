@@ -12,7 +12,7 @@ package duel.cards
 	import duel.display.CardSprite;
 	import duel.Game;
 	import duel.GameEntity;
-	import duel.Player;
+	import duel.players.Player;
 	import duel.processes.GameplayProcess;
 	import duel.table.Field;
 	import duel.table.Hand;

@@ -1,7 +1,8 @@
-package duel {
+package duel.players {
 	import duel.battleobjects.Creature;
 	import duel.battleobjects.Trap;
 	import duel.display.TableSide;
+	import duel.G;
 	import duel.players.ManaPool;
 	import duel.table.CreatureField;
 	import duel.table.Field;

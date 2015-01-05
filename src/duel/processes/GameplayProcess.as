@@ -1,7 +1,7 @@
 package duel.processes 
 {
 	import duel.cards.Card;
-	import duel.Player;
+	import duel.players.Player;
 	import duel.table.CreatureField;
 	import duel.table.IndexedField;
 	

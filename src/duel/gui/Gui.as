@@ -2,7 +2,7 @@ package duel.gui
 {
 	import chimichanga.common.display.Sprite;
 	import duel.GameSprite;
-	import duel.Player;
+	import duel.players.Player;
 	import duel.players.ManaPool;
 	import starling.display.Button;
 	import starling.events.Event;
