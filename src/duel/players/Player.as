@@ -1,6 +1,4 @@
 package duel.players {
-	import duel.battleobjects.Creature;
-	import duel.battleobjects.Trap;
 	import duel.display.TableSide;
 	import duel.G;
 	import duel.players.ManaPool;
@@ -29,9 +27,6 @@ package duel.players {
 		public var fieldsC:CreatureFieldsRow;
 		public var fieldsT:TrapFieldsRow;
 		
-		public var creatures:Vector.<Creature>;
-		public var traps:Vector.<Trap>;
-		
 		public var mana:ManaPool;
 		
 		protected var _name:String;
@@ -53,9 +48,6 @@ package duel.players {
 			
 			fieldsC = new CreatureFieldsRow( G.FIELD_COLUMNS );
 			fieldsT = new TrapFieldsRow( G.FIELD_COLUMNS );
-			
-			creatures = new Vector.<Creature>( G.FIELD_COLUMNS );
-			traps = new Vector.<Trap>( G.FIELD_COLUMNS );
 			
 			mana = new ManaPool();
 			
@@ -117,13 +109,6 @@ package duel.players {
 		{ 
 			return _name;
 		}
-		
-		// BATTLE ENTITIES
-		public function getCreatureAt( index:int ):Creature { return creatures[ index ]; }
-		public function setCreatureAt( index:int, o:Creature ):void { creatures[ index ] = o; }
-		
-		public function getTrapAt( index:int ):Trap { return traps[ index ]; }
-		public function setTrapAt( index:int, o:Trap ):void { traps[ index ] = o; }
 		
 	}
 }
