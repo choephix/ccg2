@@ -207,6 +207,7 @@ package duel.cards.status {
 			if ( hasNoAttack )			a.push( "no attack" );
 			if ( hasNoRelocation )		a.push( "no move" );
 			if ( hasSwift )				a.push( "swift" );
+			if ( _lifeLinked )			a.push( "links:"+_lifeLinks.length );
 			//if ( hasHandSpecial )		a.push( "inhand ef" );
 			//if ( hasGraveSpecial )		a.push( "ingrave ef" );
 			//if ( hasCombatFlipEffect )	a.push( "combat-flip" );

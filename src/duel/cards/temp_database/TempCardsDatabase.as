@@ -3,6 +3,7 @@ package duel.cards.temp_database
 	import duel.cards.buffs.Buff;
 	import duel.cards.Card;
 	import duel.cards.properties.cardprops;
+	import duel.G;
 	import duel.otherlogic.OngoingEffect;
 	import duel.otherlogic.SpecialEffect;
 	import duel.processes.GameplayProcess;
@@ -34,17 +35,44 @@ package duel.cards.temp_database
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
 					c.propsC.basePower = 7;
 					
+					var ongoing:OngoingEffect;
+					ongoing = c.propsC.addOngoing();
+					ongoing.funcUpdate =
+					function( p:GameplayProcess ):void {
+						if ( ! c.isInPlay ) return;
+						if ( c.owner.creatureCount == 1 )
+							TempDatabaseUtils.doKill( c );
+					}
+				},
+				/* * */
+				function( c:Card ):void ///		..C		Friend
+				{
+					c.name = "Friend";
+					
+					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
+					c.propsC.basePower = 7;
+					
 					var special:SpecialEffect;
 					special = c.propsC.addTriggered();
 					special.allowIn( CardLotType.CREATURE_FIELD );
-					special.watch( GameplayProcess.TURN_END );
+					special.watch( GameplayProcess.SUMMON_COMPLETE );
 					special.funcCondition =
 					function( p:GameplayProcess ):Boolean {
-						return c.owner.creatureCount == 1;
+						return c == p.getSourceCard();
 					}
 					special.funcActivate =
-					function( p:GameplayProcess ):Boolean {
-						c.owner.grave.findByName( "Zag" ), c.owner;
+					function( p:GameplayProcess ):void {
+						var f:CreatureField;
+						var a:Array = []
+						for ( var i:int = 0; i < G.FIELD_COLUMNS; i++ ) 
+						{
+							f = c.owner.fieldsC.getAt( i );
+							if ( f.isEmpty ) continue;
+							if ( f.topCard == c ) continue;
+							a.push( f.topCard );
+						}
+						if ( a.length == 0 ) return;
+						c.statusC.setLifeLinks.apply( null, a );
 					}
 				},
 				/* * */
@@ -65,7 +93,7 @@ package duel.cards.temp_database
 						return ( c.owner.grave.findByName( "Zag" ) != null );
 					}
 					special.funcActivate =
-					function( p:GameplayProcess ):Boolean {
+					function( p:GameplayProcess ):void {
 						TempDatabaseUtils.doPutInHand( c.owner.grave.findByName( "Zag" ), c.owner );
 					}
 				},
@@ -86,7 +114,7 @@ package duel.cards.temp_database
 						return ( c.owner.grave.findByName( "Zig" ) != null );
 					}
 					special.funcActivate =
-					function( p:GameplayProcess ):Boolean {
+					function( p:GameplayProcess ):void {
 						TempDatabaseUtils.doPutInHand( c.owner.grave.findByName( "Zig" ), c.owner );
 					}
 				},
