@@ -1,6 +1,7 @@
 package duel.cards
 {
 	import duel.cards.CardListBase;
+	import duel.cards.classes.CardClass;
 	import duel.cards.history.CardHistory;
 	import duel.cards.properties.CardProperties;
 	import duel.cards.properties.CreatureCardProperties;
@@ -28,6 +29,7 @@ package duel.cards
 		public var name:String;
 		public var descr:String;
 		public var type:CardType;
+		public var classes:Vector.<CardClass> = new <CardClass>[];
 		private var _status:CardStatus;
 		private var _props:CardProperties;
 		private var _history:CardHistory;
@@ -125,6 +127,14 @@ package duel.cards
 		
 		public function get history():CardHistory 
 		{ return _history }
+		
+		// GETTERS & SETTERS - CLASS
+		
+		public function get isHybridClass():Boolean
+		{ return classes.length > 1 }
+		
+		public function get isNeutralClass():Boolean
+		{ return classes.length = 1 }
 		
 		// GETTERS & SETTERS - 1
 		
