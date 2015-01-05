@@ -362,9 +362,10 @@ package duel.cards.temp_database
 					ongoing = c.propsC.addOngoing();
 					ongoing.funcUpdate =
 					function( p:GameplayProcess ):void {
-						c.propsC.basePower = hasAdjacentYin() ? 15 : 5;
+						c.propsC.basePower = buffUp() ? 15 : 5;
 					}
-					function hasAdjacentYin():Boolean {
+					function buffUp():Boolean {
+						if ( !c.isInPlay ) return false;
 						var cf:CreatureField;
 						cf = CreatureField( c.indexedField ).adjacentLeft as CreatureField;
 						if ( cf != null && cf.topCard != null && cf.topCard.name == "Yin" ) return true;
@@ -385,9 +386,10 @@ package duel.cards.temp_database
 					ongoing = c.propsC.addOngoing();
 					ongoing.funcUpdate =
 					function( p:GameplayProcess ):void {
-						c.propsC.basePower = hasAdjacentYang() ? 14 : 6;
+						c.propsC.basePower = buffUp() ? 14 : 6;
 					}
-					function hasAdjacentYang():Boolean {
+					function buffUp():Boolean {
+						if ( !c.isInPlay ) return false;
 						var cf:CreatureField;
 						cf = CreatureField( c.indexedField ).adjacentLeft as CreatureField;
 						if ( cf != null && cf.topCard != null && cf.topCard.name == "Yang" ) return true;
@@ -516,7 +518,7 @@ package duel.cards.temp_database
 					special.funcCondition =
 					function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.opposingCreature == null ) return false;
-						if ( c.indexedField.opposingCreature.canAttack ) return false;
+						if ( !c.indexedField.opposingCreature.canAttack ) return false;
 						return c.controller.opponent == p.getPlayer();
 					}
 					special.funcActivate =
