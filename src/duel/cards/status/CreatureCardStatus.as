@@ -129,27 +129,21 @@ package duel.cards.status {
 		public function generateAttackDamage():Damage
 		{ return new Damage( currentPowerValue, DamageType.COMBAT, card ) }
 		
-		/* * * /
+		/* * */
 		
 		// COMBAT FLIP
-		public function get hasCombatFlipEffect():Boolean
-		{ return onCombatFlipFunc != null; }
+		public function get canDoCombatFlipEffect():Boolean
+		{ return propsC.onCombatFlipFunc != null; }
 		
 		public function onCombatFlip():void
-		{
-			if ( onCombatFlipFunc != null )
-				onCombatFlipFunc();
-		}
+		{ propsC.onCombatFlipFunc() }
 		
 		// SAFE FLIP
-		public function get hasSafeFlipEffect():Boolean
-		{ return onSafeFlipFunc != null; }
+		public function get canDoSafeFlipEffect():Boolean
+		{ return propsC.onSafeFlipFunc != null; }
 		
 		public function onSafeFlip():void
-		{
-			if ( onSafeFlipFunc != null )
-				onSafeFlipFunc();
-		}
+		{ propsC.onSafeFlipFunc() }
 		
 		/* * */
 		

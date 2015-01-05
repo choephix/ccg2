@@ -602,7 +602,7 @@ package duel.processes
 			pro = chain( pro, gen( GameplayProcess.COMBAT_FLIP_COMPLETE, c ) );
 			
 			/// /// /// /// /// /// /// /// /// /// /// ///
-			if ( !c.propsC.hasCombatFlipEffect ) return;
+			if ( !c.statusC.canDoCombatFlipEffect ) return;
 			/// /// /// /// /// /// /// /// /// /// /// ///
 			
 			/// COMBAT_FLIP_EFFECT
@@ -615,12 +615,12 @@ package duel.processes
 			pro.onEnd =
 			function effectEnd( c:Card ):void
 			{
-				c.propsC.onCombatFlip();
+				c.statusC.onCombatFlip();
 			}
 			pro.abortCheck = 
 			function effectAbortCheck( c:Card ):Boolean
 			{
-				return !c.isInPlay || !c.propsC.hasCombatFlipEffect;
+				return !c.isInPlay || !c.statusC.canDoCombatFlipEffect;
 			}
 			
 			/// COMBAT_FLIP_EFFECT_COMPLETE
@@ -645,7 +645,7 @@ package duel.processes
 			pro = chain( pro, gen( GameplayProcess.SAFE_FLIP_COMPLETE, c ) );
 			
 			/// /// /// /// /// /// /// /// /// /// /// ///
-			if ( !c.propsC.hasSafeFlipEffect ) return;
+			if ( !c.statusC.canDoSafeFlipEffect ) return;
 			/// /// /// /// /// /// /// /// /// /// /// ///
 			
 			/// SAFE_FLIP_EFFECT
@@ -658,12 +658,12 @@ package duel.processes
 			pro.onEnd =
 			function effectEnd( c:Card ):void
 			{
-				c.propsC.onSafeFlip();
+				c.statusC.onSafeFlip();
 			}
 			pro.abortCheck = 
 			function effectAbortCheck( c:Card ):Boolean
 			{
-				return !c.isInPlay || !c.propsC.hasSafeFlipEffect;
+				return !c.isInPlay || !c.statusC.canDoSafeFlipEffect;
 			}
 			
 			/// SAFE_FLIP_EFFECT_COMPLETE

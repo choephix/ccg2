@@ -54,25 +54,9 @@ package duel.cards.properties {
 		
 		// COMBAT FLIP
 		public var onCombatFlipFunc:Function;
-		public function get hasCombatFlipEffect():Boolean
-		{ return onCombatFlipFunc != null; }
-		
-		public function onCombatFlip():void
-		{
-			if ( onCombatFlipFunc != null )
-				onCombatFlipFunc();
-		}
 		
 		// SAFE FLIP
 		public var onSafeFlipFunc:Function;
-		public function get hasSafeFlipEffect():Boolean
-		{ return onSafeFlipFunc != null; }
-		
-		public function onSafeFlip():void
-		{
-			if ( onSafeFlipFunc != null )
-				onSafeFlipFunc();
-		}
 		
 		//
 		
