@@ -50,6 +50,8 @@ package duel.processes
 			function onStart( p:Player ):void
 			{
 				game.currentPlayer = p;
+				p.mana.raiseCap();
+				p.mana.refill();
 			}
 			
 			pro.onEnd = 
@@ -130,6 +132,12 @@ package duel.processes
 			
 			/// SUMMON
 			pro = chain( pro, gen( GameplayProcess.SUMMON, c, field ) );
+			pro.onStart = 
+			function onStart( c:Card, field:CreatureField ):void
+			{
+				if ( isManual )
+					c.controller.mana.useMana();
+			}
 			pro.onEnd = 
 			function onEnd( c:Card, field:CreatureField ):void
 			{
@@ -295,6 +303,9 @@ package duel.processes
 			pro.onStart = 
 			function onStart( c:Card, field:TrapField ):void
 			{
+				if ( isManual )
+					c.controller.mana.useMana();
+				
 				if ( field.topCard )
 					/// DESTROY OLD TRAP
 					prepend_DestroyTrap( field.topCard );

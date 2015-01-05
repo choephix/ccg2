@@ -2,6 +2,7 @@ package duel {
 	import duel.battleobjects.Creature;
 	import duel.battleobjects.Trap;
 	import duel.display.TableSide;
+	import duel.players.ManaPool;
 	import duel.table.CreatureField;
 	import duel.table.Field;
 	import duel.table.fieldlists.CreatureFieldsRow;
@@ -30,6 +31,8 @@ package duel {
 		public var creatures:Vector.<Creature>;
 		public var traps:Vector.<Trap>;
 		
+		public var mana:ManaPool;
+		
 		protected var _name:String;
 		protected var _lp:int;
 		
@@ -52,6 +55,8 @@ package duel {
 			
 			creatures = new Vector.<Creature>( G.FIELD_COLUMNS );
 			traps = new Vector.<Trap>( G.FIELD_COLUMNS );
+			
+			mana = new ManaPool();
 			
 			_name = name;
 			_lp = lifePoints;

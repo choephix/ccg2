@@ -208,7 +208,7 @@ package duel
 				jugglerStrict.delayCall( p2.deck.addCard, time, c, true );
 			}
 			
-			jugglerStrict.delayCall( drawCards, time + .300 );
+			jugglerStrict.delayCall( drawCards, time + .360 );
 			function drawCards():void
 			{
 				processes.prepend_Draw( p1, G.INIT_HAND_SIZE );
@@ -389,6 +389,8 @@ package duel
 			
 			function canSummon():Boolean
 			{
+				if ( !canPerformAction() )
+					return false;
 				if ( !c.type.isCreature )
 					return false;
 				if ( field as CreatureField == null )
@@ -397,6 +399,8 @@ package duel
 			}
 			function canSetTrap():Boolean
 			{
+				if ( !canPerformAction() )
+					return false;
 				if ( !c.type.isTrap )
 					return false;
 				if ( field as TrapField == null )
@@ -504,16 +508,15 @@ package duel
 			processes.append_TurnEnd( currentPlayer );
 		}
 		
+		public function canPerformAction():Boolean
+		{
+			return currentPlayer.mana.current > 0;
+		}
+		
 		public function performCardSummon( c:Card, field:CreatureField ):void
 		{
 			selectCard( null );
 			processes.append_SummonHere( c, field, true );
-		}
-		
-		public function performRelocation( c:Card, field:CreatureField ):void
-		{
-			selectCard( null );
-			processes.append_Relocation( c, field, false );
 		}
 		
 		public function performTrapSet( c:Card, field:TrapField ):void
@@ -526,6 +529,12 @@ package duel
 		{
 			selectCard( null );
 			processes.append_Attack( c, false );
+		}
+		
+		public function performRelocation( c:Card, field:CreatureField ):void
+		{
+			selectCard( null );
+			processes.append_Relocation( c, field, false );
 		}
 		
 		public function performSafeFlip( c:Card ):void

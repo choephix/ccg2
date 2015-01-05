@@ -26,7 +26,7 @@ package duel.gui
 		{
 			const INSET:Number = 10;
 			
-			t1 = new AnimatedTextField( 0, 0, ( game.p1.name + ": " + AnimatedTextField.DEFAULT_MARKER ), "Impact", 50 );
+			t1 = new AnimatedTextField( 0, 0, "", "Impact", 50 );
 			addChild( t1 );
 			t1.x = INSET;
 			t1.width = App.W - INSET * 2.0;
@@ -36,7 +36,7 @@ package duel.gui
 			t1.vAlign = "bottom";
 			t1.touchable = false;
 			
-			t2 = new AnimatedTextField( 0, 0, ( game.p2.name + ": " + AnimatedTextField.DEFAULT_MARKER ), "Impact", 50 );
+			t2 = new AnimatedTextField( 0, 0, "", "Impact", 50 );
 			addChild( t2 );
 			t2.x = INSET;
 			t2.width = App.W - INSET * 2.0;
@@ -107,6 +107,7 @@ package duel.gui
 		
 		private function updateTf( t:AnimatedTextField, p:Player, time:Number ):void
 		{
+			t.text = p.mana.current + " " + game.p2.name + ": " + AnimatedTextField.DEFAULT_MARKER;
 			t.targetValue = p.lifePoints;
 			t.color = p == game.currentPlayer ? 0xFFEE22 : 0xF37618;
 			t.advanceTime( time );

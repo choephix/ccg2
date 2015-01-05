@@ -16,7 +16,7 @@ package duel.gui
 		
 		public var duration:Number = .350;
 		public var markerString:String = DEFAULT_MARKER;
-		public var rawText:String = markerString;
+		private var rawText:String = markerString;
 		private var _currentValue:Number = 0.0;
 		private var _targetValue:Number = 0.0;
 		private var _valueTween:Tween;
