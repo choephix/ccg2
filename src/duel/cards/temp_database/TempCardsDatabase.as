@@ -165,12 +165,13 @@ package duel.cards.temp_database
 					c.descr = "On opp. summon - kill summoned creature";
 				},
 				/* * */
-				function ( c:Card ):void ///		..C		Necromancer
+				function ( c:Card ):void ///		..C		Caller of the Dead
 				{
-					c.name = "Necromancer";
+					c.name = "Caller of the Dead";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
 					c.propsC.basePower = 5;
+					c.propsC.flippable = true;
 					
 					var special:SpecialEffect;
 					special = c.propsC.addTriggered();

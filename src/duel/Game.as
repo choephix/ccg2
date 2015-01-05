@@ -244,6 +244,8 @@ package duel
 			
 			//bg.visible = interactable;
 			this.touchable = interactable;
+			
+			updateSelectables();
 		}
 		
 		// PROCESSES
@@ -258,8 +260,6 @@ package duel
 			gameInspectProcess( p );
 			playerInspectProcess( currentPlayer.opponent, p );
 			playerInspectProcess( currentPlayer, p );
-			
-			updateSelectables();
 		}
 		
 		private function gameInspectProcess( p:GameplayProcess ):void
