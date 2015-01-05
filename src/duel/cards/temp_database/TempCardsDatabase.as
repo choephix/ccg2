@@ -45,9 +45,9 @@ package duel.cards.temp_database
 					}
 				},
 				/* * */
-				function( c:Card ):void ///		..C		Friend
+				function( c:Card ):void ///		..C		Links Tester
 				{
-					c.name = "Friend";
+					c.name = "Links Tester";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
 					c.propsC.basePower = 7;

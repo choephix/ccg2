@@ -96,7 +96,7 @@ package duel.cards.status {
 		// PROP FLAGS
 		
 		public function get isFlippable():Boolean
-		{ return propsC.startFaceDown || buffs.getOR( Buff.FLIPPABLE ) }
+		{ return propsC.flippable || buffs.getOR( Buff.FLIPPABLE ) }
 		
 		public function get needTribute():Boolean
 		{ return propsC.needTribute || buffs.getOR( Buff.NEED_TRIBUTE ) }
@@ -130,20 +130,6 @@ package duel.cards.status {
 		{ return new Damage( currentPowerValue, DamageType.COMBAT, card ) }
 		
 		/* * * /
-		
-		public function get hasGraveSpecial():Boolean 
-		{ return graveSpecial != null && !graveSpecial.isNone }
-		
-		public function get hasHandSpecial():Boolean 
-		{ return handSpecial != null && !handSpecial.isNone  }
-		
-		// SPECIAL
-		public function get hasInPlaySpecialEffect():Boolean
-		{ return inplaySpecial != null && !inplaySpecial.isNone }
-		
-		// ONGOING
-		public function get hasInPlayOngoingEffect():Boolean
-		{ return inplayOngoing != null && !inplayOngoing.isNone }
 		
 		// COMBAT FLIP
 		public function get hasCombatFlipEffect():Boolean

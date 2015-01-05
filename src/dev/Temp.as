@@ -19,7 +19,7 @@ package dev
 					return ColorScheme.getColorForCreatureToken( true );
 				if ( card.propsC.needTribute ) 
 					return ColorScheme.getColorForCreatureNeedsTribute( true );
-				if ( card.propsC.startFaceDown ) 
+				if ( card.propsC.flippable ) 
 					return ColorScheme.getColorForCreatureFlippable( true );
 				return ColorScheme.getColorForCreature( true );
 			}

@@ -163,7 +163,7 @@ package duel.processes
 			}
 			
 			/// ENTER_PLAY
-			pro = chain( pro, process_EnterPlay( c, field, c.propsC.startFaceDown ) );
+			pro = chain( pro, process_EnterPlay( c, field, c.propsC.flippable ) );
 			
 			/// SUMMON_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.SUMMON_COMPLETE, c, field ) );
@@ -319,7 +319,7 @@ package duel.processes
 			}
 			
 			/// ENTER_PLAY
-			pro = chain( pro, process_EnterPlay( c, field, c.props.startFaceDown ) );
+			pro = chain( pro, process_EnterPlay( c, field, true ) );
 			
 			/// SET_TRAP_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.SET_TRAP_COMPLETE, c, field ) );
@@ -801,7 +801,7 @@ package duel.processes
 			
 			pro
 				/// ENTER_INDEXED_FIELD
-				.chain( process_EnterIndexedField( c, field, c.props.startFaceDown ) )
+				.chain( process_EnterIndexedField( c, field, faceDown ) )
 				/// ENTER_PLAY_COMPLETE
 				.chain( gen( GameplayProcess.ENTER_PLAY_COMPLETE, c, field ) );
 			

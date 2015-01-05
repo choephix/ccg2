@@ -9,8 +9,5 @@ package duel.cards.properties {
 	public class CardProperties 
 	{
 		public var card:Card;
-		
-		public function get startFaceDown():Boolean 
-		{ throw new AbstractMethodError(); }
 	}
 }

@@ -15,20 +15,17 @@ package duel.cards.properties {
 		
 		cardprops var basePower:int = 0;
 		cardprops var needTribute:Boolean = false;
-		cardprops var flippable:Boolean = false;
+		public var flippable:Boolean = false;
 		
 		cardprops var haste:Boolean 	= false; 	// CAN ATTACK OR MOVE FIRST TURN
 		cardprops var swift:Boolean 	= false; 	// CAN ATTACK AND MOVE SAME TURN
 		cardprops var noAttack:Boolean 	= false; 	// CANNOT ATTACK
 		cardprops var noMove:Boolean	= false; 	// CANNOT MOVE
 		
-		override public function get startFaceDown():Boolean 
-		{ return flippable }
-		
 		// SPECIAL
-		public var specialsTriggered:Vector.<SpecialEffect> = new Vector.<SpecialEffect>();
+		cardprops var specialsTriggered:Vector.<SpecialEffect> = new Vector.<SpecialEffect>();
 		
-		public function get specialsTriggeredCount():int
+		cardprops function get specialsTriggeredCount():int
 		{ return specialsTriggered.length }
 		
 		/// Interrupts current process on activation
@@ -41,9 +38,9 @@ package duel.cards.properties {
 		}
 		
 		// ONGOING
-		public var specialsOngoing:Vector.<OngoingEffect> = new Vector.<OngoingEffect>();
+		cardprops var specialsOngoing:Vector.<OngoingEffect> = new Vector.<OngoingEffect>();
 		
-		public function get specialsOngoingCount():int
+		cardprops function get specialsOngoingCount():int
 		{ return specialsOngoing.length }
 		
 		/// Activates without interrupting current process

@@ -17,8 +17,5 @@ package duel.cards.properties {
 		{ return persistent }
 		
 		public var effect:TrapEffect = new TrapEffect();
-		
-		override public function get startFaceDown():Boolean 
-		{ return true }
 	}
 }
