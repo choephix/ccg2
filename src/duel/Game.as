@@ -510,6 +510,7 @@ package duel
 		
 		public function canPerformAction():Boolean
 		{
+			CONFIG::sandbox { return true }
 			return currentPlayer.mana.current > 0;
 		}
 		
