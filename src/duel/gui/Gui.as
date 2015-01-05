@@ -3,6 +3,7 @@ package duel.gui
 	import chimichanga.common.display.Sprite;
 	import duel.GameSprite;
 	import duel.Player;
+	import duel.players.ManaPool;
 	import starling.display.Button;
 	import starling.events.Event;
 	
@@ -107,10 +108,20 @@ package duel.gui
 		
 		private function updateTf( t:AnimatedTextField, p:Player, time:Number ):void
 		{
-			t.text = p.mana.current + " " + game.p2.name + ": " + AnimatedTextField.DEFAULT_MARKER;
+			t.text = " " + game.p2.name + ": " + AnimatedTextField.DEFAULT_MARKER 
+						+ "\n" + pMana( p.mana );
 			t.targetValue = p.lifePoints;
 			t.color = p == game.currentPlayer ? 0xFFEE22 : 0xF37618;
 			t.advanceTime( time );
+		}
+		
+		private function pMana( mana:ManaPool ):String
+		{
+			return "Mana: " + mana.current + "/" + mana.currentCap + "";
+			//var r:String = "";
+			//while ( val-- > 0 )
+				//r += "M";
+			//return r ;
 		}
 		
 		//

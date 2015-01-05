@@ -9,7 +9,7 @@ package duel.players
 	public class ManaPool extends GameEntity 
 	{
 		private var _capMax:int		= 5;
-		private var _capMin:int		= 1;
+		private var _capMin:int		= 0;
 		private var _current:int	= 1;
 		private var _cap:int		= 1;
 		
