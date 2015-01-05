@@ -84,31 +84,21 @@ package duel.players {
 		}
 		
 		public function die():void 
-		{
-			trace( this + " is dead" );
-		}
+		{ trace( this + " is dead" ) }
 		
 		// QUESTIONS
 		
 		public function get creatureCount():int
-		{ 
-			return fieldsC.countOccupied;
-		}
+		{ return fieldsC.countOccupied }
 		
 		public function get trapCount():int
-		{ 
-			return fieldsT.countOccupied;
-		}
+		{ return fieldsT.countOccupied }
 		
 		public function get lifePoints():int
-		{ 
-			return _lp;
-		}
+		{ return _lp }
 		
 		public function get name():String
-		{ 
-			return _name;
-		}
+		{ return _name }
 		
 	}
 }
