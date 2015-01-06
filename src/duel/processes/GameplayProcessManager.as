@@ -204,7 +204,7 @@ package duel.processes
 		}
 		
 		
-		gameprocessing function prepend_ResurrectHere( c:Card, field:CreatureField ):void	//TODO  USE THIS SHIT (zig&zag)
+		gameprocessing function prepend_ResurrectHere( c:Card, field:CreatureField ):void
 		{
 			var pro:GameplayProcess;
 			
