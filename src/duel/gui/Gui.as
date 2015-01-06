@@ -87,17 +87,20 @@ package duel.gui
 		
 		public function advanceTime( time:Number ):void
 		{
+			t1.advanceTime( time );
+			t2.advanceTime( time );
+		}
+		
+		public function updateData():void
+		{
 			buttonsContainer.alpha = game.interactable ? 1.0 : 0.6;
-			
 			updateTf( t1, game.p1, time );
 			updateTf( t2, game.p2, time );
-			
 			button3.visible = 
 				game.interactable && 
 				game.selectedCard != null && 
 				game.selectedCard.type.isCreature && 
 				game.selectedCard.canAttack;
-			
 			button4.visible = 
 				game.interactable && 
 				game.selectedCard != null && 

@@ -27,18 +27,12 @@ package duel
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Quad;
+	import starling.events.Event;
 	import starling.text.TextField;
 	
 	use namespace gameprocessing;
 	
-	[Event( name="turnStart",type="duel.GameEvents" )]
-	[Event( name="turnEnd",type="duel.GameEvents" )]
-	[Event( name="select",type="duel.GameEvents" )]
-	[Event( name="deselect",type="duel.GameEvents" )]
-	[Event( name="hover",type="duel.GameEvents" )]
-	[Event( name="unhover",type="duel.GameEvents" )]
 	[Event( name="destroy",type="duel.GameEvents" )]
-	
 	/**
 	 * ...
 	 * @author choephix
@@ -84,6 +78,7 @@ package duel
 			
 			processes = new GameplayProcessManager();
 			processes.addEventListener( ProcessEvent.CURRENT_PROCESS, onProcessAdvance );
+			processes.addEventListener( Event.COMPLETE, onProcessComplete );
 			
 			//
 			p1 = generatePlayer( "player1" );
@@ -258,17 +253,15 @@ package duel
 			if ( p == null )
 				return;
 			
-			gameInspectProcess( p );
 			playerInspectProcess( currentPlayer.opponent, p );
 			playerInspectProcess( currentPlayer, p );
+			
+			gui.updateData();
 		}
 		
-		private function gameInspectProcess( p:GameplayProcess ):void
+		private function onProcessComplete( e:Event ):void
 		{
-			if ( p.name == GameplayProcess.TURN_END )
-				dispatchEventWith( GameEvents.TURN_END );
-			if ( p.name == GameplayProcess.TURN_START )
-				dispatchEventWith( GameEvents.TURN_START );
+			gui.updateData();
 		}
 		
 		private function playerInspectProcess( player:Player, p:GameplayProcess ):void
