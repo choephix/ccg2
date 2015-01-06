@@ -9,7 +9,6 @@ package duel.processes
 	public class ProcessEvent extends Event 
 	{
 		static public const CURRENT_PROCESS:String = "process";
-		static public const COMPLETE_ALL:String = "completeAll";
 		
 		public var process:Process;
 		

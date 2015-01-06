@@ -4,6 +4,8 @@ package duel.processes
 	import starling.events.Event;
 	import starling.events.EventDispatcher;
 	
+	[Event( name="complete",type="starling.events.Event" )]
+	[Event( name="process",type="duel.processes.ProcessEvent" )]
 	/**
 	 * ...
 	 * @author choephix
@@ -29,7 +31,6 @@ package duel.processes
 				if ( running )
 				{
 					dispatchEventWith( Event.COMPLETE );
-					removeEventListeners( Event.COMPLETE );
 					running = false;
 				}
 				return;
