@@ -77,6 +77,32 @@ package duel.controllers
 			
 		}
 		
+		public function onUpdate():void
+		{
+			if ( selectedCard == null )
+			{
+				contextOnField = scfNilSelected;
+				return;
+			}
+			else
+			{
+				if ( contextOnField == scfHandCreature || contextOnField == scfHandTrap )
+					if ( !selectedCard.isInHand )
+						if ( selectedCard.isInPlay && selectedCard.type.isCreature )
+							contextOnField = scfFieldCreature;
+						else
+							contextOnField = scfNilSelected;
+				
+				if ( selectedCard.isInHand )
+					if ( canSelectHandCard( selectedCard ) )
+						return;
+				if ( selectedCard.isInPlay && selectedCard.type.isCreature )
+					if ( canSelectCreature( selectedCard ) )
+						return;
+				selectCard( null );
+			}
+		}
+		
 		//{ Selection Contexts
 		
 		private function schEnabledIsSelectable( o:* ):Boolean
@@ -154,12 +180,25 @@ package duel.controllers
 				var f:CreatureField = o as CreatureField;
 				
 				if ( f.owner == player )
-					ctrl.performActionRelocation( selectedCard, f );
+				{
+					if ( !f.isEmpty )
+						trace ( "You can only relocate to an empty field" );
+					else
+					if ( !CommonCardQuestions.canRelocateHere( selectedCard, f ) )
+						trace ( "You cannot relocate this creature here" );
+					else
+						ctrl.performActionRelocation( selectedCard, f );
+				}
 				else
 				if ( f.owner == player.opponent )
-					ctrl.performActionAttack( selectedCard );
+				{
+					
+					if ( !CommonCardQuestions.canPerformAttack( selectedCard ) )
+						trace ( "You cannot attack with this creature" );
+					else
+						ctrl.performActionAttack( selectedCard );
+				}
 			}
-			trace ( "SPARTAA!" );
 		}
 		
 		//}
@@ -188,13 +227,13 @@ package duel.controllers
 			/// OLD SELECTION
 			if ( selectedCard != null )
 			{
-				selectedCard.sprite.scaleX = 1.0;
-				selectedCard.sprite.scaleY = 1.0;
+				//selectedCard.sprite.scaleX = 1.0;
+				//selectedCard.sprite.scaleY = 1.0;
+				
+				selectedCard.sprite.selectAura.visible = false;
 				
 				if ( player.hand.containsCard( selectedCard ) )
-				{
 					player.handSprite.unshow( selectedCard );
-				}
 			}
 			
 			/// /// /// /// ///
@@ -220,9 +259,11 @@ package duel.controllers
 					/// UPDATE SELECTION CONTEXT
 					contextOnField = scfFieldCreature;
 					
-					selectedCard.sprite.scaleX = 1.1;
-					selectedCard.sprite.scaleY = 1.1;
+					//selectedCard.sprite.scaleX = 1.1;
+					//selectedCard.sprite.scaleY = 1.1;
 				}
+					
+				selectedCard.sprite.selectAura.visible = true;
 			}
 			else
 			{

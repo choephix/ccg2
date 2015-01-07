@@ -27,7 +27,7 @@ package duel.display {
 	{
 		public var auraContainer:Sprite;
 		private var exhaustClock:Image;
-		private var selectAura:CardAura;
+		public var selectAura:CardAura;
 		
 		private var front:Sprite;
 		private var back:Image;
@@ -147,12 +147,6 @@ package duel.display {
 			{
 				setFaceDown( card.faceDown, false );
 			}
-			
-			selectAura.visible = 
-				card.controller == game.currentPlayer &&
-				card.isInHand && 
-				_isSelectable && 
-				game.interactable;
 			
 			front.visible	= _flippedness > .0 || backTranslucency > .0;
 			back.visible	= _flippedness < .0;

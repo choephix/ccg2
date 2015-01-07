@@ -183,60 +183,16 @@ package duel.controllers
 				game.gui.tDebug.text = selection.contextOnField.name;
 		}
 		
-		override public function onProcessAdvance( p:Process ):void
-		{}
+		override public function update():void
+		{
+			if ( !active ) return;
+			
+			selection.onUpdate();
+		}
 		
 		// // // // //
 		// OUTGOING //
 		// // // // //
-		
-		override public function performActionSummon( c:Card, field:CreatureField ):void
-		{
-			selection.selectCard( null );
-			super.performActionSummon( c, field );
-		}
-		
-		override public function performActionTrapSet( c:Card, field:TrapField ):void
-		{
-			selection.selectCard( null );
-			super.performActionTrapSet( c, field );
-		}
-		
-		override public function performActionAttack( c:Card ):void
-		{
-			selection.selectCard( null );
-			super.performActionAttack( c );
-		}
-		
-		override public function performActionRelocation( c:Card, field:CreatureField ):void
-		{
-			selection.selectCard( null );
-			super.performActionRelocation( c, field );
-		}
-		
-		override public function performActionSafeFlip( c:Card ):void
-		{
-			selection.selectCard( null );
-			super.performActionSafeFlip( c );
-		}
-		
-		override public function performActionDraw():void
-		{
-			selection.selectCard( null );
-			super.performActionDraw();
-		}
-		
-		override public function performActionTurnEnd():void
-		{
-			selection.selectCard( null );
-			super.performActionTurnEnd();
-		}
-		
-		override public function performActionSurrender():void
-		{
-			selection.selectCard( null );
-			super.performActionSurrender();
-		}
 		
 		// // // // //
 		// BULLSHIT //
