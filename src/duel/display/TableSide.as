@@ -51,14 +51,14 @@ package duel.display {
 			}
 			
 			f = new FieldSprite();
-			f.x = -( G.CARD_W + FIELD_SPACING_X );
+			f.x = ( G.CARD_W + FIELD_SPACING_X ) * G.FIELD_COLUMNS;
 			f.y = ( flip ? 1.0 : -1.0 ) * 40;
 			f.initialize( player.deck, ColorScheme.getColorForDeckField() );
 			f.cardsContainer.cardSpacing = 2;
 			prepFieldSprite( f );
 			
 			f = new FieldSprite();
-			f.x = ( G.CARD_W + FIELD_SPACING_X ) * G.FIELD_COLUMNS;
+			f.x = -( G.CARD_W + FIELD_SPACING_X );
 			f.y = ( flip ? 1.0 : -1.0 ) * 40;
 			f.initialize( player.grave, ColorScheme.getColorForGraveField() );
 			f.cardsContainer.cardSpacing = 3;
