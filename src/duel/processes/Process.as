@@ -76,12 +76,6 @@ package duel.processes
 			if ( state == ProcessState.INTERRUPTED )
 				return;
 			
-			if ( !isNaN( delay ) && delay > .0 )
-			{
-				delay -= time;
-				return;
-			}
-				
 			state = ProcessState.COMPLETE;
 			
 			CONFIG::development

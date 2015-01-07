@@ -31,7 +31,6 @@ package duel.processes
 			
 			/// TURN_END
 			pro = chain( pro, gen( GameplayProcess.TURN_END, p ) );
-			pro.delay = .333;
 			pro.onEnd = function turnEnd( p:Player ):void
 			{
 				append_TurnStart( p.opponent );

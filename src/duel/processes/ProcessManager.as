@@ -42,7 +42,10 @@ package duel.processes
 			
 			if ( !p.isStarted )
 			{
-				p.start();
+				if ( isNaN( p.delay ) || p.delay <= 0 )
+					p.start();
+				else
+					p.delay -= time;
 				return;
 			}
 			
