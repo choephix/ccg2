@@ -35,13 +35,19 @@ package duel.cards.temp_database
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
 					c.propsC.basePower = 7;
 					
-					var ongoing:OngoingEffect;
-					ongoing = c.propsC.addOngoing();
-					ongoing.funcUpdate =
+					var special:SpecialEffect;
+					special = c.propsC.addTriggered();
+					special.allowIn( CardLotType.CREATURE_FIELD );
+					special.watch( GameplayProcess.LEAVE_INDEXED_FIELD_COMPLETE, GameplayProcess.SUMMON_COMPLETE );
+					special.funcCondition =
+					function( p:GameplayProcess ):Boolean {
+						if ( ! c.isInPlay ) return false;
+						if ( c.owner.creatureCount > 1 ) return false;
+						return true;
+					}
+					special.funcActivate =
 					function( p:GameplayProcess ):void {
-						if ( ! c.isInPlay ) return;
-						if ( c.owner.creatureCount == 1 )
-							TempDatabaseUtils.doKill( c );
+						TempDatabaseUtils.doKill( c );
 					}
 				},
 				/* * */
