@@ -181,9 +181,16 @@ package duel.cards
 		}
 		
 		public function get exhausted():Boolean {
-			if ( summonedThisTurn && !statusC.hasHaste && !Game.GODMODE ) return true;
+			if ( firstTurnExhaustion ) return true;
 			if ( statusC.hasSwift ) return actionsAttack > 0 && actionsRelocate > 0;
 			return actionsRelocate + actionsAttack > 0;
+		}
+		
+		private function get firstTurnExhaustion():Boolean {
+			CONFIG::development
+			{ if ( Game.GODMODE ) return false }
+			if ( statusC.hasHaste ) return false;
+			return summonedThisTurn;
 		}
 		
 		// GETTERS & SETTERS - 3

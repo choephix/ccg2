@@ -42,7 +42,7 @@ package duel
 		public static var current:Game;
 		public static var frameNum:int = 0;
 		
-		//CONFIG::development
+		CONFIG::development
 		public static var GODMODE:Boolean;
 		
 		public var processes:GameplayProcessManager;

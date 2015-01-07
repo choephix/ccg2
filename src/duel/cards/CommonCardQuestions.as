@@ -65,9 +65,13 @@ package duel.cards
 		public static function canPlaceCreatureHere( c:Card, field:CreatureField ):Boolean
 		{
 			if ( field.isLocked ) return false;
-			if ( !Game.GODMODE && c.controller != field.owner ) return false;
-			if ( !field.isEmpty ) return false; //TODO remove this for riders and combinatrons
 			if ( c.lot == field ) return false;
+			if ( !field.isEmpty ) return false; //TODO remove this for riders and combinatrons
+			
+			CONFIG::development
+			{ if ( Game.GODMODE ) return true }
+			
+			if ( c.controller != field.owner ) return false;
 			return true;
 		}
 		public static function cannotPlaceCreatureHere( c:Card, field:CreatureField ):Boolean
@@ -76,8 +80,12 @@ package duel.cards
 		public static function canPlaceTrapHere( c:Card, field:TrapField ):Boolean
 		{
 			if ( field.isLocked ) return false;
-			if ( !Game.GODMODE && c.controller != field.owner ) return false;
 			if ( c.lot == field ) return false;
+			
+			CONFIG::development
+			{ if ( Game.GODMODE ) return true }
+			
+			if ( c.controller != field.owner ) return false;
 			return true;
 		}
 		public static function cannotPlaceTrapHere( c:Card, field:TrapField ):Boolean
