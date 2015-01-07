@@ -42,6 +42,8 @@ package duel.display {
 		private var _isFaceDown:Boolean = true;
 		private var _flippedness:Number = .0;
 		private var _flipTween:Tween;
+		private var _peekThrough:Boolean;
+		public var backTranslucency:Number = .0;
 		
 		private var __attackSprite:Quad;
 		private var __bloodSprite:Quad;
@@ -151,6 +153,10 @@ package duel.display {
 				card.isInHand && 
 				_isSelectable && 
 				game.interactable;
+			
+			front.visible	= _flippedness > .0 || backTranslucency > .0;
+			back.visible	= _flippedness < .0;
+			back.alpha = 1.0 - backTranslucency;
 		}
 		
 		internal function updateData():void 
@@ -171,24 +177,6 @@ package duel.display {
 			if ( _exhaustClockVisible == value ) return;
 			_exhaustClockVisible = value;
 			juggler.xtween( exhaustClock, .500, { alpha : value ? 1.0 : .0 } );
-		}
-		
-		//
-		public function peekIn():void 
-		{
-			if ( !isFaceDown ) return;
-			back.alpha = 0.3
-			front.visible = true;
-			front.scaleX = 1.0;
-			//juggler.xtween( back, 0.250, { delay : 0.100, alpha : 0.3 } );
-		}
-		
-		public function peekOut():void 
-		{
-			if ( !isFaceDown ) return;
-			back.alpha = 1.0;
-			front.visible = false;
-			//juggler.xtween( back, 0.100, { alpha : 1.0 } );
 		}
 		
 		// ANIMATIONS
@@ -397,32 +385,37 @@ package duel.display {
 		}
 		
 		protected function get isFaceDown():Boolean
-		{
-			return _isFaceDown;
-		}
+		{ return _isFaceDown }
 		
 		public function get flippedness():Number 
-		{
-			return _flippedness;
-		}
+		{ return _flippedness }
 		
 		public function set flippedness(value:Number):void 
 		{
 			if ( _flippedness == value ) return;
 			_flippedness = value;
 			
-			front.visible	= value > .0;
-			back.visible	= value < .0;
-			
-			if ( front.visible )
-				front.scaleX = Math.abs( value );
-				
-			if ( back.visible )
-				back.scaleX = Math.abs( value );
-			
+			front.scaleX = Math.abs( value );
+			back.scaleX = Math.abs( value );
 			auraContainer.scaleX = .25 + .75 * Math.abs( value );
 		}
 		
+		// PEEKING
+		public function get peekThrough():Boolean 
+		{ return _peekThrough }
+		
+		public function set peekThrough( value:Boolean ):void 
+		{
+			if ( _peekThrough == value ) return;
+			_peekThrough = value;
+			juggler.tween( this, .330,
+				{ 
+					backTranslucency : value ? .9 : .0,
+					transition : Transitions.EASE_OUT
+				} );
+		}
+		
+		// OTHER
 		public function get isTopSide():Boolean
 		{
 			return card.controller == game.p2;

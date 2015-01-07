@@ -13,7 +13,7 @@ package duel.controllers
 	 */
 	public class PlayerController extends GameEntity
 	{
-		public var active:Boolean;
+		private var _active:Boolean;
 		
 		protected var player:Player;
 		
@@ -65,6 +65,14 @@ package duel.controllers
 		public function performActionDraw():void 
 		{ game.performActionDraw() }
 		
+		// // // // //
+		// GENERAL2 //
+		// // // // //
+		
+		public function get active():Boolean 
+		{ return _active }
+		
+		public function set active(value:Boolean):void 
+		{ _active = value }
 	}
-
 }
