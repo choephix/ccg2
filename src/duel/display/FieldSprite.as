@@ -28,7 +28,6 @@ package duel.display {
 		
 		private var _isLocked:Boolean = false;
 		private var _showAura:Boolean;
-		private var _pointerIsOver:Boolean = false;
 		
 		public function initialize( field:Field, color:uint ):void
 		{
@@ -54,8 +53,6 @@ package duel.display {
 			field.sprite = this;
 			
 			game.juggler.add( this );
-			
-			addEventListener( TouchEvent.TOUCH, onTouch );
 		}
 		
 		public function advanceTime( time:Number ):void 
@@ -64,32 +61,6 @@ package duel.display {
 				setLockIconVisibility( IndexedField( field ).isLocked );
 			
 			aura.visible = _showAura && game.interactable;
-		}
-		
-		private function onTouch(e:TouchEvent):void 
-		{
-			var t:Touch = e.getTouch( this );
-			
-			if ( t == null ) {
-				if ( _pointerIsOver ) {
-					_pointerIsOver = false;
-					if ( !field.isEmpty )
-						game.onCardRollOut( field.getCardAt( 0 ) );
-				}
-				return;
-			}
-			else
-			if ( t.phase == TouchPhase.HOVER ) {
-				if ( !_pointerIsOver ) {
-					_pointerIsOver = true;
-					if ( !field.isEmpty )
-						game.onCardRollOver( field.getCardAt( 0 ) );
-				}
-			}
-			else
-			if ( t.phase == TouchPhase.ENDED ) {
-				game.onFieldClicked( field );
-			} 
 		}
 		
 		// VISUALS

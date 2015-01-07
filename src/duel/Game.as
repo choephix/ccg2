@@ -45,19 +45,16 @@ package duel
 		//CONFIG::development
 		public static var GODMODE:Boolean;
 		
-		public var currentPlayer:Player;
 		public var processes:GameplayProcessManager;
-		
-		//
 		public var jugglerStrict:GuiJuggler;
 		public var jugglerGui:GuiJuggler;
 		public var juggler:GuiJuggler;
 		
 		public var gui:Gui;
-		public var selection:Selection;
 		
 		public var p1:Player;
 		public var p2:Player;
+		public var currentPlayer:Player;
 		
 		public var bg:Background;
 		
@@ -70,6 +67,7 @@ package duel
 		
 		private function initialize():void
 		{
+			//{ INITIAL SHIT
 			Starling.juggler.add( this );
 			
 			jugglerStrict = new GuiJuggler();
@@ -80,15 +78,18 @@ package duel
 			processes.addEventListener( ProcessEvent.CURRENT_PROCESS, onProcessAdvance );
 			processes.addEventListener( Event.COMPLETE, onProcessComplete );
 			
-			//
 			p1 = generatePlayer( "player1" );
 			p2 = generatePlayer( "player2" );
 			p1.opponent = p2;
 			p2.opponent = p1;
 			
-			// VISUALS
+			function generatePlayer( name:String ):Player
+			{ return new Player( name, G.INIT_LP ) }
+		
+			//}
+			
+			//{ VISUALS
 			bg = new Background( assets.getTexture( "bg" ) );
-			bg.onClickedCallback = onBgClicked;
 			addChild( bg );
 			
 			const CHAR_SCALE:Number = 0.5;
@@ -124,8 +125,6 @@ package duel
 			gui = new Gui();
 			addChild( gui );
 			
-			selection = new Selection();
-			
 			p1.handSprite = new HandSprite( p1.hand );
 			p1.handSprite.maxWidth = 1000;
 			p1.handSprite.x = -450 + ( App.W - p1.handSprite.maxWidth ) * 0.5;
@@ -136,23 +135,23 @@ package duel
 			p2.handSprite.x = -300 + ( App.W - p2.handSprite.maxWidth ) * 0.5;
 			p2.handSprite.y = -p2.tableSide.y;
 			p2.handSprite.flipped = true;
+			//}
 			
-			// START GAME
-			currentPlayer = p1;
-			currentPlayer.opponent = p2;
+			//{ START GAME
+			setCurrentPlayer( p1 );
 			
 			CONFIG::development
 			{
-				var pmi:ProcessManagementInspector = new ProcessManagementInspector( processes );
-				addChild( pmi );
-				pmi.x = 200;
-				pmi.y = 400;
+				//var pmi:ProcessManagementInspector = new ProcessManagementInspector( processes );
+				//addChild( pmi );
+				//pmi.x = 200;
+				//pmi.y = 400;
 			/** / ProcessTester.initTest1( processes ); return /**/
 			}
 			
-			//
+			//}
 			
-			// PREPARE DECKS
+			//{ PREPARE DECKS
 			const DECK1:Array = [];
 			const DECK2:Array = [];
 			
@@ -179,8 +178,9 @@ package duel
 				DECK1.push( i );
 				DECK2.push( i );
 			} while ( TempCardsDatabase.F[ ++i ] != null )
+			//}
 			
-			// PREPARE GAMEPLAY
+			//{ PREPARE GAMEPLAY
 			const DECK1_SIZE:uint = Math.min( DECK1.length, G.MAX_DECK_SIZE );
 			const DECK2_SIZE:uint = Math.min( DECK2.length, G.MAX_DECK_SIZE );
 			
@@ -210,6 +210,7 @@ package duel
 				processes.prepend_Draw( p1, G.INIT_HAND_SIZE );
 				processes.prepend_Draw( p2, G.INIT_HAND_SIZE );
 			}
+			//}
 			
 		}
 		
@@ -228,20 +229,28 @@ package duel
 			jugglerGui.advanceTime( time );
 			juggler.advanceTime( time );
 			
+			if ( jugglerStrict.isIdle )
+				processes.advanceTime( time );
+				
 			gui.advanceTime( time );
 			p1.handSprite.advanceTime( time );
 			p2.handSprite.advanceTime( time );
-			
-			if ( jugglerStrict.isIdle )
-				processes.advanceTime( time );
-			
-			if ( selectedCard != null && !canSelect( selectedCard ) )
-				selectCard( null );
+			p1.ctrl.advanceTime( time );
+			p2.ctrl.advanceTime( time );
 			
 			//bg.visible = interactable;
 			this.touchable = interactable;
+		}
+		
+		public function setCurrentPlayer( p:Player ):void
+		{
+			if ( currentPlayer )
+				currentPlayer.ctrl.active = false;
 			
-			updateSelectables();
+			currentPlayer = p;
+			
+			if ( currentPlayer )
+				currentPlayer.ctrl.active = true;
 		}
 		
 		// PROCESSES
@@ -255,6 +264,7 @@ package duel
 			
 			playerInspectProcess( currentPlayer.opponent, p );
 			playerInspectProcess( currentPlayer, p );
+			currentPlayer.ctrl.onProcessAdvance( p );
 			
 			gui.updateData();
 		}
@@ -310,197 +320,7 @@ package duel
 			}
 		}
 		
-		// INTERACTION
-		public function onFieldClicked( field:Field ):void
-		{
-			if ( selectedCard )
-			{
-				var c:Card = selectedCard;
-				var p:Player = c.controller;
-				
-				if ( c.isInHand )
-				{
-					if ( canSummon() )
-					{
-						performCardSummon( c, field as CreatureField );
-						return;
-					}
-					if ( canSetTrap() )
-					{
-						performTrapSet( c, field as TrapField );
-						return;
-					}
-				}
-				
-				selectCard( null );
-				
-				if ( canRelocate() )
-				{
-					performRelocation( c, field as CreatureField );
-					return;
-				}
-				
-				if ( c.isInPlay && field.owner == currentPlayer.opponent )
-				{
-					performCardAttack( c );
-					return;
-				}
-				
-				// DEV SHIT
-				CONFIG::development
-				{
-					if ( GODMODE && field.type.isGraveyard && field.owner == p )
-						processes.prepend_AddToGrave( c );
-				}
-			}
-			else if ( field is IndexedField && !field.isEmpty )
-			{
-				onCardClicked( IndexedField( field ).topCard );
-			}
-			else
-			{
-				// DEV SHIT
-				CONFIG::development
-				{
-					if ( GODMODE && field.type.isDeck )
-					{
-						processes.prepend_Draw( field.owner, 5 );
-						return;
-					}
-					if ( GODMODE && field.type.isGraveyard )
-					{
-						processes.prepend_AddToHand( field.topCard, currentPlayer );
-						return;
-					}
-				}
-				
-				if ( field.type.isDeck && field.owner == currentPlayer )
-				{
-					processes.prepend_Draw( field.owner, 1 );
-					return;
-				}
-			}
-			
-			function canSummon():Boolean
-			{
-				if ( !canPerformAction() )
-					return false;
-				if ( !c.type.isCreature )
-					return false;
-				if ( field as CreatureField == null )
-					return false;
-				return CommonCardQuestions.canSummonHere( c, field as CreatureField );
-			}
-			function canSetTrap():Boolean
-			{
-				if ( !canPerformAction() )
-					return false;
-				if ( !c.type.isTrap )
-					return false;
-				if ( field as TrapField == null )
-					return false;
-				return CommonCardQuestions.canPlaceTrapHere( c, field as TrapField );
-			}
-			function canRelocate():Boolean
-			{
-				if ( !c.type.isCreature )
-					return false;
-				if ( field as CreatureField == null )
-					return false;
-				return CommonCardQuestions.canRelocateHere( c, field as CreatureField );
-			}
-		}
-		
-		public function onCardClicked( card:Card ):void
-		{
-			if ( selectedCard == null )
-			{
-				if ( card.controller == currentPlayer )
-				{
-					if ( card.lot is Hand )
-					{
-						if ( canSelect( card ) )
-							selectCard( selectedCard == card ? null : card );
-						return;
-					}
-					else if ( canSelect( card ) )
-					{
-						selectCard( card );
-					}
-				}
-			}
-			else
-			{
-				var c:Card = selectedCard;
-				
-				if ( c != card && card.lot is Hand )
-				{
-					selectCard( card );
-					return;
-				}
-				
-				selectCard( null );
-				
-				if ( c != card && canSelect( card ) )
-				{
-					selectCard( card );
-					return;
-				}
-				
-				/// DEV SHIT
-				
-				CONFIG::development
-				{
-				/** /
-				   // MANUALLY ADD TO GRAVE
-				   if ( currentPlayer.grave.containsCard( card ) )
-				   {
-				   processes.enterGrave( c );
-				   return;
-				   }
-				   /** /
-				   // STACK CARDS LIKE IT'S NOTHING
-				   if ( c.lot != card.lot && card.controller == c.controller )
-				   {
-				   if ( !card.lot.isEmpty )
-				   c.faceDown = card.lot.getFirstCard().faceDown;
-				   card.lot.addCard( c );
-				   }
-				 /**/
-				}
-			}
-		}
-		
-		public function onCardRollOver( card:Card ):void
-		{
-			if ( !interactable )
-				return;
-			if ( card.controller.controllable )
-				card.sprite.peekIn();
-			dispatchEventWith( GameEvents.HOVER, false, card );
-		}
-		
-		public function onCardRollOut( card:Card ):void
-		{
-			if ( !interactable )
-				return;
-			if ( card.controller.controllable )
-				card.sprite.peekOut();
-			dispatchEventWith( GameEvents.UNHOVER, false, card );
-		}
-		
-		private function onBgClicked():void
-		{
-			selectCard( null );
-		}
-		
-		// GAMEPLAY
-		
-		public function endTurn():void
-		{
-			selectCard( null );
-			processes.append_TurnEnd( currentPlayer );
-		}
+		// PLAYER ACTIONS
 		
 		public function canPerformAction():Boolean
 		{
@@ -508,35 +328,29 @@ package duel
 			return currentPlayer.mana.current > 0;
 		}
 		
-		public function performCardSummon( c:Card, field:CreatureField ):void
-		{
-			selectCard( null );
-			processes.append_SummonHere( c, field, true );
-		}
+		public function performActionSummon( c:Card, field:CreatureField ):void
+		{ processes.append_SummonHere( c, field, true ) }
 		
-		public function performTrapSet( c:Card, field:TrapField ):void
-		{
-			selectCard( null );
-			processes.append_TrapSet( c, field, true );
-		}
+		public function performActionTrapSet( c:Card, field:TrapField ):void
+		{ processes.append_TrapSet( c, field, true ) }
 		
-		public function performCardAttack( c:Card ):void
-		{
-			selectCard( null );
-			processes.append_Attack( c, false );
-		}
+		public function performActionAttack( c:Card ):void
+		{ processes.append_Attack( c, false ) }
 		
-		public function performRelocation( c:Card, field:CreatureField ):void
-		{
-			selectCard( null );
-			processes.append_Relocation( c, field, false );
-		}
+		public function performActionRelocation( c:Card, field:CreatureField ):void
+		{ processes.append_Relocation( c, field, false ) }
 		
-		public function performSafeFlip( c:Card ):void
-		{
-			selectCard( null );
-			processes.prepend_SafeFlip( c );
-		}
+		public function performActionSafeFlip( c:Card ):void
+		{ processes.prepend_SafeFlip( c ) }
+		
+		public function performActionDraw():void 
+		{ processes.prepend_Draw( currentPlayer, 1, true ) }
+		
+		public function performActionTurnEnd():void
+		{ processes.append_TurnEnd( currentPlayer ) }
+		
+		public function performActionSurrender():void
+		{ endGame() }
 		
 		//
 		public function endGame():void
@@ -548,114 +362,6 @@ package duel
 			
 			Starling.juggler.remove( this );
 			Starling.juggler.tween( q, .440, { alpha: 1.0, onComplete: destroy } );
-		}
-		
-		//
-		public function selectCard( card:Card ):void
-		{
-			if ( selectedCard != null )
-				dispatchEventWith( GameEvents.DESELECT, false, selectedCard );
-			
-			selection.selectedCard = card;
-			
-			if ( selectedCard != null )
-				dispatchEventWith( GameEvents.SELECT, false, selectedCard );
-			
-			updateSelectables();
-		}
-		
-		public function updateSelectables():void
-		{
-			var card:Card = selectedCard;
-				
-			/// HAND
-			
-			var i:int = 0;
-			for ( 0; i < currentPlayer.hand.cardsCount; i++ )
-				currentPlayer.hand.getCardAt( i ).sprite.isSelectable = 
-					card == null ? canPlayAtAll( currentPlayer.hand.getCardAt( i ) ) : false;
-			for ( 0; i < currentPlayer.opponent.hand.cardsCount; i++ )
-				currentPlayer.opponent.hand.getCardAt( i ).sprite.isSelectable = false;
-			
-			/// COMBAT FIELDS
-			var clr:uint;
-			var cond:Function;
-			
-			clr = 0; cond = null;
-			p1.fieldsC.forEachField( setFieldAuraColor );
-			p1.fieldsT.forEachField( setFieldAuraColor );
-			p2.fieldsC.forEachField( setFieldAuraColor );
-			p2.fieldsT.forEachField( setFieldAuraColor );
-			
-			if ( card == null )
-			{
-				clr = 0xFFFFFF; cond = isSelectable;
-				currentPlayer.fieldsC.forEachField( setFieldAuraColor );
-			}
-			else
-			{
-				if ( card.lot is Hand )
-				{
-					if ( card.type.isTrap )
-					{
-						clr = 0xB062FF; cond = canSetTrapTo;
-						currentPlayer.fieldsT.forEachField( setFieldAuraColor );
-					}
-					if ( card.type.isCreature )
-					{
-						clr = 0xCC530B; cond = canSummonTo;
-						currentPlayer.fieldsC.forEachField( setFieldAuraColor );
-					}
-				}
-				else
-				if ( card.isInPlay )
-				{
-					if ( card.type.isCreature && !card.exhausted )
-					{
-						if ( CommonCardQuestions.canPerformAttack( card ) )
-						{
-							clr = 0xD71500; //cond = canAttack;
-							card.indexedField.opposingCreatureField.sprite.setSelectableness( clr )
-							if ( card.indexedField.opposingCreatureField.isEmpty )
-								card.indexedField.opposingTrapField.sprite.setSelectableness( clr )
-						}
-						clr = 0x1050AF; cond = canRelocateTo;
-						currentPlayer.fieldsC.forEachField( setFieldAuraColor );
-					}
-				}
-			}
-			
-			/// SLECTED, IN HAND
-			function canSetTrapTo( f:TrapField ):Boolean
-			{ return CommonCardQuestions.canPlaceTrapHere( card, f ) }
-			function canSummonTo( f:CreatureField ):Boolean
-			{ return CommonCardQuestions.canSummonHere( card, f ) }
-			
-			/// SELECTED, ON FIELD
-			//function canAttack( f:CreatureField ):Boolean
-			//{ return CommonCardQuestions.canPerformAttack( card ) ) }
-			function canRelocateTo( f:CreatureField ):Boolean
-			{ return CommonCardQuestions.canRelocateHere( card, f ) }
-			
-			/// NOTHING SELECTED
-			function isSelectable( f:Field ):Boolean
-			{ return f.topCard != null && canSelect( f.topCard ) }
-			
-			function setFieldAuraColor( f:Field ):void
-			{
-				f.sprite.setSelectableness( cond == null || cond( f ) ? clr : 0 );
-			}
-		}
-		
-		public function get selectedCard():Card
-		{
-			return selection.selectedCard
-		}
-		
-		//
-		private function generatePlayer( name:String ):Player
-		{
-			return new Player( name, G.INIT_LP );
 		}
 		
 		//
@@ -689,38 +395,6 @@ package duel
 					onComplete : o.removeFromParent,
 					onCompleteArgs : [true]
 				} );
-		}
-		
-		// QUESTIONS
-		
-		public function canSelect( card:Card ):Boolean
-		{
-			if ( card.controller != currentPlayer )
-				return false;
-			if ( card.type.isTrap && card.isInPlay )
-				return false;
-			if ( card.type.isCreature && card.exhausted )
-				return false;
-			if ( card.field && card.field.type.isGraveyard )
-				return false;
-			if ( card.field && card.field.type.isDeck )
-				return false;
-			return true;
-		}
-		
-		public function canPlayAtAll( c:Card ):Boolean
-		{
-			if ( c.type.isCreature )
-				return currentPlayer.fieldsC.hasAnyFieldThat( canSummonTo );
-			if ( c.type.isTrap )
-				return currentPlayer.fieldsT.hasAnyFieldThat( canSetTrapTo );
-			
-			function canSummonTo( f:CreatureField ):Boolean
-			{ return CommonCardQuestions.canSummonHere( c, f ); }
-			function canSetTrapTo( f:TrapField ):Boolean
-			{ return CommonCardQuestions.canPlaceTrapHere( c, f as TrapField ) }
-			
-			return false;
 		}
 		
 		//

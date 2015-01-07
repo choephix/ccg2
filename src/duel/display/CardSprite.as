@@ -128,8 +128,6 @@ package duel.display {
 			// ..
 			
 			// ..
-			addEventListener( TouchEvent.TOUCH, onTouch );
-			
 			alpha = .0;
 			
 			updateData();
@@ -173,17 +171,6 @@ package duel.display {
 			if ( _exhaustClockVisible == value ) return;
 			_exhaustClockVisible = value;
 			juggler.xtween( exhaustClock, .500, { alpha : value ? 1.0 : .0 } );
-		}
-		
-		private function onTouch(e:TouchEvent):void 
-		{
-			var t:Touch = e.getTouch( this );
-			
-			if ( t == null ) return;
-			
-			if ( t.phase == TouchPhase.ENDED ) {
-				game.onCardClicked( card );
-			} 
 		}
 		
 		//

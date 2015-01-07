@@ -49,7 +49,7 @@ package duel.processes
 			pro.onStart = 
 			function onStart( p:Player ):void
 			{
-				game.currentPlayer = p;
+				game.setCurrentPlayer( p );
 				p.mana.raiseCap();
 				p.mana.refill();
 			}
@@ -68,7 +68,7 @@ package duel.processes
 		//}
 		//{ DRAW & DISCARD
 		
-		gameprocessing function prepend_Draw( p:Player, count:int = 1 ):void
+		gameprocessing function prepend_Draw( p:Player, count:int = 1, isManual:Boolean = false ):void
 		{
 			var pro:GameplayProcess;
 			while ( --count >= 0 )
@@ -81,6 +81,9 @@ package duel.processes
 			
 			function onComplete( p:Player ):void 
 			{
+				if ( isManual )
+					p.mana.useMana( 1 );
+				
 				if ( p.deck.isEmpty )
 				{
 					prepend_DirectDamage( p, new Damage( 1, DamageType.SPECIAL, null ) );
@@ -573,11 +576,13 @@ package duel.processes
 			pro.onStart =
 			function complete( c:Card, fromCombat:Boolean=false ):void 
 			{
-				c.lot.removeCard( c );
 				if ( c.owner )
 					prepend_AddToGrave( c );
 				else
+				{
+					c.lot.removeCard( c );
 					c.sprite.animFadeToNothing( true );
+				}
 			}
 		}
 		
@@ -702,6 +707,12 @@ package duel.processes
 			
 			/// ENTER_GRAVE
 			pro = chain( pro, gen( GameplayProcess.ENTER_GRAVE, c ) );
+			pro.onStart =
+			function onStart( c:Card ):void
+			{
+				if ( c.lot != null )
+					c.lot.removeCard( c )
+			}
 			pro.onEnd =
 			function onEnd( c:Card ):void
 			{
@@ -885,7 +896,7 @@ package duel.processes
 			}
 			
 			/// LEAVE_INDEXED_FIELD_COMPLETE
-			chain( pro, gen( GameplayProcess.ENTER_INDEXED_FIELD_COMPLETE, c, c.indexedField ) );
+			chain( pro, gen( GameplayProcess.LEAVE_INDEXED_FIELD_COMPLETE, c, c.indexedField ) );
 			
 			/// returns LEAVE_INDEXED_FIELD (the chain head)
 			return pro;

@@ -181,7 +181,7 @@ package duel.cards
 		}
 		
 		public function get exhausted():Boolean {
-			if ( !Game.GODMODE && summonedThisTurn && !statusC.hasHaste ) return true;
+			if ( summonedThisTurn && !statusC.hasHaste && !Game.GODMODE ) return true;
 			if ( statusC.hasSwift ) return actionsAttack > 0 && actionsRelocate > 0;
 			return actionsRelocate + actionsAttack > 0;
 		}

@@ -60,7 +60,7 @@ package {
 				g.endGame();
 			}
 			if ( e.keyCode == Keyboard.SPACE ) {
-				g.endTurn();
+				g.performActionTurnEnd();
 			}
 			if ( e.keyCode == Keyboard.CAPS_LOCK ) {
 				Game.GODMODE = !Game.GODMODE;

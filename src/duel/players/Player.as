@@ -1,4 +1,6 @@
 package duel.players {
+	import duel.controllers.PlayerController;
+	import duel.controllers.UserPlayerController;
 	import duel.display.TableSide;
 	import duel.G;
 	import duel.players.ManaPool;
@@ -20,6 +22,7 @@ package duel.players {
 		public var opponent:Player;
 		
 		public var controllable:Boolean = true;
+		public var ctrl:PlayerController;
 		
 		public var hand:Hand;
 		public var deck:Field;
@@ -51,10 +54,15 @@ package duel.players {
 			
 			mana = new ManaPool();
 			
+			ctrl = new UserPlayerController( this );
+			
 			_name = name;
 			_lp = lifePoints;
 			
 			setAsFieldsOwner();
+			
+			// INITIALIZE
+			ctrl.initialize();
 		}
 		
 		private function setAsFieldsOwner():void 

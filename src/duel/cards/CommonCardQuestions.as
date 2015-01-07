@@ -56,6 +56,7 @@ package duel.cards
 		{ 
 			if ( !c.isInPlay ) return false;
 			if ( !c.canRelocate ) return false;
+			if ( c.field == field ) return false;
 			return canPlaceCreatureHere( c, field );
 		}
 		public static function cannotRelocateHere( c:Card, field:CreatureField ):Boolean

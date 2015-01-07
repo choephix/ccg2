@@ -6,6 +6,7 @@ package duel.gui
 	import duel.players.ManaPool;
 	import starling.display.Button;
 	import starling.events.Event;
+	import starling.text.TextField;
 	
 	/**
 	 * ...
@@ -13,6 +14,7 @@ package duel.gui
 	 */
 	public class Gui extends GameSprite
 	{
+		public var tDebug:TextField;
 		private var t1:AnimatedTextField;
 		private var t2:AnimatedTextField;
 		
@@ -47,6 +49,12 @@ package duel.gui
 			t2.vAlign = "top";
 			t2.touchable = false;
 			
+			tDebug = new TextField( App.W, App.H, "", "Calibri", 20, 0x2277EE, true );
+			addChild( tDebug );
+			tDebug.hAlign = "center";
+			tDebug.vAlign = "center";
+			tDebug.touchable = false;
+			
 			// BUTTONS
 			
 			buttonsContainer = new Sprite();
@@ -64,20 +72,19 @@ package duel.gui
 				return btn;
 			}
 			
-			button1 = addButton( "RESTART", 0x53449B, game.endGame );
-			button2 = addButton( "END TURN", 0x2EACE9, game.endTurn );
+			button1 = addButton( "SURRENDER", 0x53449B, game.performActionSurrender );
+			button2 = addButton( "END TURN", 0x2EACE9, game.performActionTurnEnd );
 			button3 = addButton( "ATTACK", 0xFF2000, btn3f );
 			button4 = addButton( "FLIP", 0xFFCC33, btn4f );
 			
 			function btn3f():void
 			{
-				game.performCardAttack( game.selectedCard );
-				game.selectCard( null );
+				//game.performActionAttack( game.selectedCard )
 			}
 			
 			function btn4f():void
-			{
-				game.performSafeFlip( game.selectedCard );
+			{ 
+				//game.performActionSafeFlip( game.selectedCard )
 			}
 			
 			buttonsContainer.alignPivot( "right", "top" );
@@ -94,28 +101,28 @@ package duel.gui
 		public function updateData():void
 		{
 			buttonsContainer.alpha = game.interactable ? 1.0 : 0.6;
-			updateTf( t1, game.p1, time );
-			updateTf( t2, game.p2, time );
-			button3.visible = 
-				game.interactable && 
-				game.selectedCard != null && 
-				game.selectedCard.type.isCreature && 
-				game.selectedCard.canAttack;
-			button4.visible = 
-				game.interactable && 
-				game.selectedCard != null && 
-				game.selectedCard.type.isCreature && 
-				game.selectedCard.faceDown &&
-				game.selectedCard.exhausted == false;
+			updateTf( t1, game.p1 );
+			updateTf( t2, game.p2 );
+			//button3.visible = 
+				//game.interactable && 
+				//game.selectedCard != null && 
+				//game.selectedCard.type.isCreature && 
+				//game.selectedCard.canAttack;
+			//button4.visible = 
+				//game.interactable && 
+				//game.selectedCard != null && 
+				//game.selectedCard.type.isCreature && 
+				//game.selectedCard.faceDown &&
+				//game.selectedCard.exhausted == false;
 		}
 		
-		private function updateTf( t:AnimatedTextField, p:Player, time:Number ):void
+		private function updateTf( t:AnimatedTextField, p:Player ):void
 		{
-			t.text = " " + game.p2.name + ": " + AnimatedTextField.DEFAULT_MARKER 
+			t.text = " " + game.p2.name + ": " 
+						+ AnimatedTextField.DEFAULT_MARKER 
 						+ "\n" + pMana( p.mana );
 			t.targetValue = p.lifePoints;
 			t.color = p == game.currentPlayer ? 0xFFEE22 : 0xF37618;
-			t.advanceTime( time );
 		}
 		
 		private function pMana( mana:ManaPool ):String
@@ -127,6 +134,5 @@ package duel.gui
 			//return r ;
 		}
 		
-		//
 	}
 }

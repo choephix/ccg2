@@ -28,12 +28,6 @@ package duel.display.cardlots {
 		{
 			this.hand = hand;
 			setTargetList( hand );
-			
-			game.addEventListener( GameEvents.TURN_START, onTurnStart );
-			game.addEventListener( GameEvents.SELECT, onCardSelected );
-			game.addEventListener( GameEvents.DESELECT, onCardDeselected );
-			//game.addEventListener( GameEvents.HOVER, onCardSelected );
-			//game.addEventListener( GameEvents.UNHOVER, onCardDeselected );
 		}
 		
 		override protected function arrangeAll():void 
