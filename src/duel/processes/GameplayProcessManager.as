@@ -175,7 +175,7 @@ package duel.processes
 			{
 				return !c.isInPlay;
 			}
-			pro.onEnd = 
+			pro.onStart = 
 			function complete( c:Card, field:CreatureField ):void
 			{
 				c.summonedThisTurn = true;
