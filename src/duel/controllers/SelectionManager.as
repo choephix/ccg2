@@ -227,9 +227,6 @@ package duel.controllers
 			/// OLD SELECTION
 			if ( selectedCard != null )
 			{
-				//selectedCard.sprite.scaleX = 1.0;
-				//selectedCard.sprite.scaleY = 1.0;
-				
 				selectedCard.sprite.selectAura.visible = false;
 				
 				if ( player.hand.containsCard( selectedCard ) )
@@ -258,9 +255,6 @@ package duel.controllers
 				{
 					/// UPDATE SELECTION CONTEXT
 					contextOnField = scfFieldCreature;
-					
-					//selectedCard.sprite.scaleX = 1.1;
-					//selectedCard.sprite.scaleY = 1.1;
 				}
 					
 				selectedCard.sprite.selectAura.visible = true;
