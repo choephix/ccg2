@@ -10,6 +10,7 @@ package duel.cards.status {
 	import duel.otherlogic.SpecialEffect;
 	import duel.processes.GameplayProcess;
 	import duel.processes.gameprocessing;
+	import duel.table.Field;
 	
 	use namespace cardprops;
 	use namespace gameprocessing;
@@ -123,6 +124,11 @@ package duel.cards.status {
 		
 		public function get currentAttackValue():int
 		{ return currentPowerValue }
+		
+		// IN-HAND LOGIC
+		
+		public function maySummonOn( f:Field ):Boolean
+		{ return propsC.summonCondition == null ? true : propsC.summonCondition( f ) }
 		
 		// COMBAT LOGIC
 		

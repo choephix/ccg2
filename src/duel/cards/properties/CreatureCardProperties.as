@@ -22,6 +22,9 @@ package duel.cards.properties {
 		cardprops var noAttack:Boolean 	= false; 	// CANNOT ATTACK
 		cardprops var noMove:Boolean	= false; 	// CANNOT MOVE
 		
+		// SUMMONING CONDITION
+		cardprops var summonCondition:Function;
+		
 		// SPECIAL
 		cardprops var specialsTriggered:Vector.<SpecialEffect> = new Vector.<SpecialEffect>();
 		

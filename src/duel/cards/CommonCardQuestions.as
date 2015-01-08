@@ -44,10 +44,11 @@ package duel.cards
 				if ( c.controller != field.owner ) return false;
 				if ( field.isEmpty ) return false; //TODO remove this for riders and combinatrons
 				if ( field.isLocked ) return false;
-				return true;
+				return c.statusC.maySummonOn( field );
 			}
-			
-			return canPlaceCreatureHere( c, field );
+			return canPlaceCreatureHere( c, field )
+					&&
+					c.statusC.maySummonOn( field );
 		}
 		public static function cannotSummonHere( c:Card, field:CreatureField ):Boolean
 		{ return !canSummonHere( c, field ) }

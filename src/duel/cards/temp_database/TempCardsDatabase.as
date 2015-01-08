@@ -58,6 +58,11 @@ package duel.cards.temp_database
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
 					c.propsC.basePower = 7;
 					
+					c.propsC.summonCondition = 
+					function( f:CreatureField ):Boolean {
+						return c.controller.creatureCount > 0;
+					}
+					
 					var special:SpecialEffect;
 					special = c.propsC.addTriggered();
 					special.allowIn( CardLotType.CREATURE_FIELD );
