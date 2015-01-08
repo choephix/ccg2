@@ -4,7 +4,11 @@ package duel.processes
 	import starling.events.Event;
 	import starling.events.EventDispatcher;
 	
-	[Event( name="complete",type="starling.events.Event" )]
+	/// When all proceses in queue are completed
+	[Event( name = "complete", type = "starling.events.Event" )]
+	/// When a process has completed
+	[Event( name = "processComplete", type = "duel.processes.ProcessEvent" )]
+	/// When a process has progressed
 	[Event( name="process",type="duel.processes.ProcessEvent" )]
 	/**
 	 * ...
@@ -15,6 +19,7 @@ package duel.processes
 		public var queue:Vector.<Process>;
 		
 		private var currentProcessEvent:ProcessEvent;
+		private var processCompleteEvent:ProcessEvent;
 		
 		private var running:Boolean;
 		
@@ -22,6 +27,7 @@ package duel.processes
 		{
 			queue = new Vector.<Process>();
 			currentProcessEvent = new ProcessEvent( ProcessEvent.CURRENT_PROCESS );
+			processCompleteEvent = new ProcessEvent( ProcessEvent.PROCESS_COMPLETE );
 		}
 		
 		public function advanceTime( time:Number ):void 
@@ -67,6 +73,8 @@ package duel.processes
 					queue.unshift( p.next );
 				
 				p.end();
+				processCompleteEvent.process = p;
+				dispatchEvent( processCompleteEvent );
 			}
 		}
 		
@@ -82,7 +90,7 @@ package duel.processes
 		
 		public function prependProcess( p:Process ):void
 		{
-			//if ( queue.length > 0 )
+			//if ( queue.length > 0 ) //TODO why the fuck did I comment this out?
 				//queue[ 0 ].interrupt();
 			queue.unshift( p );
 		}

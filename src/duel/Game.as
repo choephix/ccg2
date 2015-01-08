@@ -76,7 +76,7 @@ package duel
 			
 			processes = new GameplayProcessManager();
 			processes.addEventListener( ProcessEvent.CURRENT_PROCESS, onProcessAdvance );
-			processes.addEventListener( Event.COMPLETE, onProcessComplete );
+			processes.addEventListener( ProcessEvent.PROCESS_COMPLETE, onProcessComplete );
 			
 			p1 = generatePlayer( "player1" );
 			p2 = generatePlayer( "player2" );
@@ -268,7 +268,7 @@ package duel
 			gui.updateData();
 		}
 		
-		private function onProcessComplete( e:Event ):void
+		private function onProcessComplete( e:ProcessEvent ):void
 		{
 			currentPlayer.ctrl.update();
 			gui.updateData();

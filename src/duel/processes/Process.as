@@ -54,6 +54,7 @@ package duel.processes
 				onEnd.apply( null, args );
 		}
 		
+		/// We need this in case the process was interrupted
 		internal function preAdvanceTime( time:Number ):void 
 		{
 			if ( state == ProcessState.INTERRUPTED )
