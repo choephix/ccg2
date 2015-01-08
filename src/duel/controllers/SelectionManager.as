@@ -81,15 +81,7 @@ package duel.controllers
 		{
 			/// DESELECT CARD IF IMPOSSIBLE
 			if ( selectedCard != null )
-			{
-				if ( selectedCard.isInHand )
-					if ( canSelectHandCard( selectedCard ) )
-						return;
-				if ( selectedCard.isInPlay && selectedCard.type.isCreature )
-					if ( canSelectCreature( selectedCard ) )
-						return;
-				selectCard( null );
-			}
+				deselectOnImpossible();
 			
 			/// SWITCH SELEcTION CONTEXTS
 			if ( selectedCard == null )
@@ -103,6 +95,17 @@ package duel.controllers
 			else
 			if ( selectedCard.isInPlay && selectedCard.type.isCreature )
 				contextOnField = scfFieldCreature
+		}
+		
+		public function deselectOnImpossible():void
+		{
+			if ( selectedCard.isInHand )
+				if ( canSelectHandCard( selectedCard ) )
+					return;
+			if ( selectedCard.isInPlay && selectedCard.type.isCreature )
+				if ( canSelectCreature( selectedCard ) )
+					return;
+			selectCard( null );
 		}
 		
 		//{ Selection Contexts
@@ -189,7 +192,7 @@ package duel.controllers
 						trace ( "You can only relocate to an empty field" );
 					else
 					if ( !CommonCardQuestions.canRelocateHere( selectedCard, f ) )
-						trace ( "You cannot relocate this creature here" );
+						selectedCard( f.topCard );
 					else
 						ctrl.performActionRelocation( selectedCard, f );
 				}
@@ -219,6 +222,8 @@ package duel.controllers
 		public function canSelectCreature( card:Card ):Boolean
 		{
 			if ( card.controller != player )
+				return false;
+			if ( card.exhausted )
 				return false;
 			return true;
 		}
