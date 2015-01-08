@@ -8,6 +8,9 @@ package duel.controllers
 	{
 		public var name:String = "unnamed";
 		
+		///// Must accept NO arguments and return Boolean
+		//public var condition:Function = TRUTH;
+		
 		/// Must accept ONE argument of type * and return Boolean
 		public var isSelectable:Function = TRUTH;
 		//public var isSelectable:Vector.<Function> = new Vector.<Function>();

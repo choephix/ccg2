@@ -79,20 +79,9 @@ package duel.controllers
 		
 		public function onUpdate():void
 		{
-			if ( selectedCard == null )
+			/// DESELECT CARD IF IMPOSSIBLE
+			if ( selectedCard != null )
 			{
-				contextOnField = scfNilSelected;
-				return;
-			}
-			else
-			{
-				if ( contextOnField == scfHandCreature || contextOnField == scfHandTrap )
-					if ( !selectedCard.isInHand )
-						if ( selectedCard.isInPlay && selectedCard.type.isCreature )
-							contextOnField = scfFieldCreature;
-						else
-							contextOnField = scfNilSelected;
-				
 				if ( selectedCard.isInHand )
 					if ( canSelectHandCard( selectedCard ) )
 						return;
@@ -101,9 +90,24 @@ package duel.controllers
 						return;
 				selectCard( null );
 			}
+			
+			/// SWITCH SELEcTION CONTEXTS
+			if ( selectedCard == null )
+				contextOnField = scfNilSelected;
+			else
+			if ( selectedCard.isInHand && selectedCard.type.isCreature )
+				contextOnField = scfHandCreature
+			else
+			if ( selectedCard.isInHand && selectedCard.type.isTrap )
+				contextOnField = scfHandTrap
+			else
+			if ( selectedCard.isInPlay && selectedCard.type.isCreature )
+				contextOnField = scfFieldCreature
 		}
 		
 		//{ Selection Contexts
+		
+		// in hand
 		
 		private function schEnabledIsSelectable( o:* ):Boolean
 		{
@@ -124,7 +128,7 @@ package duel.controllers
 			return false
 		}
 		
-		//
+		// in play 
 		
 		private function scfNilSelectedIsSelectable( o:* ):Boolean
 		{
@@ -241,27 +245,9 @@ package duel.controllers
 			if ( selectedCard != null )
 			{
 				if ( player.hand.containsCard( selectedCard ) )
-				{
 					player.handSprite.show( selectedCard );
 					
-					/// UPDATE SELECTION CONTEXT
-					if ( selectedCard.type.isCreature )
-						contextOnField = scfHandCreature;
-					if ( selectedCard.type.isTrap )
-						contextOnField = scfHandTrap;
-				}
-				else
-				if ( selectedCard.lot.type.isCreatureField )
-				{
-					/// UPDATE SELECTION CONTEXT
-					contextOnField = scfFieldCreature;
-				}
-					
 				selectedCard.sprite.selectAura.visible = true;
-			}
-			else
-			{
-				contextOnField = scfNilSelected;
 			}
 		}
 		
