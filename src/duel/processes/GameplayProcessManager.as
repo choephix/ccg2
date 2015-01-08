@@ -34,6 +34,7 @@ package duel.processes
 			pro.onEnd = function turnEnd( p:Player ):void
 			{
 				append_TurnStart( p.opponent );
+				p.mana.raiseCap();
 			}
 		}
 		
@@ -49,7 +50,6 @@ package duel.processes
 			function onStart( p:Player ):void
 			{
 				game.setCurrentPlayer( p );
-				p.mana.raiseCap();
 				p.mana.refill();
 			}
 			
