@@ -18,18 +18,7 @@ package duel.controllers
 		/// Must accept ONE argument of type *
 		public var onSelected:Function = ERROR;
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		//
 		public function toString():String 
 		{ return "[SelectionContext=" + name + "]" }
 		

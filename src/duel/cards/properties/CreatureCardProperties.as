@@ -58,10 +58,5 @@ package duel.cards.properties {
 		// SAFE FLIP
 		public var onSafeFlipFunc:Function;
 		
-		//
-		
-		//
-		
-		//
 	}
 }
