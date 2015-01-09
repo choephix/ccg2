@@ -96,6 +96,12 @@ package duel.players {
 		
 		// QUESTIONS
 		
+		public function canPerformAction():Boolean
+		{
+			CONFIG::sandbox { return true }
+			return mana.current > 0;
+		}
+		
 		public function get creatureCount():int
 		{ return fieldsC.countOccupied }
 		

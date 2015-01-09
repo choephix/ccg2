@@ -322,12 +322,6 @@ package duel
 		
 		// PLAYER ACTIONS
 		
-		public function canPerformAction():Boolean
-		{
-			CONFIG::sandbox { return true }
-			return currentPlayer.mana.current > 0;
-		}
-		
 		public function performActionSummon( c:Card, field:CreatureField ):void
 		{ processes.append_SummonHere( c, field, true ) }
 		

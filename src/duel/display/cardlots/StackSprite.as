@@ -52,6 +52,7 @@ package duel.display.cardlots
 			
 			juggler.xtween( o, .250,
 				{
+					delay : 0.1,
 					alpha : 1.0,
 					x : x,
 					y : TARGET_Y,

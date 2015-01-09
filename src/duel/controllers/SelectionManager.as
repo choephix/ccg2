@@ -119,6 +119,9 @@ package duel.controllers
 		
 		private function canPlayFieldCard( c:Card ):Boolean 
 		{
+			if ( !player.canPerformAction )
+				return false;
+			
 			if ( c.type.isCreature )
 				return !c.exhausted;
 			if ( c.type.isTrap )
@@ -128,6 +131,9 @@ package duel.controllers
 		
 		private function canPlayHandCard( c:Card ):Boolean 
 		{
+			if ( !player.canPerformAction() )
+				return false;
+			
 			if ( c.type.isCreature )
 				return player.fieldsC.hasAnyFieldThat( canSummonTo );
 			if ( c.type.isTrap )
@@ -165,6 +171,11 @@ package duel.controllers
 		
 		private function schEnabledOnSelected( o:* ):void
 		{
+			if ( !player.canPerformAction() )
+			{
+				trace ( "Not enough mana" );
+				return;
+			}
 			if ( o is Card && player.hand.containsCard( o as Card ) )
 				if ( canSelectHandCard( o as Card ) )
 					selectCard( o == selectedCard ? null : o as Card )
@@ -186,12 +197,17 @@ package duel.controllers
 			if ( o is CreatureField )
 			{
 				if ( CreatureField(o).owner == player )
-					tryToSelectCard( CreatureField(o).topCard );
+					tryToSelectFieldCard( CreatureField(o).topCard );
 				else
-					tryToSelectCard( CreatureField(o).opposingCreature );
+					tryToSelectFieldCard( CreatureField(o).opposingCreature );
 			}
 			if ( o is Field && Field( o ).type.isDeck && Field( o ).owner == player )
 			{
+				if ( !player.canPerformAction() )
+				{
+					trace ( "Not enough mana" );
+					return;
+				}
 				ctrl.performActionDraw();
 			}
 		}
@@ -300,7 +316,7 @@ package duel.controllers
 			}
 		}
 		
-		public function tryToSelectCard( card:Card ):void
+		public function tryToSelectFieldCard( card:Card ):void
 		{
 			if ( card == null )
 			{
