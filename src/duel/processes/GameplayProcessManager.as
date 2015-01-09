@@ -178,6 +178,7 @@ package duel.processes
 			pro.onStart = 
 			function complete( c:Card, field:CreatureField ):void
 			{
+				if ( !c.isInPlay ) return;
 				c.summonedThisTurn = true;
 				c.sprite.animSummon();
 			}

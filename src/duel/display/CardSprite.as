@@ -27,7 +27,8 @@ package duel.display {
 	{
 		public var auraContainer:Sprite;
 		private var exhaustClock:Image;
-		public var selectAura:CardAura;
+		public var selectableAura:Image;
+		public var selectedAura:Image;
 		
 		private var front:Sprite;
 		private var back:Image;
@@ -70,18 +71,25 @@ package duel.display {
 			auraContainer = new Sprite();
 			addChild( auraContainer );
 			
-			selectAura = new CardAura();
-			selectAura.visible = false;
-			selectAura.color = 0x6699EE;
-			//selectAura.color = 0x1C3ACA;
-			CONFIG::sandbox{ selectAura.color = 0x081122 }
-			addChild( selectAura );
+			selectableAura = new CardAura();
+			selectableAura.visible = false;
+			selectableAura.color = 0x669BEA;
+			//selectableAura.color = 0xFFE064;
+			//selectableAura.color = Temp.getColorForCard( card );
+			selectableAura.blendMode = "add";
+			auraContainer.addChild( selectableAura );
+			
+			selectedAura = assets.generateImage( "card-selectable", false, true );
+			selectedAura.visible = false;
+			selectedAura.color = Temp.getColorForCard( card );
+			selectedAura.blendMode = "add";
+			auraContainer.addChild( selectedAura );
 			
 			exhaustClock = assets.generateImage( "exhaustClock", false, true );
 			exhaustClock.x = G.CARD_W * 0.25;
 			exhaustClock.y = G.CARD_H * 0.00;
 			exhaustClock.alpha = 0.0;
-			addChild( exhaustClock );
+			auraContainer.addChild( exhaustClock );
 			
 			// MAIN - FRONT
 			pad = assets.generateImage( "card", true, false );
@@ -138,19 +146,33 @@ package duel.display {
 		
 		public function advanceTime(time:Number):void 
 		{
-			updateData();
-			
-			if ( tfAttak != null )
-				tfAttak.advanceTime( time );
-			
 			if ( _isFaceDown != card.faceDown )
-			{
 				setFaceDown( card.faceDown, false );
-			}
 			
 			front.visible	= _flippedness > .0 || backTranslucency > .0;
 			back.visible	= _flippedness < .0;
-			back.alpha = 1.0 - backTranslucency;
+			
+			auraContainer.scaleX = .25 + .75 * Math.abs( _flippedness );
+			selectableAura.visible = _isSelectable;
+			
+			if ( selectedAura.visible )
+			{
+				selectedAura.rotation = y > 100 ? .0 : Math.PI;
+			}
+			
+			if ( front.visible )
+			{
+				front.scaleX = Math.abs( _flippedness );
+				updateData();
+				if ( tfAttak != null )
+					tfAttak.advanceTime( time );
+			}
+			
+			if ( back.visible )
+			{
+				back.scaleX = Math.abs( _flippedness );
+				back.alpha = 1.0 - backTranslucency;
+			}
 		}
 		
 		internal function updateData():void 
@@ -388,10 +410,6 @@ package duel.display {
 		{
 			if ( _flippedness == value ) return;
 			_flippedness = value;
-			
-			front.scaleX = Math.abs( value );
-			back.scaleX = Math.abs( value );
-			auraContainer.scaleX = .25 + .75 * Math.abs( value );
 		}
 		
 		// PEEKING
@@ -416,11 +434,11 @@ package duel.display {
 		}
 		
 		//
-		public function get isSelectable():Boolean 
+		public function get selectable():Boolean 
 		{ return _isSelectable }
 		
-		public function set isSelectable(value:Boolean):void 
-		{ _isSelectable = value; }
+		public function set selectable(value:Boolean):void 
+		{ _isSelectable = value }
 		
 	}
 

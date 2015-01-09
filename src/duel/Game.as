@@ -264,13 +264,13 @@ package duel
 			
 			playerInspectProcess( currentPlayer.opponent, p );
 			playerInspectProcess( currentPlayer, p );
-			currentPlayer.ctrl.update();
+			currentPlayer.ctrl.onProcessUpdate();
 			gui.updateData();
 		}
 		
 		private function onProcessComplete( e:ProcessEvent ):void
 		{
-			currentPlayer.ctrl.update();
+			currentPlayer.ctrl.onProcessUpdate();
 			gui.updateData();
 		}
 		

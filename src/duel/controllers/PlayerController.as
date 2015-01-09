@@ -34,7 +34,7 @@ package duel.controllers
 		public function advanceTime( time:Number ):void
 		{}
 		
-		public function update():void
+		public function onProcessUpdate():void
 		{}
 		
 		// // // // //

@@ -6,6 +6,7 @@ package duel.controllers
 	import duel.players.Player;
 	import duel.table.CreatureField;
 	import duel.table.Field;
+	import duel.table.IndexedField;
 	import duel.table.TrapField;
 	
 	/**
@@ -74,10 +75,9 @@ package duel.controllers
 			
 			contextInHand = schEnabled;
 			contextOnField = scfNilSelected;
-			
 		}
 		
-		public function onUpdate():void
+		public function advanceTime(time:Number):void 
 		{
 			/// DESELECT CARD IF IMPOSSIBLE
 			if ( selectedCard != null )
@@ -95,6 +95,50 @@ package duel.controllers
 			else
 			if ( selectedCard.isInPlay && selectedCard.type.isCreature )
 				contextOnField = scfFieldCreature
+		}
+		
+		public function onProcessUpdate():void
+		{
+			player.hand.forEachCard( updateHandCard );
+			player.fieldsC.forEachField( updateIndexedField );
+			
+			if ( !player.deck.isEmpty )
+				player.deck.topCard.sprite.selectable = player.mana.current > 0;
+			
+			function updateHandCard( c:Card ):void 
+			{
+				c.sprite.selectable = canPlayHandCard( c );
+			}
+			
+			function updateIndexedField( f:IndexedField ):void 
+			{
+				if ( f.isEmpty ) return;
+				f.topCard.sprite.selectable = canPlayFieldCard( f.topCard );
+			}
+		}
+		
+		private function canPlayFieldCard( c:Card ):Boolean 
+		{
+			if ( c.type.isCreature )
+				return !c.exhausted;
+			if ( c.type.isTrap )
+				return true;
+			return false;
+		}
+		
+		private function canPlayHandCard( c:Card ):Boolean 
+		{
+			if ( c.type.isCreature )
+				return player.fieldsC.hasAnyFieldThat( canSummonTo );
+			if ( c.type.isTrap )
+				return player.fieldsT.hasAnyFieldThat( canSetTrapTo );
+			
+			function canSummonTo( f:CreatureField ):Boolean
+			{ return CommonCardQuestions.canSummonHere( c, f ); }
+			function canSetTrapTo( f:TrapField ):Boolean
+			{ return CommonCardQuestions.canPlaceTrapHere( c, f ) }
+			
+			return false;
 		}
 		
 		public function deselectOnImpossible():void
@@ -236,7 +280,7 @@ package duel.controllers
 			/// OLD SELECTION
 			if ( selectedCard != null )
 			{
-				selectedCard.sprite.selectAura.visible = false;
+				selectedCard.sprite.selectedAura.visible = false;
 				
 				if ( player.hand.containsCard( selectedCard ) )
 					player.handSprite.unshow( selectedCard );
@@ -252,7 +296,7 @@ package duel.controllers
 				if ( player.hand.containsCard( selectedCard ) )
 					player.handSprite.show( selectedCard );
 					
-				selectedCard.sprite.selectAura.visible = true;
+				selectedCard.sprite.selectedAura.visible = true;
 			}
 		}
 		

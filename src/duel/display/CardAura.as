@@ -12,6 +12,7 @@ package duel.display {
 	public class CardAura extends Image 
 	{
 		
+		
 		public function CardAura( assetName:String="card-aura" ) 
 		{
 			super( App.assets.getTexture( assetName ) );
@@ -22,8 +23,8 @@ package duel.display {
 			this.blendMode = BlendMode.ADD;
 			
 			Game.current.juggler.tween( this, 0.5, {
-					scaleX:1.03,
-					scaleY:1.03,
+					scaleX:1.01,
+					scaleY:1.02,
 					repeatCount:0,
 					reverse:true,
 					transition:Transitions.EASE_IN

@@ -179,15 +179,17 @@ package duel.controllers
 		{
 			if ( !active ) return;
 			
-			selection.onUpdate();
+			selection.advanceTime( time );
 			
 			if ( game.gui.tDebug.text != selection.contextOnField.name )
 				game.gui.tDebug.text = selection.contextOnField.name + " " + selection.selectedCard;
 		}
 		
-		override public function update():void
+		override public function onProcessUpdate():void
 		{
 			if ( !active ) return;
+			
+			selection.onProcessUpdate();
 		}
 		
 		// // // // //
