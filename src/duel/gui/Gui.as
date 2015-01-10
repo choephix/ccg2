@@ -14,7 +14,7 @@ package duel.gui
 	 */
 	public class Gui extends GameSprite
 	{
-		public var tDebug:TextField;
+		private var tcenter:TextField;
 		private var t1:AnimatedTextField;
 		private var t2:AnimatedTextField;
 		
@@ -49,11 +49,11 @@ package duel.gui
 			t2.vAlign = "top";
 			t2.touchable = false;
 			
-			tDebug = new TextField( App.W, App.H, "", "Calibri", 20, 0x2277EE, true );
-			addChild( tDebug );
-			tDebug.hAlign = "center";
-			tDebug.vAlign = "center";
-			tDebug.touchable = false;
+			tcenter = new TextField( App.W, App.H, "", "Calibri", 20, 0x2277EE, true );
+			addChild( tcenter );
+			tcenter.hAlign = "center";
+			tcenter.vAlign = "center";
+			tcenter.touchable = false;
 			
 			// BUTTONS
 			
@@ -120,12 +120,12 @@ package duel.gui
 		{
 			t.text = " " + game.p2.name + ": " 
 						+ AnimatedTextField.DEFAULT_MARKER 
-						+ "\n" + pMana( p.mana );
+						+ "\n" + manaText( p.mana );
 			t.targetValue = p.lifePoints;
 			t.color = p == game.currentPlayer ? 0xFFEE22 : 0xF37618;
 		}
 		
-		private function pMana( mana:ManaPool ):String
+		private function manaText( mana:ManaPool ):String
 		{
 			return "Mana: " + mana.current + "/" + mana.currentCap + "";
 			//var r:String = "";
@@ -133,6 +133,21 @@ package duel.gui
 				//r += "M";
 			//return r ;
 		}
+		
+		public function pMsg( msg:String ):void
+		{
+			tcenter.text = msg;
+			
+			CONFIG::sandbox
+			{ return }
+			
+			tcenter.alpha = 1.0;
+			juggler.removeTweens( tcenter );
+			juggler.tween( tcenter, 1.500, { alpha : .0, delay : 1.500 } );
+		}
+		
+		//public function log( o:* ):void
+		//{ tLog.text = String( o ) + "\n" + tLog.text }
 		
 	}
 }

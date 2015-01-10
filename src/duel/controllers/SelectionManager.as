@@ -172,13 +172,15 @@ package duel.controllers
 		private function schEnabledOnSelected( o:* ):void
 		{
 			if ( !player.canPerformAction() )
-			{
-				trace ( "Not enough mana" );
-				return;
-			}
-			if ( o is Card && player.hand.containsCard( o as Card ) )
-				if ( canSelectHandCard( o as Card ) )
-					selectCard( o == selectedCard ? null : o as Card )
+				game.gui.pMsg( "Not enough mana" );
+			else
+			if ( Card( o ).controller != player )
+				game.gui.pMsg( "This is not your card" );
+			else
+			if ( !canSelectHandCard( o as Card ) )
+				game.gui.pMsg( "You cannot select this card for reasons" );
+			else
+				selectCard( o == selectedCard ? null : o as Card )
 		}
 		
 		private function schDisabledIsSelectable( o:* ):Boolean
@@ -204,35 +206,47 @@ package duel.controllers
 			if ( o is Field && Field( o ).type.isDeck && Field( o ).owner == player )
 			{
 				if ( !player.canPerformAction() )
-				{
-					trace ( "Not enough mana" );
-					return;
-				}
-				ctrl.performActionDraw();
+					game.gui.pMsg( "Not enough mana" );
+				else
+					ctrl.performActionDraw();
 			}
 		}
 		
 		private function scfHandCreatureIsSelectable( o:* ):Boolean
 		{
-			return o is CreatureField 
-				&&
-				CommonCardQuestions.canSummonHere( selectedCard, o as CreatureField );
+			return o is IndexedField;
 		}
 		private function scfHandCreatureOnSelected( o:* ):void
 		{
-			ctrl.performActionSummon( selectedCard, o as CreatureField );
+			if ( o as CreatureField == null )
+				game.gui.pMsg( "You can only summon creatures on on creature fields." );
+			else
+			if ( !CommonCardQuestions.canSummonHere( selectedCard, o as CreatureField ) )
+				game.gui.pMsg( "You cannot summon this creature here." );
+			else
+				ctrl.performActionSummon( selectedCard, o as CreatureField );
 		}
 		
 		
 		private function scfHandTrapIsSelectable( o:* ):Boolean
 		{
-			return o is TrapField
-				&&
-				CommonCardQuestions.canPlaceTrapHere( selectedCard, o as TrapField );
+			return o is IndexedField;
 		}
 		private function scfHandTrapOnSelected( o:* ):void
 		{
-			ctrl.performActionTrapSet( selectedCard, o as TrapField );
+			if ( selectedCard.lot == o )
+				return;
+			else
+			if ( o as TrapField == null )
+				game.gui.pMsg( "You can only set traps on trap fields." );
+			else
+			if ( TrapField( o ).isLocked )
+				game.gui.pMsg( "You cannot set traps on a locked field." );
+			else
+			if ( !CommonCardQuestions.canPlaceTrapHere( selectedCard, o as TrapField ) )
+				game.gui.pMsg( "You cannot set this trap here." );
+			else
+				ctrl.performActionTrapSet( selectedCard, o as TrapField );
 		}
 		
 		
@@ -249,7 +263,7 @@ package duel.controllers
 				if ( f.owner == player )
 				{
 					if ( !f.isEmpty )
-						trace ( "You can only relocate to an empty field" );
+						game.gui.pMsg( "You can only relocate to an empty field" );
 					else
 					if ( !CommonCardQuestions.canRelocateHere( selectedCard, f ) )
 						selectCard( f.topCard );
@@ -261,7 +275,7 @@ package duel.controllers
 				{
 					
 					if ( !CommonCardQuestions.canPerformAttack( selectedCard ) )
-						trace ( "You cannot attack with this creature" );
+						game.gui.pMsg ( "You cannot attack with this creature" );
 					else
 						ctrl.performActionAttack( selectedCard );
 				}
@@ -319,21 +333,15 @@ package duel.controllers
 		public function tryToSelectFieldCard( card:Card ):void
 		{
 			if ( card == null )
-			{
-				trace ( "There is no creature here" );
-				return;
-			}
+				game.gui.pMsg( "There is no creature here" );
+			else
 			if ( card.exhausted )
-			{
-				trace ( "This card is exhausted" );
-				return;
-			}
+				game.gui.pMsg( "This card is exhausted" );
+			else
 			if ( card.controller != player )
-			{
-				trace ( "This is not your creature" );
-				return;
-			}
-			selectCard( card );
+				game.gui.pMsg( "This is not your creature" );
+			else
+				selectCard( card );
 		}
 		
 		// // // // //

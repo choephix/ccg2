@@ -181,8 +181,8 @@ package duel.controllers
 			
 			selection.advanceTime( time );
 			
-			if ( game.gui.tDebug.text != selection.contextOnField.name )
-				game.gui.tDebug.text = selection.contextOnField.name + " " + selection.selectedCard;
+			CONFIG::sandbox 
+			{ game.gui.pMsg( selection.contextOnField.name + " " + selection.selectedCard ) }
 		}
 		
 		override public function onProcessUpdate():void
