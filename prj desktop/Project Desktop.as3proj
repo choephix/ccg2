@@ -12,7 +12,7 @@
     <movie minorVersion="0" />
     <movie platform="AIR" />
     <movie background="#FFFFFF" />
-    <movie preferredSDK="Flex 4.6.0, AIR 14.0;4.6.0, 14.0;" />
+    <movie preferredSDK="Apache Flex 4.13.0 FP15.0 AIR15.0 en_US;4.13.0;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
@@ -46,7 +46,7 @@
     <option loadExterns="" />
     <option staticLinkRSL="True" />
     <option additional="" />
-    <option compilerConstants="CONFIG::development,true&#xA;CONFIG::sandbox,true&#xA;CONFIG::slowmode,false" />
+    <option compilerConstants="CONFIG::development,true&#xA;CONFIG::sandbox,false&#xA;CONFIG::slowmode,false" />
     <option minorVersion="" />
   </build>
   <!-- SWC Include Libraries -->

@@ -140,7 +140,7 @@ package duel.controllers
 				return player.fieldsT.hasAnyFieldThat( canSetTrapTo );
 			
 			function canSummonTo( f:CreatureField ):Boolean
-			{ return CommonCardQuestions.canSummonHere( c, f ); }
+			{ return CommonCardQuestions.canSummonHere( c, f ) }
 			function canSetTrapTo( f:TrapField ):Boolean
 			{ return CommonCardQuestions.canPlaceTrapHere( c, f ) }
 			
