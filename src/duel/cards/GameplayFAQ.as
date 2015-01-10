@@ -9,7 +9,7 @@ package duel.cards
 	 * ...
 	 * @author choephix
 	 */
-	public class CommonCardQuestions 
+	public class GameplayFAQ 
 	{
 		
 		public static function isInPlay( c:Card ):Boolean

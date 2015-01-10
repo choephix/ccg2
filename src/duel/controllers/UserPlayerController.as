@@ -1,13 +1,8 @@
 package duel.controllers
 {
 	import duel.cards.Card;
-	import duel.cards.CommonCardQuestions;
-	import duel.Game;
 	import duel.players.Player;
-	import duel.processes.Process;
-	import duel.table.CreatureField;
 	import duel.table.Field;
-	import duel.table.TrapField;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;

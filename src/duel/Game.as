@@ -5,7 +5,6 @@ package duel
 	import dev.ProcessManagementInspector;
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
-	import duel.cards.CommonCardQuestions;
 	import duel.cards.temp_database.TempCardsDatabase;
 	import duel.display.cardlots.HandSprite;
 	import duel.display.TableSide;
@@ -17,9 +16,6 @@ package duel
 	import duel.processes.gameprocessing;
 	import duel.processes.ProcessEvent;
 	import duel.table.CreatureField;
-	import duel.table.Field;
-	import duel.table.Hand;
-	import duel.table.IndexedField;
 	import duel.table.TrapField;
 	import flash.geom.Point;
 	import starling.animation.IAnimatable;
@@ -27,7 +23,6 @@ package duel
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Quad;
-	import starling.events.Event;
 	import starling.text.TextField;
 	
 	use namespace gameprocessing;

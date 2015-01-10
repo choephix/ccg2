@@ -1,7 +1,7 @@
 package duel.controllers
 {
 	import duel.cards.Card;
-	import duel.cards.CommonCardQuestions;
+	import duel.cards.GameplayFAQ;
 	import duel.GameEntity;
 	import duel.players.Player;
 	import duel.table.CreatureField;
@@ -81,11 +81,11 @@ package duel.controllers
 		{
 			/// DESELECT CARD IF IMPOSSIBLE
 			if ( selectedCard != null )
-				deselectOnImpossible();
+				deselectOnImpossible()
 			
 			/// SWITCH SELEcTION CONTEXTS
 			if ( selectedCard == null )
-				contextOnField = scfNilSelected;
+				contextOnField = scfNilSelected
 			else
 			if ( selectedCard.isInHand && selectedCard.type.isCreature )
 				contextOnField = scfHandCreature
@@ -114,6 +114,14 @@ package duel.controllers
 			{
 				if ( f.isEmpty ) return;
 				f.topCard.sprite.selectable = canPlayFieldCard( f.topCard );
+				
+				f.sprite.setSelectableness( 0x0 );
+				if ( selectedCard && selectedCard.isInPlay )
+				{
+					if ( selectedCard.type.isCreature )
+						if ( f is CreatureField && GameplayFAQ.canRelocateHere( selectedCard, f as CreatureField ) )
+							
+				}
 			}
 		}
 		
@@ -124,8 +132,6 @@ package duel.controllers
 			
 			if ( c.type.isCreature )
 				return !c.exhausted;
-			if ( c.type.isTrap )
-				return true;
 			return false;
 		}
 		
@@ -140,9 +146,9 @@ package duel.controllers
 				return player.fieldsT.hasAnyFieldThat( canSetTrapTo );
 			
 			function canSummonTo( f:CreatureField ):Boolean
-			{ return CommonCardQuestions.canSummonHere( c, f ) }
+			{ return GameplayFAQ.canSummonHere( c, f ) }
 			function canSetTrapTo( f:TrapField ):Boolean
-			{ return CommonCardQuestions.canPlaceTrapHere( c, f ) }
+			{ return GameplayFAQ.canPlaceTrapHere( c, f ) }
 			
 			return false;
 		}
@@ -221,7 +227,7 @@ package duel.controllers
 			if ( o as CreatureField == null )
 				game.gui.pMsg( "You can only summon creatures on on creature fields." );
 			else
-			if ( !CommonCardQuestions.canSummonHere( selectedCard, o as CreatureField ) )
+			if ( !GameplayFAQ.canSummonHere( selectedCard, o as CreatureField ) )
 				game.gui.pMsg( "You cannot summon this creature here." );
 			else
 				ctrl.performActionSummon( selectedCard, o as CreatureField );
@@ -243,7 +249,7 @@ package duel.controllers
 			if ( TrapField( o ).isLocked )
 				game.gui.pMsg( "You cannot set traps on a locked field." );
 			else
-			if ( !CommonCardQuestions.canPlaceTrapHere( selectedCard, o as TrapField ) )
+			if ( !GameplayFAQ.canPlaceTrapHere( selectedCard, o as TrapField ) )
 				game.gui.pMsg( "You cannot set this trap here." );
 			else
 				ctrl.performActionTrapSet( selectedCard, o as TrapField );
@@ -265,7 +271,7 @@ package duel.controllers
 					if ( !f.isEmpty )
 						game.gui.pMsg( "You can only relocate to an empty field" );
 					else
-					if ( !CommonCardQuestions.canRelocateHere( selectedCard, f ) )
+					if ( !GameplayFAQ.canRelocateHere( selectedCard, f ) )
 						selectCard( f.topCard );
 					else
 						ctrl.performActionRelocation( selectedCard, f );
@@ -274,7 +280,7 @@ package duel.controllers
 				if ( f.owner == player.opponent )
 				{
 					
-					if ( !CommonCardQuestions.canPerformAttack( selectedCard ) )
+					if ( !GameplayFAQ.canPerformAttack( selectedCard ) )
 						game.gui.pMsg ( "You cannot attack with this creature" );
 					else
 						ctrl.performActionAttack( selectedCard );

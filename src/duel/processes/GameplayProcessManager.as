@@ -2,7 +2,7 @@ package duel.processes
 {
 	import chimichanga.debug.logging.error;
 	import duel.cards.Card;
-	import duel.cards.CommonCardQuestions;
+	import duel.cards.GameplayFAQ;
 	import duel.Damage;
 	import duel.DamageType;
 	import duel.display.animation;
@@ -191,7 +191,7 @@ package duel.processes
 			
 			/// TRIBUTE_CREATURE
 			pro = chain( pro, gen( GameplayProcess.TRIBUTE_CREATURE, c ) );
-			pro.abortCheck = CommonCardQuestions.isNotInPlay;
+			pro.abortCheck = GameplayFAQ.isNotInPlay;
 			pro.onEnd = 
 			function onEnd( c:Card ):void 
 			{
@@ -225,7 +225,7 @@ package duel.processes
 			function abortCheck( c:Card, field:CreatureField ):Boolean
 			{
 				if ( !c.isInGrave ) return true;
-				return CommonCardQuestions.cannotPlaceCreatureHere( c, field );
+				return GameplayFAQ.cannotPlaceCreatureHere( c, field );
 			}
 			pro.onAbort = 
 			function onAbort( c:Card, field:CreatureField ):void
@@ -253,7 +253,7 @@ package duel.processes
 			
 			/// RELOCATE
 			pro = chain( pro, gen( GameplayProcess.RELOCATE, c, field ) );
-			pro.abortCheck = CommonCardQuestions.cannotRelocateHere;
+			pro.abortCheck = GameplayFAQ.cannotRelocateHere;
 			pro.onStart = 
 			function onStart( c:Card, field:CreatureField ):void
 			{
@@ -313,7 +313,7 @@ package duel.processes
 					/// DESTROY OLD TRAP
 					prepend_DestroyTrap( field.topCard );
 			}
-			pro.abortCheck = CommonCardQuestions.cannotPlaceTrapHere;
+			pro.abortCheck = GameplayFAQ.cannotPlaceTrapHere;
 			pro.onAbort = onAbort;
 			function onAbort( c:Card, field:TrapField ):void
 			{
@@ -338,7 +338,7 @@ package duel.processes
 			pro.onStart = onStart;
 			pro.onEnd = onEnd;
 			pro.onAbort = onAbort;
-			pro.abortCheck = CommonCardQuestions.isNotInPlay;
+			pro.abortCheck = GameplayFAQ.isNotInPlay;
 			
 			function onStart( c:Card ):void
 			{
@@ -469,7 +469,7 @@ package duel.processes
 				completeOrAbort( c );
 				prependProcess( gen( GameplayProcess.ATTACK_ABORT, c ) );
 			}
-			pro.abortCheck = CommonCardQuestions.cannotPerformAttack;
+			pro.abortCheck = GameplayFAQ.cannotPerformAttack;
 			
 			/// ATTACK_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.ATTACK_COMPLETE, c ) );
@@ -527,7 +527,7 @@ package duel.processes
 				if ( c.isInPlay )
 					c.sprite.animDamageAbort();
 			}
-			pro.abortCheck = CommonCardQuestions.cannotTakeDamage;
+			pro.abortCheck = GameplayFAQ.cannotTakeDamage;
 			
 			/// CREATURE_DAMAGE_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.CREATURE_DAMAGE_COMPLETE, c, dmg ) );
@@ -569,7 +569,7 @@ package duel.processes
 				else
 					c.sprite.animFadeToNothing( false );
 			}
-			pro.abortCheck = CommonCardQuestions.cannotDie;
+			pro.abortCheck = GameplayFAQ.cannotDie;
 			
 			/// DIE_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.DIE_COMPLETE, c, fromCombat ) );
@@ -601,7 +601,7 @@ package duel.processes
 				c.faceDown = false;
 				c.sprite.animSpecialFlip();
 			}
-			pro.abortCheck = CommonCardQuestions.cannotFlipInPlay;
+			pro.abortCheck = GameplayFAQ.cannotFlipInPlay;
 			
 			/// COMBAT_FLIP_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.COMBAT_FLIP_COMPLETE, c ) );
@@ -644,7 +644,7 @@ package duel.processes
 				c.faceDown = false;
 				c.sprite.animSpecialFlip();
 			}
-			pro.abortCheck = CommonCardQuestions.cannotFlipInPlay;
+			pro.abortCheck = GameplayFAQ.cannotFlipInPlay;
 			
 			/// SAFE_FLIP_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.SAFE_FLIP_COMPLETE, c ) );
@@ -826,7 +826,7 @@ package duel.processes
 			
 			/// LEAVE_PLAY
 			pro = gen( GameplayProcess.LEAVE_PLAY, c );
-			pro.abortCheck = CommonCardQuestions.isNotInPlay;
+			pro.abortCheck = GameplayFAQ.isNotInPlay;
 			pro.onStart =
 			function onStart( c:Card ):void 
 			{
