@@ -31,7 +31,7 @@ package duel
 			if ( t == null ) return;
 			
 			if ( t.phase == TouchPhase.ENDED ) {
-				if ( onClickedCallback ) {
+				if ( onClickedCallback != null ) {
 					onClickedCallback();
 				}
 			} 

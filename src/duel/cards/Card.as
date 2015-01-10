@@ -134,7 +134,7 @@ package duel.cards
 		{ return classes.length > 1 }
 		
 		public function get isNeutralClass():Boolean
-		{ return classes.length = 1 }
+		{ return classes.length == 1 }
 		
 		// GETTERS & SETTERS - 1
 		

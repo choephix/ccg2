@@ -104,7 +104,7 @@ package duel.display {
 			tfTitle.color = 0x330011;
 			tfTitle.pivotX = tfTitle.width * .5;
 			tfTitle.x = G.CARD_W * .5;
-			tfTitle.scaleX = Number.min( 1.0, G.CARD_W / tfTitle.textBounds.width - .05 );
+			tfTitle.scaleX = Math.min( 1.0, G.CARD_W / tfTitle.textBounds.width - .05 );
 			front.addChild( tfTitle );
 			
 			tfDescr = new TextField( G.CARD_W, G.CARD_H, "", "Verdana", 10, 0x330011 );

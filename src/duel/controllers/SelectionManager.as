@@ -119,7 +119,7 @@ package duel.controllers
 		
 		private function canPlayFieldCard( c:Card ):Boolean 
 		{
-			if ( !player.canPerformAction )
+			if ( !player.canPerformAction() )
 				return false;
 			
 			if ( c.type.isCreature )
@@ -252,7 +252,7 @@ package duel.controllers
 						trace ( "You can only relocate to an empty field" );
 					else
 					if ( !CommonCardQuestions.canRelocateHere( selectedCard, f ) )
-						selectedCard( f.topCard );
+						selectCard( f.topCard );
 					else
 						ctrl.performActionRelocation( selectedCard, f );
 				}

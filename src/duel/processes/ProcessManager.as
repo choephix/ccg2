@@ -103,7 +103,7 @@ package duel.processes
 		public function toString():String { return queue.join("\n"); }
 		
 		// // //
-		public static function gen( name:String, onEnd:Function = null, ...args ):Process
+		public static function generate( name:String, onEnd:Function = null, ...args ):Process
 		{
 			var p:Process = new Process();
 			p.name = name;

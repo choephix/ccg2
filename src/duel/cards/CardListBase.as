@@ -2,7 +2,6 @@ package duel.cards {
 	import duel.cards.Card;
 	import duel.players.Player;
 	import duel.table.CardLotType;
-	import flash.display3D.textures.VideoTexture;
 	import starling.events.Event;
 	import starling.events.EventDispatcher;
 	

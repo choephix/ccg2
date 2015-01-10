@@ -142,10 +142,10 @@ package duel
 			
 			CONFIG::development
 			{
-				//var pmi:ProcessManagementInspector = new ProcessManagementInspector( processes );
-				//addChild( pmi );
-				//pmi.x = 200;
-				//pmi.y = 400;
+				var pmi:ProcessManagementInspector = new ProcessManagementInspector( processes );
+				addChild( pmi );
+				pmi.x = 200;
+				pmi.y = 400;
 			/** / ProcessTester.initTest1( processes ); return /**/
 			}
 			

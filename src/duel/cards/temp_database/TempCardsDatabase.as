@@ -147,7 +147,7 @@ package duel.cards.temp_database
 						return c == p.getAttacker();
 					}
 					special.funcActivate =
-					function( p:GameplayProcess ):Boolean {
+					function( p:GameplayProcess ):void {
 						TempDatabaseUtils.doKill( c );
 					}
 				},
@@ -193,7 +193,7 @@ package duel.cards.temp_database
 						return true;
 					}
 					special.funcActivate =
-					function( p:GameplayProcess ):Boolean {
+					function( p:GameplayProcess ):void {
 						TempDatabaseUtils.doResurrectCreature
 							( c.controller.grave.findFirstCard( isViableTarget ), 
 							c.history.lastIndexedField as CreatureField );
@@ -221,7 +221,7 @@ package duel.cards.temp_database
 						return c == p.getSourceCard();
 					}
 					special.funcActivate =
-					function( p:GameplayProcess ):Boolean {
+					function( p:GameplayProcess ):void {
 						c.controller.fieldsC.forEachField( TempDatabaseUtils.doSpawnTokenCreatureIfEmpty );
 						c.controller.opponent.fieldsC.forEachField( TempDatabaseUtils.doSpawnTokenCreatureIfEmpty );
 					}
@@ -516,7 +516,7 @@ package duel.cards.temp_database
 					special.allowIn( CardLotType.CREATURE_FIELD );
 					special.watch( GameplayProcess.TURN_END );
 					special.funcActivate =
-					function( p:GameplayProcess ):Boolean {
+					function( p:GameplayProcess ):void {
 						TempDatabaseUtils.doKill( c );
 					}
 				},
@@ -561,7 +561,7 @@ package duel.cards.temp_database
 						return c.controller.opponent == p.getPlayer();
 					}
 					special.funcActivate =
-					function( p:GameplayProcess ):Boolean {
+					function( p:GameplayProcess ):void {
 						TempDatabaseUtils.doForceAttack( c.indexedField.opposingCreature, false );
 					}
 				},
@@ -583,7 +583,7 @@ package duel.cards.temp_database
 						return c == p.getSourceCard();
 					}
 					special.funcActivate =
-					function( p:GameplayProcess ):Boolean {
+					function( p:GameplayProcess ):void {
 						TempDatabaseUtils.doDestroyTrapsRow( c.controller.opponent );
 						TempDatabaseUtils.doDestroyTrapsRow( c.controller );
 						TempDatabaseUtils.doKillCreaturesRow( c.controller.opponent );
@@ -631,7 +631,7 @@ package duel.cards.temp_database
 						return c.controller.opponent == p.getPlayer();
 					}
 					special.funcActivate =
-					function( p:GameplayProcess ):Boolean {
+					function( p:GameplayProcess ):void {
 						TempDatabaseUtils.doForceAttack( c.indexedField.opposingCreature, false );
 					}
 				},
@@ -652,7 +652,7 @@ package duel.cards.temp_database
 						return c.controller == p.getPlayer();
 					}
 					special.funcActivate =
-					function( p:GameplayProcess ):Boolean {
+					function( p:GameplayProcess ):void {
 						TempDatabaseUtils.doForceAttack( c, false );
 					}
 				},
