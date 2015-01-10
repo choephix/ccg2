@@ -50,7 +50,7 @@ package duel.display.utils
 		{ return 0x222222 }
 		
 		public static function getColorForGraveField():uint
-		{ return Colors.fromRGB( .12, .08, .19 ) }
+		{ return 0x141414 }
 		
 		//
 		private static var sHelperColor1:Color = new Color();

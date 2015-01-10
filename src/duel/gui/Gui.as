@@ -19,6 +19,8 @@ package duel.gui
 		private var t1:AnimatedTextField;
 		private var t2:AnimatedTextField;
 		
+		private var logBox:LogBox;
+		
 		public var buttonsContainer:Sprite;
 		
 		public var button1:Button;
@@ -55,6 +57,13 @@ package duel.gui
 			tcenter.hAlign = "center";
 			tcenter.vAlign = "center";
 			tcenter.touchable = false;
+			
+			logBox = new LogBox();
+			addChild( logBox );
+			logBox.x = 20;
+			logBox.y = 380;
+			logBox.width = 250;
+			logBox.height = 380;
 			
 			// BUTTONS
 			
@@ -139,6 +148,11 @@ package duel.gui
 			//while ( val-- > 0 )
 				//r += "M";
 			//return r ;
+		}
+		
+		public function log( s:String ):void
+		{
+			logBox.log( s );
 		}
 		
 		public function pMsg( msg:String ):void

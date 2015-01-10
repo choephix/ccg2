@@ -171,7 +171,7 @@ package duel.display {
 			if ( back.visible )
 			{
 				back.scaleX = Math.abs( _flippedness );
-				back.alpha = 1.0 - backTranslucency;
+				back.alpha = game.interactable ? 1.0 - backTranslucency : 1.0;
 			}
 		}
 		
@@ -398,6 +398,9 @@ package duel.display {
 			_flipTween.reset( this, .500, Transitions.EASE_OUT );
 			_flipTween.animate( "flippedness", faceDown ? -1.0 : 1.0 );
 			( strict ? jugglerStrict : juggler ).add( _flipTween );
+			
+			_peekThrough = false;
+			backTranslucency = .0;
 		}
 		
 		protected function get isFaceDown():Boolean

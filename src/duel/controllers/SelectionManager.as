@@ -115,7 +115,7 @@ package duel.controllers
 						if ( f is CreatureField )
 							if ( ctrl.faq.canSummonCreatureOn( selectedCard, f, true ) == null )
 							{
-								f.sprite.setSelectableness( 0xE4730C );
+								f.sprite.setSelectableness( 0xE7360A );
 								return;
 							}
 					if ( selectedCard.type.isTrap )

@@ -559,7 +559,7 @@ package duel.processes
 			function onStart( c:Card, fromCombat:Boolean=false ):void
 			{
 				if ( c.faceDown )
-					prepend_SilentFlip( c );
+					prepend_SilentFlip( c, !fromCombat );
 			}
 			pro.onEnd =
 			function onEnd( c:Card, fromCombat:Boolean=false ):void
@@ -675,7 +675,7 @@ package duel.processes
 			pro = chain( pro, gen( GameplayProcess.SAFE_FLIP_EFFECT_COMPLETE, c ) );
 		}
 		
-		gameprocessing function prepend_SilentFlip( c:Card ):void
+		gameprocessing function prepend_SilentFlip( c:Card, quick:Boolean = false ):void
 		{
 			
 			var pro:GameplayProcess;
@@ -687,7 +687,8 @@ package duel.processes
 			function onEnd( c:Card ):void
 			{
 				c.faceDown = false;
-				c.sprite.animSpecialFlip();
+				if ( !quick )
+					c.sprite.animSpecialFlip();
 			}
 			
 			/// SILENT_FLIP_COMPLETE

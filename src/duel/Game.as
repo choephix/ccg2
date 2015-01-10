@@ -137,10 +137,14 @@ package duel
 			
 			CONFIG::development
 			{
-				var pmi:ProcessManagementInspector = new ProcessManagementInspector( processes );
+				if ( false )
+				{
+				var pmi:ProcessManagementInspector;
+				pmi = new ProcessManagementInspector( processes );
 				addChild( pmi );
 				pmi.x = 200;
 				pmi.y = 400;
+				}
 			/** / ProcessTester.initTest1( processes ); return /**/
 			}
 			
@@ -267,6 +271,9 @@ package duel
 		{
 			currentPlayer.ctrl.onProcessUpdate();
 			gui.updateData();
+			
+			if ( e.process.name )
+				gui.log( e.process.name );
 		}
 		
 		private function playerInspectProcess( player:Player, p:GameplayProcess ):void
