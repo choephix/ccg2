@@ -14,6 +14,7 @@ package duel.controllers
 	public class UserPlayerController extends PlayerController
 	{
 		public var selection:SelectionManager;
+		public var faq:PlayerControllerFAQ;
 		public var hoveredCard:Card;
 		
 		public function UserPlayerController( p:Player ) { super( p ) }
@@ -26,6 +27,8 @@ package duel.controllers
 		{
 			selection = new SelectionManager();
 			selection.initialize( this, player );
+			
+			faq = new PlayerControllerFAQ();
 			
 			game.addEventListener( TouchEvent.TOUCH, onTouch );
 		}

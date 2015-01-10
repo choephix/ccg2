@@ -65,6 +65,11 @@ package {
 			if ( e.keyCode == Keyboard.CAPS_LOCK ) {
 				Game.GODMODE = !Game.GODMODE;
 			}
+			if ( e.keyCode == Keyboard.NUMBER_1 ) {
+				g.currentPlayer.mana.raiseCap();
+				g.currentPlayer.mana.refill();
+				g.gui.updateData();
+			}
 		}
 	}
 }

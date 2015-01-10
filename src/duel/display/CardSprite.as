@@ -153,7 +153,7 @@ package duel.display {
 			back.visible	= _flippedness < .0;
 			
 			auraContainer.scaleX = .25 + .75 * Math.abs( _flippedness );
-			selectableAura.visible = _isSelectable;
+			selectableAura.visible = _isSelectable && ( !selectedAura.visible || !card.isInPlay );
 			
 			if ( selectedAura.visible )
 			{
@@ -184,7 +184,7 @@ package duel.display {
 					tfDescr.text = card.statusC.toString();
 				}
 				
-				setExhaustClockVisible( card.isInPlay && card.exhausted && !card.faceDown );
+				setExhaustClockVisible( card.isInPlay && card.exhausted );
 			}
 		}
 		
