@@ -13,8 +13,7 @@ package duel.controllers
 	 */
 	public class UserPlayerController extends PlayerController
 	{
-		private var selection:SelectionManager;
-		
+		public var selection:SelectionManager;
 		public var hoveredCard:Card;
 		
 		public function UserPlayerController( p:Player ) { super( p ) }

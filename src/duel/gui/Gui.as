@@ -1,6 +1,7 @@
 package duel.gui
 {
 	import chimichanga.common.display.Sprite;
+	import duel.controllers.UserPlayerController;
 	import duel.GameSprite;
 	import duel.players.Player;
 	import duel.players.ManaPool;
@@ -103,17 +104,23 @@ package duel.gui
 			buttonsContainer.alpha = game.interactable ? 1.0 : 0.6;
 			updateTf( t1, game.p1 );
 			updateTf( t2, game.p2 );
-			//button3.visible = 
-				//game.interactable && 
-				//game.selectedCard != null && 
-				//game.selectedCard.type.isCreature && 
-				//game.selectedCard.canAttack;
-			//button4.visible = 
-				//game.interactable && 
-				//game.selectedCard != null && 
-				//game.selectedCard.type.isCreature && 
-				//game.selectedCard.faceDown &&
-				//game.selectedCard.exhausted == false;
+			button3.visible = game.interactable && canDoAttack( game.currentPlayer.ctrl as UserPlayerController );
+			button4.visible = game.interactable && canDoSafeFlip( game.currentPlayer.ctrl as UserPlayerController );
+		}
+		
+		private function canDoAttack( ctrl:UserPlayerController ):Boolean
+		{
+			return ctrl.selection.selectedCard != null && 
+				ctrl.selection.selectedCard.type.isCreature && 
+				ctrl.selection.selectedCard.canAttack;
+		}
+		
+		private function canDoSafeFlip( ctrl:UserPlayerController ):Boolean
+		{
+			return ctrl.selection.selectedCard != null && 
+				ctrl.selection.selectedCard.type.isCreature && 
+				ctrl.selection.selectedCard.faceDown &&
+				ctrl.selection.selectedCard.exhausted == false;
 		}
 		
 		private function updateTf( t:AnimatedTextField, p:Player ):void

@@ -30,6 +30,7 @@ package duel.cards
 		public var descr:String;
 		public var type:CardType;
 		public var classes:Vector.<CardClass> = new <CardClass>[];
+		public var cost:int = 1;
 		private var _status:CardStatus;
 		private var _props:CardProperties;
 		private var _history:CardHistory;

@@ -95,6 +95,58 @@ package duel.controllers
 			else
 			if ( selectedCard.isInPlay && selectedCard.type.isCreature )
 				contextOnField = scfFieldCreature
+				
+			player.fieldsC.forEachField( updateIndexedField );
+			player.fieldsT.forEachField( updateIndexedField );
+			player.opponent.fieldsC.forEachField( updateIndexedField );
+			player.opponent.fieldsT.forEachField( updateIndexedField );
+			
+			function updateIndexedField( f:IndexedField ):void 
+			{
+				f.sprite.setSelectableness( 0x0 );
+				
+				if ( selectedCard == null ) return;
+				
+				if ( selectedCard.isInHand )
+				{
+					if ( !player.canPerformAction() )
+						return;
+					
+					if ( selectedCard.type.isCreature )
+						if ( f is CreatureField )
+							if ( GameplayFAQ.canSummonHere( selectedCard, f as CreatureField ) )
+							{
+								f.sprite.setSelectableness( 0xE4730C );
+								return;
+							}
+					if ( selectedCard.type.isTrap )
+						if ( f is TrapField )
+							if ( GameplayFAQ.canPlaceTrapHere( selectedCard, f as TrapField ) )
+							{
+								f.sprite.setSelectableness( 0x6622ff );
+								return;
+							}
+				}
+				
+				if ( !selectedCard.isInPlay ) return;
+				
+				if ( !selectedCard.type.isCreature ) return;
+				
+				if ( f is CreatureField )
+					if ( GameplayFAQ.canRelocateHere( selectedCard, f as CreatureField ) )
+					{
+						f.sprite.setSelectableness( 0x2266DD );
+						return;
+					}
+					
+				if ( GameplayFAQ.canPerformAttack( selectedCard ) )
+					if ( f.index == selectedCard.indexedField.index )
+						if ( f.owner == player.opponent )
+						{
+							f.sprite.setSelectableness( 0xcc0011 );
+							return;
+						}
+			}
 		}
 		
 		public function onProcessUpdate():void
@@ -114,14 +166,6 @@ package duel.controllers
 			{
 				if ( f.isEmpty ) return;
 				f.topCard.sprite.selectable = canPlayFieldCard( f.topCard );
-				
-				f.sprite.setSelectableness( 0x0 );
-				if ( selectedCard && selectedCard.isInPlay )
-				{
-					if ( selectedCard.type.isCreature )
-						if ( f is CreatureField && GameplayFAQ.canRelocateHere( selectedCard, f as CreatureField ) )
-							
-				}
 			}
 		}
 		
@@ -177,9 +221,9 @@ package duel.controllers
 		
 		private function schEnabledOnSelected( o:* ):void
 		{
-			if ( !player.canPerformAction() )
-				game.gui.pMsg( "Not enough mana" );
-			else
+			//if ( !player.canPerformAction() )
+				//game.gui.pMsg( "Not enough mana" );
+			//else
 			if ( Card( o ).controller != player )
 				game.gui.pMsg( "This is not your card" );
 			else
@@ -227,8 +271,14 @@ package duel.controllers
 			if ( o as CreatureField == null )
 				game.gui.pMsg( "You can only summon creatures on on creature fields." );
 			else
+			if ( CreatureField( o ).isLocked )
+				game.gui.pMsg( "You cannot place creatures on a locked field." );
+			else
 			if ( !GameplayFAQ.canSummonHere( selectedCard, o as CreatureField ) )
 				game.gui.pMsg( "You cannot summon this creature here." );
+			else
+			if ( player.mana.current < selectedCard.cost )
+				game.gui.pMsg( "You don't have enough mana to play "+selectedCard );
 			else
 				ctrl.performActionSummon( selectedCard, o as CreatureField );
 		}
@@ -252,6 +302,9 @@ package duel.controllers
 			if ( !GameplayFAQ.canPlaceTrapHere( selectedCard, o as TrapField ) )
 				game.gui.pMsg( "You cannot set this trap here." );
 			else
+			if ( player.mana.current < selectedCard.cost )
+				game.gui.pMsg( "You don't have enough mana to play "+selectedCard );
+			else
 				ctrl.performActionTrapSet( selectedCard, o as TrapField );
 		}
 		
@@ -268,6 +321,9 @@ package duel.controllers
 				
 				if ( f.owner == player )
 				{
+					if ( f == selectedCard.lot )
+						selectCard( null );
+					else
 					if ( !f.isEmpty )
 						game.gui.pMsg( "You can only relocate to an empty field" );
 					else
