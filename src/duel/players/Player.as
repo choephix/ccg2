@@ -32,6 +32,7 @@ package duel.players {
 		
 		public var mana:ManaPool;
 		
+		public var id:int;
 		protected var _name:String;
 		protected var _lp:int;
 		
@@ -108,5 +109,8 @@ package duel.players {
 		public function get name():String
 		{ return _name }
 		
+		//
+		public function toString():String 
+		{return name}
 	}
 }

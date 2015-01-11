@@ -18,6 +18,6 @@ package duel.table {
 		{ return isEmpty ? null : getFirstCard() }
 		
 		override public function toString():String 
-		{ return type.toString() + "_FIELD" }
+		{ return type.toString() }
 	}
 }

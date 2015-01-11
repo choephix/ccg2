@@ -48,9 +48,6 @@ package duel.table
 		public function get samesideTrap():Card
 		{ return samesideTrapField.topCard }
 		
-		//
-		override public function toString():String 
-		{ return type.toString() + "_FIELD #" + index }
 	}
 
 }

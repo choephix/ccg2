@@ -77,6 +77,8 @@ package duel
 			p2 = generatePlayer( "player2" );
 			p1.opponent = p2;
 			p2.opponent = p1;
+			p1.id = 1;
+			p2.id = 2;
 			
 			function generatePlayer( name:String ):Player
 			{ return new Player( name, G.INIT_LP ) }
@@ -273,7 +275,7 @@ package duel
 			gui.updateData();
 			
 			if ( e.process.name )
-				gui.log( e.process.name );
+				gui.log( e.process.name + " " + e.process.args );
 		}
 		
 		private function playerInspectProcess( player:Player, p:GameplayProcess ):void

@@ -687,7 +687,7 @@ package duel.processes
 			function onEnd( c:Card ):void
 			{
 				c.faceDown = false;
-				if ( !quick )
+				//if ( !quick )
 					c.sprite.animSpecialFlip();
 			}
 			

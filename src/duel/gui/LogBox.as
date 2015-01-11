@@ -16,7 +16,7 @@ package duel.gui
 		
 		private var lines:Array = [];
 		private var linesMax:int = 20;
-		private var fontSize:int = 13;
+		private var fontSize:int = 10;
 		
 		public function LogBox() 
 		{
@@ -66,7 +66,7 @@ package duel.gui
 		{
 			quad.height = value;
 			t.height = value;
-			linesMax = Math.ceil( value / fontSize );
+			linesMax = Math.ceil( value * .8 / fontSize );
 		}
 		
 	}

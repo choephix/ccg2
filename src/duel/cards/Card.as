@@ -213,7 +213,7 @@ package duel.cards
 		//
 		public function toString():String 
 		{
-			return "[" + name + "]";
+			return "\"" + name + "\"";
 		}
 	}
 }

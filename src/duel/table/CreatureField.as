@@ -20,5 +20,9 @@ package duel.table {
 		{
 			return owner.fieldsC.getAt( index + 1 );
 		}
+		
+		//
+		override public function toString():String 
+		{ return "f_" + owner.id + "C" + index }
 	}
 }

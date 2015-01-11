@@ -62,7 +62,7 @@ package duel.gui
 			addChild( logBox );
 			logBox.x = 20;
 			logBox.y = 380;
-			logBox.width = 250;
+			logBox.width = 260;
 			logBox.height = 380;
 			
 			// BUTTONS
