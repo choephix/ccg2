@@ -49,27 +49,33 @@ package duel.controllers
 			
 			/// TAP
 			
+			onTouchCheck_Tap( t );
+			
+		}
+		
+		private function onTouchCheck_Tap( t:Touch ):void {
+			
 			if ( t == null )
+				return;
+			
+			if ( t.phase != TouchPhase.ENDED )
 				return;
 			
 			var interrupt:Boolean;
 			
-			if ( t.phase == TouchPhase.ENDED )
-			{
-				player.hand.forEachCard( checkHandCard );	if ( interrupt ) return;
-				player.fieldsC.forEachField( checkField );	if ( interrupt ) return;
-				player.fieldsT.forEachField( checkField );	if ( interrupt ) return;
-				checkField( player.deck );					if ( interrupt ) return;
-				checkField( player.grave);					if ( interrupt ) return;
-				
-				player.opponent.hand.forEachCard( checkHandCard );	if ( interrupt ) return;
-				player.opponent.fieldsC.forEachField( checkField );	if ( interrupt ) return;
-				player.opponent.fieldsT.forEachField( checkField );	if ( interrupt ) return;
-				checkField( player.opponent.deck );					if ( interrupt ) return;
-				checkField( player.opponent.grave);					if ( interrupt ) return;
-				
-				selection.selectCard( null );
-			}
+			player.hand.forEachCard( checkHandCard );			if ( interrupt ) return;
+			player.fieldsC.forEachField( checkField );			if ( interrupt ) return;
+			player.fieldsT.forEachField( checkField );			if ( interrupt ) return;
+			checkField( player.deck );							if ( interrupt ) return;
+			checkField( player.grave);							if ( interrupt ) return;
+			
+			player.opponent.hand.forEachCard( checkHandCard );	if ( interrupt ) return;
+			player.opponent.fieldsC.forEachField( checkField );	if ( interrupt ) return;
+			player.opponent.fieldsT.forEachField( checkField );	if ( interrupt ) return;
+			checkField( player.opponent.deck );					if ( interrupt ) return;
+			checkField( player.opponent.grave);					if ( interrupt ) return;
+			
+			selection.selectCard( null );
 			
 			function checkHandCard( c:Card ):void
 			{
@@ -107,15 +113,10 @@ package duel.controllers
 				return;
 			}
 			
-			if ( t.phase != TouchPhase.HOVER && t.phase != TouchPhase.MOVED )
-			{
+			if ( hoveredCard != null && !t.isTouching( hoveredCard.sprite ) )
 				hoverCard( null );
-				return;
-			}
 			
 			var interrupt:Boolean;
-			
-			/// HOVER
 			
 			player.hand.forEachCard( hoverCheckHandCard );	if ( interrupt ) return;
 			player.fieldsC.forEachField( hoverCheckField );	if ( interrupt ) return;
