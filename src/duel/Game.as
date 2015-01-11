@@ -241,6 +241,7 @@ package duel
 			
 			//bg.visible = interactable;
 			this.touchable = interactable;
+			gui.updateData();
 		}
 		
 		public function setCurrentPlayer( p:Player ):void
@@ -266,13 +267,13 @@ package duel
 			playerInspectProcess( currentPlayer.opponent, p );
 			playerInspectProcess( currentPlayer, p );
 			currentPlayer.ctrl.onProcessUpdate();
-			gui.updateData();
+			//gui.updateData();
 		}
 		
 		private function onProcessComplete( e:ProcessEvent ):void
 		{
 			currentPlayer.ctrl.onProcessUpdate();
-			gui.updateData();
+			//gui.updateData();
 			
 			if ( e.process.name )
 				gui.log( e.process.name + " " + e.process.args );

@@ -89,12 +89,14 @@ package duel.gui
 			
 			function btn3f():void
 			{
-				//game.performActionAttack( game.selectedCard )
+				game.currentPlayer.ctrl.performActionAttack( 
+					UserPlayerController( game.currentPlayer.ctrl ).selection.selectedCard )
 			}
 			
 			function btn4f():void
 			{ 
-				//game.performActionSafeFlip( game.selectedCard )
+				game.currentPlayer.ctrl.performActionSafeFlip( 
+					UserPlayerController( game.currentPlayer.ctrl ).selection.selectedCard )
 			}
 			
 			buttonsContainer.alignPivot( "right", "top" );
