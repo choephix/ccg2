@@ -16,9 +16,13 @@ package duel.controllers
 		private var _active:Boolean;
 		
 		protected var player:Player;
+		public var faq:PlayerControllerFAQ;
 		
 		public function PlayerController( player:Player ) 
-		{ this.player = player }
+		{ 
+			this.player = player;
+			this.faq = new PlayerControllerFAQ();
+		}
 		
 		// // // // //
 		// GENERALE //
@@ -35,6 +39,9 @@ package duel.controllers
 		{}
 		
 		public function onProcessUpdate():void
+		{}
+		
+		public function onTurnStart():void
 		{}
 		
 		// // // // //

@@ -275,6 +275,9 @@ package duel
 			currentPlayer.ctrl.onProcessUpdate();
 			//gui.updateData();
 			
+			if ( e.process.name == GameplayProcess.TURN_START_COMPLETE )
+				currentPlayer.ctrl.onTurnStart();
+			
 			if ( e.process.name )
 				gui.log( e.process.name + " " + e.process.args );
 		}

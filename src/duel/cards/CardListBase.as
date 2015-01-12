@@ -38,6 +38,14 @@ package duel.cards {
 		
 		// FIND
 		
+		public function findByUid( uid:int ):Card
+		{
+			for ( var i:int = 0; i < _count; i++ ) 
+				if ( uid == _list[ i ].uid )
+					return _list[ i ];
+			return null;
+		}
+		
 		public function findByName( name:String ):Card
 		{
 			for ( var i:int = 0; i < _count; i++ ) 

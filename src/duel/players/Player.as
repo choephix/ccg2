@@ -1,5 +1,6 @@
 package duel.players {
 	import duel.controllers.PlayerController;
+	import duel.controllers.RemotePlayerController;
 	import duel.controllers.UserPlayerController;
 	import duel.display.TableSide;
 	import duel.G;
@@ -55,7 +56,7 @@ package duel.players {
 			
 			mana = new ManaPool();
 			
-			ctrl = new UserPlayerController( this );
+			ctrl = new RemotePlayerController( this );
 			
 			_name = name;
 			_lp = lifePoints;

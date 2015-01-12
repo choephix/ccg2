@@ -204,7 +204,7 @@ package duel.cards.temp_database
 						return cc.type.isCreature;
 					}
 				},
-				/* * */
+				/* * * /
 				function( c:Card ):void ///		..C		Summoner
 				{
 					c.name = "Summoner";
@@ -226,7 +226,7 @@ package duel.cards.temp_database
 						c.controller.opponent.fieldsC.forEachField( TempDatabaseUtils.doSpawnTokenCreatureIfEmpty );
 					}
 				},
-				/* * */
+				/* * * /
 				function( c:Card ):void ///		T..		Stunner
 				{
 					c.name = "Stunner";
@@ -269,7 +269,7 @@ package duel.cards.temp_database
 					
 					c.descr = "On opp. attack - stun attacking creature forever\n(it's CONCEPT DEMO!)";
 				},
-				/* * */
+				/* * * /
 				function( c:Card ):void ///		..C		Immortal Bob
 				{
 					c.name = "Immortal Bob";
@@ -307,16 +307,6 @@ package duel.cards.temp_database
 					}
 					
 					c.descr = "On opp. direct attack - kill attacking creature";
-				},
-				/* * */
-				function( c:Card ):void ///		..C		Big Shield
-				{
-					c.name = "Big Shield";
-					
-					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.basePower = 17;
-					c.propsC.noAttack = true;
-					c.propsC.flippable = true;
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Bozo
@@ -565,7 +555,7 @@ package duel.cards.temp_database
 						TempDatabaseUtils.doForceAttack( c.indexedField.opposingCreature, false );
 					}
 				},
-				/* * */
+				/* * * /
 				function( c:Card ):void ///		..C		Ragnarok
 				{
 					c.name = "Ragnarok";
@@ -735,6 +725,33 @@ package duel.cards.temp_database
 					ongoing.funcUpdate =
 					function( p:GameplayProcess ):void {
 						c.propsC.basePower = c.controller.opponent.creatureCount * 5;
+					}
+				},
+				/* * */
+				function( c:Card ):void ///		..C		Big Shield
+				{
+					c.name = "Big Shield";
+					
+					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
+					c.propsC.basePower = 17;
+					c.propsC.noAttack = true;
+					c.propsC.flippable = true;
+				},
+				/* * */
+				function( c:Card ):void ///		..C		Immortal Bob
+				{
+					c.name = "Immortal Bob";
+					
+					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
+					c.propsC.basePower = 2;
+					
+					var special:SpecialEffect;
+					special = c.propsC.addTriggered();
+					special.allowIn( CardLotType.GRAVEYARD );
+					special.watch( GameplayProcess.TURN_END );
+					special.funcActivate =
+					function( p:GameplayProcess ):void {
+						TempDatabaseUtils.doPutInHand( c, c.controller );
 					}
 				},
 				/* * */

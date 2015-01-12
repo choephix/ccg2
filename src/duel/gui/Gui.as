@@ -121,14 +121,16 @@ package duel.gui
 		
 		private function canDoAttack( ctrl:UserPlayerController ):Boolean
 		{
-			return ctrl.selection.selectedCard != null && 
+			return ctrl != null &&
+				ctrl.selection.selectedCard != null && 
 				ctrl.selection.selectedCard.type.isCreature && 
 				ctrl.selection.selectedCard.canAttack;
 		}
 		
 		private function canDoSafeFlip( ctrl:UserPlayerController ):Boolean
 		{
-			return ctrl.selection.selectedCard != null && 
+			return ctrl != null &&
+				ctrl.selection.selectedCard != null && 
 				ctrl.selection.selectedCard.type.isCreature && 
 				ctrl.selection.selectedCard.faceDown &&
 				ctrl.selection.selectedCard.exhausted == false;
