@@ -1,19 +1,15 @@
 package duel.players {
 	import duel.controllers.PlayerController;
-	import duel.controllers.RemotePlayerController;
 	import duel.controllers.UserPlayerController;
+	import duel.display.cardlots.HandSprite;
 	import duel.display.TableSide;
 	import duel.G;
 	import duel.players.ManaPool;
-	import duel.table.CreatureField;
+	import duel.table.CardLotType;
 	import duel.table.Field;
 	import duel.table.fieldlists.CreatureFieldsRow;
 	import duel.table.fieldlists.TrapFieldsRow;
 	import duel.table.Hand;
-	import duel.table.TrapField;
-	import duel.cards.Card;
-	import duel.display.cardlots.HandSprite;
-	import duel.table.CardLotType;
 	/**
 	 * ...
 	 * @author choephix
@@ -56,7 +52,8 @@ package duel.players {
 			
 			mana = new ManaPool();
 			
-			ctrl = new RemotePlayerController( this );
+			//ctrl = new RemotePlayerController( this );
+			//ctrl = new UserPlayerController( this );
 			
 			_name = name;
 			_lp = lifePoints;
@@ -64,7 +61,7 @@ package duel.players {
 			setAsFieldsOwner();
 			
 			// INITIALIZE
-			ctrl.initialize();
+			//ctrl.initialize();
 		}
 		
 		private function setAsFieldsOwner():void 

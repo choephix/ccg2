@@ -10,6 +10,11 @@ package chimichanga.common.assets
 	import starling.textures.Texture;
 	import starling.utils.AssetManager;
 	
+	CONFIG::air
+	{
+	import flash.filesystem.File;
+	}
+	
 	/**
 	 * ...
 	 * @author choephix
@@ -57,6 +62,21 @@ package chimichanga.common.assets
 					}
 				}
 			}
+		}
+		
+		override public function enqueue(...rest):void 
+		{
+			CONFIG::air
+			{
+				for ( var i:int = 0; i < rest.length; i++ ) 
+					if ( rest[ i ] is String )
+						super.enqueue( File.applicationDirectory.resolvePath( rest[ i ] ) );
+					else
+						super.enqueue( rest[ i ] );
+				return;
+			}
+			
+			super.enqueue.apply( null, rest );
 		}
 		
 		public function queueEmpty():Boolean 

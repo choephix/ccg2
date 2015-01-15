@@ -2,7 +2,9 @@ package duel.controllers
 {
 	import duel.cards.Card;
 	import duel.players.Player;
+	import duel.table.CreatureField;
 	import duel.table.Field;
+	import duel.table.TrapField;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
@@ -15,6 +17,7 @@ package duel.controllers
 	{
 		public var selection:SelectionManager;
 		public var hoveredCard:Card;
+		public var remote:UserPlayerRemoteMessager;
 		
 		public function UserPlayerController( p:Player ) { super( p ) }
 		
@@ -27,6 +30,8 @@ package duel.controllers
 			selection = new SelectionManager();
 			selection.initialize( this, player );
 			game.addEventListener( TouchEvent.TOUCH, onTouch );
+			
+			remote = new UserPlayerRemoteMessager( player );
 		}
 		
 		private function onTouch( e:TouchEvent ):void {
@@ -189,6 +194,59 @@ package duel.controllers
 		// // // // //
 		// OUTGOING //
 		// // // // //
+		
+				//"attack:0",
+				//"summon:0:0",
+				//"trapset:0:0",
+				//"turnend"
+				
+		override public function performActionDraw():void 
+		{
+			remote.performActionDraw();
+			super.performActionDraw();
+		}
+		
+		override public function performActionSummon(c:Card, field:CreatureField):void 
+		{
+			remote.performActionSummon(c, field);
+			super.performActionSummon(c, field);
+		}
+		
+		override public function performActionTrapSet(c:Card, field:TrapField):void 
+		{
+			remote.performActionTrapSet(c, field);
+			super.performActionTrapSet(c, field);
+		}
+		
+		override public function performActionAttack(c:Card):void 
+		{
+			remote.performActionAttack(c);
+			super.performActionAttack(c);
+		}
+		
+		override public function performActionRelocation(c:Card, field:CreatureField):void 
+		{
+			remote.performActionRelocation(c, field);
+			super.performActionRelocation(c, field);
+		}
+		
+		override public function performActionSafeFlip(c:Card):void 
+		{
+			remote.performActionSafeFlip(c);
+			super.performActionSafeFlip(c);
+		}
+		
+		override public function performActionTurnEnd():void 
+		{
+			remote.performActionTurnEnd();
+			super.performActionTurnEnd();
+		}
+		
+		override public function performActionSurrender():void 
+		{
+			remote.performActionSurrender();
+			super.performActionSurrender();
+		}
 		
 		// // // // //
 		// BULLSHIT //

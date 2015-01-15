@@ -36,6 +36,7 @@ package duel.display {
 		private var tfDescr:TextField;
 		private var tfTitle:TextField;
 		private var tfAttak:AnimatedTextField;
+		private var tfDebug:TextField;
 		
 		///
 		private var _isSelectable:Boolean = false;
@@ -96,11 +97,7 @@ package duel.display {
 			pad.color = Temp.getColorForCard( card );
 			front.addChild( pad );
 			
-			var title:String = card.name;
-			CONFIG::sandbox
-			{ title = card.uid + " " + card.name }
-			
-			tfTitle = new TextField( 500, G.CARD_H, title, "Arial Black", 24, 0x53001B );
+			tfTitle = new TextField( 500, G.CARD_H, card.name, "Arial Black", 24, 0x53001B );
 			tfTitle.touchable = false;
 			tfTitle.hAlign = "center";
 			tfTitle.vAlign = "top";
@@ -110,6 +107,16 @@ package duel.display {
 			tfTitle.x = G.CARD_W * .5;
 			tfTitle.scaleX = Math.min( 1.0, G.CARD_W / tfTitle.textBounds.width - .05 );
 			front.addChild( tfTitle );
+			
+			tfDebug = new TextField( 480, 40, ""+card.uid+".", "Lucida Console", 12, 0x0054A8 );
+			tfDebug.touchable = false;
+			tfDebug.alignPivot();
+			tfDebug.hAlign = "center";
+			tfDebug.vAlign = "center";
+			tfDebug.bold = true;
+			tfDebug.x = G.CARD_W * .5;
+			tfDebug.y = - 10;
+			front.addChild( tfDebug );
 			
 			tfDescr = new TextField( G.CARD_W, G.CARD_H, "", "Verdana", 10, 0x330011 );
 			tfDescr.touchable = false;

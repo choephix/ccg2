@@ -2,7 +2,6 @@ package {
 	import chimichanga.common.display.Sprite;
 	import duel.Game;
 	import duel.GameEvents;
-	import flash.filesystem.File;
 	import flash.ui.Keyboard;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
@@ -24,11 +23,38 @@ package {
 		private function onAddedToStage( e:Event = null ):void {
 			removeEventListeners( Event.ADDED_TO_STAGE );
 			App.initialize( this );
-			Starling.juggler.delayCall( startLoadingApp, .25 );
+			
+			enqueueAssets();
+			Starling.juggler.delayCall( startLoadingAssets, .25 );
 		}
 		
-		private function startLoadingApp():void {
-			App.assets.enqueue( File.applicationDirectory.resolvePath( "assets/" ) );
+		private function enqueueAssets():void {
+			
+			CONFIG::air
+			{ 
+				App.assets.enqueue( "assets/" ); 
+				return; 
+			}
+			
+			App.assets.enqueue( "assets/bg.jpg" )
+			App.assets.enqueue( "assets/btn.png" )
+			App.assets.enqueue( "assets/card.png" )
+			App.assets.enqueue( "assets/card-aura.jpg" )
+			App.assets.enqueue( "assets/card-back.png" )
+			App.assets.enqueue( "assets/card-blood.jpg" )
+			App.assets.enqueue( "assets/card-glow.png" )
+			App.assets.enqueue( "assets/card-sele2.png" )
+			App.assets.enqueue( "assets/card-selectable.png" )
+			App.assets.enqueue( "assets/exhaustClock.png" )
+			App.assets.enqueue( "assets/field.png" )
+			App.assets.enqueue( "assets/hadouken.png" )
+			App.assets.enqueue( "assets/iconLock.png" )
+			App.assets.enqueue( "assets/ring.png" )
+			App.assets.enqueue( "assets/characters/char1.png" )
+			App.assets.enqueue( "assets/characters/char2.png" )
+		}
+		
+		private function startLoadingAssets():void {
 			App.assets.initialize( null, onLoadingAppComplete );
 		}
 		

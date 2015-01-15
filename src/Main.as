@@ -28,6 +28,8 @@
 		
 		public function Main():void
 		{
+			trace( 12345 );
+			
 			if ( stage == null ) {
 				addEventListener(Event.ADDED_TO_STAGE, onAddedToStage );
 			} else {
@@ -132,15 +134,15 @@
 		
 		private function deactivate( e:Event ):void {
 			
-			if ( starling )
-				starling.stop();
+			//if ( starling )
+				//starling.stop();
 			
 		}
 		
 		private function activate( e:Event ):void {
 			
-			if ( starling )
-				starling.start();
+			//if ( starling )
+				//starling.start();
 			
 		}
 		

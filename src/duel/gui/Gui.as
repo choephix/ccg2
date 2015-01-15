@@ -82,10 +82,20 @@ package duel.gui
 				return btn;
 			}
 			
-			button1 = addButton( "SURRENDER", 0x53449B, game.performActionSurrender );
-			button2 = addButton( "END TURN", 0x2EACE9, game.performActionTurnEnd );
+			button1 = addButton( "SURRENDER", 0x53449B, btn1f );
+			button2 = addButton( "END TURN", 0x2EACE9, btn2f );
 			button3 = addButton( "ATTACK", 0xFF2000, btn3f );
 			button4 = addButton( "FLIP", 0xFFCC33, btn4f );
+			
+			function btn1f():void
+			{
+				game.currentPlayer.ctrl.performActionSurrender();
+			}
+			
+			function btn2f():void
+			{
+				game.currentPlayer.ctrl.performActionTurnEnd();
+			}
 			
 			function btn3f():void
 			{
@@ -138,7 +148,7 @@ package duel.gui
 		
 		private function updateTf( t:AnimatedTextField, p:Player ):void
 		{
-			t.text = " " + game.p2.name + ": " 
+			t.text = " " + p.name + ": " 
 						+ AnimatedTextField.DEFAULT_MARKER 
 						+ "\n" + manaText( p.mana );
 			t.targetValue = p.lifePoints;

@@ -16,7 +16,7 @@ package duel.display.cardlots {
 		static public const SEL_SPACE:Number = 100;
 		
 		public var maxWidth:Number = 800;
-		public var flipped:Boolean = false;
+		public var topSide:Boolean = false;
 		
 		private var _active:Boolean = true;
 		
@@ -72,13 +72,13 @@ package duel.display.cardlots {
 				o = list.getCardAt( i ).sprite;
 				
 				x = x + theD( W );
-				y = ( flipped ? -1.0 : 1.0 ) * 50;
+				y = ( topSide ? -1.0 : 1.0 ) * 50;
 				if ( _active )
 				{
 					if ( selectedIndex < 0 )
 						y = 0
 					else
-						y = ( flipped ? -1.0 : 1.0 ) * ( i == selectedIndex ? -75 : 50 )
+						y = ( topSide ? -1.0 : 1.0 ) * ( i == selectedIndex ? -75 : 50 )
 				}
 				jugglerGui.removeTweens( o );
 				jugglerGui.tween( o, 0.250, // .850 .250
@@ -86,11 +86,15 @@ package duel.display.cardlots {
 						alpha: 1.0,
 						x: this.x + x, 
 						y: this.y + y, 
+						rotation: topSide ? Math.PI : .0,
 						transition: Transitions.EASE_OUT 
 						// EASE_OUT EASE_OUT_BACK EASE_OUT_ELASTIC
 					} );
 				
-				o.parent.setChildIndex( o, o.parent.numChildren - 1 );
+				if ( topSide )
+					o.parent.setChildIndex( o, 0 );
+				else
+					o.parent.setChildIndex( o, o.parent.numChildren - 1 );
 				
 				o.touchable = true;
 				o.useHandCursor = true;

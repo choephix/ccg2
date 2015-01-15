@@ -130,7 +130,7 @@ package duel.processes
 		
 		CONFIG::development
 		private function log( msg:String ):void {
-			//return;
+			return;
 			trace ( "4:" + Game.frameNum + ". " + name+" -:> " + msg )
 		}
 	}

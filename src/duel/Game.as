@@ -6,6 +6,8 @@ package duel
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
 	import duel.cards.temp_database.TempCardsDatabase;
+	import duel.controllers.RemotePlayerController;
+	import duel.controllers.UserPlayerController;
 	import duel.display.cardlots.HandSprite;
 	import duel.display.TableSide;
 	import duel.gui.Gui;
@@ -36,9 +38,12 @@ package duel
 	{
 		public static var current:Game;
 		public static var frameNum:int = 0;
+		public static function log(s:String):void{current.gui.log(s)}
 		
 		CONFIG::development
 		public static var GODMODE:Boolean;
+		
+		public var switchPlayers:Boolean = !CONFIG::sandbox;
 		
 		public var processes:GameplayProcessManager;
 		public var jugglerStrict:GuiJuggler;
@@ -73,12 +78,25 @@ package duel
 			processes.addEventListener( ProcessEvent.CURRENT_PROCESS, onProcessAdvance );
 			processes.addEventListener( ProcessEvent.PROCESS_COMPLETE, onProcessComplete );
 			
-			p1 = generatePlayer( "player1" );
-			p2 = generatePlayer( "player2" );
+			if ( switchPlayers )
+			{
+				p1 = generatePlayer( "player2" );
+				p2 = generatePlayer( "player1" );
+			}
+			else
+			{
+				p1 = generatePlayer( "player1" );
+				p2 = generatePlayer( "player2" );
+			}
 			p1.opponent = p2;
 			p2.opponent = p1;
 			p1.id = 1;
 			p2.id = 2;
+			
+			p1.ctrl = new UserPlayerController( p1 );
+			p2.ctrl = new RemotePlayerController( p2 );
+			p1.ctrl.initialize();
+			p2.ctrl.initialize();
 			
 			function generatePlayer( name:String ):Player
 			{ return new Player( name, G.INIT_LP ) }
@@ -131,11 +149,11 @@ package duel
 			p2.handSprite.maxWidth = 950;
 			p2.handSprite.x = -300 + ( App.W - p2.handSprite.maxWidth ) * 0.5;
 			p2.handSprite.y = -p2.tableSide.y;
-			p2.handSprite.flipped = true;
+			p2.handSprite.topSide = true;
 			//}
 			
 			//{ START GAME
-			setCurrentPlayer( p1 );
+			setCurrentPlayer( switchPlayers ? p2 : p1 );
 			
 			CONFIG::development
 			{
@@ -153,8 +171,8 @@ package duel
 			//}
 			
 			//{ PREPARE DECKS
-			const DECK1:Array = [];
-			const DECK2:Array = [];
+			var DECK1:Array = [];
+			var DECK2:Array = [];
 			
 			var i:int;
 			
@@ -179,30 +197,35 @@ package duel
 				DECK1.push( i );
 				DECK2.push( i );
 			} while ( TempCardsDatabase.F[ ++i ] != null )
+			
 			//}
 			
 			//{ PREPARE GAMEPLAY
-			const DECK1_SIZE:uint = Math.min( DECK1.length, G.MAX_DECK_SIZE );
-			const DECK2_SIZE:uint = Math.min( DECK2.length, G.MAX_DECK_SIZE );
 			
 			var time:Number = 0.7;
 			var c:Card;
-			for ( i = 0; i < DECK1_SIZE; i++ )
+			
+			if ( switchPlayers )
 			{
-				time += .010;
-				c = CardFactory.produceCard( DECK1[ i ] );
-				c.owner = p1;
-				c.faceDown = true;
-				jugglerStrict.delayCall( p1.deck.addCard, time, c, true );
+				populatePlayerDeck( p2, DECK1 );
+				populatePlayerDeck( p1, DECK2 );
+			}
+			else
+			{
+				populatePlayerDeck( p1, DECK1 );
+				populatePlayerDeck( p2, DECK2 );
 			}
 			
-			for ( i = 0; i < DECK2_SIZE; i++ )
+			function populatePlayerDeck( p:Player, cardIds:Array ):void
 			{
-				time += .010;
-				c = CardFactory.produceCard( DECK2[ i ] );
-				c.owner = p2;
-				c.faceDown = true;
-				jugglerStrict.delayCall( p2.deck.addCard, time, c, true );
+				for ( i = 0; i < cardIds.length && i < G.MAX_DECK_SIZE; i++ )
+				{
+					time += .010;
+					c = CardFactory.produceCard( cardIds[ i ] );
+					c.owner = p;
+					c.faceDown = true;
+					jugglerStrict.delayCall( p.deck.addCard, time, c, true );
+				}
 			}
 			
 			jugglerStrict.delayCall( drawCards, time + .360 );
@@ -278,8 +301,8 @@ package duel
 			if ( e.process.name == GameplayProcess.TURN_START_COMPLETE )
 				currentPlayer.ctrl.onTurnStart();
 			
-			if ( e.process.name )
-				gui.log( e.process.name + " " + e.process.args );
+			//if ( e.process.name )
+				//gui.log( e.process.name + " " + e.process.args );
 		}
 		
 		private function playerInspectProcess( player:Player, p:GameplayProcess ):void
