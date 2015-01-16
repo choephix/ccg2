@@ -2,6 +2,7 @@ package {
 	import chimichanga.common.display.Sprite;
 	import duel.Game;
 	import duel.GameEvents;
+	import duel.GameMeta;
 	import flash.ui.Keyboard;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
@@ -70,6 +71,8 @@ package {
 			g = new Game();
 			addChild( g );
 			g.addEventListener( GameEvents.DESTROY, onGameDestroyed );
+			g.meta = new GameMeta();
+			g.initialize();
 		}
 		
 		private function onGameDestroyed():void {

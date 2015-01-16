@@ -43,6 +43,7 @@ package duel
 		CONFIG::development
 		public static var GODMODE:Boolean;
 		
+		public var meta:GameMeta;
 		public var switchPlayers:Boolean = !CONFIG::sandbox;
 		
 		public var processes:GameplayProcessManager;
@@ -59,11 +60,7 @@ package duel
 		public var bg:Background;
 		
 		//
-		public function Game()
-		{
-			current = this;
-			initialize();
-		}
+		public function Game() { current = this }
 		
 		private function initialize():void
 		{
