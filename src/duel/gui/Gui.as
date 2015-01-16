@@ -152,7 +152,8 @@ package duel.gui
 						+ AnimatedTextField.DEFAULT_MARKER 
 						+ "\n" + manaText( p.mana );
 			t.targetValue = p.lifePoints;
-			t.color = p == game.currentPlayer ? 0xFFEE22 : 0xF37618;
+			t.color = p.color;
+			t.alpha = p == game.currentPlayer ? 1.0 : 0.3;
 		}
 		
 		private function manaText( mana:ManaPool ):String

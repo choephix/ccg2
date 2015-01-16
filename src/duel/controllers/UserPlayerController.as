@@ -17,7 +17,7 @@ package duel.controllers
 	{
 		public var selection:SelectionManager;
 		public var hoveredCard:Card;
-		public var remote:UserPlayerRemoteMessager;
+		public var remoteMessager:UserPlayerRemoteMessager;
 		
 		public function UserPlayerController( p:Player ) { super( p ) }
 		
@@ -30,8 +30,6 @@ package duel.controllers
 			selection = new SelectionManager();
 			selection.initialize( this, player );
 			game.addEventListener( TouchEvent.TOUCH, onTouch );
-			
-			remote = new UserPlayerRemoteMessager( player );
 		}
 		
 		private function onTouch( e:TouchEvent ):void {
@@ -195,56 +193,59 @@ package duel.controllers
 		// OUTGOING //
 		// // // // //
 		
-				//"attack:0",
-				//"summon:0:0",
-				//"trapset:0:0",
-				//"turnend"
-				
 		override public function performActionDraw():void 
 		{
-			remote.performActionDraw();
+			if ( remoteMessager != null )
+				remoteMessager.performActionDraw();
 			super.performActionDraw();
 		}
 		
 		override public function performActionSummon(c:Card, field:CreatureField):void 
 		{
-			remote.performActionSummon(c, field);
+			if ( remoteMessager != null )
+				remoteMessager.performActionSummon(c, field);
 			super.performActionSummon(c, field);
 		}
 		
 		override public function performActionTrapSet(c:Card, field:TrapField):void 
 		{
-			remote.performActionTrapSet(c, field);
+			if ( remoteMessager != null )
+				remoteMessager.performActionTrapSet(c, field);
 			super.performActionTrapSet(c, field);
 		}
 		
 		override public function performActionAttack(c:Card):void 
 		{
-			remote.performActionAttack(c);
+			if ( remoteMessager != null )
+				remoteMessager.performActionAttack(c);
 			super.performActionAttack(c);
 		}
 		
 		override public function performActionRelocation(c:Card, field:CreatureField):void 
 		{
-			remote.performActionRelocation(c, field);
+			if ( remoteMessager != null )
+				remoteMessager.performActionRelocation(c, field);
 			super.performActionRelocation(c, field);
 		}
 		
 		override public function performActionSafeFlip(c:Card):void 
 		{
-			remote.performActionSafeFlip(c);
+			if ( remoteMessager != null )
+				remoteMessager.performActionSafeFlip(c);
 			super.performActionSafeFlip(c);
 		}
 		
 		override public function performActionTurnEnd():void 
 		{
-			remote.performActionTurnEnd();
+			if ( remoteMessager != null )
+				remoteMessager.performActionTurnEnd();
 			super.performActionTurnEnd();
 		}
 		
 		override public function performActionSurrender():void 
 		{
-			remote.performActionSurrender();
+			if ( remoteMessager != null )
+				remoteMessager.performActionSurrender();
 			super.performActionSurrender();
 		}
 		

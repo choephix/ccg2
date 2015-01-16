@@ -46,7 +46,7 @@
     <option loadExterns="" />
     <option staticLinkRSL="True" />
     <option additional="" />
-    <option compilerConstants="CONFIG::development,true&#xA;CONFIG::sandbox,false&#xA;CONFIG::slowmode,false" />
+    <option compilerConstants="CONFIG::development,true&#xA;CONFIG::sandbox,true&#xA;CONFIG::slowmode,false" />
     <option minorVersion="" />
   </build>
   <!-- SWC Include Libraries -->
@@ -56,6 +56,7 @@
   <!-- SWC Libraries -->
   <libraryPaths>
     <element path="..\lib\starling.swc" />
+    <element path="..\lib\as3mul.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

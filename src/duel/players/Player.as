@@ -30,8 +30,9 @@ package duel.players {
 		public var mana:ManaPool;
 		
 		public var id:int;
-		protected var _name:String;
-		protected var _lp:int;
+		private var _name:String;
+		private var _lp:int;
+		private var _color:uint = 0x44FFFF;
 		
 		//VISUAL
 		
@@ -78,6 +79,12 @@ package duel.players {
 			while ( --i >= 0 ) fieldsT.getAt( i ).owner = this;
 		}
 		
+		public function updateDetails( name:String, color:uint ):void
+		{
+			this._name = name;
+			this._color = color;
+		}
+		
 		// CARD ACTIONS
 		
 		// GAMELPLAY
@@ -106,6 +113,9 @@ package duel.players {
 		
 		public function get name():String
 		{ return _name }
+		
+		public function get color():uint
+		{ return _color }
 		
 		//
 		public function toString():String 

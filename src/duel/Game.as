@@ -2,16 +2,21 @@ package duel
 {
 	import chimichanga.common.assets.AdvancedAssetManager;
 	import chimichanga.common.display.Sprite;
+	import chimichanga.debug.logging.error;
+	import com.reyco1.multiuser.data.UserObject;
 	import dev.ProcessManagementInspector;
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
 	import duel.cards.temp_database.TempCardsDatabase;
 	import duel.controllers.RemotePlayerController;
 	import duel.controllers.UserPlayerController;
+	import duel.controllers.UserPlayerRemoteMessager;
 	import duel.display.cardlots.HandSprite;
 	import duel.display.TableSide;
 	import duel.gui.Gui;
 	import duel.gui.GuiJuggler;
+	import duel.network.RemoteConnectionController;
+	import duel.network.Waiter;
 	import duel.players.Player;
 	import duel.processes.GameplayProcess;
 	import duel.processes.GameplayProcessManager;
@@ -45,6 +50,7 @@ package duel
 		
 		public var meta:GameMeta;
 		public var state:GameState = GameState.WAITING;
+		public var remote:RemoteConnectionController;
 		
 		public var processes:GameplayProcessManager;
 		public var jugglerStrict:GuiJuggler;
@@ -62,7 +68,7 @@ package duel
 		//
 		public function Game() { current = this }
 		
-		private function initialize():void
+		public function initialize():void
 		{
 			//{ INITIAL SHIT
 			Starling.juggler.add( this );
@@ -75,25 +81,12 @@ package duel
 			processes.addEventListener( ProcessEvent.CURRENT_PROCESS, onProcessAdvance );
 			processes.addEventListener( ProcessEvent.PROCESS_COMPLETE, onProcessComplete );
 			
-			if ( switchPlayers )
-			{
-				p1 = generatePlayer( "player2" );
-				p2 = generatePlayer( "player1" );
-			}
-			else
-			{
-				p1 = generatePlayer( "player1" );
-				p2 = generatePlayer( "player2" );
-			}
+			p1 = generatePlayer( "?" );
+			p2 = generatePlayer( "??" );
 			p1.opponent = p2;
 			p2.opponent = p1;
 			p1.id = 1;
 			p2.id = 2;
-			
-			p1.ctrl = new UserPlayerController( p1 );
-			p2.ctrl = new RemotePlayerController( p2 );
-			p1.ctrl.initialize();
-			p2.ctrl.initialize();
 			
 			function generatePlayer( name:String ):Player
 			{ return new Player( name, G.INIT_LP ) }
@@ -135,6 +128,7 @@ package duel
 			
 			// GUI AND STUFF
 			gui = new Gui();
+			//gui.visible = false;
 			addChild( gui );
 			
 			p1.handSprite = new HandSprite( p1.hand );
@@ -149,8 +143,60 @@ package duel
 			p2.handSprite.topSide = true;
 			//}
 			
+			if ( !meta.isMultiplayer )
+			{
+				p1.ctrl = new UserPlayerController( p1 );
+				p2.ctrl = new UserPlayerController( p2 );
+				p1.ctrl.initialize();
+				p2.ctrl.initialize();
+				
+				startGame();
+			}
+			else
+			{
+				p1.ctrl = new UserPlayerController( p1 );
+				p2.ctrl = new RemotePlayerController( p2 );
+				p1.ctrl.initialize();
+				p2.ctrl.initialize();
+			
+				remote = new RemoteConnectionController();
+				remote.initialize();
+				remote.onOpponentFoundCallback = startGame;
+				remote.onUserObjectRecievedCallback = onRemoteMessageReceived;
+				
+				UserPlayerController( p1.ctrl ).remoteMessager = new UserPlayerRemoteMessager( remote );
+			}
+		}
+		
+		private function onRemoteMessageReceived( userName:String, data:Object ):void 
+		{
+			if ( p2.name != userName )
+			{
+				error( "Who is this " + userName + " person?" );
+				log( userName + " != " + p2.name );
+				return;
+			}
+			
+			RemotePlayerController( p2.ctrl ).onMessage( data as String );
+		}
+		
+		public function startGame():void
+		{
+			var amFirst:Boolean = true;
+			
+			if ( meta.isMultiplayer )
+			{
+				var p1u:UserObject = remote.myUser;
+				var p2u:UserObject = remote.oppUser;
+				
+				p1.updateDetails( p1u.name, p1u.details.color );
+				p2.updateDetails( p2u.name, p2u.details.color );
+				
+				amFirst = p1u.details.hasFirstTurn;
+			}
+			
 			//{ START GAME
-			setCurrentPlayer( switchPlayers ? p2 : p1 );
+			setCurrentPlayer( amFirst ? p1 : p2 );
 			
 			CONFIG::development
 			{
@@ -176,16 +222,14 @@ package duel
 			i = 0;
 			
 			do
-			{
 				DECK1.push( i );
-			} while ( TempCardsDatabase.F[ ++i ] != null )
+			while ( TempCardsDatabase.F[ ++i ] != null )
 			
 			++i
 			
 			do
-			{
 				DECK2.push( i );
-			} while ( TempCardsDatabase.F[ ++i ] != null )
+			while ( TempCardsDatabase.F[ ++i ] != null )
 			
 			++i
 			
@@ -193,7 +237,8 @@ package duel
 			{
 				DECK1.push( i );
 				DECK2.push( i );
-			} while ( TempCardsDatabase.F[ ++i ] != null )
+			}
+			while ( TempCardsDatabase.F[ ++i ] != null )
 			
 			//}
 			
@@ -202,15 +247,15 @@ package duel
 			var time:Number = 0.7;
 			var c:Card;
 			
-			if ( switchPlayers )
-			{
-				populatePlayerDeck( p2, DECK1 );
-				populatePlayerDeck( p1, DECK2 );
-			}
-			else
+			if ( amFirst )
 			{
 				populatePlayerDeck( p1, DECK1 );
 				populatePlayerDeck( p2, DECK2 );
+			}
+			else
+			{
+				populatePlayerDeck( p2, DECK1 );
+				populatePlayerDeck( p1, DECK2 );
 			}
 			
 			function populatePlayerDeck( p:Player, cardIds:Array ):void
@@ -235,6 +280,8 @@ package duel
 			
 			state = GameState.ONGOING;
 			
+			gui.visible = true;
+			gui.updateData();
 		}
 		
 		public function destroy():void
@@ -251,6 +298,9 @@ package duel
 			jugglerStrict.advanceTime( time );
 			jugglerGui.advanceTime( time );
 			juggler.advanceTime( time );
+			
+			//if ( state.isWaiting )
+				//return;
 			
 			if ( jugglerStrict.isIdle )
 				processes.advanceTime( time );
