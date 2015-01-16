@@ -1,7 +1,6 @@
 package duel.network {
 	import com.reyco1.multiuser.data.UserObject;
 	import com.reyco1.multiuser.MultiUserSession;
-	import duel.controllers.RemotePlayerController;
 	import duel.Game;
 	import starling.animation.Juggler;
 	/**
@@ -69,7 +68,6 @@ package duel.network {
 				var s:String = "";
 				for ( i = 0; i < a.length; i++ )
 					s += a[ i ].name + " , ";
-				Game.current.gui.pMsg( s );
 				Game.log( "> > > " + s );
 			} catch (e:Error) {
 				Game.log( e.message );

@@ -3,8 +3,8 @@ package duel.gui
 	import chimichanga.common.display.Sprite;
 	import duel.controllers.UserPlayerController;
 	import duel.GameSprite;
-	import duel.players.Player;
 	import duel.players.ManaPool;
+	import duel.players.Player;
 	import starling.display.Button;
 	import starling.events.Event;
 	import starling.text.TextField;
@@ -118,6 +118,10 @@ package duel.gui
 		{
 			t1.advanceTime( time );
 			t2.advanceTime( time );
+			
+			buttonsContainer.visible =
+				game.state.isOngoing &&
+				( !game.meta.isMultiplayer || game.currentPlayer == game.p1 );
 		}
 		
 		public function updateData():void
@@ -170,16 +174,15 @@ package duel.gui
 			logBox.log( s );
 		}
 		
-		public function pMsg( msg:String ):void
+		public function pMsg( msg:String, fadeOut:Boolean = true ):void
 		{
 			tcenter.text = msg;
 			
-			CONFIG::sandbox
-			{ return }
-			
 			tcenter.alpha = 1.0;
 			juggler.removeTweens( tcenter );
-			juggler.tween( tcenter, 1.500, { alpha : .0, delay : 1.500 } );
+			
+			if ( fadeOut )
+				juggler.tween( tcenter, 1.500, { alpha : .0, delay : 1.500 } );
 		}
 		
 		//public function log( o:* ):void

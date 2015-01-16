@@ -93,13 +93,15 @@ package duel.controllers
 			}
 		}
 		
-		override public function set active(value:Boolean):void 
+		override public function set active( value:Boolean ):void 
 		{
 			super.active = value;
 			if ( !value ) {
 				hoverCard( null );
 				selection.selectCard( null );
 			}
+			updateSelectables();
+			selection.advanceTime( .0 );
 		}
 		
 		// POINTER HOVER UPDATE
@@ -179,7 +181,7 @@ package duel.controllers
 			selection.advanceTime( time );
 			
 			CONFIG::sandbox 
-			{ game.gui.pMsg( selection.contextOnField.name + " " + selection.selectedCard ) }
+			{ game.gui.pMsg( selection.contextOnField.name + " " + selection.selectedCard, false ) }
 		}
 		
 		override public function onProcessUpdate():void

@@ -11,7 +11,7 @@ package duel
 		public static const OVER:GameState		= new GameState();
 		
 		public function get isWaiting():Boolean		{ return this == WAITING }
-		public function get isOngooing():Boolean	{ return this == ONGOING }
+		public function get isOngoing():Boolean		{ return this == ONGOING }
 		public function get isOver():Boolean		{ return this == OVER }
 	}
 

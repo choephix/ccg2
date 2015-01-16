@@ -16,7 +16,6 @@ package duel
 	import duel.gui.Gui;
 	import duel.gui.GuiJuggler;
 	import duel.network.RemoteConnectionController;
-	import duel.network.Waiter;
 	import duel.players.Player;
 	import duel.processes.GameplayProcess;
 	import duel.processes.GameplayProcessManager;
@@ -165,6 +164,8 @@ package duel
 				remote.onUserObjectRecievedCallback = onRemoteMessageReceived;
 				
 				UserPlayerController( p1.ctrl ).remoteMessager = new UserPlayerRemoteMessager( remote );
+				
+				gui.pMsg( "Waiting for opponent...", false );
 			}
 		}
 		
@@ -178,6 +179,7 @@ package duel
 			}
 			
 			RemotePlayerController( p2.ctrl ).onMessage( data as String );
+			gui.pMsg( p2.name + ": " + data );
 		}
 		
 		public function startGame():void
@@ -322,6 +324,7 @@ package duel
 				currentPlayer.ctrl.active = false;
 			
 			currentPlayer = p;
+			gui.pMsg( p == p1 ? "Your turn" : "Enemy turn" );
 			
 			if ( currentPlayer )
 				currentPlayer.ctrl.active = true;
@@ -443,7 +446,7 @@ package duel
 		//
 		public function get interactable():Boolean
 		{
-			return jugglerStrict.isIdle && jugglerGui.isIdle && processes.isIdle && state.isOngooing;
+			return jugglerStrict.isIdle && jugglerGui.isIdle && processes.isIdle && state.isOngoing;
 		}
 		
 		// FX

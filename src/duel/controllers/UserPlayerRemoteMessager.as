@@ -3,6 +3,7 @@ package duel.controllers
 	import duel.cards.Card;
 	import duel.network.RemoteConnectionController;
 	import duel.table.CreatureField;
+	import duel.table.IndexedField;
 	import duel.table.TrapField;
 	/**
 	 * ...
@@ -36,7 +37,7 @@ package duel.controllers
 		
 		public function performActionAttack( c:Card ):void
 		{
-			sendMessage( "attack:" + serialize(c) )
+			sendMessage( "attack:" + serialize(c.indexedField) )
 		}
 		
 		public function performActionRelocation( c:Card, field:CreatureField ):void
@@ -70,9 +71,7 @@ package duel.controllers
 		{
 			if ( o is Card )
 				return o.uid.toString()
-			if ( o is CreatureField )
-				return o.index.toString()
-			if ( o is TrapField )
+			if ( o is IndexedField )
 				return o.index.toString()
 			return "?"
 		}
