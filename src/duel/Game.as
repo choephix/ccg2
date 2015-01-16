@@ -44,7 +44,7 @@ package duel
 		public static var GODMODE:Boolean;
 		
 		public var meta:GameMeta;
-		public var switchPlayers:Boolean = !CONFIG::sandbox;
+		public var state:GameState = GameState.WAITING;
 		
 		public var processes:GameplayProcessManager;
 		public var jugglerStrict:GuiJuggler;
@@ -233,6 +233,8 @@ package duel
 			}
 			//}
 			
+			state = GameState.ONGOING;
+			
 		}
 		
 		public function destroy():void
@@ -377,6 +379,8 @@ package duel
 		//
 		public function endGame():void
 		{
+			state = GameState.OVER;
+			
 			var q:Quad = new Quad( App.W, App.H, 0x0 );
 			q.alpha = 0;
 			addChild( q );
@@ -389,7 +393,7 @@ package duel
 		//
 		public function get interactable():Boolean
 		{
-			return jugglerStrict.isIdle && jugglerGui.isIdle && processes.isIdle;
+			return jugglerStrict.isIdle && jugglerGui.isIdle && processes.isIdle && state.isOngooing;
 		}
 		
 		// FX
