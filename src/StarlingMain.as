@@ -107,22 +107,32 @@ package {
 		
 		private function onGameDestroyed():void {
 			g.removeEventListener( GameEvents.DESTROY, onGameDestroyed );
+			g = null;
 		}
 		
 		CONFIG::development
 		private function onkey( e:KeyboardEvent ):void {
-			if ( !g.interactable )
-				return;
 			
-			if ( e.keyCode == Keyboard.ESCAPE ) {
-				g.endGame();
+			if ( e.keyCode == Keyboard.F ) {
+				App.toggleFullScreen();
 			}
 			if ( e.keyCode == Keyboard.SPACE ) {
-				g.performActionTurnEnd();
+				//g.performActionTurnEnd();
+				App.toggleFullScreen();
+			}
+			if ( e.keyCode == Keyboard.ESCAPE ) {
+				if ( g == null )
+					App.nativeWindow.close();
+				else
+					g.endGame();
 			}
 			if ( e.keyCode == Keyboard.CAPS_LOCK ) {
 				Game.GODMODE = !Game.GODMODE;
 			}
+			
+			if ( g == null || !g.interactable )
+				return;
+			
 			if ( e.keyCode == Keyboard.NUMBER_1 ) {
 				g.currentPlayer.mana.raiseCap();
 				g.currentPlayer.mana.refill();

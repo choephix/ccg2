@@ -106,6 +106,8 @@ package duel.controllers
 			{
 				f.sprite.setGuiState( FieldSpriteGuiState.NONE );
 				
+				if ( !ctrl.active ) return;
+				
 				if ( selectedCard == null ) return;
 				
 				if ( selectedCard.isInHand )
@@ -172,17 +174,17 @@ package duel.controllers
 			player.fieldsC.forEachField( updateIndexedField );
 			
 			if ( !player.deck.isEmpty )
-				player.deck.topCard.sprite.selectable = player.mana.current > 0;
+				player.deck.topCard.sprite.selectable = ctrl.active && player.mana.current > 0;
 			
 			function updateHandCard( c:Card ):void 
 			{
-				c.sprite.selectable = canPlayHandCard( c );
+				c.sprite.selectable = ctrl.active && canPlayHandCard( c );
 			}
 			
 			function updateIndexedField( f:IndexedField ):void 
 			{
 				if ( f.isEmpty ) return;
-				f.topCard.sprite.selectable = canPlayFieldCard( f.topCard );
+				f.topCard.sprite.selectable = ctrl.active && canPlayFieldCard( f.topCard );
 			}
 		}
 		

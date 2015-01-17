@@ -1,6 +1,8 @@
 package {
 	import chimichanga.common.assets.AdvancedAssetManager;
+	import flash.display.StageDisplayState;
 	import starling.display.Stage;
+	import flash.display.Stage;
 	
 	CONFIG::air {
 	import flash.display.NativeWindow;
@@ -14,6 +16,8 @@ package {
 		
 		/// NATIVE SHIT
 		
+		public static var nativeStage:flash.display.Stage;
+		
 		CONFIG::air
 		{
 			public static var nativeWindow:NativeWindow;
@@ -23,11 +27,19 @@ package {
 				if ( nativeWindow.closed ) return true;
 				return nativeWindow.displayState == NativeWindowDisplayState.MINIMIZED
 			}
+			public static function toggleFullScreen():void
+			{ 
+				if( nativeStage.displayState == StageDisplayState.NORMAL ) {
+					nativeStage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+				} else {
+					nativeStage.displayState = StageDisplayState.NORMAL;
+				}
+			}
 		}
 		
 		/// STARLING SHIT
 		
-		public static var stage:Stage;
+		public static var stage:starling.display.Stage;
 		public static var root:StarlingMain;
 		
 		public static var initialized:Boolean;

@@ -98,6 +98,7 @@ package duel.display.cardlots {
 				
 				o.touchable = true;
 				o.useHandCursor = true;
+				cardsParent.addChild( o );
 				
 				jj++;
 			}

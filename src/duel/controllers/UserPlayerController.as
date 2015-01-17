@@ -105,8 +105,8 @@ package duel.controllers
 				hoverCard( null );
 				selection.selectCard( null );
 			}
-			updateSelectables();
 			selection.advanceTime( .0 );
+			selection.onProcessUpdate();
 		}
 		
 		// POINTER HOVER UPDATE
@@ -170,10 +170,6 @@ package duel.controllers
 		}
 		
 		// SELECTION
-		
-		public function updateSelectables():void
-		{
-		}
 		
 		// // // // //
 		// INCOMING //

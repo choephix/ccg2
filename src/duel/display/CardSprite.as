@@ -108,6 +108,7 @@ package duel.display {
 			tfTitle.scaleX = Math.min( 1.0, G.CARD_W / tfTitle.textBounds.width - .05 );
 			front.addChild( tfTitle );
 			
+			CONFIG::sandbox {
 			tfDebug = new TextField( 480, 40, ""+card.uid+".", "Lucida Console", 12, 0x0054A8 );
 			tfDebug.touchable = false;
 			tfDebug.alignPivot();
@@ -117,6 +118,7 @@ package duel.display {
 			tfDebug.x = G.CARD_W * .5;
 			tfDebug.y = - 10;
 			front.addChild( tfDebug );
+			}
 			
 			tfDescr = new TextField( G.CARD_W, G.CARD_H, "", "Verdana", 10, 0x330011 );
 			tfDescr.touchable = false;
@@ -132,7 +134,7 @@ package duel.display {
 					tfDescr.fontSize = 10;
 					tfDescr.text = card.descr == null ? "" : card.descr;
 					tfDescr.x = 50;
-					tfDescr.y = 40;
+					tfDescr.y = 25;
 					tfDescr.width  = G.CARD_W - tfDescr.x;
 					tfDescr.height = G.CARD_H - tfDescr.y;
 			

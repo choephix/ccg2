@@ -1,9 +1,12 @@
 ﻿package {
 	import chimichanga.debug.logging.log;
 	import chimichanga.global.app.Platform;
+	import duel.Game;
+	import flash.display.NativeWindowDisplayState;
 	import flash.display.Sprite;
 	import flash.display.Stage3D;
 	import flash.display.StageAlign;
+	import flash.display.StageDisplayState;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -38,6 +41,7 @@
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
+			App.nativeStage = stage;
 			CONFIG::air
 			{
 			App.nativeWindow = stage.nativeWindow;
@@ -78,8 +82,23 @@
 		
 		private function onRightClick( e:MouseEvent ):void
 		{
-			CONFIG::air
-			{ stage.nativeWindow.notifyUser( "'sup bitch" ) }
+			//CONFIG::air
+			//{ stage.nativeWindow.notifyUser( "'sup bitch" ) }
+			//CONFIG::air
+			//{ 
+				//if ( stage.nativeWindow.displayState == NativeWindowDisplayState.MAXIMIZED )
+					//stage.nativeWindow.restore()
+				//else
+					//stage.nativeWindow.maximize()
+			//}
+			
+			//if( stage.displayState == StageDisplayState.NORMAL ) {
+				//stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+			//} else {
+				//stage.displayState = StageDisplayState.NORMAL;
+			//}
+			if ( Game.current && Game.current.currentPlayer && Game.current.currentPlayer.controllable )
+				Game.current.performActionTurnEnd();
 		}
 		
 		private function onMiddleClick( e:MouseEvent ):void

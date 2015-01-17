@@ -17,6 +17,7 @@ package duel.display {
 		public var tableContainer:Sprite;
 		public var cardsParent:Sprite;
 		public var fieldTipsParent:Sprite;
+		public var cardsParentTop:Sprite;
 		
 		public function TableSide( player:Player, flip:Boolean )
 		{
@@ -30,6 +31,9 @@ package duel.display {
 			
 			fieldTipsParent = new Sprite();
 			addChild( fieldTipsParent );
+			
+			cardsParentTop = new Sprite();
+			addChild( cardsParentTop );
 			
 			//
 			const FIELD_SPACING_X:Number = 25;
