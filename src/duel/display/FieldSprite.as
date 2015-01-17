@@ -1,7 +1,9 @@
 package duel.display {
+	import chimichanga.common.display.Sprite;
 	import duel.display.cardlots.DeckStackSprite;
 	import duel.display.cardlots.GraveStackSprite;
 	import duel.display.cardlots.StackSprite;
+	import duel.display.fields.FieldSpriteGuiState;
 	import duel.GameSprite;
 	import duel.table.Field;
 	import duel.table.CardLotType;
@@ -20,14 +22,17 @@ package duel.display {
 	public class FieldSprite extends GameSprite implements IAnimatable
 	{
 		public var cardsContainer:StackSprite;
+		public var fieldTipsParent:Sprite;
 		private var image:Image;
 		private var lockIcon:Image;
 		private var aura:CardAura;
+		private var overTip:FieldSpriteOverTip;
 		
 		public var field:Field;
 		
 		private var _isLocked:Boolean = false;
 		private var _showAura:Boolean;
+		private var _guiState:FieldSpriteGuiState = FieldSpriteGuiState.NONE;
 		
 		public function initialize( field:Field, color:uint ):void
 		{
@@ -65,16 +70,65 @@ package duel.display {
 		
 		// VISUALS
 		
-		public function setSelectableness( color:uint ):void
+		public function setGuiState( state:FieldSpriteGuiState ):void
 		{
-			_showAura = color > 0;
-			if ( _showAura )
+			if ( _guiState == state )
+				return;
+			
+			if ( overTip == null )
 			{
-				aura.color = color;
+				overTip = new FieldSpriteOverTip();
+				fieldTipsParent.addChild( overTip );
+				overTip.x = x;
+				overTip.y = y;
+			}
+			
+			_guiState = state;
+			
+			overTip.visible = 
+			_showAura = state != FieldSpriteGuiState.NONE;
+			
+			if ( state != FieldSpriteGuiState.NONE )
+			{
+				switch ( state ) 
+				{
+					case FieldSpriteGuiState.NORMAL_SUMMON:
+						setShit( 0xE7360A, "Summon Here", 0xcc9966 );
+						break;
+					case FieldSpriteGuiState.TRIBUTE_SUMMON:
+						setShit( 0xE7360A, "Tribute Summon!", 0xFFFFFF );
+						break;
+					case FieldSpriteGuiState.SET_TRAP:
+						setShit( 0x6622ff, "Set Here", 0xFF71BF );
+						break;
+						
+					case FieldSpriteGuiState.SAFE_FLIP:
+						setShit( 0x000000, "Safe-Flip!", 0xFFFF80 );
+						break;
+					case FieldSpriteGuiState.RELOCATE_TO:
+						setShit( 0x2266DD, "Move Here", 0x65D2FC );
+						break;
+					case FieldSpriteGuiState.ATTACK_DIRECT:
+						setShit( 0xcc0011, "Attack Directly!", 0xFFC600 );
+						break;
+					case FieldSpriteGuiState.ATTACK_CREATURE:
+						setShit( 0xcc0011, "Attack!", 0xFF8000 );
+						break;
+					default:
+				}
+				
 				if ( field.topCard )
 					aura.rotation = field.topCard.sprite.rotation;
 				else
 					aura.rotation = .0;
+			}
+			
+			function setShit( auraColor:uint, tipText:String, tipTextColor:uint ):void
+			{
+				aura.color = auraColor;
+				aura.visible = auraColor > 0;
+				overTip.text = tipText;
+				overTip.color = tipTextColor;
 			}
 		}
 		
@@ -119,7 +173,5 @@ package duel.display {
 			if ( type.isDeck ) return DeckStackSprite;
 			return StackSprite;
 		}
-		
 	}
-
 }

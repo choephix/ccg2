@@ -18,7 +18,8 @@ package {
 		{
 		public static var nativeWindow:NativeWindow;
 		public static function get isMinimized():Boolean
-		{ return nativeWindow.displayState == NativeWindowDisplayState.MINIMIZED }
+		{ return nativeWindow.closed || 
+			nativeWindow.displayState == NativeWindowDisplayState.MINIMIZED }
 		}
 		
 		/// STARLING SHIT

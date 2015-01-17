@@ -1,6 +1,8 @@
 package duel.controllers
 {
 	import duel.cards.Card;
+	import duel.cards.properties.CreatureCardProperties;
+	import duel.display.fields.FieldSpriteGuiState;
 	import duel.GameEntity;
 	import duel.players.Player;
 	import duel.table.CreatureField;
@@ -102,7 +104,7 @@ package duel.controllers
 			
 			function updateIndexedField( f:IndexedField ):void 
 			{
-				f.sprite.setSelectableness( 0x0 );
+				f.sprite.setGuiState( FieldSpriteGuiState.NONE );
 				
 				if ( selectedCard == null ) return;
 				
@@ -115,14 +117,17 @@ package duel.controllers
 						if ( f is CreatureField )
 							if ( ctrl.faq.canSummonCreatureOn( selectedCard, f, true ) == null )
 							{
-								f.sprite.setSelectableness( 0xE7360A );
+								f.sprite.setGuiState( 
+									selectedCard.statusC.needTribute ? 
+									FieldSpriteGuiState.TRIBUTE_SUMMON : 
+									FieldSpriteGuiState.NORMAL_SUMMON );
 								return;
 							}
 					if ( selectedCard.type.isTrap )
 						if ( f is TrapField )
 							if ( ctrl.faq.canSetTrapOn( selectedCard, f, true ) == null )
 							{
-								f.sprite.setSelectableness( 0x6622ff );
+								f.sprite.setGuiState( FieldSpriteGuiState.SET_TRAP );
 								return;
 							}
 				}
@@ -133,17 +138,21 @@ package duel.controllers
 				
 				if ( ctrl.faq.canCreatureRelocateTo( selectedCard, f, true ) == null )
 				{
-					f.sprite.setSelectableness( 0x2266DD );
+					f.sprite.setGuiState( FieldSpriteGuiState.RELOCATE_TO );
 					return;
 				}
 					
 				if ( f.index == selectedCard.indexedField.index )
 					if ( f.owner == player.opponent )
-						if ( ctrl.faq.canCreatureAttack( selectedCard, true ) == null )
-						{
-							f.sprite.setSelectableness( 0xcc0011 );
-							return;
-						}
+						if ( f is CreatureField )
+							if ( ctrl.faq.canCreatureAttack( selectedCard, true ) == null )
+							{
+								f.sprite.setGuiState( 
+									f.isEmpty ?
+									FieldSpriteGuiState.ATTACK_DIRECT : 
+									FieldSpriteGuiState.ATTACK_CREATURE );
+								return;
+							}
 			}
 		}
 		

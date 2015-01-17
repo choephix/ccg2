@@ -59,8 +59,9 @@
 			stage.addEventListener(Event.ACTIVATE, activate );
 			stage.addEventListener(Event.DEACTIVATE, deactivate );
 			stage.addEventListener(Event.RESIZE, onStageResize );
-			stage.addEventListener(MouseEvent.RIGHT_CLICK, onRightClick );
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown );
+			stage.addEventListener(MouseEvent.RIGHT_CLICK, onRightClick );
+			stage.addEventListener(MouseEvent.MIDDLE_CLICK, onMiddleClick );
 			
 			mStage3D = stage.stage3Ds[ 0 ];
 			
@@ -75,12 +76,16 @@
 			//{ stage.nativeWindow.startResize() }
 		}
 		
-		private function onRightClick( e:MouseEvent ):void {
-			trace( "RIGHT CLICKY" );
-			
+		private function onRightClick( e:MouseEvent ):void
+		{
+			CONFIG::air
+			{ stage.nativeWindow.notifyUser( "'sup bitch" ) }
+		}
+		
+		private function onMiddleClick( e:MouseEvent ):void
+		{
 			CONFIG::air
 			{ stage.nativeWindow.close() }
-			//{ stage.nativeWindow.notifyUser( "'sup bitch" ) }
 		}
 		
 		private function onContextCreated( event:Event ):void {
