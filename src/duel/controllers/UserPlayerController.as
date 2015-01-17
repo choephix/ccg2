@@ -46,6 +46,11 @@ package duel.controllers
 			
 			onTouchCheck_Hover( t );
 			
+			if ( t == null )
+				return;
+			
+			/// BEGIN
+			
 			/// TAP
 			
 			onTouchCheck_Tap( t );

@@ -38,6 +38,11 @@
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
+			CONFIG::air
+			{
+			App.nativeWindow = stage.nativeWindow;
+			}
+			
 			viewRect = new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight );
 			
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -54,18 +59,28 @@
 			stage.addEventListener(Event.ACTIVATE, activate );
 			stage.addEventListener(Event.DEACTIVATE, deactivate );
 			stage.addEventListener(Event.RESIZE, onStageResize );
+			stage.addEventListener(MouseEvent.RIGHT_CLICK, onRightClick );
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown );
 			
 			mStage3D = stage.stage3Ds[ 0 ];
 			
 			mStage3D.addEventListener( Event.CONTEXT3D_CREATE, onContextCreated, false, 0, true );
 			mStage3D.requestContext3D();
-			
 		}
 		
-		CONFIG::air
+		private function onMouseDown(e:MouseEvent):void 
+		{
+			CONFIG::air
+			{ stage.nativeWindow.startMove() }
+			//{ stage.nativeWindow.startResize() }
+		}
+		
 		private function onRightClick( e:MouseEvent ):void {
 			trace( "RIGHT CLICKY" );
-			//dispatchAppEvent( AppEvents.RIGHT_CLICK );
+			
+			CONFIG::air
+			{ stage.nativeWindow.close() }
+			//{ stage.nativeWindow.notifyUser( "'sup bitch" ) }
 		}
 		
 		private function onContextCreated( event:Event ):void {
@@ -115,25 +130,26 @@
 		
 		private function onEnterFrame( e:Event ):void {
 			
+			CONFIG::air
+			{ if ( App.isMinimized ) return }
+			
 			if ( starling.isStarted ) {
 				mStage3D.context3D.clear();
 				starling.nextFrame()
 				mStage3D.context3D.present();
 			}
-		
 		}
 		
 		private function deactivate( e:Event ):void {
 			
-			if ( starling )
-				starling.stop();
-			
+			CONFIG::mobile
+			{ if ( starling ) starling.stop() }
 		}
 		
 		private function activate( e:Event ):void {
 			
-			if ( starling )
-				starling.start();
+			CONFIG::mobile
+			{ if ( starling ) starling.start() }
 			
 		}
 		
