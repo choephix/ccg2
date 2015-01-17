@@ -46,6 +46,10 @@ package duel.controllers
 			{
 				if ( field.isEmpty )
 					return _( "You need to replace another creature to summon a Grand creature." )
+				if ( field.topCard.exhausted )
+					return _( "Exhausted creatures cannot serve as tributes." )
+				if ( !field.topCard.statusC.canBeTribute )
+					return _( "You cannot sacrifice that creature right now." )
 			}
 			else
 			{

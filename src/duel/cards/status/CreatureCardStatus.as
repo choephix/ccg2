@@ -102,6 +102,9 @@ package duel.cards.status {
 		public function get needTribute():Boolean
 		{ return propsC.needTribute || buffs.getOR( Buff.NEED_TRIBUTE ) }
 		
+		public function get canBeTribute():Boolean
+		{ return !card.exhausted }
+		
 		public function get hasHaste():Boolean
 		{ return propsC.haste || buffs.getOR( Buff.HASTE ) }
 		
