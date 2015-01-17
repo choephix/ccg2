@@ -127,7 +127,10 @@ package duel.controllers
 						if ( f is TrapField )
 							if ( ctrl.faq.canSetTrapOn( selectedCard, f, true ) == null )
 							{
-								f.sprite.setGuiState( FieldSpriteGuiState.SET_TRAP );
+								f.sprite.setGuiState(
+									f.isEmpty ?
+									FieldSpriteGuiState.SET_TRAP : 
+									FieldSpriteGuiState.REPLACE_TRAP );
 								return;
 							}
 				}

@@ -1,5 +1,6 @@
 package duel.display {
 	import chimichanga.common.display.Sprite;
+	import chimichanga.debug.logging.error;
 	import duel.display.cardlots.DeckStackSprite;
 	import duel.display.cardlots.GraveStackSprite;
 	import duel.display.cardlots.StackSprite;
@@ -40,10 +41,6 @@ package duel.display {
 			image.color = color; 
 			addChild( image );
 			
-			aura = new CardAura( "card-sele2" );
-			aura.visible = false;
-			addChild( aura );
-			
 			if ( field is IndexedField )
 			{
 				lockIcon = assets.generateImage( "iconLock", false, true );
@@ -65,7 +62,8 @@ package duel.display {
 			if ( lockIcon != null )
 				setLockIconVisibility( IndexedField( field ).isLocked );
 			
-			aura.visible = _showAura && game.interactable;
+			if ( aura != null )
+				aura.visible = _showAura && game.interactable;
 		}
 		
 		// VISUALS
@@ -77,6 +75,15 @@ package duel.display {
 			
 			_guiState = state;
 			
+			if ( aura == null )
+			{
+				aura = new CardAura( "card-sele2" );
+				aura.visible = false;
+				addChild( aura );
+				fieldTipsParent.addChild( aura );
+				aura.x = x;
+				aura.y = y;
+			}
 			if ( overTip == null )
 			{
 				overTip = new FieldSpriteOverTip();
@@ -101,6 +108,9 @@ package duel.display {
 					case FieldSpriteGuiState.SET_TRAP:
 						setShit( 0x6622ff, "Set Trap\nHere", 0xFF71BF );
 						break;
+					case FieldSpriteGuiState.REPLACE_TRAP:
+						setShit( 0x6622ff, "Replace\nTrap", 0xFF71BF );
+						break;
 						
 					case FieldSpriteGuiState.SAFE_FLIP:
 						setShit( 0x000000, "Safe-Flip!", 0xFFFF80 );
@@ -115,6 +125,7 @@ package duel.display {
 						setShit( 0xcc0011, "Attack!", 0xFFFFFF );
 						break;
 					default:
+						error( "FieldSpriteGuiState = ?" );
 				}
 				
 				if ( field.topCard )

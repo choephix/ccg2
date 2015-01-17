@@ -22,7 +22,7 @@ package duel.display
 			q = new Quad( 1, 1, 0x0 );
 			q.alignPivot();
 			q.width  = 96;
-			q.height = 96;
+			q.height = 66;
 			q.alpha = .40;
 			q.touchable = false;
 			addChild( q );
@@ -30,7 +30,7 @@ package duel.display
 			q1 = new Quad( 1, 1, 0x0 );
 			q1.alignPivot();
 			q1.width  = 100;
-			q1.height = 100;
+			q1.height = 70;
 			q1.alpha = .40;
 			q1.touchable = false;
 			addChild( q1 );
