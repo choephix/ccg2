@@ -797,6 +797,7 @@ package duel.processes
 			if ( shuffle )
 			{
 				CONFIG::development { throw UninitializedError( "Deck shuffling not yet implemented" ) }
+				return;
 			}
 		}
 		

@@ -295,6 +295,9 @@ package duel
 		
 		public function advanceTime( time:Number ):void
 		{
+			scaleY = stage.stageHeight / App.H;
+			scaleX = scaleY;
+			
 			frameNum++;
 			
 			jugglerStrict.advanceTime( time );

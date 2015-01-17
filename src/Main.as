@@ -28,13 +28,10 @@
 		
 		public function Main():void
 		{
-			trace( 12345 );
-			
-			if ( stage == null ) {
-				addEventListener(Event.ADDED_TO_STAGE, onAddedToStage );
-			} else {
+			if ( stage == null )
+				addEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
+			else
 				onAddedToStage( null );
-			}
 		}
 		
 		private function onAddedToStage(e:Event):void 
@@ -67,21 +64,16 @@
 		
 		CONFIG::air
 		private function onRightClick( e:MouseEvent ):void {
-			
+			trace( "RIGHT CLICKY" );
 			//dispatchAppEvent( AppEvents.RIGHT_CLICK );
-			
 		}
 		
 		private function onContextCreated( event:Event ):void {
 			
 			mStage3D.context3D.configureBackBuffer( stage.stageWidth, stage.stageHeight, 0, false );
 			
-			if ( !starling ) {
-				
+			if ( starling == null )
 				initStarling();
-				
-			}
-			
 		}
 		
 		private function initStarling():void {
@@ -90,26 +82,25 @@
 			starling.addEventListener( "rootCreated", onStarlingReady );
 			
 			starling.antiAliasing = 0;
-			starling.simulateMultitouch = true;
+			//starling.simulateMultitouch = true;
 			starling.enableErrorChecking = true;
 			starling.showStats = CONFIG::development;
-			starling.showStats = true;
 			starling.showStatsAt( "left", "bottom" );
 			
-			//starling.start();
-			
 			stage.addEventListener( Event.ENTER_FRAME, onEnterFrame );
-		
 		}
 		
-		private function onStageResize(e:Event):void {
+		private function onStageResize( e:Event = null ):void {
 			
 			if ( starling ) {
 				viewRect.width = stage.stageWidth;
 				viewRect.height = stage.stageHeight;
+				starling.stage.stageWidth = viewRect.width;
+				starling.stage.stageHeight = viewRect.height;
 				mStage3D.context3D.configureBackBuffer( viewRect.width, viewRect.height, 0, false );
+				if ( starling.showStats )
+					starling.showStatsAt( "left", "bottom" );
 			}
-			
 		}
 		
 		private function onStarlingReady( e:* = null ):void {
@@ -119,7 +110,7 @@
 			log( "Starling v" + Starling.VERSION + " ready" );
 			
 			starling.start();
-			
+			onStageResize();
 		}
 		
 		private function onEnterFrame( e:Event ):void {
@@ -134,15 +125,15 @@
 		
 		private function deactivate( e:Event ):void {
 			
-			//if ( starling )
-				//starling.stop();
+			if ( starling )
+				starling.stop();
 			
 		}
 		
 		private function activate( e:Event ):void {
 			
-			//if ( starling )
-				//starling.start();
+			if ( starling )
+				starling.start();
 			
 		}
 		

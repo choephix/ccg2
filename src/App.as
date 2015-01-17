@@ -23,11 +23,11 @@ package {
 		}
 		
 		public static function get W():int {	
-			return stage.stageWidth;
+			return 1280;
 		}
 		
 		public static function get H():int {	
-			return stage.stageHeight;
+			return 860;
 		}
 		
 		public static function get VERSION():String {	

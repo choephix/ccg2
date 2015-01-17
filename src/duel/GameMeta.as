@@ -6,6 +6,6 @@ package duel
 	 */
 	public class GameMeta 
 	{
-		public var isMultiplayer:Boolean = true;
+		public var isMultiplayer:Boolean = false; // true false
 	}
 }

@@ -10,10 +10,8 @@ package duel.controllers
 	 */
 	public class RemotePlayerController extends PlayerController 
 	{
-		private static const COOLDOWN:Number =  .100; // 1.0 .1
+		private static const COOLDOWN:Number =  .200; // 1.0 .1
 		private static const PINGTIME:Number = 1.500; // 1.0 .1
-		
-		private var isBusy:Boolean;
 		
 		private var actionQueue:Array = [];
 		private var cooldown:Number = COOLDOWN;
@@ -28,9 +26,9 @@ package duel.controllers
 		override public function advanceTime( time:Number ):void
 		{
 			if ( !active ) return;
+			if ( !jugglerGui.isIdle ) return;
 			if ( !jugglerStrict.isIdle ) return;
 			if ( !game.processes.isIdle ) return;
-			if ( isBusy ) return;
 			if ( actionQueue.length == 0 ) return;
 			
 			if ( cooldown > .0 )
