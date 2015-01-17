@@ -14,9 +14,11 @@ package duel.cards
 	import duel.GameEntity;
 	import duel.players.Player;
 	import duel.processes.GameplayProcess;
+	import duel.table.CreatureField;
 	import duel.table.Field;
 	import duel.table.Hand;
 	import duel.table.IndexedField;
+	import duel.table.TrapField;
 	
 	/**
 	 * ...
@@ -159,6 +161,12 @@ package duel.cards
 		
 		public function get indexedField():IndexedField
 		{ return lot as IndexedField }
+		
+		public function get fieldC():CreatureField
+		{ return lot as CreatureField }
+		
+		public function get fieldT():TrapField
+		{ return lot as TrapField }
 		
 		public function get controller():Player
 		{ return lot == null ? null : lot.owner }

@@ -129,7 +129,12 @@ package duel.display {
 					tfDescr.bold = true;
 					tfDescr.hAlign = "right";
 					tfDescr.vAlign = "center";
-					tfDescr.fontSize = 14;
+					tfDescr.fontSize = 10;
+					tfDescr.text = card.descr == null ? "" : card.descr;
+					tfDescr.x = 50;
+					tfDescr.y = 40;
+					tfDescr.width  = G.CARD_W - tfDescr.x;
+					tfDescr.height = G.CARD_H - tfDescr.y;
 			
 					tfAttak = new AnimatedTextField( 
 									G.CARD_W, G.CARD_H,
@@ -143,7 +148,11 @@ package duel.display {
 					break;
 				case CardType.TRAP:
 					tfDescr.text = card.descr == null ? "?" : card.descr;
-					tfDescr.fontSize = 14;
+					tfDescr.fontSize = 12;
+					tfDescr.x = 0;
+					tfDescr.y = 30;
+					tfDescr.width  = G.CARD_W - tfDescr.x;
+					tfDescr.height = G.CARD_H - tfDescr.y;
 			}
 			
 			// ..
@@ -192,7 +201,7 @@ package duel.display {
 			{
 				if ( !card.faceDown ) {
 					tfAttak.targetValue = card.statusC.currentAttackValue;
-					tfDescr.text = card.statusC.toString();
+					//tfDescr.text = card.statusC.toString();
 				}
 				
 				setExhaustClockVisible( card.isInPlay && card.exhausted );

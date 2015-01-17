@@ -1,4 +1,5 @@
 package duel.table {
+	import duel.cards.Card;
 	import duel.G;
 	import duel.table.CardLotType;
 	
@@ -19,6 +20,16 @@ package duel.table {
 		public function get adjacentRight():CreatureField
 		{
 			return owner.fieldsC.getAt( index + 1 );
+		}
+		
+		public function get adjacentCreatureLeft():Card
+		{
+			return adjacentLeft == null ? null : adjacentLeft.topCard;
+		}
+		
+		public function get adjacentCreatureRight():Card
+		{
+			return adjacentRight == null ? null : adjacentRight.topCard;
 		}
 		
 		//

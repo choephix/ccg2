@@ -167,6 +167,41 @@ import duel.table.CardLotType;
 						TempDatabaseUtils.doPutToGrave( p.getSourceCard() );
 						
 						
+						c.propsC.basePower = c.controller.opponent.creatureCount * 5;
+						
+						
+					special.funcCondition =
+					function( p:GameplayProcess ):Boolean {
+						return c == p.getSourceCard();
+					}
+						
+					special.funcCondition =
+					function( p:GameplayProcess ):Boolean {
+						if ( c != p.getSourceCard() ) return false;
+						if ( c.controller.grave.findFirstCard( isViableTarget ) == null ) return false;
+						return true;
+					}
+						
+						
+						
+					c.propsT.effect.funcActivateCondition =
+					function( p:GameplayProcess ):Boolean {
+						if ( c.indexedField.index != p.getIndex() ) return false;
+						if ( c.controller.opponent != p.getAttacker().controller ) return false;
+						return true;
+					}
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
 						
 				/** /
 				function( c:Card ):void ///		..C		TEST CREATURE

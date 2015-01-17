@@ -42,6 +42,7 @@ package duel.cards.temp_database
 		
 		public static function doKill( c:Card ):void
 		{
+			if ( c == null ) return;
 			Game.current.processes.prepend_Death( c );
 		}
 		
