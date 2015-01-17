@@ -113,6 +113,8 @@ package {
 		CONFIG::development
 		private function onkey( e:KeyboardEvent ):void {
 			
+			CONFIG::air
+			{
 			if ( e.keyCode == Keyboard.F ) {
 				App.toggleFullScreen();
 			}
@@ -126,6 +128,8 @@ package {
 				else
 					g.endGame();
 			}
+			}
+			
 			if ( e.keyCode == Keyboard.CAPS_LOCK ) {
 				Game.GODMODE = !Game.GODMODE;
 			}

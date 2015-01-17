@@ -1,8 +1,8 @@
 package {
 	import chimichanga.common.assets.AdvancedAssetManager;
 	import flash.display.StageDisplayState;
-	import starling.display.Stage;
 	import flash.display.Stage;
+	import starling.display.Stage;
 	
 	CONFIG::air {
 	import flash.display.NativeWindow;

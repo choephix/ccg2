@@ -2,7 +2,6 @@
 	import chimichanga.debug.logging.log;
 	import chimichanga.global.app.Platform;
 	import duel.Game;
-	import flash.display.NativeWindowDisplayState;
 	import flash.display.Sprite;
 	import flash.display.Stage3D;
 	import flash.display.StageAlign;
