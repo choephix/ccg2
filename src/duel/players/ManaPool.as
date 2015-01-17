@@ -10,7 +10,7 @@ package duel.players
 	{
 		private var _capMax:int		= 5;
 		private var _capMin:int		= 0;
-		private var _cap:int		= 4; //TODO return to 1
+		private var _cap:int		= CONFIG::sandbox?5:1; //TODO return to 1
 		private var _current:int	= _cap;
 		
 		public function refill():void
