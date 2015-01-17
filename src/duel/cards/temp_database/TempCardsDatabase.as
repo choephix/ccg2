@@ -56,7 +56,7 @@ package duel.cards.temp_database
 						TempDatabaseUtils.doKill( p.getSourceCard() );
 					}
 					
-					c.descr = "When an enemy creature on this column and there is no opposing friendly creature - destroy enemy creature.";
+					c.descr = "When enemy creature is summoned to he opposing field and there is no friendly creature on your side of it - destroy enemy creature.";
 				},
 				/* * */
 				function( c:Card ):void ///		.`C		Cowardly Golem
@@ -75,6 +75,7 @@ package duel.cards.temp_database
 					function( p:GameplayProcess ):Boolean {
 						if ( ! c.isInPlay ) return false;
 						if ( c.indexedField.index != p.getIndex() ) return false;
+						if ( c.controller.opponent != p.getAttacker().controller ) return false;
 						return true;
 					}
 					special.funcActivate =

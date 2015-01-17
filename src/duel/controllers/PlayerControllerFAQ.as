@@ -112,6 +112,9 @@ package duel.controllers
 			if ( isManual && c.exhausted )
 				return _( c.name + " is exhausted." )
 			
+			if ( isManual && c.faceDown )
+				return _( c.name + " must be flipped up before it can move." )
+			
 			if ( isManual && !c.canRelocate )
 				return _( c.name + " cannot move right now." )
 			
@@ -132,6 +135,9 @@ package duel.controllers
 			if ( isManual && c.exhausted )
 				return _( c.name + " is exhausted." )
 			
+			if ( isManual && c.faceDown )
+				return _( c.name + " must be flipped up before it can attack." )
+			
 			if ( isManual && !c.canAttack )
 				return _( c.name + " cannot attack right now." )
 			
@@ -142,6 +148,9 @@ package duel.controllers
 		{ 
 			if ( c == null || !c.isInPlay )
 				return err;
+			
+			if ( !c.faceDown )
+				return _( "Creature is not face-down." );
 			
 			if ( !c.statusC.isFlippable )
 				return _( "You cannot safeflip this card." );

@@ -253,11 +253,13 @@ package duel
 			{
 				populatePlayerDeck( p1, DECK1 );
 				populatePlayerDeck( p2, DECK2 );
+				p2.mana.raiseCap();
 			}
 			else
 			{
 				populatePlayerDeck( p2, DECK1 );
 				populatePlayerDeck( p1, DECK2 );
+				p1.mana.raiseCap();
 			}
 			
 			function populatePlayerDeck( p:Player, cardIds:Array ):void

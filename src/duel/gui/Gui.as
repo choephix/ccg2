@@ -76,11 +76,12 @@ package duel.gui
 			cardTip.alignPivot();
 			cardTip.x = App.W * .5;
 			cardTip.y = App.H * .3;
-			cardTip.scaleX = 2.0;
-			cardTip.scaleY = 2.0;
+			cardTip.scaleX = CONFIG::mobile?2.0:1.50;
+			cardTip.scaleY = CONFIG::mobile?2.0:1.25;
 			cardTip.alpha = .88;
 			cardTip.addEventListener( Event.TRIGGERED, hideTip );
 			cardTip.visible = false;
+			cardTip.touchable = false;
 			
 			// BUTTONS
 			
@@ -135,6 +136,7 @@ package duel.gui
 		{
 			cardTip.visible = true;
 			cardTip.text = tip;
+			cardTip.y = game.currentPlayer == game.p1 ? App.H * .3 : App.H * .7;
 		}
 		
 		public function hideTip():void

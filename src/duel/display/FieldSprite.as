@@ -113,7 +113,7 @@ package duel.display {
 						break;
 						
 					case FieldSpriteGuiState.SAFE_FLIP:
-						setShit( 0x000000, "Safe-Flip!", 0xFFFF80 );
+						setShit( 0x9D9771, "Safe-Flip!", 0xFFFF80 );
 						break;
 					case FieldSpriteGuiState.RELOCATE_TO:
 						setShit( 0x2266DD, "Move\nHere", 0x65D2FC );

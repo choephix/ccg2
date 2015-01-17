@@ -139,12 +139,19 @@ package duel.controllers
 				
 				if ( !selectedCard.type.isCreature ) return;
 				
+				if ( f == selectedCard.indexedField )
+					if ( ctrl.faq.canCreatureSafeFlip( selectedCard, true ) == null )
+					{
+						f.sprite.setGuiState( FieldSpriteGuiState.SAFE_FLIP );
+						return;
+					}
+				
 				if ( ctrl.faq.canCreatureRelocateTo( selectedCard, f, true ) == null )
 				{
 					f.sprite.setGuiState( FieldSpriteGuiState.RELOCATE_TO );
 					return;
 				}
-					
+				
 				if ( f.index == selectedCard.indexedField.index )
 					if ( f.owner == player.opponent )
 						if ( f is CreatureField )
@@ -396,8 +403,9 @@ package duel.controllers
 			{
 				if ( player.hand.containsCard( selectedCard ) )
 					player.handSprite.show( selectedCard );
-					
-				game.gui.showTip( selectedCard.name + '\n\n' + selectedCard.descr );
+				
+				if ( player.hand.containsCard( selectedCard ) )
+					game.gui.showTip( selectedCard.name + '\n\n' + selectedCard.descr );
 				
 				selectedCard.sprite.selectedAura.visible = true;
 			}

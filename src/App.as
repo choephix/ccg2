@@ -16,10 +16,13 @@ package {
 		
 		CONFIG::air
 		{
-		public static var nativeWindow:NativeWindow;
-		public static function get isMinimized():Boolean
-		{ return nativeWindow.closed || 
-			nativeWindow.displayState == NativeWindowDisplayState.MINIMIZED }
+			public static var nativeWindow:NativeWindow;
+			public static function get isMinimized():Boolean
+			{ 
+				if ( nativeWindow == null ) return false;
+				if ( nativeWindow.closed ) return true;
+				return nativeWindow.displayState == NativeWindowDisplayState.MINIMIZED
+			}
 		}
 		
 		/// STARLING SHIT

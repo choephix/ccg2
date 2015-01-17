@@ -2,7 +2,13 @@ package duel.network {
 	import com.reyco1.multiuser.data.UserObject;
 	import com.reyco1.multiuser.MultiUserSession;
 	import duel.Game;
+	import flash.system.Capabilities;
 	import starling.animation.Juggler;
+	
+	CONFIG::air
+	{
+	import flash.filesystem.File;
+	}
 	/**
 	 * ...
 	 * @author choephix
@@ -28,6 +34,13 @@ package duel.network {
 			var myEnterTime:Number = new Date().time;
 			var myName:String = "User_" + myEnterTime.toString( 36 );
 			var myColor:uint = Math.random() * 0xFFFFFF;
+			
+			CONFIG::air
+			{ myName = File.userDirectory.name }
+			
+			CONFIG::mobile
+			//{ myName = Capabilities.manufacturer + " " + Capabilities.cpuArchitecture }
+			{ myName = Capabilities.cpuArchitecture+"_"+ myEnterTime.toString( 36 ) }
 			
 			connection.connect(myName, { color:myColor, logtime:myEnterTime } );
 		}
