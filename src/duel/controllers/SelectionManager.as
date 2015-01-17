@@ -381,6 +381,8 @@ package duel.controllers
 			{
 				selectedCard.sprite.selectedAura.visible = false;
 				
+				game.gui.hideTip();
+				
 				if ( player.hand.containsCard( selectedCard ) )
 					player.handSprite.unshow( selectedCard );
 			}
@@ -395,6 +397,8 @@ package duel.controllers
 				if ( player.hand.containsCard( selectedCard ) )
 					player.handSprite.show( selectedCard );
 					
+				game.gui.showTip( selectedCard.name + '\n\n' + selectedCard.descr );
+				
 				selectedCard.sprite.selectedAura.visible = true;
 			}
 		}

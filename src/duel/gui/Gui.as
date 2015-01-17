@@ -24,6 +24,8 @@ package duel.gui
 		
 		public var buttonsContainer:Sprite;
 		
+		public var cardTip:Button;
+		
 		public var button1:Button;
 		public var button2:Button;
 		public var button3:Button;
@@ -68,6 +70,17 @@ package duel.gui
 			logBox.width = 260;
 			logBox.height = 380;
 			}
+			
+			cardTip = new Button( assets.getTexture( "card" ) );
+			addChild( cardTip );
+			cardTip.alignPivot();
+			cardTip.x = App.W * .5;
+			cardTip.y = App.H * .3;
+			cardTip.scaleX = 2.0;
+			cardTip.scaleY = 2.0;
+			cardTip.alpha = .88;
+			cardTip.addEventListener( Event.TRIGGERED, hideTip );
+			cardTip.visible = false;
 			
 			// BUTTONS
 			
@@ -116,6 +129,17 @@ package duel.gui
 			buttonsContainer.alignPivot( "right", "top" );
 			buttonsContainer.x = App.W;
 			buttonsContainer.y = 0;
+		}
+		
+		public function showTip( tip:String ):void
+		{
+			cardTip.visible = true;
+			cardTip.text = tip;
+		}
+		
+		public function hideTip():void
+		{
+			cardTip.visible = false;
 		}
 		
 		public function advanceTime( time:Number ):void
