@@ -75,6 +75,8 @@ package duel.display {
 			if ( _guiState == state )
 				return;
 			
+			_guiState = state;
+			
 			if ( overTip == null )
 			{
 				overTip = new FieldSpriteOverTip();
@@ -82,8 +84,6 @@ package duel.display {
 				overTip.x = x;
 				overTip.y = y;
 			}
-			
-			_guiState = state;
 			
 			overTip.visible = 
 			_showAura = state != FieldSpriteGuiState.NONE;
@@ -93,26 +93,26 @@ package duel.display {
 				switch ( state ) 
 				{
 					case FieldSpriteGuiState.NORMAL_SUMMON:
-						setShit( 0xE7360A, "Summon Here", 0xcc9966 );
+						setShit( 0xE7360A, "Summon\nHere", 0xcc9966 );
 						break;
 					case FieldSpriteGuiState.TRIBUTE_SUMMON:
-						setShit( 0xE7360A, "Tribute Summon!", 0xFFFFFF );
+						setShit( 0xE7360A, "Tribute\nSummon!", 0xFFFFFF );
 						break;
 					case FieldSpriteGuiState.SET_TRAP:
-						setShit( 0x6622ff, "Set Here", 0xFF71BF );
+						setShit( 0x6622ff, "Set Trap\nHere", 0xFF71BF );
 						break;
 						
 					case FieldSpriteGuiState.SAFE_FLIP:
 						setShit( 0x000000, "Safe-Flip!", 0xFFFF80 );
 						break;
 					case FieldSpriteGuiState.RELOCATE_TO:
-						setShit( 0x2266DD, "Move Here", 0x65D2FC );
+						setShit( 0x2266DD, "Move\nHere", 0x65D2FC );
 						break;
 					case FieldSpriteGuiState.ATTACK_DIRECT:
-						setShit( 0xcc0011, "Attack Directly!", 0xFFC600 );
+						setShit( 0xcc0011, "Attack\nDirectly!", 0xFFC600 );
 						break;
 					case FieldSpriteGuiState.ATTACK_CREATURE:
-						setShit( 0xcc0011, "Attack!", 0xFF8000 );
+						setShit( 0xcc0011, "Attack!", 0xFFFFFF );
 						break;
 					default:
 				}

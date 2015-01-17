@@ -38,16 +38,13 @@ package {
 			assets = new AdvancedAssetManager();
 		}
 		
-		public static function get W():int {	
-			return 1280;
-		}
+		public static function get W():int
+		{ return 1280 }
 		
-		public static function get H():int {	
-			return 860;
-		}
+		public static function get H():int
+		{ return 860 }
 		
-		public static function get VERSION():String {	
-			return Version.Major + "." + Version.Minor + "." + Version.Build + "." + Version.Revision;
-		}
+		public static function get VERSION():String
+		{ return Version.Major + "." + Version.Minor + "." + Version.Build + "." + Version.Revision }
 	}
 }
