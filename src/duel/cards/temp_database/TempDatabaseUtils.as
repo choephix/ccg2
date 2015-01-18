@@ -127,6 +127,11 @@ package duel.cards.temp_database
 			}
 		}
 		
+		static public function doHeal( p:Player, amount:int ):void
+		{
+			p.heal( amount );
+		}
+		
 		static public function doSpawnTokenCreatureIfEmpty( field:CreatureField ):void
 		{
 			if ( !field.isEmpty ) return;
@@ -136,6 +141,11 @@ package duel.cards.temp_database
 		static public function doResurrectCreature( c:Card, field:CreatureField ):void
 		{
 			Game.current.processes.prepend_ResurrectHere( c, field );
+		}
+		
+		static public function doEndCurrrentTurn():void
+		{
+			Game.current.processes.append_TurnEnd( Game.current.currentPlayer );
 		}
 		
 	}

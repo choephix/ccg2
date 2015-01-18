@@ -32,13 +32,21 @@ package duel.controllers
 			game.addEventListener( TouchEvent.TOUCH, onTouch );
 		}
 		
+		override public function set active( value:Boolean ):void 
+		{
+			super.active = value;
+			if ( !value ) {
+				hoverCard( null );
+				selection.selectCard( null );
+			}
+			selection.advanceTime( .0 );
+			selection.onProcessUpdate();
+		}
+		
 		private function onTouch( e:TouchEvent ):void {
 			
 			if ( !active )
-			{
 				hoverCard( null );
-				return;
-			}
 			
 			var t:Touch = e.getTouch( game );
 			
@@ -65,6 +73,12 @@ package duel.controllers
 			if ( t.phase != TouchPhase.ENDED )
 				return;
 			
+			if ( !active )
+			{
+				game.gui.pMsg( "It's the enemy's turn." );
+				return;
+			}
+				
 			var interrupt:Boolean;
 			
 			player.hand.forEachCard( checkHandCard );			if ( interrupt ) return;
@@ -96,17 +110,6 @@ package duel.controllers
 				interrupt = true;
 				selection.contextOnField.onSelected( f );
 			}
-		}
-		
-		override public function set active( value:Boolean ):void 
-		{
-			super.active = value;
-			if ( !value ) {
-				hoverCard( null );
-				selection.selectCard( null );
-			}
-			selection.advanceTime( .0 );
-			selection.onProcessUpdate();
 		}
 		
 		// POINTER HOVER UPDATE

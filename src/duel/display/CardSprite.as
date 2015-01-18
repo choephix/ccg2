@@ -1,24 +1,19 @@
 package duel.display {
 	import chimichanga.common.display.Sprite;
-	import chimichanga.global.utils.Colors;
 	import dev.Temp;
 	import duel.cards.Card;
 	import duel.cards.CardType;
-	import duel.display.utils.ColorScheme;
 	import duel.G;
 	import duel.GameSprite;
 	import duel.gui.AnimatedTextField;
 	import starling.animation.IAnimatable;
 	import starling.animation.Transitions;
-	import starling.animation.Tween;
 	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.display.Quad;
-	import starling.events.Touch;
-	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
 	import starling.text.TextField;
 	
+	use namespace animation;
 	/**
 	 * ...
 	 * @author choephix
@@ -43,7 +38,6 @@ package duel.display {
 		private var _exhaustClockVisible:Boolean = false;
 		private var _isFaceDown:Boolean = true;
 		private var _flippedness:Number = .0;
-		private var _flipTween:Tween;
 		private var _peekThrough:Boolean;
 		public var backTranslucency:Number = .0;
 		
@@ -56,7 +50,6 @@ package duel.display {
 		public function initialize( card:Card ):void
 		{
 			this.card = card;
-			this._flipTween = new Tween( this, 0 );
 			
 			juggler.add( this );
 			
@@ -171,6 +164,8 @@ package duel.display {
 			if ( _isFaceDown != card.faceDown )
 				setFaceDown( card.faceDown, false );
 			
+			_flippedness = lerp( _flippedness, card.faceDown ? -1.0 : 1.0, .20 );
+			
 			front.visible	= _flippedness > .0 || backTranslucency > .0;
 			back.visible	= _flippedness < .0;
 			
@@ -178,9 +173,7 @@ package duel.display {
 			selectableAura.visible = _isSelectable && ( !selectedAura.visible || !card.isInPlay );
 			
 			if ( selectedAura.visible )
-			{
 				selectedAura.rotation = y > 100 ? .0 : Math.PI;
-			}
 			
 			if ( front.visible )
 			{
@@ -417,12 +410,10 @@ package duel.display {
 		protected function setFaceDown( faceDown:Boolean, strict:Boolean = false ):void 
 		{
 			_isFaceDown = faceDown;
-			_flipTween.reset( this, .500, Transitions.EASE_OUT );
-			_flipTween.animate( "flippedness", faceDown ? -1.0 : 1.0 );
-			( strict ? jugglerStrict : juggler ).add( _flipTween );
-			
 			_peekThrough = false;
 			backTranslucency = .0;
+			if ( strict )
+				jugglerStrict.delayCall( trace, .660 );
 		}
 		
 		protected function get isFaceDown():Boolean

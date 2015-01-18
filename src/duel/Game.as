@@ -42,7 +42,7 @@ package duel
 	{
 		public static var current:Game;
 		public static var frameNum:int = 0;
-		public static function log(s:String):void{current.gui.log(s)}
+		public static function log(s:String):void{if(current)current.gui.log(s)}
 		
 		CONFIG::development
 		public static var GODMODE:Boolean;
@@ -295,6 +295,9 @@ package duel
 			dispatchEventWith( GameEvents.DESTROY );
 			Starling.juggler.remove( this );
 			removeFromParent( true );
+			
+			if ( current == this )
+				current = null;
 		}
 		
 		public function advanceTime( time:Number ):void
@@ -312,8 +315,12 @@ package duel
 			//if ( state.isWaiting )
 				//return;
 			
+			try
+			{
 			if ( jugglerStrict.isIdle )
 				processes.advanceTime( time );
+			}
+			catch ( e:Error ) { log( e.message ) }
 				
 			gui.advanceTime( time );
 			p1.handSprite.advanceTime( time );
@@ -324,18 +331,27 @@ package duel
 			//bg.visible = interactable;
 			this.touchable = interactable;
 			gui.updateData();
+			
+			if ( !state.isOngoing )
+				return;
+			
+			if ( p1.lifePoints <= 0 )
+				endGame();
+			else
+			if ( p2.lifePoints <= 0 )
+				endGame();
 		}
 		
 		public function setCurrentPlayer( p:Player ):void
 		{
 			if ( currentPlayer )
-				currentPlayer.ctrl.active = false;
+				currentPlayer.isMyTurn = false;
 			
 			currentPlayer = p;
 			gui.pMsg( p == p1 ? "Your turn" : "Enemy turn" );
 			
 			if ( currentPlayer )
-				currentPlayer.ctrl.active = true;
+				currentPlayer.isMyTurn = true;
 		}
 		
 		// PROCESSES

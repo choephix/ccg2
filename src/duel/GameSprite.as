@@ -23,6 +23,13 @@ package duel
 		
 		protected function get assets():AdvancedAssetManager
 		{ return App.assets }
+		
+		///
+		
+		/** Returns interlpolated value between two other. **/
+		public static function lerp( a:Number, b:Number, r:Number ):Number
+		{ return a + r * ( b - a ) }
+		
 	}
 
 }

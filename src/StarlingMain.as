@@ -9,6 +9,7 @@ package {
 	import starling.display.Button;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
+	import starling.text.TextField;
 	
 	/**
 	 * ...
@@ -16,6 +17,7 @@ package {
 	 */
 	public class StarlingMain extends Sprite {
 		private var g:Game;
+		private var loadingText:TextField;
 		
 		public function StarlingMain() {
 			blendMode = BlendMode.NORMAL;
@@ -57,12 +59,27 @@ package {
 		}
 		
 		private function startLoadingAssets():void {
-			App.assets.initialize( null, onLoadingAppComplete );
+			
+			loadingText = new TextField(
+				stage.stageWidth, stage.stageHeight,
+				"...", "Arial Black", 120, 0x202020, false );
+			addChild( loadingText );
+			
+			App.assets.initialize( onLoadingAppProgress, onLoadingAppComplete );
+		}
+		
+		private function onLoadingAppProgress( progress:Number ):void {
+			loadingText.text = int ( progress * 100 ) + "%";
+			loadingText.width = stage.stageWidth;
+			loadingText.height = stage.stageHeight;
 		}
 		
 		private function onLoadingAppComplete():void {
 			CONFIG::development
 			{ stage.addEventListener(KeyboardEvent.KEY_DOWN, onkey); }
+			
+			loadingText.removeFromParent( true );
+			loadingText = null;
 			
 			var b1:Button = new Button( App.assets.getTexture( "card" ), "LOCAL" );
 			b1.alignPivot();
@@ -113,6 +130,11 @@ package {
 		CONFIG::development
 		private function onkey( e:KeyboardEvent ):void {
 			
+			if ( e.keyCode == Keyboard.ESCAPE ) {
+				if ( g != null )
+					g.endGame();
+			}
+			
 			CONFIG::air
 			{
 			if ( e.keyCode == Keyboard.F ) {
@@ -123,10 +145,7 @@ package {
 				App.toggleFullScreen();
 			}
 			if ( e.keyCode == Keyboard.ESCAPE ) {
-				if ( g == null )
-					App.nativeWindow.close();
-				else
-					g.endGame();
+				App.nativeWindow.close();
 			}
 			}
 			

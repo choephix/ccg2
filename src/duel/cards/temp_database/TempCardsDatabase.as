@@ -20,7 +20,11 @@ package duel.cards.temp_database
 	
 	public class TempCardsDatabase 
 	{
-		static public const F:Array = [
+		static public function get F():Array
+		//{ return f }
+		{ return OtherTempCardsDatabase.F }
+		
+		static public const f:Array = [
 				/* * * /
 				
 					PLAYER 1
@@ -92,6 +96,7 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
 					c.propsC.basePower = 2;
+					c.propsC.flippable = true;
 					
 					var special:SpecialEffect;
 					special = c.propsC.addTriggered();
@@ -226,6 +231,20 @@ package duel.cards.temp_database
 					c.descr = "When opposing enemy creature attacks - stun it until the start of its controller's next turn.";
 				},
 				/* * */
+				function( c:Card ):void ///		..C		Flippers
+				{
+					c.name = "Flippers";
+					
+					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
+					c.propsC.basePower = 4;
+					c.propsC.flippable = true;
+					c.propsC.onCombatFlipFunc =
+					function():void {
+						if ( c.indexedField.opposingCreature == null ) return;
+						c.indexedField.opposingCreature.returnToControllerHand();
+					}
+				},
+				/* * */
 				function( c:Card ):void ///		.`C		Dick Johnson
 				{
 					c.name = "Dick Johnson";
@@ -269,6 +288,7 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
 					c.propsC.basePower = 6;
+					c.propsC.flippable = true;
 					
 					var special:SpecialEffect;
 					special = c.propsC.addTriggered();
@@ -358,6 +378,29 @@ package duel.cards.temp_database
 					c.descr = "Base power = 7 while Yin is adjacent";
 				},
 				/* * */
+				function( c:Card ):void ///		T..		Super Healing
+				{
+					c.name = "Super Healing";
+					
+					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
+					
+					c.propsT.effect.watchForActivation( GameplayProcess.DIRECT_DAMAGE );
+					c.propsT.effect.funcActivateCondition =
+					function( p:GameplayProcess ):Boolean {
+						if ( c.indexedField.index != p.getIndex() ) return false;
+						if ( c.controller.opponent != p.getAttacker().controller ) return false;
+						if ( !c.indexedField.samesideCreatureField.isEmpty ) return false;
+						return true;
+					}
+					c.propsT.effect.funcActivate =
+					function( p:GameplayProcess ):void {
+						p.abort();
+						TempDatabaseUtils.doHeal( c.controller, p.getAttacker().statusC.generateAttackDamage().amount );
+					}
+					
+					c.descr = "When opposing enemy trap's activation finishes - add that trap to your hand.";
+				},
+				/* * */
 				function( c:Card ):void ///		..C		The Producer
 				{
 					c.name = "The Producer";
@@ -427,7 +470,7 @@ package duel.cards.temp_database
 						if ( !c.isInPlay ) return;
 						if ( c.fieldC.adjacentCreatureLeft != null ) return;
 						if ( c.fieldC.adjacentCreatureRight != null ) return;
-						TempDatabaseUtils.doKill( c );
+						TempDatabaseUtils.doPutInHand( c, c.controller );
 					}
 					
 					c.descr = "The moment there are no adjacent friendly creatures to this card, return it from play to your hand";
@@ -439,6 +482,7 @@ package duel.cards.temp_database
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
 					c.propsC.basePower = 3;
+					c.propsC.flippable = true;
 					
 					var special:SpecialEffect;
 					special = c.propsC.addTriggered();
@@ -496,6 +540,26 @@ package duel.cards.temp_database
 					}
 					
 					c.descr = "When opposing enemy trap activates - negate activation and destroy trap";
+				},
+				/* * */
+				function( c:Card ):void ///		..C		Flippers' Mom
+				{
+					c.name = "Flippers' Mom";
+					
+					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
+					c.propsC.basePower = 3;
+					c.propsC.flippable = true;
+					c.propsC.onCombatFlipFunc =
+					function():void {
+						if ( c.indexedField.opposingCreature != null )
+						{
+							if ( c.controller.isMyTurn ) return;
+							TempDatabaseUtils.doEndCurrrentTurn();
+							return;
+						}
+					}
+					
+					c.descr = "CONBAT FLIP: If it's the enemy's turn - end their turn after the end of this combat.";
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Saboteur
@@ -631,6 +695,16 @@ package duel.cards.temp_database
 					c.descr = "Opposing enemy creatures attack automatically at the start of the enemy turn";
 				},
 				/* * */
+				function( c:Card ):void ///		..C		Big Shield
+				{
+					c.name = "Big Shield";
+					
+					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
+					c.propsC.basePower = 9;
+					c.propsC.noAttack = true;
+					c.propsC.flippable = true;
+				},
+				/* * */
 				function( c:Card ):void ///		T..		Fatal Sacrifice
 				{
 					c.name = "Fatal Sacrifice";
@@ -642,8 +716,8 @@ package duel.cards.temp_database
 					function( p:GameplayProcess ):Boolean {
 						if ( c.indexedField.index != p.getIndex() ) return false;
 						if ( c.controller.opponent != p.getAttacker().controller ) return false;
-						if ( c.indexedField.opposingCreature != null ) return false;
-						if ( c.indexedField.samesideCreature != null ) return false;
+						if ( c.indexedField.opposingCreature == null ) return false;
+						if ( c.indexedField.samesideCreature == null ) return false;
 						return true;
 					}
 					c.propsT.effect.funcActivate =
@@ -670,7 +744,7 @@ package duel.cards.temp_database
 					
 					var special:SpecialEffect;
 					special = c.propsC.addTriggered();
-					special.allowIn( CardLotType.CREATURE_FIELD );
+					special.allowIn( CardLotType.CREATURE_FIELD, CardLotType.HAND );
 					special.watch( GameplayProcess.SUMMON );
 					special.funcCondition =
 					function( p:GameplayProcess ):Boolean {
@@ -691,6 +765,7 @@ package duel.cards.temp_database
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
 					c.propsC.basePower = 4;
 					c.propsC.swift = true;
+					c.propsC.flippable = true;
 				},
 				/* * */
 				function( c:Card ):void ///		.`C		Very Social Fiend
@@ -709,6 +784,32 @@ package duel.cards.temp_database
 					}
 					
 					c.descr = "Base power = number of friendly creatures in play x 4.";
+				},
+				/* * */
+				function( c:Card ):void ///		..C		Ragnarok
+				{
+					c.name = "Ragnarok";
+					
+					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
+					c.propsC.basePower = 0;
+					c.propsC.needTribute = true;
+					
+					var special:SpecialEffect;
+					special = c.propsC.addTriggered();
+					special.allowIn( CardLotType.CREATURE_FIELD );
+					special.watch( GameplayProcess.ENTER_PLAY_COMPLETE );
+					special.funcCondition =
+					function( p:GameplayProcess ):Boolean {
+						return c == p.getSourceCard();
+					}
+					special.funcActivate =
+					function( p:GameplayProcess ):void {
+						TempDatabaseUtils.doDestroyTrapsRow( c.controller.opponent );
+						TempDatabaseUtils.doDestroyTrapsRow( c.controller );
+						TempDatabaseUtils.doKillCreaturesRow( c.controller.opponent );
+						TempDatabaseUtils.doKillCreaturesRow( c.controller );
+						TempDatabaseUtils.doDealDirectDamage( c.controller, c.controller.lifePoints / 2, c );
+					}
 				},
 				/* * */
 				null,
@@ -735,6 +836,6 @@ package duel.cards.temp_database
 		
 		//  - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - //
 		
+		static private function doNothing( p:GameplayProcess ):void {}
 	}
-
 }

@@ -663,7 +663,7 @@ package duel.cards.temp_database
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
 					c.propsC.basePower = 3;
 					c.propsC.flippable = true;
-					c.propsC.onCombatFlip =
+					c.propsC.onCombatFlipFunc =
 					function():void {
 						TempDatabaseUtils.doPutInHandTrapsRow( c.controller.opponent );
 					}
@@ -848,6 +848,7 @@ package duel.cards.temp_database
 		
 		//  - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - //
 		
+		static private function doNothing( p:GameplayProcess ):void {}
 	}
 
 }

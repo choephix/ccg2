@@ -29,6 +29,7 @@ package duel.network {
 			connection.onConnect 		= onConnected;
 			connection.onUserAdded 		= onUserAdded;
 			connection.onUserRemoved 	= onUserRemoved;
+			connection.onUserExpired 	= onUserRemoved;
 			connection.onObjectRecieve 	= onUserObjectRecieved;
 			
 			var myEnterTime:Number = new Date().time;
@@ -95,6 +96,9 @@ package duel.network {
 				+ "\n" + "totalusers: " + connection.userCount
 				+ "\n"
 				); 
+			
+			if ( Game.current )
+				Game.current.endGame();
 		}
 		
 		public function sendMyUserObject( data:Object ):void			

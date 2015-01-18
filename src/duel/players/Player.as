@@ -28,6 +28,7 @@ package duel.players {
 		public var fieldsT:TrapFieldsRow;
 		
 		public var mana:ManaPool;
+		private var _isMyTurn:Boolean;
 		
 		public var id:int;
 		private var _name:String;
@@ -89,12 +90,28 @@ package duel.players {
 		
 		// GAMELPLAY
 		
+		public function get isMyTurn():Boolean 
+		{
+			return _isMyTurn;
+		}
+		
+		public function set isMyTurn(value:Boolean):void 
+		{
+			_isMyTurn = value;
+			ctrl.active = value;
+		}
+		
 		public function takeDirectDamage( amount:int ):void
 		{
 			_lp -= amount;
 			
 			if ( _lp <= 0 )
 				die();
+		}
+		
+		public function heal( amount:int ):void
+		{
+			_lp += amount;
 		}
 		
 		public function die():void 
