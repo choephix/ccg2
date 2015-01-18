@@ -2,7 +2,9 @@ package duel.controllers
 {
 	import chimichanga.debug.logging.error;
 	import duel.cards.Card;
+	import duel.Game;
 	import duel.players.Player;
+	import duel.table.IndexedField;
 	
 	/**
 	 * ...
@@ -55,30 +57,25 @@ package duel.controllers
 			
 			switch( action[0] )
 			{
-				case "attack" :
-					c = player.fieldsC.getAt( action[1] ).topCard;
-					if ( c == null || ( faq.canCreatureAttack( c, true ) != null ) )
-					{
-						error( "Card " + c + " cannot attack" );
-						return;
-					}
-					performActionAttack( c );
-					break;
 				case "summon" :
-					if ( player.hand.findByUid( action[1] ) == null )
-					{
-						error( "Card#" + action[1] + " not in " + player + "'s hand - " + player.hand );
-						return;
-					}
-					performActionSummon( player.hand.findByUid( action[1] ), player.fieldsC.getAt( action[2] ) );
+					c = player.hand.findByUid( action[1] );
+					performActionSummon( c, player.fieldsC.getAt( action[2] ) );
 					break;
 				case "trapset" :
-					if ( player.hand.findByUid( action[1] ) == null )
-					{
-						error( "Card#" + action[1] + " not in " + player + "'s hand - " + player.hand );
-						return;
-					}
-					performActionTrapSet( player.hand.findByUid( action[1] ), player.fieldsT.getAt( action[2] ) );
+					c = player.hand.findByUid( action[1] );
+					performActionTrapSet( c, player.fieldsT.getAt( action[2] ) );
+					break;
+				case "safeflip" :
+					c = player.fieldsC.getAt( action[1] ).topCard;
+					performActionSafeFlip( c );
+					break;
+				case "relocate" :
+					c = player.fieldsC.getAt( action[1] ).topCard;
+					performActionRelocation( c, player.fieldsC.getAt( action[2] ) );
+					break;
+				case "attack" :
+					c = player.fieldsC.getAt( action[1] ).topCard;
+					performActionAttack( c );
 					break;
 				case "draw":
 					performActionDraw();
@@ -86,7 +83,18 @@ package duel.controllers
 				case "turnend":
 					performActionTurnEnd();
 					break;
+				case "surrender":
+					performActionSurrender();
+					break;
+				default:
+					err( "could not recognize action " + action );
 			}
+		}
+		
+		private function err( msg:String ):void
+		{
+			error( msg );
+			Game.log( "ERROR: "+msg );
 		}
 		
 		override public function onTurnStart():void

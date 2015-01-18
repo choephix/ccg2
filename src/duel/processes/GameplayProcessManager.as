@@ -751,7 +751,7 @@ package duel.processes
 			{
 				c.resetState();
 				p.hand.addCard( c );
-				c.faceDown = false;
+				c.faceDown = !p.controllable;
 			}
 			pro.abortCheck = 
 			function abortCheck( c:Card, p:Player ):Boolean

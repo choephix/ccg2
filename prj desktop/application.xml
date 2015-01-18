@@ -6,7 +6,7 @@
   <name>Project</name>
   <initialWindow>
     <title>Project</title>
-    <content>project.swf</content>
+    <content>Project.swf</content>
     <systemChrome>none</systemChrome>
     <transparent>false</transparent>
     <visible>true</visible>

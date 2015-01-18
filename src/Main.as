@@ -97,7 +97,7 @@
 				//stage.displayState = StageDisplayState.NORMAL;
 			//}
 			if ( Game.current && Game.current.currentPlayer && Game.current.currentPlayer.controllable )
-				Game.current.performActionTurnEnd();
+				Game.current.currentPlayer.ctrl.performActionTurnEnd();
 		}
 		
 		private function onMiddleClick( e:MouseEvent ):void

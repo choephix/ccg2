@@ -18,7 +18,7 @@ package duel.players {
 	{
 		public var opponent:Player;
 		
-		public var controllable:Boolean = true;
+		public function get controllable():Boolean { return ctrl is UserPlayerController }
 		public var ctrl:PlayerController;
 		
 		public var hand:Hand;

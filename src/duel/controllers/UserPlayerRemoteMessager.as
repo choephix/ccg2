@@ -26,44 +26,28 @@ package duel.controllers
 		/// /// /// /// /// /// /// /// /// /// /// /// /// /// /// 
 		
 		public function performActionSummon( c:Card, field:CreatureField ):void
-		{
-			sendMessage( "summon:" + serialize(c) + ":" + serialize(field) )
-		}
+		{ sendMessage( "summon:" + serialize(c) + ":" + serialize(field) ) }
 		
 		public function performActionTrapSet( c:Card, field:TrapField ):void
-		{
-			sendMessage( "trapset:" + serialize(c) + ":" + serialize(field) )
-		}
+		{ sendMessage( "trapset:" + serialize(c) + ":" + serialize(field) ) }
 		
 		public function performActionAttack( c:Card ):void
-		{
-			sendMessage( "attack:" + serialize(c.indexedField) )
-		}
+		{ sendMessage( "attack:" + serialize(c.indexedField) ) }
 		
 		public function performActionRelocation( c:Card, field:CreatureField ):void
-		{
-			sendMessage( "relocate:" + serialize(c) + ":" + serialize(field) )
-		}
+		{ sendMessage( "relocate:" + serialize(c.indexedField) + ":" + serialize(field) ) }
 		
 		public function performActionSafeFlip( c:Card ):void
-		{
-			sendMessage( "safeflip:" + serialize(c) )
-		}
+		{ sendMessage( "safeflip:" + serialize(c.indexedField) ) }
 		
 		public function performActionTurnEnd():void
-		{
-			sendMessage( "turnend" )
-		}
+		{ sendMessage( "turnend" ) }
 		
 		public function performActionSurrender():void
-		{
-			sendMessage( "surrender" )
-		}
+		{ sendMessage( "surrender" ) }
 		
 		public function performActionDraw():void 
-		{
-			sendMessage( "draw" )
-		}
+		{ sendMessage( "draw" ) }
 		
 		/// /// /// /// /// /// /// /// /// /// /// /// /// /// /// 
 		
