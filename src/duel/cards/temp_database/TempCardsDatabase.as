@@ -21,8 +21,7 @@ package duel.cards.temp_database
 	public class TempCardsDatabase 
 	{
 		static public function get F():Array
-		//{ return f }
-		{ return OtherTempCardsDatabase.F }
+		{ return CONFIG::sandbox?OtherTempCardsDatabase.F:f }
 		
 		static public const f:Array = [
 				/* * * /
@@ -700,7 +699,7 @@ package duel.cards.temp_database
 					c.name = "Big Shield";
 					
 					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.basePower = 9;
+					c.propsC.basePower = 8;
 					c.propsC.noAttack = true;
 					c.propsC.flippable = true;
 				},

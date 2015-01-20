@@ -1,5 +1,6 @@
 package {
 	import chimichanga.common.display.Sprite;
+	import dev.Temp;
 	import duel.Game;
 	import duel.GameEvents;
 	import duel.GameMeta;
@@ -7,6 +8,7 @@ package {
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.Button;
+	import starling.display.Image;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	import starling.text.TextField;
@@ -41,6 +43,7 @@ package {
 			}
 			
 			App.assets.enqueue( "assets/bg.jpg" )
+			App.assets.enqueue( "assets/mainbg.jpg" )
 			App.assets.enqueue( "assets/btn.png" )
 			App.assets.enqueue( "assets/card.png" )
 			App.assets.enqueue( "assets/card-aura.jpg" )
@@ -62,7 +65,7 @@ package {
 			
 			loadingText = new TextField(
 				stage.stageWidth, stage.stageHeight,
-				"...", "Arial Black", 120, 0x202020, false );
+				"...", "Arial Black", 80, 0x304050, true );
 			addChild( loadingText );
 			
 			App.assets.initialize( onLoadingAppProgress, onLoadingAppComplete );
@@ -81,6 +84,19 @@ package {
 			loadingText.removeFromParent( true );
 			loadingText = null;
 			
+			Temp.tweenAppSize( App.W, App.H, showMenu );
+		}
+		
+		private function showMenu():void {
+			
+			var bg:Image = App.assets.generateImage( "mainbg", false, false );
+			bg.width = App.W;
+			bg.height = App.H;
+			addChild( bg );
+			
+			bg.alpha = .0;
+			Starling.juggler.tween( bg, .250, { alpha : 2.0 } );
+			
 			var b1:Button = new Button( App.assets.getTexture( "card" ), "LOCAL" );
 			b1.alignPivot();
 			b1.fontSize = 30;
@@ -90,6 +106,9 @@ package {
 			b1.addEventListener( Event.TRIGGERED, onB1 );
 			addChild( b1 );
 			
+			b1.alpha = .0;
+			Starling.juggler.tween( b1, .330, { delay : .200, alpha : 1.0 } );
+			
 			var b2:Button = new Button( App.assets.getTexture( "card" ), "REMOTE" );
 			b2.alignPivot();
 			b2.fontSize = 30;
@@ -98,6 +117,9 @@ package {
 			b2.y = .50 * stage.stageHeight;
 			b2.addEventListener( Event.TRIGGERED, onB2 );
 			addChild( b2 );
+			
+			b2.alpha = .0;
+			Starling.juggler.tween( b2, .330, { delay : .200, alpha : 2.0 } );
 			
 			var gameMeta:GameMeta = new GameMeta();
 			
@@ -137,6 +159,9 @@ package {
 			
 			CONFIG::air
 			{
+			if ( e.keyCode == Keyboard.NUMBER_2 ) {
+				Temp.tweenAppSize( Math.random() * 2000, Math.random() * 1000 );
+			}
 			if ( e.keyCode == Keyboard.F ) {
 				App.toggleFullScreen();
 			}

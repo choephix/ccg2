@@ -3,6 +3,7 @@ package dev
 	import duel.cards.Card;
 	import duel.cards.properties.cardprops;
 	import duel.display.utils.ColorScheme;
+	import starling.core.Starling;
 	
 	use namespace cardprops;
 	/**
@@ -32,5 +33,17 @@ package dev
 			}
 			return 0x0;
 		}
+		
+		public static function tweenAppSize( w:Number, h:Number, onComplete:Function=null ):void
+		{
+			Starling.juggler.removeTweens( Main.me );
+			Starling.juggler.tween( Main.me, .250,
+				{ 
+					appWidth : w,
+					appHeight : h,
+					onComplete : onComplete
+				} );
+		}
+		
 	}
 }

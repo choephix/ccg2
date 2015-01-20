@@ -74,10 +74,6 @@ package duel.cards.buffs
 		
 		//}
 		
-		public function advanceTime(time:Number):void 
-		{
-		}
-		
 	}
 
 }

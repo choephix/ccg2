@@ -14,8 +14,6 @@
     <maximizable>true</maximizable>
     <resizable>true</resizable>
     <renderMode>direct</renderMode>
-    <x>100</x>
-    <y>100</y>
     <aspectRatio>landscape</aspectRatio>
     <fullScreen>true</fullScreen>
   </initialWindow>
