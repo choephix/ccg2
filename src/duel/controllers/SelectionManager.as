@@ -16,7 +16,7 @@ package duel.controllers
 	 */
 	public class SelectionManager extends GameEntity
 	{
-		private var ctrl:UserPlayerController;
+		private var faq:PlayerControllerFAQ;
 		private var player:Player;
 		
 		public var schEnabled:SelectionContext;
@@ -31,11 +31,12 @@ package duel.controllers
 		public var contextOnField:SelectionContext;
 		
 		public var selectedCard:Card;
+		public var ctrl:UserPlayerController;
 		
-		public function initialize( ctrl:UserPlayerController, player:Player ):void
+		public function initialize( player:Player, faq:PlayerControllerFAQ ):void
 		{
 			this.player = player;
-			this.ctrl = ctrl;
+			this.faq = faq;
 			
 			//{ Selection Contexts
 			
@@ -106,7 +107,7 @@ package duel.controllers
 			{
 				f.sprite.setGuiState( FieldSpriteGuiState.NONE );
 				
-				if ( !ctrl.active ) return;
+				if ( !player.isMyTurn ) return;
 				
 				if ( selectedCard == null ) return;
 				
@@ -117,7 +118,7 @@ package duel.controllers
 					
 					if ( selectedCard.type.isCreature )
 						if ( f is CreatureField )
-							if ( ctrl.faq.canSummonCreatureOn( selectedCard, f, true ) == null )
+							if ( faq.canSummonCreatureOn( selectedCard, f, true ) == null )
 							{
 								f.sprite.setGuiState( 
 									selectedCard.statusC.needTribute ? 
@@ -127,7 +128,7 @@ package duel.controllers
 							}
 					if ( selectedCard.type.isTrap )
 						if ( f is TrapField )
-							if ( ctrl.faq.canSetTrapOn( selectedCard, f, true ) == null )
+							if ( faq.canSetTrapOn( selectedCard, f, true ) == null )
 							{
 								f.sprite.setGuiState(
 									f.isEmpty ?
@@ -142,13 +143,13 @@ package duel.controllers
 				if ( !selectedCard.type.isCreature ) return;
 				
 				if ( f == selectedCard.indexedField )
-					if ( ctrl.faq.canCreatureSafeFlip( selectedCard, true ) == null )
+					if ( faq.canCreatureSafeFlip( selectedCard, true ) == null )
 					{
 						f.sprite.setGuiState( FieldSpriteGuiState.SAFE_FLIP );
 						return;
 					}
 				
-				if ( ctrl.faq.canCreatureRelocateTo( selectedCard, f, true ) == null )
+				if ( faq.canCreatureRelocateTo( selectedCard, f, true ) == null )
 				{
 					f.sprite.setGuiState( FieldSpriteGuiState.RELOCATE_TO );
 					return;
@@ -157,7 +158,7 @@ package duel.controllers
 				if ( f.index == selectedCard.indexedField.index )
 					if ( f.owner == player.opponent )
 						if ( f is CreatureField )
-							if ( ctrl.faq.canCreatureAttack( selectedCard, true ) == null )
+							if ( faq.canCreatureAttack( selectedCard, true ) == null )
 							{
 								f.sprite.setGuiState( 
 									f.isEmpty ?
@@ -190,6 +191,9 @@ package duel.controllers
 		
 		private function canPlayFieldCard( c:Card ):Boolean 
 		{
+			if ( !player.isMyTurn )
+				return false;
+			
 			if ( c.type.isCreature )
 				return !c.exhausted;
 			return false;
@@ -197,6 +201,9 @@ package duel.controllers
 		
 		private function canPlayHandCard( c:Card ):Boolean 
 		{
+			if ( !player.isMyTurn )
+				return false;
+			
 			if ( c.cost > player.mana.current )
 				return false;
 				
@@ -206,9 +213,9 @@ package duel.controllers
 				return player.fieldsT.hasAnyFieldThat( canSetTrapTo );
 			
 			function canSummonTo( f:CreatureField ):Boolean
-			{ return ctrl.faq.canSummonCreatureOn( c, f, true ) == null }
+			{ return faq.canSummonCreatureOn( c, f, true ) == null }
 			function canSetTrapTo( f:TrapField ):Boolean
-			{ return ctrl.faq.canSetTrapOn( c, f, true ) == null }
+			{ return faq.canSetTrapOn( c, f, true ) == null }
 			
 			return false;
 		}
@@ -273,7 +280,7 @@ package duel.controllers
 			}
 			if ( o is Field && Field( o ).type.isDeck && Field( o ).owner == player )
 			{
-				problem = ctrl.faq.canDrawCard( player, true );
+				problem = faq.canDrawCard( player, true );
 				if ( problem == null )
 					ctrl.performActionDraw();
 				else
@@ -287,7 +294,7 @@ package duel.controllers
 		}
 		private function scfHandCreatureOnSelected( o:* ):void
 		{
-			var problem:String = ctrl.faq.canSummonCreatureOn( selectedCard, o as IndexedField, true );
+			var problem:String = faq.canSummonCreatureOn( selectedCard, o as IndexedField, true );
 			
 			if ( problem == null )
 				ctrl.performActionSummon( selectedCard, o as CreatureField );
@@ -302,7 +309,7 @@ package duel.controllers
 		}
 		private function scfHandTrapOnSelected( o:* ):void
 		{
-			var problem:String = ctrl.faq.canSetTrapOn( selectedCard, o as IndexedField, true );
+			var problem:String = faq.canSetTrapOn( selectedCard, o as IndexedField, true );
 			
 			if ( problem == null )
 				ctrl.performActionTrapSet( selectedCard, o as TrapField );
@@ -324,7 +331,7 @@ package duel.controllers
 			{
 				if ( selectedCard.faceDown && selectedCard.statusC.isFlippable )
 				{
-					problem = ctrl.faq.canCreatureSafeFlip( selectedCard, true );
+					problem = faq.canCreatureSafeFlip( selectedCard, true );
 					if ( problem == null )
 						ctrl.performActionSafeFlip( selectedCard );
 					else
@@ -338,7 +345,7 @@ package duel.controllers
 			/// RELOCATION
 			if ( f.owner == player )
 			{
-				problem = ctrl.faq.canCreatureRelocateTo( selectedCard, f as IndexedField, true );
+				problem = faq.canCreatureRelocateTo( selectedCard, f as IndexedField, true );
 				if ( problem == null )
 					ctrl.performActionRelocation( selectedCard, f as CreatureField );
 				else
@@ -351,7 +358,7 @@ package duel.controllers
 			/// ATTACK
 			if ( f.owner == player.opponent )
 			{
-				problem = ctrl.faq.canCreatureAttack( selectedCard, true );
+				problem = faq.canCreatureAttack( selectedCard, true );
 				if ( problem == null )
 					ctrl.performActionAttack( selectedCard );
 				else
@@ -415,8 +422,9 @@ package duel.controllers
 		
 		public function tryToSelectFieldCard( card:Card ):void
 		{
-			if ( card == null )
-				game.gui.pMsg( "There is no creature here" );
+			if ( card == null && selectedCard == null )
+				//game.gui.pMsg( "There is no creature here" );
+				return;
 			else
 			if ( card.exhausted )
 				game.gui.pMsg( "This card is exhausted" );

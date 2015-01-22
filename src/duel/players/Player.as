@@ -1,6 +1,5 @@
 package duel.players {
-	import duel.controllers.PlayerController;
-	import duel.controllers.UserPlayerController;
+	import duel.controllers.PlayerAction;
 	import duel.display.cardlots.HandSprite;
 	import duel.display.TableSide;
 	import duel.G;
@@ -10,16 +9,14 @@ package duel.players {
 	import duel.table.fieldlists.CreatureFieldsRow;
 	import duel.table.fieldlists.TrapFieldsRow;
 	import duel.table.Hand;
+	import starling.events.EventDispatcher;
 	/**
 	 * ...
 	 * @author choephix
 	 */
-	public class Player 
+	public class Player extends EventDispatcher
 	{
 		public var opponent:Player;
-		
-		public function get controllable():Boolean { return ctrl is UserPlayerController }
-		public var ctrl:PlayerController;
 		
 		public var hand:Hand;
 		public var deck:Field;
@@ -30,19 +27,22 @@ package duel.players {
 		public var mana:ManaPool;
 		private var _isMyTurn:Boolean;
 		
-		public var id:int;
+		public var controllable:Boolean;
 		private var _name:String;
 		private var _lp:int;
 		private var _color:uint = 0x44FFFF;
 		
-		//VISUAL
-		
+		// visuals
 		public var tableSide:TableSide;
 		public var handSprite:HandSprite;
 		
+		// helpers
+		private var e:PlayerEvent = new PlayerEvent('');
+		
+		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
+		// CONSTRUCTION
 		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
 		
-		// CONSTRUCTION
 		public function Player( name:String, lifePoints:int )
 		{
 			hand = new Hand();
@@ -54,16 +54,10 @@ package duel.players {
 			
 			mana = new ManaPool();
 			
-			//ctrl = new RemotePlayerController( this );
-			//ctrl = new UserPlayerController( this );
-			
 			_name = name;
 			_lp = lifePoints;
 			
 			setAsFieldsOwner();
-			
-			// INITIALIZE
-			//ctrl.initialize();
 		}
 		
 		private function setAsFieldsOwner():void 
@@ -86,9 +80,19 @@ package duel.players {
 			this._color = color;
 		}
 		
-		// CARD ACTIONS
+		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
+		// ACTIONS
+		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
 		
+		public function performAction( a:PlayerAction ):void
+		{
+			//dispatchEvent( e.reset( PlayerEvent.ACTION, false, a ) );
+			dispatchEvent( new PlayerEvent( PlayerEvent.ACTION, false, a ) );
+		}
+		
+		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
 		// GAMELPLAY
+		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
 		
 		public function get isMyTurn():Boolean 
 		{
@@ -98,7 +102,6 @@ package duel.players {
 		public function set isMyTurn(value:Boolean):void 
 		{
 			_isMyTurn = value;
-			ctrl.active = value;
 		}
 		
 		public function takeDirectDamage( amount:int ):void
@@ -117,7 +120,9 @@ package duel.players {
 		public function die():void 
 		{ trace( this + " is dead" ) }
 		
+		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
 		// QUESTIONS
+		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
 		
 		public function get creatureCount():int
 		{ return fieldsC.countOccupied }

@@ -1,20 +1,18 @@
 package duel.cards.temp_database 
 {
-	import duel.cards.status.CreatureCardStatus;
-	import duel.cards.properties.CreatureCardProperties;
-	import duel.cards.properties.TrapCardProperties;
 	import duel.cards.Card;
-	import duel.cards.CardFactory;
 	import duel.cards.CardType;
 	import duel.cards.properties.CreatureCardProperties;
+	import duel.cards.properties.TrapCardProperties;
+	import duel.cards.status.CreatureCardStatus;
 	import duel.cards.status.TrapCardStatus;
 	import duel.Damage;
 	import duel.DamageType;
 	import duel.G;
 	import duel.Game;
 	import duel.players.Player;
-	import duel.table.CreatureField;
 	import duel.processes.gameprocessing;
+	import duel.table.CreatureField;
 	
 	use namespace gameprocessing;
 	
@@ -135,7 +133,7 @@ package duel.cards.temp_database
 		static public function doSpawnTokenCreatureIfEmpty( field:CreatureField ):void
 		{
 			if ( !field.isEmpty ) return;
-			Game.current.processes.append_SummonHere( CardFactory.produceCard( -1 ), field, false );
+			Game.current.processes.append_SummonHere( Game.current.produceCard( -1 ), field, false );
 		}
 		
 		static public function doResurrectCreature( c:Card, field:CreatureField ):void

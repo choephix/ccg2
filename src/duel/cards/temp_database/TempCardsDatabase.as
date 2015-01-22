@@ -3,7 +3,6 @@ package duel.cards.temp_database
 	import duel.cards.buffs.Buff;
 	import duel.cards.Card;
 	import duel.cards.properties.cardprops;
-	import duel.G;
 	import duel.otherlogic.OngoingEffect;
 	import duel.otherlogic.SpecialEffect;
 	import duel.processes.GameplayProcess;

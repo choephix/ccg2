@@ -10,10 +10,6 @@ package duel.table {
 		{
 			super( CardLotType.TRAP_FIELD, index );
 		}
-		
-		//
-		override public function toString():String 
-		{ return "f_" + owner.id + "T" + index }
 	}
 
 }

@@ -84,7 +84,10 @@ package {
 			loadingText.removeFromParent( true );
 			loadingText = null;
 			
-			Temp.tweenAppSize( App.W, App.H, showMenu );
+			CONFIG::air
+			{ Temp.tweenAppSize( App.W, App.H, showMenu ); return; }
+			
+			showMenu();
 		}
 		
 		private function showMenu():void {

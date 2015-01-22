@@ -1,6 +1,5 @@
 package duel.table {
 	import duel.cards.Card;
-	import duel.G;
 	import duel.table.CardLotType;
 	
 	/**
@@ -31,9 +30,5 @@ package duel.table {
 		{
 			return adjacentRight == null ? null : adjacentRight.topCard;
 		}
-		
-		//
-		override public function toString():String 
-		{ return "f_" + owner.id + "C" + index }
 	}
 }

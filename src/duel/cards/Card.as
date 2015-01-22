@@ -26,8 +26,6 @@ package duel.cards
 	 */
 	public class Card extends GameEntity
 	{
-		private static var UID:int = 0;
-		
 		// PERSISTENT
 		public var uid:int;
 		public var id:int;
@@ -65,11 +63,7 @@ package duel.cards
 				if ( _status == null )
 					throw VerifyError( "You left " + this + "'s status = NULL, you asscunt." );
 			}
-			
-			uid = UID++;
-			
 			_history = new CardHistory();
-			
 			sprite = new CardSprite();
 			sprite.initialize( this );
 		}

@@ -1,6 +1,8 @@
 package duel.gui
 {
 	import chimichanga.common.display.Sprite;
+	import duel.controllers.PlayerAction;
+	import duel.controllers.PlayerActionType;
 	import duel.controllers.UserPlayerController;
 	import duel.GameSprite;
 	import duel.players.ManaPool;
@@ -102,29 +104,17 @@ package duel.gui
 			
 			button1 = addButton( "SURRENDER", 0x53449B, btn1f );
 			button2 = addButton( "END TURN", 0x2EACE9, btn2f );
-			button3 = addButton( "ATTACK", 0xFF2000, btn3f );
-			button4 = addButton( "FLIP", 0xFFCC33, btn4f );
 			
 			function btn1f():void
 			{
-				game.currentPlayer.ctrl.performActionSurrender();
+				game.currentPlayer.performAction(
+					new PlayerAction().setTo( PlayerActionType.SURRENDER ) );
 			}
 			
 			function btn2f():void
 			{
-				game.currentPlayer.ctrl.performActionTurnEnd();
-			}
-			
-			function btn3f():void
-			{
-				game.currentPlayer.ctrl.performActionAttack( 
-					UserPlayerController( game.currentPlayer.ctrl ).selection.selectedCard )
-			}
-			
-			function btn4f():void
-			{ 
-				game.currentPlayer.ctrl.performActionSafeFlip( 
-					UserPlayerController( game.currentPlayer.ctrl ).selection.selectedCard )
+				game.currentPlayer.performAction(
+					new PlayerAction().setTo( PlayerActionType.END_TURN ) );
 			}
 			
 			buttonsContainer.alignPivot( "right", "top" );
@@ -159,8 +149,6 @@ package duel.gui
 			buttonsContainer.alpha = game.interactable ? 1.0 : 0.6;
 			updateTf( t1, game.p1 );
 			updateTf( t2, game.p2 );
-			button3.visible = game.interactable && canDoAttack( game.currentPlayer.ctrl as UserPlayerController );
-			button4.visible = game.interactable && canDoSafeFlip( game.currentPlayer.ctrl as UserPlayerController );
 		}
 		
 		private function canDoAttack( ctrl:UserPlayerController ):Boolean

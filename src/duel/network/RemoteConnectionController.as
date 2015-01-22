@@ -4,6 +4,7 @@ package duel.network {
 	import duel.Game;
 	import flash.system.Capabilities;
 	import starling.animation.Juggler;
+	import starling.events.EventDispatcher;
 	
 	CONFIG::air
 	{
@@ -13,7 +14,7 @@ package duel.network {
 	 * ...
 	 * @author choephix
 	 */
-	public class RemoteConnectionController 
+	public class RemoteConnectionController extends EventDispatcher
 	{
 		private const SERVER_ADDRESS:String	= "rtmfp://p2p.rtmfp.net/dd445b2af11141d2f0638908-3a1ceb27480a";
 		private var connection:MultiUserSession;
@@ -44,6 +45,16 @@ package duel.network {
 			{ myName = Capabilities.cpuArchitecture+"_"+ myEnterTime.toString( 36 ) }
 			
 			connection.connect(myName, { color:myColor, logtime:myEnterTime } );
+		}
+		
+		public function destroy():void
+		{
+			connection.close();
+			connection = null;
+			onOpponentFoundCallback = null;
+			onUserObjectRecievedCallback = null;
+			myUser = null;
+			oppUser = null;
 		}
 		
 		protected function onConnected(user:UserObject):void					

@@ -1,6 +1,8 @@
 ﻿package {
 	import chimichanga.debug.logging.log;
 	import chimichanga.global.app.Platform;
+	import duel.controllers.PlayerAction;
+	import duel.controllers.PlayerActionType;
 	import duel.Game;
 	import flash.display.Sprite;
 	import flash.display.Stage3D;
@@ -16,8 +18,8 @@
 	import starling.core.Starling;
 	
 	//[SWF(width="640", height="960", backgroundColor="#000000", frameRate="60")]
-	[SWF(width="240",height="240",backgroundColor="#0",frameRate="60")]
-	//[SWF(width="1280",height="720",backgroundColor="#0",frameRate="60")]
+	//[SWF(width="240",height="240",backgroundColor="#0",frameRate="60")]
+	[SWF(width="1280",height="720",backgroundColor="#0",frameRate="60")]
 	//[SWF( width="800",height="480",backgroundColor="#000000",frameRate="60" )]
 	//[SWF(width="400",height="240",backgroundColor="#00000",frameRate="60")]
 	
@@ -103,7 +105,8 @@
 				//stage.displayState = StageDisplayState.NORMAL;
 			//}
 			if ( Game.current && Game.current.currentPlayer && Game.current.currentPlayer.controllable )
-				Game.current.currentPlayer.ctrl.performActionTurnEnd();
+				Game.current.currentPlayer.performAction(
+					new PlayerAction().setTo( PlayerActionType.END_TURN ) );
 		}
 		
 		private function onMiddleClick( e:MouseEvent ):void
@@ -185,6 +188,7 @@
 		
 		///
 		
+		CONFIG::air
 		public function set appWidth( value:Number ):void
 		{
 			me.stage.stageWidth = value;
@@ -197,6 +201,7 @@
 			return stage.stageWidth;
 		}
 		
+		CONFIG::air
 		public function set appHeight( value:Number ):void
 		{
 			me.stage.stageHeight = value;

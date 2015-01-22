@@ -8,15 +8,18 @@ package duel
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
 	import duel.cards.temp_database.TempCardsDatabase;
-	import duel.controllers.RemotePlayerController;
+	import duel.controllers.PlayerAction;
+	import duel.controllers.PlayerActionType;
 	import duel.controllers.UserPlayerController;
-	import duel.controllers.UserPlayerRemoteMessager;
 	import duel.display.cardlots.HandSprite;
 	import duel.display.TableSide;
 	import duel.gui.Gui;
 	import duel.gui.GuiJuggler;
 	import duel.network.RemoteConnectionController;
+	import duel.network.RemotePlayerActionReceiver;
+	import duel.network.RemotePlayerActionSender;
 	import duel.players.Player;
+	import duel.players.PlayerEvent;
 	import duel.processes.GameplayProcess;
 	import duel.processes.GameplayProcessManager;
 	import duel.processes.gameprocessing;
@@ -49,7 +52,9 @@ package duel
 		
 		public var meta:GameMeta;
 		public var state:GameState = GameState.WAITING;
+		
 		public var remote:RemoteConnectionController;
+		private var remoteInput:RemotePlayerActionReceiver;
 		
 		public var processes:GameplayProcessManager;
 		public var jugglerStrict:GuiJuggler;
@@ -63,6 +68,10 @@ package duel
 		public var currentPlayer:Player;
 		
 		public var bg:Background;
+		
+		private var logicComponents:Vector.<GameUpdatable>;
+		private var cards:Vector.<Card>;
+		private var cardsCount:int = 0;
 		
 		//
 		public function Game() { current = this }
@@ -80,15 +89,20 @@ package duel
 			processes.addEventListener( ProcessEvent.CURRENT_PROCESS, onProcessAdvance );
 			processes.addEventListener( ProcessEvent.PROCESS_COMPLETE, onProcessComplete );
 			
+			logicComponents = new Vector.<GameUpdatable>();
+			cards = new Vector.<Card>();
+			
 			p1 = generatePlayer( "?" );
-			p2 = generatePlayer( "??" );
+			p2 = generatePlayer( "?" );
 			p1.opponent = p2;
 			p2.opponent = p1;
-			p1.id = 1;
-			p2.id = 2;
 			
 			function generatePlayer( name:String ):Player
-			{ return new Player( name, G.INIT_LP ) }
+			{ 
+				var p:Player = new Player( name, G.INIT_LP )
+				p.addEventListener( PlayerEvent.ACTION, onPlayerActionEvent );
+				return p;
+			}
 		
 			//}
 			
@@ -146,26 +160,27 @@ package duel
 			
 			if ( !meta.isMultiplayer )
 			{
-				p1.ctrl = new UserPlayerController( p1 );
-				p2.ctrl = new UserPlayerController( p2 );
-				p1.ctrl.initialize();
-				p2.ctrl.initialize();
-				
+				logicComponents.push( new UserPlayerController( p1 ) );
+				logicComponents.push( new UserPlayerController( p2 ) );
+				p1.updateDetails( "Player1", 0x33AAFF );
+				p2.updateDetails( "Player2", 0xFFAA33 );
+				p1.controllable = true;
+				p2.controllable = true;
 				startGame();
 			}
 			else
 			{
-				p1.ctrl = new UserPlayerController( p1 );
-				p2.ctrl = new RemotePlayerController( p2 );
-				p1.ctrl.initialize();
-				p2.ctrl.initialize();
+				remoteInput = new RemotePlayerActionReceiver( p2 );
+				
+				logicComponents.push( new UserPlayerController( p1 ) );
+				logicComponents.push( new RemotePlayerActionSender( p1 ) );
+				logicComponents.push( remoteInput );
+				p1.controllable = true;
 			
 				remote = new RemoteConnectionController();
 				remote.initialize();
 				remote.onOpponentFoundCallback = startGame;
 				remote.onUserObjectRecievedCallback = onRemoteMessageReceived;
-				
-				UserPlayerController( p1.ctrl ).remoteMessager = new UserPlayerRemoteMessager( remote );
 				
 				gui.pMsg( "Waiting for opponent...", false );
 			}
@@ -173,15 +188,13 @@ package duel
 		
 		private function onRemoteMessageReceived( userName:String, data:Object ):void 
 		{
-			if ( p2.name != userName )
+			if ( userName != p2.name )
 			{
-				error( "Who is this " + userName + " person?" );
-				log( userName + " != " + p2.name );
+				error( "who?" );
 				return;
 			}
 			
-			RemotePlayerController( p2.ctrl ).onMessage( data as String );
-			gui.pMsg( p2.name + ": " + data );
+			remoteInput.onMessage( data as String );
 		}
 		
 		public function startGame():void
@@ -269,7 +282,7 @@ package duel
 				for ( i = 0; i < cardIds.length && i < G.MAX_DECK_SIZE; i++ )
 				{
 					time += .010;
-					c = CardFactory.produceCard( cardIds[ i ] );
+					c = produceCard( cardIds[ i ] );
 					c.owner = p;
 					c.faceDown = true;
 					jugglerStrict.delayCall( p.deck.addCard, time, c, true );
@@ -312,6 +325,9 @@ package duel
 			jugglerGui.advanceTime( time );
 			juggler.advanceTime( time );
 			
+			for ( var i:int = 0, iMax:int = logicComponents.length; i < iMax; i++ ) 
+				logicComponents[ i ].advanceTime( time );
+			
 			//if ( state.isWaiting )
 				//return;
 			
@@ -325,8 +341,6 @@ package duel
 			gui.advanceTime( time );
 			p1.handSprite.advanceTime( time );
 			p2.handSprite.advanceTime( time );
-			p1.ctrl.advanceTime( time );
-			p2.ctrl.advanceTime( time );
 			
 			//bg.visible = interactable;
 			this.touchable = interactable;
@@ -348,11 +362,27 @@ package duel
 				currentPlayer.isMyTurn = false;
 			
 			currentPlayer = p;
-			gui.pMsg( p == p1 ? "Your turn" : "Enemy turn" );
+			
+			if ( meta.isMultiplayer )
+				gui.pMsg( p == p1 ? "Your turn" : "Enemy turn" );
+			else
+				gui.pMsg( currentPlayer.name + "'s turn" );
 			
 			if ( currentPlayer )
 				currentPlayer.isMyTurn = true;
 		}
+		
+		public function produceCard( id:int ):Card
+		{ 
+			var c:Card;
+			c = CardFactory.produceCard( id );
+			cardsCount = cards.push( c );
+			c.uid = cardsCount;
+			return c;
+		}
+		
+		public function findCardByUid( uid:int ):Card
+		{ return cards[ uid-1 ] }
 		
 		// PROCESSES
 		
@@ -363,22 +393,20 @@ package duel
 			if ( p == null )
 				return;
 			
+			for ( var i:int = 0, iMax:int = logicComponents.length; i < iMax; i++ ) 
+				logicComponents[ i ].onProcessUpdateOrComplete( p );
+			
 			playerInspectProcess( currentPlayer.opponent, p );
 			playerInspectProcess( currentPlayer, p );
-			currentPlayer.ctrl.onProcessUpdate();
-			//gui.updateData();
 		}
 		
 		private function onProcessComplete( e:ProcessEvent ):void
 		{
-			currentPlayer.ctrl.onProcessUpdate();
-			//gui.updateData();
+			for ( var i:int = 0, iMax:int = logicComponents.length; i < iMax; i++ ) 
+				logicComponents[ i ].onProcessUpdateOrComplete( e.process as GameplayProcess );
 			
-			if ( e.process.name == GameplayProcess.TURN_START_COMPLETE )
-				currentPlayer.ctrl.onTurnStart();
-			
-			//if ( e.process.name )
-				//gui.log( e.process.name + " " + e.process.args );
+			if ( !meta.isMultiplayer && e.process.name )
+				gui.log( e.process.name + " " + e.process.args );
 		}
 		
 		private function playerInspectProcess( player:Player, p:GameplayProcess ):void
@@ -429,28 +457,67 @@ package duel
 		
 		// PLAYER ACTIONS
 		
-		public function performActionSummon( c:Card, field:CreatureField ):void
-		{ processes.append_SummonHere( c, field, true ) }
+		public function onPlayerActionEvent( e:PlayerEvent ):void
+		{
+			if ( currentPlayer != e.currentTarget )
+			{ error ( "dafuq" ); return; }
+			
+			performCurrentPlayerAction( e.data as PlayerAction );
+		}
 		
-		public function performActionTrapSet( c:Card, field:TrapField ):void
-		{ processes.append_TrapSet( c, field, true ) }
+		public function performCurrentPlayerAction( a:PlayerAction ):void
+		{
+			switch ( a.type )
+			{
+				case PlayerActionType.DRAW:		
+					performActionDraw();
+					break;
+				case PlayerActionType.SUMMON_CREATURE:	
+					performActionSummon( a.args[0] as Card, a.args[1] as CreatureField );
+					break;
+				case PlayerActionType.SET_TRAP:	
+					performActionTrapSet( a.args[0] as Card, a.args[1] as TrapField );
+					break;
+				case PlayerActionType.ATTACK:	
+					performActionAttack( a.args[0] as Card );
+					break;
+				case PlayerActionType.RELOCATE:	
+					performActionRelocation( a.args[0] as Card, a.args[1] as CreatureField );
+					break;
+				case PlayerActionType.SAFEFLIP:	
+					performActionSafeFlip( a.args[0] as Card );
+					break;
+				case PlayerActionType.END_TURN:	
+					performActionTurnEnd();
+					break;
+				case PlayerActionType.SURRENDER: 
+					performActionSurrender();
+					break;
+			}
+		}
 		
-		public function performActionAttack( c:Card ):void
-		{ processes.append_Attack( c, false ) }
-		
-		public function performActionRelocation( c:Card, field:CreatureField ):void
-		{ processes.append_Relocation( c, field, false ) }
-		
-		public function performActionSafeFlip( c:Card ):void
-		{ processes.prepend_SafeFlip( c ) }
-		
-		public function performActionDraw():void 
+		private function performActionDraw():void 
 		{ processes.prepend_Draw( currentPlayer, 1, true ) }
 		
-		public function performActionTurnEnd():void
+		private function performActionSummon( c:Card, field:CreatureField ):void
+		{ processes.append_SummonHere( c, field, true ) }
+		
+		private function performActionTrapSet( c:Card, field:TrapField ):void
+		{ processes.append_TrapSet( c, field, true ) }
+		
+		private function performActionAttack( c:Card ):void
+		{ processes.append_Attack( c, false ) }
+		
+		private function performActionRelocation( c:Card, field:CreatureField ):void
+		{ processes.append_Relocation( c, field, false ) }
+		
+		private function performActionSafeFlip( c:Card ):void
+		{ processes.prepend_SafeFlip( c ) }
+		
+		private function performActionTurnEnd():void
 		{ processes.append_TurnEnd( currentPlayer ) }
 		
-		public function performActionSurrender():void
+		private function performActionSurrender():void
 		{ endGame() }
 		
 		//

@@ -1,7 +1,9 @@
 package duel.controllers
 {
 	import duel.cards.Card;
+	import duel.GameUpdatable;
 	import duel.players.Player;
+	import duel.processes.GameplayProcess;
 	import duel.table.CreatureField;
 	import duel.table.Field;
 	import duel.table.TrapField;
@@ -13,34 +15,34 @@ package duel.controllers
 	 * ...
 	 * @author choephix
 	 */
-	public class UserPlayerController extends PlayerController
+	public class UserPlayerController extends GameUpdatable
 	{
 		public var selection:SelectionManager;
 		public var hoveredCard:Card;
-		public var remoteMessager:UserPlayerRemoteMessager;
 		
-		public function UserPlayerController( p:Player ) { super( p ) }
+		protected var faq:PlayerControllerFAQ;
+		protected var player:Player;
+		
+		private static var a__:PlayerAction = new PlayerAction();
+		
+		public function UserPlayerController( player:Player ) 
+		{
+			this.player = player;
+			this.faq = new PlayerControllerFAQ();
+		}
 		
 		// // // // //
 		// GENERALE //
 		// // // // //
 		
-		override public function initialize():void 
+		override protected function initialize():void 
 		{
+			super.initialize();
+			
 			selection = new SelectionManager();
-			selection.initialize( this, player );
+			selection.initialize( player, faq );
+			selection.ctrl = this;
 			game.addEventListener( TouchEvent.TOUCH, onTouch );
-		}
-		
-		override public function set active( value:Boolean ):void 
-		{
-			super.active = value;
-			if ( !value ) {
-				hoverCard( null );
-				selection.selectCard( null );
-			}
-			selection.advanceTime( .0 );
-			selection.onProcessUpdate();
 		}
 		
 		private function onTouch( e:TouchEvent ):void {
@@ -73,7 +75,7 @@ package duel.controllers
 			if ( t.phase != TouchPhase.ENDED )
 				return;
 			
-			if ( !active )
+			if ( !game.currentPlayer.controllable )
 			{
 				game.gui.pMsg( "It's the enemy's turn." );
 				return;
@@ -172,7 +174,10 @@ package duel.controllers
 				hoveredCard.sprite.peekThrough = true;
 		}
 		
-		// SELECTION
+		// OTHER
+		
+		public function get active():Boolean
+		{ return game.currentPlayer == player }
 		
 		// // // // //
 		// INCOMING //
@@ -180,6 +185,8 @@ package duel.controllers
 		
 		override public function advanceTime( time:Number ):void
 		{
+			super.advanceTime( time );
+			
 			if ( !active ) return;
 			
 			selection.advanceTime( time );
@@ -188,8 +195,10 @@ package duel.controllers
 			{ game.gui.pMsg( selection.contextOnField.name + " " + selection.selectedCard, false ) }
 		}
 		
-		override public function onProcessUpdate():void
+		override public function onProcessUpdateOrComplete( p:GameplayProcess ):void
 		{
+			super.onProcessUpdateOrComplete( p );
+			
 			if ( !active ) return;
 			
 			selection.onProcessUpdate();
@@ -199,61 +208,32 @@ package duel.controllers
 		// OUTGOING //
 		// // // // //
 		
-		override public function performActionDraw():void 
-		{
-			if ( remoteMessager != null )
-				remoteMessager.performActionDraw();
-			super.performActionDraw();
-		}
+		public function performActionDraw():void 
+		{ performAction( a__.setTo( PlayerActionType.DRAW ) ) }
 		
-		override public function performActionSummon(c:Card, field:CreatureField):void 
-		{
-			if ( remoteMessager != null )
-				remoteMessager.performActionSummon(c, field);
-			super.performActionSummon(c, field);
-		}
+		public function performActionSummon( c:Card, field:CreatureField ):void
+		{ performAction( a__.setTo( PlayerActionType.SUMMON_CREATURE, c, field ) ) }
 		
-		override public function performActionTrapSet(c:Card, field:TrapField):void 
-		{
-			if ( remoteMessager != null )
-				remoteMessager.performActionTrapSet(c, field);
-			super.performActionTrapSet(c, field);
-		}
+		public function performActionTrapSet( c:Card, field:TrapField ):void
+		{ performAction( a__.setTo( PlayerActionType.SET_TRAP, c, field ) ) }
 		
-		override public function performActionAttack(c:Card):void 
-		{
-			if ( remoteMessager != null )
-				remoteMessager.performActionAttack(c);
-			super.performActionAttack(c);
-		}
+		public function performActionAttack( c:Card ):void
+		{ performAction( a__.setTo( PlayerActionType.ATTACK, c ) ) }
 		
-		override public function performActionRelocation(c:Card, field:CreatureField):void 
-		{
-			if ( remoteMessager != null )
-				remoteMessager.performActionRelocation(c, field);
-			super.performActionRelocation(c, field);
-		}
+		public function performActionRelocation( c:Card, field:CreatureField ):void
+		{ performAction( a__.setTo( PlayerActionType.RELOCATE, c, field ) ) }
 		
-		override public function performActionSafeFlip(c:Card):void 
-		{
-			if ( remoteMessager != null )
-				remoteMessager.performActionSafeFlip(c);
-			super.performActionSafeFlip(c);
-		}
+		public function performActionSafeFlip( c:Card ):void
+		{ performAction( a__.setTo( PlayerActionType.SAFEFLIP, c ) ) }
 		
-		override public function performActionTurnEnd():void 
-		{
-			if ( remoteMessager != null )
-				remoteMessager.performActionTurnEnd();
-			super.performActionTurnEnd();
-		}
+		public function performActionTurnEnd():void
+		{ performAction( a__.setTo( PlayerActionType.END_TURN ) ) }
 		
-		override public function performActionSurrender():void 
-		{
-			if ( remoteMessager != null )
-				remoteMessager.performActionSurrender();
-			super.performActionSurrender();
-		}
+		public function performActionSurrender():void
+		{ performAction( a__.setTo( PlayerActionType.SURRENDER ) ) }
+		
+		public function performAction( a:PlayerAction ):void
+		{ player.performAction( a ) }
 		
 		// // // // //
 		// BULLSHIT //
