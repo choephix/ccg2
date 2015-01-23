@@ -65,7 +65,7 @@ package duel.display {
 			auraContainer = new Sprite();
 			addChild( auraContainer );
 			
-			selectableAura = new CardAura();
+			selectableAura = new CardAura( "card-aura" );
 			selectableAura.visible = false;
 			selectableAura.color = 0x669BEA;
 			//selectableAura.color = 0xFFE064;
@@ -73,7 +73,7 @@ package duel.display {
 			selectableAura.blendMode = "add";
 			auraContainer.addChild( selectableAura );
 			
-			selectedAura = assets.generateImage( "card-selectable", false, true );
+			selectedAura = assets.generateImage( "card-aura-selected", false, true );
 			selectedAura.visible = false;
 			selectedAura.color = Temp.getColorForCard( card );
 			selectedAura.blendMode = "add";
@@ -86,8 +86,10 @@ package duel.display {
 			auraContainer.addChild( exhaustClock );
 			
 			// MAIN - FRONT
-			pad = assets.generateImage( "card", true, false );
+			pad = assets.generateImage( "card-front-bg", true, false );
 			pad.color = Temp.getColorForCard( card );
+			pad.x = .5 * ( G.CARD_W - pad.width );
+			pad.y = .5 * ( G.CARD_H - pad.height );
 			front.addChild( pad );
 			
 			tfTitle = new TextField( 500, G.CARD_H, card.name, "Arial Black", 24, 0x53001B );
@@ -332,7 +334,7 @@ package duel.display {
 			
 			animBlink( false, 0xB00000 ).blendMode = BlendMode.NORMAL;
 			
-			__bloodSprite = assets.generateImage( "card-blood" );
+			__bloodSprite = assets.generateImage( "card-damage" );
 			__bloodSprite.alignPivot();
 			__bloodSprite.blendMode = BlendMode.MULTIPLY;
 			addChild( __bloodSprite );
@@ -386,7 +388,7 @@ package duel.display {
 		
 		private function animBlink( strict:Boolean, color:uint = 0xFFFFFF ):Quad
 		{
-			var q:Quad = assets.generateImage( "card-glow" );
+			var q:Quad = assets.generateImage( "card-blink-glow" );
 			addChild( q );
 			q.alignPivot();
 			q.blendMode = BlendMode.ADD;

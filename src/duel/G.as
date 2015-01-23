@@ -5,8 +5,8 @@ package duel {
 	 */
 	public class G 
 	{
-		public static const CARD_W:Number = 150;
-		public static const CARD_H:Number = 150;
+		public static const CARD_W:Number = 245;
+		public static const CARD_H:Number = 342;
 		
 		public static const FIELD_COLUMNS:Number = 4;
 		

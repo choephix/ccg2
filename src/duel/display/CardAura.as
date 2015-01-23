@@ -13,7 +13,7 @@ package duel.display {
 	{
 		
 		
-		public function CardAura( assetName:String="card-aura" ) 
+		public function CardAura( assetName:String ) 
 		{
 			super( App.assets.getTexture( assetName ) );
 			this.touchable = false;

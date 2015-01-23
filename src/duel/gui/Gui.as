@@ -73,7 +73,7 @@ package duel.gui
 			logBox.height = 380;
 			}
 			
-			cardTip = new Button( assets.getTexture( "card" ) );
+			cardTip = new Button( assets.getTexture( "tipspace" ) );
 			addChild( cardTip );
 			cardTip.alignPivot();
 			cardTip.x = App.W * .5;

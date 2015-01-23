@@ -11,6 +11,7 @@ package {
 	import starling.display.Image;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
+	import starling.events.ResizeEvent;
 	import starling.text.TextField;
 	
 	/**
@@ -85,7 +86,7 @@ package {
 			loadingText = null;
 			
 			CONFIG::air
-			{ Temp.tweenAppSize( App.W, App.H, showMenu ); return; }
+			{ Temp.tweenAppSize( App.REAL_W, App.REAL_H, showMenu ); return; }
 			
 			showMenu();
 		}
@@ -93,31 +94,27 @@ package {
 		private function showMenu():void {
 			
 			var bg:Image = App.assets.generateImage( "mainbg", false, false );
-			bg.width = App.W;
-			bg.height = App.H;
 			addChild( bg );
 			
 			bg.alpha = .0;
 			Starling.juggler.tween( bg, .250, { alpha : 2.0 } );
 			
-			var b1:Button = new Button( App.assets.getTexture( "card" ), "LOCAL" );
+			var b1:Button = new Button( App.assets.getTexture( "btn" ), "LOCAL" );
 			b1.alignPivot();
 			b1.fontSize = 30;
 			b1.fontName = "Impact";
-			b1.x = .25 * stage.stageWidth;
-			b1.y = .50 * stage.stageHeight;
+			b1.fontColor = 0x999999;
 			b1.addEventListener( Event.TRIGGERED, onB1 );
 			addChild( b1 );
 			
 			b1.alpha = .0;
 			Starling.juggler.tween( b1, .330, { delay : .200, alpha : 1.0 } );
 			
-			var b2:Button = new Button( App.assets.getTexture( "card" ), "REMOTE" );
+			var b2:Button = new Button( App.assets.getTexture( "btn" ), "REMOTE" );
 			b2.alignPivot();
 			b2.fontSize = 30;
 			b2.fontName = "Impact";
-			b2.x = .75 * stage.stageWidth;
-			b2.y = .50 * stage.stageHeight;
+			b2.fontColor = 0x999999;
 			b2.addEventListener( Event.TRIGGERED, onB2 );
 			addChild( b2 );
 			
@@ -136,6 +133,18 @@ package {
 				gameMeta.isMultiplayer = true;
 				startGame( gameMeta );
 			}
+			
+			stage.addEventListener( ResizeEvent.RESIZE, onResize );
+			function onResize( e:ResizeEvent ):void 
+			{
+				b1.x = .25 * stage.stageWidth;
+				b1.y = .50 * stage.stageHeight;
+				b2.x = .75 * stage.stageWidth;
+				b2.y = .50 * stage.stageHeight;
+				bg.width = stage.stageWidth;
+				bg.height = stage.stageHeight;
+			}
+			onResize( null );
 		}
 		
 		private function startGame( meta:GameMeta ):void {

@@ -38,6 +38,7 @@ package duel.display {
 		public function initialize( field:Field, color:uint ):void
 		{
 			image = assets.generateImage( "field", true, true );
+			image.blendMode = "add";
 			image.color = color; 
 			addChild( image );
 			
@@ -77,7 +78,7 @@ package duel.display {
 			
 			if ( aura == null )
 			{
-				aura = new CardAura( "card-sele2" );
+				aura = new CardAura( "card-aura-field" );
 				aura.visible = false;
 				addChild( aura );
 				fieldTipsParent.addChild( aura );
