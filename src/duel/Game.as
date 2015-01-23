@@ -12,6 +12,7 @@ package duel
 	import duel.controllers.PlayerActionType;
 	import duel.controllers.UserPlayerController;
 	import duel.display.cardlots.HandSprite;
+	import duel.display.TableSprite;
 	import duel.display.TableSide;
 	import duel.gui.Gui;
 	import duel.gui.GuiJuggler;
@@ -61,6 +62,7 @@ package duel
 		public var jugglerGui:GuiJuggler;
 		public var juggler:GuiJuggler;
 		
+		public var table:TableSprite;
 		public var gui:Gui;
 		
 		public var p1:Player;
@@ -110,8 +112,13 @@ package duel
 			bg = new Background( assets.getTexture( "bg" ) );
 			addChild( bg );
 			
-			const CHAR_SCALE:Number = 0.5;
-			const CHAR_MARGIN_Y:Number = 40;
+			table = new TableSprite();
+			table.x = App.W * 0.50;
+			table.y = App.H * 0.50;
+			addChild( table );
+			
+			const CHAR_SCALE:Number = 0.75;
+			const CHAR_MARGIN_Y:Number = 60;
 			
 			var char1:Image = assets.generateImage( "char1" );
 			char1.alignPivot( "right", "bottom" );
@@ -129,15 +136,8 @@ package duel
 			char2.scaleY = CHAR_SCALE;
 			addChild( char2 );
 			
-			p2.tableSide = new TableSide( p2, true );
-			p2.tableSide.x = App.W * 0.50;
-			p2.tableSide.y = App.H * 0.30;
-			addChild( p2.tableSide );
-			
-			p1.tableSide = new TableSide( p1, false );
-			p1.tableSide.x = App.W * 0.50;
-			p1.tableSide.y = App.H * 0.70;
-			addChild( p1.tableSide );
+			p1.tableSide = new TableSide( p1, table, false );
+			p2.tableSide = new TableSide( p2, table, true );
 			
 			// GUI AND STUFF
 			gui = new Gui();
@@ -146,15 +146,15 @@ package duel
 			
 			p1.handSprite = new HandSprite( p1.hand );
 			p1.handSprite.maxWidth = 1000;
-			p1.handSprite.x = -450 + ( App.W - p1.handSprite.maxWidth ) * 0.5;
-			p1.handSprite.y = -p1.tableSide.y + App.H;
-			p1.handSprite.cardsParent = p1.tableSide.cardsParentTop;
+			p1.handSprite.x = - p1.handSprite.maxWidth * 0.5;
+			p1.handSprite.y =  .5 * App.H;
+			p1.handSprite.cardsParent = table.cardsParentTop;
 			
 			p2.handSprite = new HandSprite( p2.hand );
 			p2.handSprite.maxWidth = 950;
-			p2.handSprite.x = -300 + ( App.W - p2.handSprite.maxWidth ) * 0.5;
-			p2.handSprite.y = -p2.tableSide.y;
-			p2.handSprite.cardsParent = p2.tableSide.cardsParentTop;
+			p2.handSprite.x = - p2.handSprite.maxWidth * 0.5;
+			p2.handSprite.y = -.5 * App.H;
+			p2.handSprite.cardsParent = table.cardsParentTop;
 			p2.handSprite.topSide = true;
 			//}
 			
@@ -325,11 +325,11 @@ package duel
 			jugglerGui.advanceTime( time );
 			juggler.advanceTime( time );
 			
+			if ( state.isWaiting )
+				return;
+			
 			for ( var i:int = 0, iMax:int = logicComponents.length; i < iMax; i++ ) 
 				logicComponents[ i ].advanceTime( time );
-			
-			//if ( state.isWaiting )
-				//return;
 			
 			try
 			{

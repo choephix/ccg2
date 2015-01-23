@@ -422,9 +422,9 @@ package duel.controllers
 		
 		public function tryToSelectFieldCard( card:Card ):void
 		{
-			if ( card == null && selectedCard == null )
+			if ( card == null )
 				//game.gui.pMsg( "There is no creature here" );
-				return;
+				selectCard( null );
 			else
 			if ( card.exhausted )
 				game.gui.pMsg( "This card is exhausted" );

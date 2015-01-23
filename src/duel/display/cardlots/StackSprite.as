@@ -40,6 +40,8 @@ package duel.display.cardlots
 			o.alpha = 1.0;
 			o.x = x;
 			o.y = y - cardSpacing * bottomUpIndex;
+			o.scaleX = z;
+			o.scaleY = z;
 			cardsParent.addChild( o );
 		
 			o.touchable = false;
@@ -56,8 +58,8 @@ package duel.display.cardlots
 					alpha : 1.0,
 					x : x,
 					y : TARGET_Y,
-					scaleX : 1.0,
-					scaleY : 1.0,
+					scaleX : z,
+					scaleY : z,
 					rotation : MathF.randSign * MathF.random( .025 ),
 					transition : Transitions.EASE_OUT
 				} );

@@ -3,6 +3,7 @@ package duel.display {
 	import duel.display.FieldSprite;
 	import duel.display.utils.ColorScheme;
 	import duel.G;
+	import duel.GameEntity;
 	import duel.GameSprite;
 	import duel.players.Player;
 	
@@ -10,77 +11,67 @@ package duel.display {
 	 * ...
 	 * @author choephix
 	 */
-	public class TableSide extends GameSprite
+	public class TableSide extends GameEntity
 	{
-		public var player:Player;
-		
-		public var tableContainer:Sprite;
-		public var cardsParent:Sprite;
-		public var fieldTipsParent:Sprite;
-		public var cardsParentTop:Sprite;
-		
-		public function TableSide( player:Player, flip:Boolean )
+		public function TableSide( player:Player, tableSprite:TableSprite, flip:Boolean )
 		{
-			this.player = player;
-			
-			tableContainer = new Sprite();
-			addChild( tableContainer );
-			
-			cardsParent = new Sprite();
-			addChild( cardsParent );
-			
-			fieldTipsParent = new Sprite();
-			addChild( fieldTipsParent );
-			
-			cardsParentTop = new Sprite();
-			addChild( cardsParentTop );
+			//p2.tableSide.x = App.W * 0.50;
+			//p2.tableSide.y = App.H * 0.23;
+			//p1.tableSide.x = App.W * 0.50;
+			//p1.tableSide.y = App.H * 0.77;
 			
 			//
-			const FIELD_SPACING_X:Number = 25;
+			const CENTER_EXRA_MARGIN:Number = 15;
+			const FIELD_SPACING_X:Number = 45;
+			const FIELD_SPACING_Y:Number = 30;
+			const Z:Number = G.TABLE_Z;
+			
+			const C_COUNT:int = player.fieldsC.count;
+			const T_COUNT:int = player.fieldsT.count;
 			
 			var f:FieldSprite;
 			var i:int;
 			var len:int;
-			for ( i = 0, len = player.fieldsC.count; i < len; i++ )
+			var dir:Number = flip ? -1.0 : 1.0;
+			for ( i = 0, len = C_COUNT; i < len; i++ )
 			{
 				f = new FieldSprite();
-				f.x = i * ( G.CARD_W + FIELD_SPACING_X );
-				f.y = ( flip ? 1.0 : -1.0 ) * 80;
+				f.x = ( i - ( len - 1 ) * .5 ) * ( G.CARD_W * Z + FIELD_SPACING_X );
+				f.y = dir * ( 0.5 * ( G.CARD_H * Z + FIELD_SPACING_Y ) + CENTER_EXRA_MARGIN );
 				f.initialize( player.fieldsC.getAt( i ), ColorScheme.getColorForCreatureField() );
 				prepFieldSprite( f );
 			}
-			for ( i = 0, len = player.fieldsT.count; i < len; i++ )
+			for ( i = 0, len = T_COUNT; i < len; i++ )
 			{
 				f = new FieldSprite();
-				f.x = i * ( G.CARD_W + FIELD_SPACING_X );
-				f.y = ( flip ? -1.0 : 1.0 ) * 80;
+				f.x = ( i - ( len - 1 ) * .5 ) * ( G.CARD_W * Z + FIELD_SPACING_X );
+				f.y = dir * ( 1.5 * ( G.CARD_H * Z + FIELD_SPACING_Y ) + CENTER_EXRA_MARGIN );
 				f.initialize( player.fieldsT.getAt( i ), ColorScheme.getColorForTrapField() );
 				prepFieldSprite( f );
 			}
 			
 			f = new FieldSprite();
-			f.x = ( G.CARD_W + FIELD_SPACING_X ) * G.FIELD_COLUMNS;
-			f.y = ( flip ? 1.0 : -1.0 ) * 40;
+			f.x = ( G.CARD_W * Z + FIELD_SPACING_X ) * ( C_COUNT + 1 ) * .5;
+			f.y = dir * ( 0.6 * ( G.CARD_H * Z + FIELD_SPACING_Y ) + CENTER_EXRA_MARGIN );
 			f.initialize( player.deck, ColorScheme.getColorForDeckField() );
 			f.cardsContainer.cardSpacing = 2;
 			prepFieldSprite( f );
 			
 			f = new FieldSprite();
-			f.x = -( G.CARD_W + FIELD_SPACING_X );
-			f.y = ( flip ? 1.0 : -1.0 ) * 40;
+			f.x = ( G.CARD_W * Z + FIELD_SPACING_X ) * ( C_COUNT + 1 ) * -.5;
+			f.y = dir * ( 0.6 * ( G.CARD_H * Z + FIELD_SPACING_Y ) + CENTER_EXRA_MARGIN );
 			f.initialize( player.grave, ColorScheme.getColorForGraveField() );
 			f.cardsContainer.cardSpacing = 3;
 			prepFieldSprite( f );
 			
-			alignPivot();
-			
 			function prepFieldSprite( f:FieldSprite ):void
 			{
-				tableContainer.addChild( f );
-				f.fieldTipsParent = fieldTipsParent;
-				f.cardsContainer.cardsParent = cardsParent;
+				tableSprite.surface.addChild( f );
+				f.fieldTipsParent = tableSprite.fieldTipsParent;
+				f.cardsContainer.cardsParent = tableSprite.cardsParent;
 				f.cardsContainer.x = f.x;
 				f.cardsContainer.y = f.y;
+				f.z = Z;
 			}
 		}
 	}

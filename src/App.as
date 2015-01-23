@@ -29,12 +29,12 @@ package {
 			}
 			public static function toggleFullScreen():void
 			{ 
-				if( nativeStage.displayState == StageDisplayState.NORMAL ) {
-					nativeStage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
-				} else {
-					nativeStage.displayState = StageDisplayState.NORMAL;
-				}
+				nativeStage.displayState = isFullscreen ? 
+					StageDisplayState.NORMAL : 
+					StageDisplayState.FULL_SCREEN_INTERACTIVE;
 			}
+			static public function get isFullscreen():Boolean 
+			{ return nativeStage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE }
 		}
 		
 		/// STARLING SHIT

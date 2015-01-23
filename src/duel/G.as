@@ -7,6 +7,7 @@ package duel {
 	{
 		public static const CARD_W:Number = 245;
 		public static const CARD_H:Number = 342;
+		public static const TABLE_Z:Number = .80;
 		
 		public static const FIELD_COLUMNS:Number = 4;
 		

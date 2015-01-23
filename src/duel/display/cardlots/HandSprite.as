@@ -18,7 +18,7 @@ package duel.display.cardlots {
 		public var maxWidth:Number = 800;
 		public var topSide:Boolean = false;
 		
-		private var _active:Boolean = true;
+		private var _active:Boolean = false;
 		
 		private var selectedIndex:int = -1;
 		
@@ -42,6 +42,7 @@ package duel.display.cardlots {
 		
 		public function arrange():void
 		{
+			trace( this.y );
 			/** /
 			if ( selectedIndex >= 0 )
 			{
@@ -72,20 +73,21 @@ package duel.display.cardlots {
 				o = list.getCardAt( i ).sprite;
 				
 				x = x + theD( W );
-				y = ( topSide ? -1.0 : 1.0 ) * 50;
+				y = ( topSide ? 1.0 : -1.0 ) * G.CARD_H * -.4;
 				if ( _active )
-				{
-					if ( selectedIndex < 0 )
+					if ( selectedIndex < 0.0 )
 						y = 0
 					else
-						y = ( topSide ? -1.0 : 1.0 ) * ( i == selectedIndex ? -75 : 50 )
-				}
+						y = ( topSide ? 1.0 : -1.0 ) * G.CARD_H * ( i == selectedIndex ? .5 : -.4 )
+				
 				jugglerGui.removeTweens( o );
-				jugglerGui.tween( o, 0.250, // .850 .250
+				jugglerGui.tween( o, 0.330, // .850 .250
 					{ 
 						alpha: 1.0,
 						x: this.x + x, 
 						y: this.y + y, 
+						scaleX: z,
+						scaleY: z,
 						rotation: topSide ? Math.PI : .0,
 						transition: Transitions.EASE_OUT 
 						// EASE_OUT EASE_OUT_BACK EASE_OUT_ELASTIC
@@ -164,11 +166,6 @@ package duel.display.cardlots {
 			selectedIndex = -1;
 			
 			arrange();
-		}
-		
-		private function onTurnStart(e:Event):void 
-		{
-			active = game.currentPlayer == hand.owner;
 		}
 		
 		private function onCardSelected(e:Event):void 

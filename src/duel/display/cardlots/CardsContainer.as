@@ -64,8 +64,9 @@ package duel.display.cardlots
 		
 		//
 		
-		public var x:Number;
-		public var y:Number;
+		public var x:Number = 0.0;
+		public var y:Number = 0.0;
+		public var z:Number = 1.0;
 		
 		//
 		public function get cardsCount():int { return list.cardsCount }

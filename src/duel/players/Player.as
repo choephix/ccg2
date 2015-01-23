@@ -102,6 +102,7 @@ package duel.players {
 		public function set isMyTurn(value:Boolean):void 
 		{
 			_isMyTurn = value;
+			handSprite.active = value;
 		}
 		
 		public function takeDirectDamage( amount:int ):void

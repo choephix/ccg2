@@ -19,9 +19,8 @@ package duel.display.cardlots
 		
 		override protected function tweenToPlace( o:CardSprite ):void
 		{
+			/* * * /
 			const TARGET_Y:Number = y - cardSpacing * ( cardsCount - 1 );
-			
-			/* * */
 			if ( o.alpha < .5 )
 			{
 				quickPlaceAt( o, cardsCount - 1 );

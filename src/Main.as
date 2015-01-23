@@ -83,7 +83,7 @@
 		private function onMouseDown(e:MouseEvent):void 
 		{
 			CONFIG::air
-			{ stage.nativeWindow.startMove() }
+			{ if ( !App.isFullscreen ) stage.nativeWindow.startMove() }
 			//{ stage.nativeWindow.startResize() }
 		}
 		
@@ -99,11 +99,8 @@
 					//stage.nativeWindow.maximize()
 			//}
 			
-			//if( stage.displayState == StageDisplayState.NORMAL ) {
-				//stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
-			//} else {
-				//stage.displayState = StageDisplayState.NORMAL;
-			//}
+			App.toggleFullScreen(); return;
+			
 			if ( Game.current && Game.current.currentPlayer && Game.current.currentPlayer.controllable )
 				Game.current.currentPlayer.performAction(
 					new PlayerAction().setTo( PlayerActionType.END_TURN ) );

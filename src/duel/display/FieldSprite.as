@@ -34,6 +34,7 @@ package duel.display {
 		private var _isLocked:Boolean = false;
 		private var _showAura:Boolean;
 		private var _guiState:FieldSpriteGuiState = FieldSpriteGuiState.NONE;
+		private var _z:Number;
 		
 		public function initialize( field:Field, color:uint ):void
 		{
@@ -80,17 +81,19 @@ package duel.display {
 			{
 				aura = new CardAura( "card-aura-field" );
 				aura.visible = false;
-				addChild( aura );
-				fieldTipsParent.addChild( aura );
 				aura.x = x;
 				aura.y = y;
+				aura.scale = _z;
+				fieldTipsParent.addChild( aura );
 			}
 			if ( overTip == null )
 			{
 				overTip = new FieldSpriteOverTip();
-				fieldTipsParent.addChild( overTip );
 				overTip.x = x;
 				overTip.y = y;
+				overTip.scaleX = 1.5;
+				overTip.scaleY = 1.5;
+				fieldTipsParent.addChild( overTip );
 			}
 			
 			overTip.visible = 
@@ -184,6 +187,19 @@ package duel.display {
 			if ( type.isGraveyard ) return GraveStackSprite;
 			if ( type.isDeck ) return DeckStackSprite;
 			return StackSprite;
+		}
+		
+		public function get z():Number 
+		{
+			return _z;
+		}
+		
+		public function set z(value:Number):void 
+		{
+			_z = value;
+			scaleX = _z;
+			scaleY = _z;
+			cardsContainer.z = z;
 		}
 	}
 }
