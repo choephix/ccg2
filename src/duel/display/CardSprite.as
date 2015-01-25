@@ -25,6 +25,8 @@ package duel.display {
 		public var selectableAura:Image;
 		public var selectedAura:Image;
 		
+		public var targetProps:TargetProps;
+		
 		private var front:Sprite;
 		private var back:Image;
 		private var pad:Image;
@@ -154,6 +156,8 @@ package duel.display {
 			
 			// ..
 			
+			targetProps = new TargetProps();
+			
 			// ..
 			alpha = .0;
 			
@@ -203,6 +207,8 @@ package duel.display {
 				
 				setExhaustClockVisible( card.isInPlay && card.exhausted );
 			}
+			
+			flatten();
 		}
 		
 		private function setExhaustClockVisible( value:Boolean ):void 
@@ -460,4 +466,12 @@ package duel.display {
 		
 	}
 
+}
+
+class TargetProps
+{
+	public var x:Number;
+	public var y:Number;
+	public var scale:Number;
+	public var rotation:Number;
 }

@@ -1,4 +1,5 @@
-package duel.display.cardlots {
+package duel.display.cardlots
+{
 	import duel.cards.Card;
 	import duel.display.CardSprite;
 	import duel.G;
@@ -30,35 +31,49 @@ package duel.display.cardlots {
 			setTargetList( hand );
 		}
 		
-		override protected function arrangeAll():void 
+		override public function advanceTime( time:Number ):void
+		{
+			var o:CardSprite;
+			var i:int = list.cardsCount;
+			while ( --i >= 0 )
+			{
+				o = list.getCardAt( i ).sprite;
+				o.x = lerp( o.x, o.targetProps.x, .15 );
+				o.y = lerp( o.y, o.targetProps.y, .30 );
+				o.scaleX = lerp( o.scaleX, o.targetProps.scale, .20 );
+				o.scaleY = lerp( o.scaleY, o.targetProps.scale, .20 );
+				o.rotation = lerp( o.rotation, o.targetProps.rotation, .25 );
+			}
+		}
+		
+		override protected function arrangeAll():void
 		{
 			arrange();
 		}
 		
-		override protected function tweenToPlace( cs:CardSprite ):void 
+		override protected function tweenToPlace( cs:CardSprite ):void
 		{
 			arrange();
 		}
 		
 		public function arrange():void
 		{
-			trace( this.y );
 			/** /
-			if ( selectedIndex >= 0 )
-			{
-				const A:Array = [];
-				var j:int = 0;
-				var m1:int = selectedIndex;
-				var m2:int = cardsCount - selectedIndex;
-				var n:Number;
-				for ( j = 0; j < cardsCount; j++ )
-				{
-					n = 1.0 - ( Math.abs( j - selectedIndex ) / ( j < selectedIndex ? m1 : m2 ) );
-					A.push( n );
-				}
-				const A_TOTAL:Number = MathF.sum( A );
-			}
-			/**/
+			   if ( selectedIndex >= 0 )
+			   {
+			   const A:Array = [];
+			   var j:int = 0;
+			   var m1:int = selectedIndex;
+			   var m2:int = cardsCount - selectedIndex;
+			   var n:Number;
+			   for ( j = 0; j < cardsCount; j++ )
+			   {
+			   n = 1.0 - ( Math.abs( j - selectedIndex ) / ( j < selectedIndex ? m1 : m2 ) );
+			   A.push( n );
+			   }
+			   const A_TOTAL:Number = MathF.sum( A );
+			   }
+			 /**/
 			
 			const W:Number = maxWidth - G.CARD_W;
 			
@@ -72,27 +87,29 @@ package duel.display.cardlots {
 			{
 				o = list.getCardAt( i ).sprite;
 				
+				/// X
 				x = x + theD( W );
-				y = ( topSide ? 1.0 : -1.0 ) * G.CARD_H * -.4;
+				o.targetProps.x = this.x + x;
+				
+				/// Y
 				if ( _active )
 					if ( selectedIndex < 0.0 )
 						y = 0
 					else
-						y = ( topSide ? 1.0 : -1.0 ) * G.CARD_H * ( i == selectedIndex ? .5 : -.4 )
+						y =
+							( topSide ? 1.0 : -1.0 ) * G.CARD_H
+							* ( i == selectedIndex ? .5 : -.4 )
+				else
+					y = ( topSide ? 1.0 : -1.0 ) * G.CARD_H * -.4;
+				o.targetProps.y = this.y + y;
 				
-				jugglerGui.removeTweens( o );
-				jugglerGui.tween( o, 0.330, // .850 .250
-					{ 
-						alpha: 1.0,
-						x: this.x + x, 
-						y: this.y + y, 
-						scaleX: z,
-						scaleY: z,
-						rotation: topSide ? Math.PI : .0,
-						transition: Transitions.EASE_OUT 
-						// EASE_OUT EASE_OUT_BACK EASE_OUT_ELASTIC
-					} );
+				/// Z
+				o.targetProps.scale = z;
 				
+				/// ROTATION
+				o.targetProps.rotation = topSide ? Math.PI : .0;
+				
+				/// Index
 				if ( topSide )
 					o.parent.setChildIndex( o, 0 );
 				else
@@ -111,54 +128,57 @@ package duel.display.cardlots {
 			var d:Number;
 			
 			/** /
-			if ( selectedIndex == -1 || selectedIndex == cardsCount - 1 )
-			{
-				d = Math.min( W / cardsCount, G.CARD_W );
-			}
-			else
-			{
-				d = Math.min( i == selectedIndex + 1 ? Number.MAX_VALUE : ( W - SEL_SPACE ) / cardsCount, G.CARD_W );
-			}
-			/** /
-			if ( selectedIndex == -1 )
-			{
-				d = Math.min( W / hand.count, G.CARD_W );
-			}
-			else
-			{
-				d = ( W - SEL_SPACE ) * A[i] / A_TOTAL;
-				if ( i == selectedIndex + 1 ) d = SEL_SPACE;
-			}
-			/** /
-			if ( selectedIndex == -1 || selectedIndex == cardsCount - 1 )
-			{
-				d = Math.min( W / cardsCount, G.CARD_W );
-			}
-			else
-			{
-				if ( i <= selectedIndex )
-					d = Math.min( W / cardsCount, G.CARD_W );
-				else 
-				if ( i == selectedIndex + 1 )
-					d = G.CARD_W;
-				else 
-					d = Math.min( W / cardsCount, G.CARD_W );
-			}
-			/**/
-			d = Math.min( ( W - G.CARD_W*.5 ) / cardsCount, G.CARD_W );
+			   if ( selectedIndex == -1 || selectedIndex == cardsCount - 1 )
+			   {
+			   d = Math.min( W / cardsCount, G.CARD_W );
+			   }
+			   else
+			   {
+			   d = Math.min( i == selectedIndex + 1 ? Number.MAX_VALUE : ( W - SEL_SPACE ) / cardsCount, G.CARD_W );
+			   }
+			   /** /
+			   if ( selectedIndex == -1 )
+			   {
+			   d = Math.min( W / hand.count, G.CARD_W );
+			   }
+			   else
+			   {
+			   d = ( W - SEL_SPACE ) * A[i] / A_TOTAL;
+			   if ( i == selectedIndex + 1 ) d = SEL_SPACE;
+			   }
+			   /** /
+			   if ( selectedIndex == -1 || selectedIndex == cardsCount - 1 )
+			   {
+			   d = Math.min( W / cardsCount, G.CARD_W );
+			   }
+			   else
+			   {
+			   if ( i <= selectedIndex )
+			   d = Math.min( W / cardsCount, G.CARD_W );
+			   else
+			   if ( i == selectedIndex + 1 )
+			   d = G.CARD_W;
+			   else
+			   d = Math.min( W / cardsCount, G.CARD_W );
+			   }
+			 /**/
+			d = Math.min(( W - G.CARD_W * .5 ) / cardsCount, G.CARD_W );
 			/**/
 			
 			return d;
 		}
 		
+		private function lerp( a:Number, b:Number, r:Number ):Number
+		{ return a + r * ( b - a ) }
+		
 		// EVENT HANDLERS
 		
-		override protected function onCardAdded( e:Event ):void 
+		override protected function onCardAdded( e:Event ):void
 		{
 			super.onCardAdded( e );
 		}
 		
-		override protected function onCardRemoved( e:Event ):void 
+		override protected function onCardRemoved( e:Event ):void
 		{
 			super.onCardRemoved( e );
 			var c:Card = e.data as Card;
@@ -168,24 +188,22 @@ package duel.display.cardlots {
 			arrange();
 		}
 		
-		private function onCardSelected(e:Event):void 
+		private function onCardSelected( e:Event ):void
 		{
 			var c:Card = e.data as Card;
-			if ( c == null ) return;
-			
-			if ( hand.containsCard( c ) ) {
+			if ( c == null )
+				return;
+			if ( hand.containsCard( c ) )
 				show( c );
-			}
 		}
 		
-		private function onCardDeselected(e:Event):void 
+		private function onCardDeselected( e:Event ):void
 		{
 			var c:Card = e.data as Card;
-			if ( c == null ) return;
-			
-			if ( hand.containsCard( c ) ) {
+			if ( c == null )
+				return;
+			if ( hand.containsCard( c ) )
 				unshow( c );
-			}
 		}
 		
 		//
@@ -202,12 +220,12 @@ package duel.display.cardlots {
 		}
 		
 		//
-		public function get active():Boolean 
+		public function get active():Boolean
 		{
 			return _active;
 		}
 		
-		public function set active(value:Boolean):void 
+		public function set active( value:Boolean ):void
 		{
 			_active = value;
 			arrange();

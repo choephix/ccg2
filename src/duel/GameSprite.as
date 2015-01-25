@@ -1,13 +1,14 @@
 package duel 
 {
 	import chimichanga.common.assets.AdvancedAssetManager;
+	import chimichanga.common.display.Sprite;
 	import duel.gui.GuiJuggler;
 	import starling.display.DisplayObjectContainer;
 	/**
 	 * ...
 	 * @author choephix
 	 */
-	public class GameSprite extends DisplayObjectContainer
+	public class GameSprite extends Sprite
 	{
 		protected function get juggler():GuiJuggler
 		{ return Game.current.juggler }

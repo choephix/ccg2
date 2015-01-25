@@ -59,11 +59,11 @@ package {
 		public static function get H():int
 		{ return 1080 }
 		
-		public static function get REAL_W():int
-		{ return 1280 }
+		public static function get WINDOW_W():int
+		{ return 960 }
 		
-		public static function get REAL_H():int
-		{ return 720 }
+		public static function get WINDOW_H():int
+		{ return 540 }
 		
 		public static function get VERSION():String
 		{ return Version.Major + "." + Version.Minor + "." + Version.Build + "." + Version.Revision }

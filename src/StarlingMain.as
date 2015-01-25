@@ -33,6 +33,8 @@ package {
 			
 			enqueueAssets();
 			Starling.juggler.delayCall( startLoadingAssets, .25 );
+			
+			
 		}
 		
 		private function enqueueAssets():void {
@@ -86,7 +88,7 @@ package {
 			loadingText = null;
 			
 			CONFIG::air
-			{ Temp.tweenAppSize( App.REAL_W, App.REAL_H, showMenu ); return; }
+			{ Temp.tweenAppSize( App.WINDOW_W, App.WINDOW_H, showMenu ); return; }
 			
 			showMenu();
 		}
