@@ -35,9 +35,9 @@ package duel.gui
 		
 		public function Gui()
 		{
-			const INSET:Number = 20;
+			const INSET:Number = 70;
 			
-			t1 = new AnimatedTextField( 0, 0, "", "Impact", 45 );
+			t1 = new AnimatedTextField( 0, 0, "", "Impact", 55 );
 			addChild( t1 );
 			t1.x = INSET;
 			t1.width = App.W - INSET * 2.0;
@@ -47,9 +47,9 @@ package duel.gui
 			t1.vAlign = "bottom";
 			t1.touchable = false;
 			
-			t2 = new AnimatedTextField( 0, 0, "", "Impact", 45 );
+			t2 = new AnimatedTextField( 0, 0, "", "Impact", 55 );
 			addChild( t2 );
-			t2.x = INSET;
+			t2.x = 20;
 			t2.width = App.W - INSET * 2.0;
 			t2.height = App.H;
 			t2.color = 0xFFEE22;

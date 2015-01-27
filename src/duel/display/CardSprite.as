@@ -125,33 +125,39 @@ package duel.display {
 			switch( card.type )
 			{
 				case CardType.CREATURE:
-					tfDescr.bold = true;
-					tfDescr.hAlign = "right";
+					tfDescr.bold = false;
+					tfDescr.hAlign = "center";
 					tfDescr.vAlign = "center";
-					tfDescr.fontSize = 10;
+					tfDescr.fontSize = 15;
 					tfDescr.text = card.descr == null ? "" : card.descr;
-					tfDescr.x = 50;
-					tfDescr.y = 25;
-					tfDescr.width  = G.CARD_W - tfDescr.x;
-					tfDescr.height = G.CARD_H - tfDescr.y;
+					tfDescr.x = xx( .37 );
+					tfDescr.y = yy( .50 );
+					tfDescr.width  = xx( .63 );
+					tfDescr.height = yy( .50 );
 			
 					tfAttak = new AnimatedTextField( 
 									G.CARD_W, G.CARD_H,
 									AnimatedTextField.DEFAULT_MARKER,
-									"Impact", 72, 0x330011 );
+									"Impact", 90, 0x330011 );
 					tfAttak.touchable = false;
-					tfAttak.hAlign = "left";
+					tfAttak.hAlign = "center";
+					tfAttak.vAlign = "center";
 					tfAttak.duration = .450;
 					tfAttak.currentValue = card.statusC.currentPowerValue;
 					front.addChild( tfAttak );
+					tfAttak.x = .21 * G.CARD_W;
+					tfAttak.y = .75* G.CARD_H;
+					tfAttak.alignPivot();
 					break;
 				case CardType.TRAP:
 					tfDescr.text = card.descr == null ? "?" : card.descr;
-					tfDescr.fontSize = 12;
+					tfDescr.fontSize = 18;
 					tfDescr.x = 0;
 					tfDescr.y = 30;
-					tfDescr.width  = G.CARD_W - tfDescr.x;
-					tfDescr.height = G.CARD_H - tfDescr.y;
+					tfDescr.x = xx( .00 );
+					tfDescr.y = yy( .50 );
+					tfDescr.width  = xx( 1.0 );
+					tfDescr.height = yy( .50 );
 			}
 			
 			// ..
@@ -162,6 +168,9 @@ package duel.display {
 			alpha = .0;
 			
 			updateData();
+			
+			function xx( ratio:Number ):Number { return ratio * G.CARD_W }
+			function yy( ratio:Number ):Number { return ratio * G.CARD_H }
 		}
 		
 		public function advanceTime(time:Number):void 
@@ -273,7 +282,6 @@ package duel.display {
 					onComplete : destroyAnimAttackSprite
 				} );
 		}
-		
 		animation function animSummon():void 
 		{
 			var q:Quad = assets.generateImage( "ring", false, true );
@@ -290,7 +298,6 @@ package duel.display {
 					onCompleteArgs : [true]
 				} );
 		}
-		
 		animation function animRelocation():void 
 		{
 			jugglerStrict.tween( this, .600,
@@ -300,39 +307,32 @@ package duel.display {
 					transition : Transitions.EASE_OUT_ELASTIC
 				} );
 		}
-		
 		animation function animRelocationCompleteOrAbort():void 
 		{
 			this.scaleX = 1.0;
 			this.scaleY = 1.0;
 			this.alpha = 1.0;
 		}
-		
 		animation function animFlipEffect():void
 		{
 			animBlink( true, 0xFF8030 );
 		}
-		
 		animation function animTrapEffect():void
 		{
 			animBlink( true, 0x60B0FF );
 		}
-		
 		animation function animSpecialEffect():void
 		{
 			animBlink( true, 0xFFD060 );
 		}
-		
 		animation function animDamageAbort():void
 		{
 			animBlink( true, 0x104050 );
 		}
-		
 		animation function animDamageOnly():void
 		{
 			//animBlink( false, 0xFFAEAE ).blendMode = BlendMode.MULTIPLY;
 		}
-		
 		animation function animDie():void 
 		{
 			setAsTopChild();
@@ -359,13 +359,11 @@ package duel.display {
 			
 			destroyAnimAttackSprite();
 		}
-		
 		/// Plays ste standard flip-up animation, but in a way that pauses gameplay processes during it
 		animation function animSpecialFlip():void
 		{
 			setFaceDown( false, true );
 		}
-		
 		public function animFadeToNothing( dispose:Boolean ):void 
 		{
 			juggler.xtween( this, .150, { 
@@ -381,7 +379,6 @@ package duel.display {
 				removeFromParent( true );
 			}
 		}
-		
 		animation function resetAnimState():void
 		{
 			destroyAnimAttackSprite();
@@ -390,7 +387,6 @@ package duel.display {
 			this.scaleY = 1.0;
 			this.alpha = 1.0;
 		}
-		
 		private function animBlink( strict:Boolean, color:uint = 0xFFFFFF ):Quad
 		{
 			var q:Quad = assets.generateImage( "card-blink-glow" );
@@ -407,7 +403,6 @@ package duel.display {
 				} );
 			return q;
 		}
-		
 		public function setAsTopChild():void
 		{
 			parent.setChildIndex( this, parent.numChildren - 1 );

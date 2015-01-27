@@ -1,9 +1,12 @@
 package {
 	import chimichanga.common.display.Sprite;
 	import dev.Temp;
+	import duel.controllers.PlayerAction;
+	import duel.controllers.PlayerActionType;
 	import duel.Game;
 	import duel.GameEvents;
 	import duel.GameMeta;
+	import flash.geom.Point;
 	import flash.ui.Keyboard;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
@@ -12,6 +15,9 @@ package {
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	import starling.events.ResizeEvent;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	import starling.text.TextField;
 	
 	/**
@@ -34,7 +40,19 @@ package {
 			enqueueAssets();
 			Starling.juggler.delayCall( startLoadingAssets, .25 );
 			
+			stage.addEventListener( TouchEvent.TOUCH, onTouch );
+		}
+		
+		private function onTouch( e:TouchEvent ):void {
+			var t:Touch = e.getTouch( stage );
 			
+			if ( t == null ) return;
+			
+			t.getLocation( stage, App.mouseXY );
+			
+			//if ( t.phase == TouchPhase.ENDED )
+				//if ( t.tapCount == 2 ) 
+					//App.toggleFullScreen();
 		}
 		
 		private function enqueueAssets():void {
@@ -99,7 +117,7 @@ package {
 			addChild( bg );
 			
 			bg.alpha = .0;
-			//Starling.juggler.tween( bg, .250, { alpha : 2.0 } );
+			Starling.juggler.tween( bg, .250, { alpha : 2.0 } );
 			
 			var b1:Button = new Button( App.assets.getTexture( "btn" ), "LOCAL" );
 			b1.alignPivot();
@@ -167,8 +185,11 @@ package {
 		private function onkey( e:KeyboardEvent ):void {
 			
 			if ( e.keyCode == Keyboard.ESCAPE ) {
-				if ( g != null )
-					g.endGame();
+				//if ( g != null )
+					//g.endGame();
+				if ( Game.current && Game.current.currentPlayer && Game.current.currentPlayer.controllable )
+					Game.current.currentPlayer.performAction(
+						new PlayerAction().setTo( PlayerActionType.END_TURN ) );
 			}
 			
 			CONFIG::desktop

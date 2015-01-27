@@ -112,21 +112,6 @@ package duel.cards.temp_database
 					c.descr = "If this card is in your graveyard, the moment you have no cards in your hand - return this card to your hand.";
 				},
 				/* * */
-				function( c:Card ):void ///		..C		Trap Diffuser
-				{
-					c.name = "Trap Diffuser";
-					
-					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.basePower = 2;
-					c.propsC.flippable = true;
-					c.propsC.onSafeFlipFunc =
-					function():void {
-						TempDatabaseUtils.doDestroyTrapsRow( c.controller.opponent );
-					}
-					
-					c.descr = "Safe-Flip: destroy all enemy traps";
-				},
-				/* * */
 				function( c:Card ):void ///		T..		Smelly socks
 				{
 					c.name = "Smelly socks";
@@ -185,7 +170,7 @@ package duel.cards.temp_database
 					
 					c.descr = "Base Power = 2 x number of enemy creatures in play.";
 				},
-				/* * */
+				/* * * /
 				function( c:Card ):void ///		T..		Stun
 				{
 					c.name = "Stun";
@@ -229,6 +214,30 @@ package duel.cards.temp_database
 					c.descr = "When opposing enemy creature attacks - stun it until the start of its controller's next turn.";
 				},
 				/* * */
+				function( c:Card ):void ///		T..		Fatal Sacrifice
+				{
+					c.name = "Fatal Sacrifice";
+					
+					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
+					
+					c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
+					c.propsT.effect.funcActivateCondition =
+					function( p:GameplayProcess ):Boolean {
+						if ( c.indexedField.index != p.getIndex() ) return false;
+						if ( c.controller.opponent != p.getAttacker().controller ) return false;
+						if ( c.indexedField.opposingCreature == null ) return false;
+						if ( c.indexedField.samesideCreature == null ) return false;
+						return true;
+					}
+					c.propsT.effect.funcActivate =
+					function( p:GameplayProcess ):void {
+						TempDatabaseUtils.doKill( c.indexedField.opposingCreature );
+						TempDatabaseUtils.doKill( c.indexedField.samesideCreature );
+					}
+					
+					c.descr = "When opposing creature attacks your creature - destroy both creatures";
+				},
+				/* * */
 				function( c:Card ):void ///		..C		Flippers
 				{
 					c.name = "Flippers";
@@ -239,8 +248,11 @@ package duel.cards.temp_database
 					c.propsC.onCombatFlipFunc =
 					function():void {
 						if ( c.indexedField.opposingCreature == null ) return;
-						c.indexedField.opposingCreature.returnToControllerHand();
+						TempDatabaseUtils.doPutInHand( 
+							c.indexedField.opposingCreature,
+							c.indexedField.opposingCreature.owner );
 					}
+					c.descr = "Combat-Flip: Return opposing creature to its owner's hand.";
 				},
 				/* * */
 				function( c:Card ):void ///		.`C		Dick Johnson
@@ -376,6 +388,21 @@ package duel.cards.temp_database
 					c.descr = "Base power = 7 while Yin is adjacent";
 				},
 				/* * */
+				function( c:Card ):void ///		..C		Trap Diffuser
+				{
+					c.name = "Trap Diffuser";
+					
+					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
+					c.propsC.basePower = 2;
+					c.propsC.flippable = true;
+					c.propsC.onSafeFlipFunc =
+					function():void {
+						TempDatabaseUtils.doDestroyTrapsRow( c.controller.opponent );
+					}
+					
+					c.descr = "Safe-Flip: destroy all enemy traps";
+				},
+				/* * */
 				function( c:Card ):void ///		T..		Super Healing
 				{
 					c.name = "Super Healing";
@@ -385,18 +412,20 @@ package duel.cards.temp_database
 					c.propsT.effect.watchForActivation( GameplayProcess.DIRECT_DAMAGE );
 					c.propsT.effect.funcActivateCondition =
 					function( p:GameplayProcess ):Boolean {
-						if ( c.indexedField.index != p.getIndex() ) return false;
-						if ( c.controller.opponent != p.getAttacker().controller ) return false;
+						if ( p.getDamage() == null ) return false;
+						if ( p.getDamage().source as Card == null ) return false;
+						if ( Card( p.getDamage().source ).indexedField == null ) return false;
+						if ( c.indexedField.index != Card( p.getDamage().source ).indexedField.index ) return false;
 						if ( !c.indexedField.samesideCreatureField.isEmpty ) return false;
 						return true;
 					}
 					c.propsT.effect.funcActivate =
 					function( p:GameplayProcess ):void {
 						p.abort();
-						TempDatabaseUtils.doHeal( c.controller, p.getAttacker().statusC.generateAttackDamage().amount );
+						TempDatabaseUtils.doHeal( c.controller, p.getDamage().amount );
 					}
 					
-					c.descr = "When opposing enemy trap's activation finishes - add that trap to your hand.";
+					c.descr = "When you receive direct damage from an opposing card and you have no card on your own side - heal yourself instead.";
 				},
 				/* * */
 				function( c:Card ):void ///		..C		The Producer
@@ -560,21 +589,6 @@ package duel.cards.temp_database
 					c.descr = "CONBAT FLIP: If it's the enemy's turn - end their turn after the end of this combat.";
 				},
 				/* * */
-				function( c:Card ):void ///		..C		Saboteur
-				{
-					c.name = "Saboteur";
-					
-					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
-					c.propsC.basePower = 3;
-					c.propsC.flippable = true;
-					c.propsC.onCombatFlipFunc =
-					function():void {
-						TempDatabaseUtils.doPutInHandTrapsRow( c.controller.opponent );
-					}
-					
-					c.descr = "Combat-Flip: return all of your opponent's traps to their hand";
-				},
-				/* * */
 				function( c:Card ):void ///		..C		Provoked Nina
 				{
 					c.name = "Provoked Nina";
@@ -590,7 +604,7 @@ package duel.cards.temp_database
 					
 					c.descr = "Safe-Flip: Die.";
 				},
-				/* * */
+				/* * * /
 				function( c:Card ):void ///		T..		Field Lock
 				{
 					c.name = "Field Lock";
@@ -630,6 +644,30 @@ package duel.cards.temp_database
 					}
 					
 					c.descr = "When opponent is summoning an opposing creature - lock opposing creature field until the start of your next turn. (summoning cannot continue and all tributes, if any, do not return)";
+				},
+				/* * */
+				function( c:Card ):void ///		T..		Fatal Sacrifice
+				{
+					c.name = "Fatal Sacrifice";
+					
+					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
+					
+					c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
+					c.propsT.effect.funcActivateCondition =
+					function( p:GameplayProcess ):Boolean {
+						if ( c.indexedField.index != p.getIndex() ) return false;
+						if ( c.controller.opponent != p.getAttacker().controller ) return false;
+						if ( c.indexedField.opposingCreature == null ) return false;
+						if ( c.indexedField.samesideCreature == null ) return false;
+						return true;
+					}
+					c.propsT.effect.funcActivate =
+					function( p:GameplayProcess ):void {
+						TempDatabaseUtils.doKill( c.indexedField.opposingCreature );
+						TempDatabaseUtils.doKill( c.indexedField.samesideCreature );
+					}
+					
+					c.descr = "When opposing creature attacks your creature - destroy both creatures";
 				},
 				/* * */
 				function( c:Card ):void ///		.`C		Compromising Bill
@@ -782,6 +820,21 @@ package duel.cards.temp_database
 					}
 					
 					c.descr = "Base power = number of friendly creatures in play x 4.";
+				},
+				/* * */
+				function( c:Card ):void ///		..C		Saboteur
+				{
+					c.name = "Saboteur";
+					
+					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
+					c.propsC.basePower = 3;
+					c.propsC.flippable = true;
+					c.propsC.onCombatFlipFunc =
+					function():void {
+						TempDatabaseUtils.doPutInHandTrapsRow( c.controller.opponent );
+					}
+					
+					c.descr = "Combat-Flip: return all of your opponent's traps to their hand";
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Ragnarok

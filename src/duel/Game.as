@@ -259,6 +259,35 @@ package duel
 			
 			//}
 			
+			//{ PREPARE DECKS AGAIN (double the cards, dowble the fun!) (not really) (whatever, it's proof of concept!)
+			var DECK1:Array = [];
+			var DECK2:Array = [];
+			
+			var i:int;
+			
+			i = 0;
+			
+			do
+				DECK1.push( i );
+			while ( TempCardsDatabase.F[ ++i ] != null )
+			
+			++i
+			
+			do
+				DECK2.push( i );
+			while ( TempCardsDatabase.F[ ++i ] != null )
+			
+			++i
+			
+			do
+			{
+				DECK1.push( i );
+				DECK2.push( i );
+			}
+			while ( TempCardsDatabase.F[ ++i ] != null )
+			
+			//}
+			
 			//{ PREPARE GAMEPLAY
 			
 			var time:Number = 0.7;
@@ -325,8 +354,8 @@ package duel
 			jugglerGui.advanceTime( time );
 			juggler.advanceTime( time );
 			
-			if ( state.isWaiting )
-				return;
+			//if ( state.isWaiting )
+				//return;
 			
 			for ( var i:int = 0, iMax:int = logicComponents.length; i < iMax; i++ ) 
 				logicComponents[ i ].advanceTime( time );

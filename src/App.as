@@ -2,6 +2,7 @@ package {
 	import chimichanga.common.assets.AdvancedAssetManager;
 	import flash.display.StageDisplayState;
 	import flash.display.Stage;
+	import flash.geom.Point;
 	import starling.display.Stage;
 	
 	CONFIG::desktop {
@@ -29,6 +30,7 @@ package {
 			}
 			public static function toggleFullScreen():void
 			{ 
+				trace( nativeStage.displayState == isFullscreen ? "NORMAL":"FULL_SCREEN_INTERACTIVE" );
 				nativeStage.displayState = isFullscreen ? 
 					StageDisplayState.NORMAL : 
 					StageDisplayState.FULL_SCREEN_INTERACTIVE;
@@ -46,6 +48,8 @@ package {
 		
 		public static var assets:AdvancedAssetManager;
 		
+		public static var mouseXY:Point = new Point();
+		
 		public static function initialize( root:StarlingMain ):void {
 			
 			App.root = root;
@@ -60,10 +64,16 @@ package {
 		{ return 1080 }
 		
 		public static function get WINDOW_W():int
-		{ return 960 }
+		{ return 1280 }
 		
 		public static function get WINDOW_H():int
-		{ return 540 }
+		{ return 720 }
+		
+		public static function get STAGE_W():int
+		{ return stage.stageWidth }
+		
+		public static function get STAGE_H():int
+		{ return stage.stageHeight }
 		
 		public static function get VERSION():String
 		{ return Version.Major + "." + Version.Minor + "." + Version.Build + "." + Version.Revision }

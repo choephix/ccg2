@@ -28,6 +28,48 @@ package duel.cards.temp_database
 				/* * * /
 				
 				/* * */
+				function( c:Card ):void ///		..C		Flippers
+				{
+					c.name = "Flippers";
+					
+					TempDatabaseUtils.setToCreature( c );					// - - - - - CREATURE //
+					c.propsC.basePower = 4;
+					c.propsC.flippable = true;
+					c.propsC.onCombatFlipFunc =
+					function():void {
+						if ( c.indexedField.opposingCreature == null ) return;
+						TempDatabaseUtils.doPutInHand( 
+							c.indexedField.opposingCreature,
+							c.indexedField.opposingCreature.owner );
+					}
+					c.descr = "Combat-Flip: Return opposing creature to its owner's hand.";
+				},
+				/* * */
+				function( c:Card ):void ///		T..		Super Healing
+				{
+					c.name = "Super Healing";
+					
+					TempDatabaseUtils.setToTrap( c );						// TRAP - - - - - - //
+					
+					c.propsT.effect.watchForActivation( GameplayProcess.DIRECT_DAMAGE );
+					c.propsT.effect.funcActivateCondition =
+					function( p:GameplayProcess ):Boolean {
+						if ( p.getDamage() == null ) return false;
+						if ( p.getDamage().source as Card == null ) return false;
+						if ( Card( p.getDamage().source ).indexedField == null ) return false;
+						if ( c.indexedField.index != Card( p.getDamage().source ).indexedField.index ) return false;
+						if ( !c.indexedField.samesideCreatureField.isEmpty ) return false;
+						return true;
+					}
+					c.propsT.effect.funcActivate =
+					function( p:GameplayProcess ):void {
+						p.abort();
+						TempDatabaseUtils.doHeal( c.controller, p.getDamage().amount );
+					}
+					
+					c.descr = "When you receive direct damage from an opposing card and you have no card on your own side - heal yourself instead.";
+				},
+				/* * */
 				function( c:Card ):void ///		..C		Lonely Golem
 				{
 					c.name = "Lonely Golem";

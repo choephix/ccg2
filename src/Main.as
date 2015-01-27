@@ -18,8 +18,8 @@
 	import starling.core.Starling;
 	
 	//[SWF(width="640", height="960", backgroundColor="#000000", frameRate="60")]
-	//[SWF(width="240",height="240",backgroundColor="#0",frameRate="60")]
-	[SWF(width="1280",height="720",backgroundColor="#0",frameRate="60")]
+	[SWF(width="240",height="240",backgroundColor="#0",frameRate="60")]
+	//[SWF(width="1280",height="720",backgroundColor="#0",frameRate="60")]
 	//[SWF( width="800",height="480",backgroundColor="#000000",frameRate="60" )]
 	//[SWF(width="400",height="240",backgroundColor="#00000",frameRate="60")]
 	
@@ -108,6 +108,7 @@
 		
 		private function onMiddleClick( e:MouseEvent ):void
 		{
+			CONFIG::debug
 			CONFIG::desktop
 			{ stage.nativeWindow.close() }
 		}

@@ -33,6 +33,8 @@ package duel.display.cardlots
 		
 		override public function advanceTime( time:Number ):void
 		{
+			//arrange();
+			
 			var o:CardSprite;
 			var i:int = list.cardsCount;
 			while ( --i >= 0 )
@@ -73,7 +75,23 @@ package duel.display.cardlots
 			   }
 			   const A_TOTAL:Number = MathF.sum( A );
 			   }
-			 /**/
+			/**/
+			
+			const POR:Number = .100;
+			var YY:Number
+			
+			if ( _active )
+			{
+				YY = App.mouseXY.y / App.WINDOW_H;
+				YY = Math.max( 0, YY - 1.0 + POR );
+				YY = YY * 1 / POR;
+				YY = 1 - YY;
+				
+				YY = App.mouseXY.y / App.WINDOW_H > 1.0 - POR ? 0.0 : 1.0;
+				trace( YY );
+			}
+			else
+				YY = 1.0;
 			
 			const W:Number = maxWidth - G.CARD_W;
 			
@@ -94,6 +112,7 @@ package duel.display.cardlots
 				/// Y
 				if ( _active )
 					if ( selectedIndex < 0.0 )
+						//y = .4 * G.CARD_H * YY
 						y = 0
 					else
 						y =
