@@ -162,7 +162,6 @@ package duel.display {
 			alpha = .0;
 			
 			updateData();
-			setFaceDown( card.faceDown, false );
 		}
 		
 		public function advanceTime(time:Number):void 
@@ -208,7 +207,7 @@ package duel.display {
 				setExhaustClockVisible( card.isInPlay && card.exhausted );
 			}
 			
-			flatten();
+			//flatten();
 		}
 		
 		private function setExhaustClockVisible( value:Boolean ):void 
