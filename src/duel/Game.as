@@ -260,30 +260,15 @@ package duel
 			//}
 			
 			//{ PREPARE DECKS AGAIN (double the cards, dowble the fun!) (not really) (whatever, it's proof of concept!)
-			var DECK1:Array = [];
-			var DECK2:Array = [];
-			
-			var i:int;
 			
 			i = 0;
-			
-			do
-				DECK1.push( i );
+			do DECK1.push( i ); 
 			while ( TempCardsDatabase.F[ ++i ] != null )
-			
 			++i
-			
-			do
-				DECK2.push( i );
+			do DECK2.push( i ); 
 			while ( TempCardsDatabase.F[ ++i ] != null )
-			
 			++i
-			
-			do
-			{
-				DECK1.push( i );
-				DECK2.push( i );
-			}
+			do { DECK1.push( i ); DECK2.push( i ); }
 			while ( TempCardsDatabase.F[ ++i ] != null )
 			
 			//}
