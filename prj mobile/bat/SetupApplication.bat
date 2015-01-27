@@ -38,7 +38,7 @@ set DIST_PATH=dist
 set DIST_NAME=Prjmobile
 
 :: Debugging using a custom IP
-set DEBUG_IP=
+set DEBUG_IP=192.168.0.105
 
 
 
