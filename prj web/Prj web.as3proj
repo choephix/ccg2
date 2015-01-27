@@ -18,7 +18,6 @@
   <classpaths>
     <class path="..\src" />
     <class path="..\lib" />
-    <class path="embedded" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -46,7 +45,7 @@
     <option loadExterns="" />
     <option staticLinkRSL="True" />
     <option additional="" />
-    <option compilerConstants="CONFIG::development,true&#xA;CONFIG::sandbox,true&#xA;CONFIG::slowmode,false" />
+    <option compilerConstants="CONFIG::development,true&#xA;CONFIG::desktop,false&#xA;CONFIG::web,false&#xA;CONFIG::slowmode,false&#xA;CONFIG::quickplay,false&#xA;CONFIG::sandbox,false" />
     <option minorVersion="" />
   </build>
   <!-- SWC Include Libraries -->

@@ -47,7 +47,7 @@
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
 			App.nativeStage = stage;
-			CONFIG::air
+			CONFIG::desktop
 			{
 			App.nativeWindow = stage.nativeWindow;
 			App.nativeWindow.x = .5 * ( Capabilities.screenResolutionX - stage.stageWidth );
@@ -82,7 +82,7 @@
 		
 		private function onMouseDown(e:MouseEvent):void 
 		{
-			CONFIG::air
+			CONFIG::desktop
 			{ if ( !App.isFullscreen ) stage.nativeWindow.startMove() }
 			//{ stage.nativeWindow.startResize() }
 		}
@@ -108,7 +108,7 @@
 		
 		private function onMiddleClick( e:MouseEvent ):void
 		{
-			CONFIG::air
+			CONFIG::desktop
 			{ stage.nativeWindow.close() }
 		}
 		
@@ -160,7 +160,7 @@
 		
 		private function onEnterFrame( e:Event ):void {
 			
-			CONFIG::air
+			CONFIG::desktop
 			{ if ( App.isMinimized ) return }
 			
 			if ( starling.isStarted ) {
@@ -185,7 +185,7 @@
 		
 		///
 		
-		CONFIG::air
+		CONFIG::desktop
 		public function set appWidth( value:Number ):void
 		{
 			me.stage.stageWidth = value;
@@ -198,7 +198,7 @@
 			return stage.stageWidth;
 		}
 		
-		CONFIG::air
+		CONFIG::desktop
 		public function set appHeight( value:Number ):void
 		{
 			me.stage.stageHeight = value;

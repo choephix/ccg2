@@ -87,7 +87,7 @@ package {
 			loadingText.removeFromParent( true );
 			loadingText = null;
 			
-			CONFIG::air
+			CONFIG::desktop
 			{ Temp.tweenAppSize( App.WINDOW_W, App.WINDOW_H, showMenu ); return; }
 			
 			showMenu();
@@ -99,7 +99,7 @@ package {
 			addChild( bg );
 			
 			bg.alpha = .0;
-			Starling.juggler.tween( bg, .250, { alpha : 2.0 } );
+			//Starling.juggler.tween( bg, .250, { alpha : 2.0 } );
 			
 			var b1:Button = new Button( App.assets.getTexture( "btn" ), "LOCAL" );
 			b1.alignPivot();
@@ -171,21 +171,21 @@ package {
 					g.endGame();
 			}
 			
-			CONFIG::air
+			CONFIG::desktop
 			{
-			if ( e.keyCode == Keyboard.NUMBER_2 ) {
-				Temp.tweenAppSize( Math.random() * 2000, Math.random() * 1000 );
-			}
-			if ( e.keyCode == Keyboard.F ) {
-				App.toggleFullScreen();
-			}
-			if ( e.keyCode == Keyboard.SPACE ) {
-				//g.performActionTurnEnd();
-				App.toggleFullScreen();
-			}
-			if ( e.keyCode == Keyboard.ESCAPE ) {
-				App.nativeWindow.close();
-			}
+				if ( e.keyCode == Keyboard.NUMBER_2 ) {
+					Temp.tweenAppSize( Math.random() * 2000, Math.random() * 1000 );
+				}
+				if ( e.keyCode == Keyboard.F ) {
+					App.toggleFullScreen();
+				}
+				if ( e.keyCode == Keyboard.SPACE ) {
+					//g.performActionTurnEnd();
+					App.toggleFullScreen();
+				}
+				if ( e.keyCode == Keyboard.ESCAPE ) {
+					App.nativeWindow.close();
+				}
 			}
 			
 			if ( e.keyCode == Keyboard.CAPS_LOCK ) {

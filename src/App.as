@@ -4,7 +4,7 @@ package {
 	import flash.display.Stage;
 	import starling.display.Stage;
 	
-	CONFIG::air {
+	CONFIG::desktop {
 	import flash.display.NativeWindow;
 	import flash.display.NativeWindowDisplayState;
 	}
@@ -18,7 +18,7 @@ package {
 		
 		public static var nativeStage:flash.display.Stage;
 		
-		CONFIG::air
+		CONFIG::desktop
 		{
 			public static var nativeWindow:NativeWindow;
 			public static function get isMinimized():Boolean
