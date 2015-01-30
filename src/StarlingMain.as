@@ -8,6 +8,7 @@ package {
 	import duel.GameMeta;
 	import flash.geom.Point;
 	import flash.ui.Keyboard;
+	import screens.lobby.Lobby;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.Button;
@@ -27,6 +28,7 @@ package {
 	public class StarlingMain extends Sprite {
 		private var g:Game;
 		private var loadingText:TextField;
+		private var gameMeta:GameMeta;
 		
 		public function StarlingMain() {
 			blendMode = BlendMode.NORMAL;
@@ -128,7 +130,7 @@ package {
 			b1.fontSize = 30;
 			b1.fontName = "Impact";
 			b1.fontColor = 0x999999;
-			b1.addEventListener( Event.TRIGGERED, onB1 );
+			b1.addEventListener( Event.TRIGGERED, startSingle );
 			addChild( b1 );
 			
 			b1.alpha = .0;
@@ -139,24 +141,13 @@ package {
 			b2.fontSize = 30;
 			b2.fontName = "Impact";
 			b2.fontColor = 0x999999;
-			b2.addEventListener( Event.TRIGGERED, onB2 );
+			b2.addEventListener( Event.TRIGGERED, showLobby );
 			addChild( b2 );
 			
 			b2.alpha = .0;
 			Starling.juggler.tween( b2, .330, { delay : .200, alpha : 2.0 } );
 			
-			var gameMeta:GameMeta = new GameMeta();
-			
-			function onB1():void
-			{
-				gameMeta.isMultiplayer = false;
-				startGame( gameMeta );
-			}
-			function onB2():void
-			{
-				gameMeta.isMultiplayer = true;
-				startGame( gameMeta );
-			}
+			gameMeta = new GameMeta();
 			
 			stage.addEventListener( ResizeEvent.RESIZE, onResize );
 			function onResize( e:ResizeEvent ):void 
@@ -169,6 +160,29 @@ package {
 				bg.height = stage.stageHeight;
 			}
 			onResize( null );
+			
+			CONFIG::quickplay { showLobby(); }
+			//CONFIG::quickplay { startGame( gameMeta ); }
+		}
+		
+		private function showLobby():void {
+			trace( "Opening Lobby" );
+			var lobby:Lobby = new Lobby();
+			lobby.readyCallback = startMulti;
+			addChild( lobby );
+		}
+		
+		private function startSingle():void {
+			gameMeta.isMultiplayer = false;
+			startGame( gameMeta );
+		}
+		
+		private function startMulti( room:String, enemy:String ):void {
+			trace( "Starting remote game", room, enemy );
+			
+			gameMeta.isMultiplayer = true;
+			gameMeta.roomName = room;
+			startGame( gameMeta );
 		}
 		
 		private function startGame( meta:GameMeta ):void {

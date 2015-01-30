@@ -24,13 +24,13 @@ package duel.network {
 		public var myUser:UserObject;
 		public var oppUser:UserObject;
 		
-		public function initialize():void
+		public function initialize( roomName:String ):void
 		{
-			connection = new MultiUserSession( SERVER_ADDRESS, "ccg2/test" );
+			connection = new MultiUserSession( SERVER_ADDRESS, "ccg2/" + roomName );
 			connection.onConnect 		= onConnected;
 			connection.onUserAdded 		= onUserAdded;
 			connection.onUserRemoved 	= onUserRemoved;
-			connection.onUserExpired 	= onUserRemoved;
+			connection.onUserExpired 	= onUserExpired;
 			connection.onObjectRecieve 	= onUserObjectRecieved;
 			
 			var myEnterTime:Number = new Date().time;
@@ -41,7 +41,6 @@ package duel.network {
 			{ myName = File.userDirectory.name }
 			
 			CONFIG::mobile
-			//{ myName = Capabilities.manufacturer + " " + Capabilities.cpuArchitecture }
 			{ myName = Capabilities.cpuArchitecture+"_"+ myEnterTime.toString( 36 ) }
 			
 			connection.connect(myName, { color:myColor, logtime:myEnterTime } );
@@ -110,6 +109,16 @@ package duel.network {
 			
 			if ( Game.current )
 				Game.current.endGame();
+		}
+		
+		protected function onUserExpired(user:UserObject):void				
+		{
+			Game.log( "User expired"
+				+ "\n" + "username: " + user.name
+				+ "\n" + "userid: " + user.id.substr(0,16) + "..."
+				+ "\n" + "totalusers: " + connection.userCount
+				+ "\n"
+				); 
 		}
 		
 		public function sendMyUserObject( data:Object ):void			

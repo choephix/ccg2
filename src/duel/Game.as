@@ -178,11 +178,12 @@ package duel
 				p1.controllable = true;
 			
 				remote = new RemoteConnectionController();
-				remote.initialize();
+				remote.initialize( meta.roomName );
 				remote.onOpponentFoundCallback = startGame;
 				remote.onUserObjectRecievedCallback = onRemoteMessageReceived;
 				
-				gui.pMsg( "Waiting for opponent...", false );
+				//gui.pMsg( "Waiting for opponent...", false );
+				gui.pMsg( "Waiting for opponent in room " + meta.roomName, false );
 			}
 		}
 		

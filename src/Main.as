@@ -18,8 +18,8 @@
 	import starling.core.Starling;
 	
 	//[SWF(width="640", height="960", backgroundColor="#000000", frameRate="60")]
-	[SWF(width="240",height="240",backgroundColor="#0",frameRate="60")]
-	//[SWF(width="1280",height="720",backgroundColor="#0",frameRate="60")]
+	//[SWF(width="240",height="240",backgroundColor="#0",frameRate="60")]
+	[SWF(width="1280",height="720",backgroundColor="#0",frameRate="60")]
 	//[SWF( width="800",height="480",backgroundColor="#000000",frameRate="60" )]
 	//[SWF(width="400",height="240",backgroundColor="#00000",frameRate="60")]
 	
@@ -67,12 +67,12 @@
 			Starling.multitouchEnabled = true; // useful on mobile devices
 			Starling.handleLostContext = !Platform.isIOS(); // not necessary on iOS. Saves a lot of memory!
 			
-			stage.addEventListener(Event.ACTIVATE, activate );
-			stage.addEventListener(Event.DEACTIVATE, deactivate );
-			stage.addEventListener(Event.RESIZE, onStageResize );
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown );
-			stage.addEventListener(MouseEvent.RIGHT_CLICK, onRightClick );
-			stage.addEventListener(MouseEvent.MIDDLE_CLICK, onMiddleClick );
+			stage.addEventListener( Event.ACTIVATE, activate );
+			stage.addEventListener( Event.DEACTIVATE, deactivate );
+			stage.addEventListener( Event.RESIZE, onStageResize );
+			stage.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDown );
+			stage.addEventListener( MouseEvent.RIGHT_CLICK, onRightClick );
+			stage.addEventListener( MouseEvent.MIDDLE_CLICK, onMiddleClick );
 			
 			mStage3D = stage.stage3Ds[ 0 ];
 			
@@ -99,18 +99,24 @@
 					//stage.nativeWindow.maximize()
 			//}
 			
-			App.toggleFullScreen(); return;
+			CONFIG::desktop
+			{ App.toggleFullScreen(); }
 			
-			if ( Game.current && Game.current.currentPlayer && Game.current.currentPlayer.controllable )
-				Game.current.currentPlayer.performAction(
-					new PlayerAction().setTo( PlayerActionType.END_TURN ) );
+			CONFIG::web
+			{
+				if ( Game.current && Game.current.currentPlayer && Game.current.currentPlayer.controllable )
+					Game.current.currentPlayer.performAction(
+						new PlayerAction().setTo( PlayerActionType.END_TURN ) );
+			}
 		}
 		
 		private function onMiddleClick( e:MouseEvent ):void
 		{
 			CONFIG::debug
-			CONFIG::desktop
-			{ stage.nativeWindow.close() }
+			{
+				CONFIG::desktop
+				{ stage.nativeWindow.close() }
+			}
 		}
 		
 		private function onContextCreated( event:Event ):void {
