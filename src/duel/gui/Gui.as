@@ -182,7 +182,7 @@ package duel.gui
 		
 		private function manaText( mana:ManaPool ):String
 		{
-			return "Mana: " + mana.current + "/" + mana.currentCap + "";
+			return "AP: " + mana.current + "/" + mana.currentCap + "";
 			//var r:String = "";
 			//while ( val-- > 0 )
 				//r += "M";

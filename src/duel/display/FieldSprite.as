@@ -4,14 +4,19 @@ package duel.display {
 	import duel.display.cardlots.DeckStackSprite;
 	import duel.display.cardlots.GraveStackSprite;
 	import duel.display.cardlots.StackSprite;
+	import duel.display.fields.CreatureFieldOverlay;
 	import duel.display.fields.FieldSpriteGuiState;
+	import duel.G;
 	import duel.GameSprite;
+	import duel.gui.GuiEvents;
+	import duel.table.CreatureField;
 	import duel.table.Field;
 	import duel.table.CardLotType;
 	import duel.table.IndexedField;
 	import starling.animation.IAnimatable;
 	import starling.animation.Transitions;
 	import starling.display.Image;
+	import starling.display.Quad;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
@@ -24,9 +29,11 @@ package duel.display {
 	{
 		public var cardsContainer:StackSprite;
 		public var fieldTipsParent:Sprite;
+		private var quad:Quad;
 		private var image:Image;
 		private var lockIcon:Image;
 		private var aura:CardAura;
+		private var overlayC:CreatureFieldOverlay;
 		private var overTip:FieldSpriteOverTip;
 		
 		public var field:Field;
@@ -38,7 +45,7 @@ package duel.display {
 		
 		public function initialize( field:Field, color:uint ):void
 		{
-			image = assets.generateImage( "field", true, true );
+			image = assets.generateImage( "field", false, true );
 			image.blendMode = "add";
 			image.color = color; 
 			addChild( image );
@@ -50,17 +57,53 @@ package duel.display {
 				addChild( lockIcon );
 			}
 			
+			if ( field is CreatureField )
+			{
+				overlayC = new CreatureFieldOverlay();
+				addChild( overlayC );
+			}
+			
 			var CardStackT:Class = GetCardStackClassForFieldType( field.type );
 			cardsContainer = new CardStackT( field );
+			
+			quad = new Quad( G.CARD_W, G.CARD_H, 0xFF0000 );
+			quad.alpha = .0;
+			//quad.alpha = .1;
+			quad.alignPivot();
+			addChild( quad );
 			
 			this.field = field;
 			field.sprite = this;
 			
 			game.juggler.add( this );
+			
+			addEventListener( TouchEvent.TOUCH, onTouch );
+			touchable = true;
+		}
+		
+		private function onTouch(e:TouchEvent):void 
+		{
+			var t:Touch = e.getTouch( quad );
+			
+			if ( t == null )
+			{
+				return;
+			}
+			
+			switch ( t.phase )
+			{
+				case TouchPhase.HOVER:
+					break;
+				case TouchPhase.ENDED:
+					guiEvents.dispatchEventWith( GuiEvents.FIELD_CLICK, false, field );
+					break;
+			}
 		}
 		
 		public function advanceTime( time:Number ):void 
 		{
+			useHandCursor = _guiState != FieldSpriteGuiState.NONE;
+			
 			if ( lockIcon != null )
 				setLockIconVisibility( IndexedField( field ).isLocked );
 			
@@ -80,6 +123,7 @@ package duel.display {
 			if ( aura == null )
 			{
 				aura = new CardAura( "card-aura-field" );
+				aura.touchable = false;
 				aura.visible = false;
 				aura.x = x;
 				aura.y = y;
@@ -93,6 +137,7 @@ package duel.display {
 				overTip.y = y;
 				overTip.scaleX = 1.5;
 				overTip.scaleY = 1.5;
+				overTip.touchable = false;
 				fieldTipsParent.addChild( overTip );
 			}
 			
@@ -103,6 +148,10 @@ package duel.display {
 			{
 				switch ( state ) 
 				{
+					case FieldSpriteGuiState.SELECTABLE:
+						setShit( 0xFFFFFF, "", 0 );
+						break;
+					
 					case FieldSpriteGuiState.NORMAL_SUMMON:
 						setShit( 0xE7360A, "Summon\nHere", 0xcc9966 );
 						break;
@@ -144,6 +193,7 @@ package duel.display {
 				aura.visible = auraColor > 0;
 				overTip.text = tipText;
 				overTip.color = tipTextColor;
+				overTip.visible = tipTextColor > 0;
 			}
 		}
 		

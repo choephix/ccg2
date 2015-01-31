@@ -178,8 +178,8 @@ package {
 			}
 			onResize( null );
 			
-			CONFIG::quickplay { showLobby(); }
-			//CONFIG::quickplay { startGame( gameMeta ); }
+			//CONFIG::quickplay { showLobby(); }
+			CONFIG::quickplay { startGame( gameMeta ); }
 		}
 		
 		private function showLobby():void {

@@ -81,6 +81,11 @@ package duel.controllers
 		
 		public function advanceTime(time:Number):void 
 		{
+			update();
+		}
+		
+		public function update():void
+		{
 			/// DESELECT CARD IF IMPOSSIBLE
 			if ( selectedCard != null )
 				deselectOnImpossible()
@@ -98,23 +103,52 @@ package duel.controllers
 			if ( selectedCard.isInPlay && selectedCard.type.isCreature )
 				contextOnField = scfFieldCreature
 			
-			player.fieldsC.forEachField( updateIndexedField );
-			player.fieldsT.forEachField( updateIndexedField );
-			player.opponent.fieldsC.forEachField( updateIndexedField );
-			player.opponent.fieldsT.forEachField( updateIndexedField );
+			var i:int;
 			
-			function updateIndexedField( f:IndexedField ):void 
+			// -- // -- // -- // -- // -- // -- // -- // -- // -- //
+			// -- // 
+			// -- // 					LOOP CARDS
+			// -- // 
+			// -- // -- // -- // -- // -- // -- // -- // -- // -- //
+			var c:Card;
+			for ( i = 0; i < game.cardsCount; i++ ) 
 			{
+				c = game.cards[ i ];
+				c.sprite.isSelectable = 
+					ctrl.active && 
+					selectedCard == null &&
+					c.lot != null && 
+					c.lot.type.isHand && 
+					canPlayHandCard( c );
+			}
+			
+			// -- // -- // -- // -- // -- // -- // -- // -- // -- //
+			// -- // 
+			// -- // 					LOOP INDEXED FIELDS
+			// -- // 
+			// -- // -- // -- // -- // -- // -- // -- // -- // -- //
+			var f:IndexedField;
+			for ( i  = 0; i < game.indexedFields.length; i++ ) 
+			{
+				f = game.indexedFields[ i ];
+				
 				f.sprite.setGuiState( FieldSpriteGuiState.NONE );
 				
-				if ( !player.isMyTurn ) return;
+				if ( !player.isMyTurn ) continue;
 				
-				if ( selectedCard == null ) return;
+				if ( !game.interactable ) continue;
+				
+				if ( selectedCard == null )
+				{
+					if ( ctrl.active && !f.isEmpty && canPlayFieldCard( f.topCard ) )
+						f.sprite.setGuiState( FieldSpriteGuiState.SELECTABLE );
+					continue;
+				}
 				
 				if ( selectedCard.isInHand )
 				{
 					if ( selectedCard.cost > player.mana.current )
-						return;
+						continue;
 					
 					if ( selectedCard.type.isCreature )
 						if ( f is CreatureField )
@@ -124,7 +158,7 @@ package duel.controllers
 									selectedCard.statusC.needTribute ? 
 									FieldSpriteGuiState.TRIBUTE_SUMMON : 
 									FieldSpriteGuiState.NORMAL_SUMMON );
-								return;
+								continue;
 							}
 					if ( selectedCard.type.isTrap )
 						if ( f is TrapField )
@@ -134,25 +168,25 @@ package duel.controllers
 									f.isEmpty ?
 									FieldSpriteGuiState.SET_TRAP : 
 									FieldSpriteGuiState.REPLACE_TRAP );
-								return;
+								continue;
 							}
 				}
 				
-				if ( !selectedCard.isInPlay ) return;
+				if ( !selectedCard.isInPlay ) continue;
 				
-				if ( !selectedCard.type.isCreature ) return;
+				if ( !selectedCard.type.isCreature ) continue;
 				
 				if ( f == selectedCard.indexedField )
 					if ( faq.canCreatureSafeFlip( selectedCard, true ) == null )
 					{
 						f.sprite.setGuiState( FieldSpriteGuiState.SAFE_FLIP );
-						return;
+						continue;
 					}
 				
 				if ( faq.canCreatureRelocateTo( selectedCard, f, true ) == null )
 				{
 					f.sprite.setGuiState( FieldSpriteGuiState.RELOCATE_TO );
-					return;
+					continue;
 				}
 				
 				if ( f.index == selectedCard.indexedField.index )
@@ -164,29 +198,18 @@ package duel.controllers
 									f.isEmpty ?
 									FieldSpriteGuiState.ATTACK_DIRECT : 
 									FieldSpriteGuiState.ATTACK_CREATURE );
-								return;
+								continue;
 							}
 			}
-		}
-		
-		public function onProcessUpdate():void
-		{
-			player.hand.forEachCard( updateHandCard );
-			player.fieldsC.forEachField( updateIndexedField );
+			
+			// -- // -- // -- // -- // -- // -- // -- // -- // -- //
+			// -- // 
+			// -- // 						DECK
+			// -- // 
+			// -- // -- // -- // -- // -- // -- // -- // -- // -- //
 			
 			if ( !player.deck.isEmpty )
-				player.deck.topCard.sprite.selectable = ctrl.active && player.mana.current > 0;
-			
-			function updateHandCard( c:Card ):void 
-			{
-				c.sprite.selectable = ctrl.active && canPlayHandCard( c );
-			}
-			
-			function updateIndexedField( f:IndexedField ):void 
-			{
-				if ( f.isEmpty ) return;
-				f.topCard.sprite.selectable = ctrl.active && canPlayFieldCard( f.topCard );
-			}
+				player.deck.topCard.sprite.isSelectable = ctrl.active && player.mana.current > 0;
 		}
 		
 		private function canPlayFieldCard( c:Card ):Boolean 
@@ -322,9 +345,14 @@ package duel.controllers
 		{
 			return o is IndexedField;
 		}
-		private function scfFieldCreatureOnSelected( f:* ):void
+		private function scfFieldCreatureOnSelected( ff:* ):void
 		{
 			var problem:String;
+			
+			var f:IndexedField = ff as IndexedField;
+			
+			if ( f == null )
+				return;
 			
 			///SAFE FLIP
 			if ( f  == selectedCard.lot )
@@ -356,7 +384,7 @@ package duel.controllers
 			}
 			else
 			/// ATTACK
-			if ( f.owner == player.opponent )
+			if ( f.owner == player.opponent && f.index == selectedCard.indexedField.index )
 			{
 				problem = faq.canCreatureAttack( selectedCard, true );
 				if ( problem == null )
@@ -418,6 +446,9 @@ package duel.controllers
 				
 				selectedCard.sprite.selectedAura.visible = true;
 			}
+			
+			///
+			update();
 		}
 		
 		public function tryToSelectFieldCard( card:Card ):void

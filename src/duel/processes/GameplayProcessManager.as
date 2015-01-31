@@ -343,7 +343,7 @@ package duel.processes
 			function onStart( c:Card ):void
 			{
 				c.faceDown = false;
-				c.sprite.animSpecialFlip();
+				game.jugglerStrict.addFakeTime( .350 );
 				trace ( c + " interrupted process " + interruptedProcess );
 			}
 			function onEnd( c:Card ):void
@@ -599,7 +599,7 @@ package duel.processes
 			function onEnd( c:Card ):void
 			{
 				c.faceDown = false;
-				c.sprite.animSpecialFlip();
+				game.jugglerStrict.addFakeTime( .5 );
 			}
 			pro.abortCheck = GameplayFAQ.cannotFlipInPlay;
 			
@@ -642,7 +642,7 @@ package duel.processes
 			function onEnd( c:Card ):void
 			{
 				c.faceDown = false;
-				c.sprite.animSpecialFlip();
+				game.jugglerStrict.addFakeTime( .5 );
 			}
 			pro.abortCheck = GameplayFAQ.cannotFlipInPlay;
 			
@@ -687,8 +687,7 @@ package duel.processes
 			function onEnd( c:Card ):void
 			{
 				c.faceDown = false;
-				//if ( !quick )
-					c.sprite.animSpecialFlip();
+				game.jugglerStrict.addFakeTime( quick ? .067 : .440 );
 			}
 			
 			/// SILENT_FLIP_COMPLETE

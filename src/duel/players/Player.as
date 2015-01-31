@@ -1,4 +1,5 @@
 package duel.players {
+	import duel.cards.Card;
 	import duel.controllers.PlayerAction;
 	import duel.display.cardlots.HandSprite;
 	import duel.display.TableSide;
@@ -124,6 +125,9 @@ package duel.players {
 		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
 		// QUESTIONS
 		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
+		
+		public function knowsCard( c:Card ):Boolean
+		{ return ( c.controller == this && !c.lot.type.isDeck ) || !c.faceDown }
 		
 		public function get creatureCount():int
 		{ return fieldsC.countOccupied }

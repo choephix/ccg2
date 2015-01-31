@@ -133,8 +133,6 @@ package duel.display.cardlots
 				else
 					o.parent.setChildIndex( o, o.parent.numChildren - 1 );
 				
-				o.touchable = true;
-				o.useHandCursor = true;
 				cardsParent.addChild( o );
 				
 				jj++;

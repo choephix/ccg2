@@ -7,6 +7,8 @@ package duel.display.fields
 	public class FieldSpriteGuiState 
 	{
 		public static const NONE:FieldSpriteGuiState			= new FieldSpriteGuiState();
+		public static const SELECTABLE:FieldSpriteGuiState		= new FieldSpriteGuiState();
+		
 		public static const NORMAL_SUMMON:FieldSpriteGuiState	= new FieldSpriteGuiState();
 		public static const TRIBUTE_SUMMON:FieldSpriteGuiState	= new FieldSpriteGuiState();
 		public static const SET_TRAP:FieldSpriteGuiState		= new FieldSpriteGuiState();

@@ -112,9 +112,12 @@
 		
 		private function onMiddleClick( e:MouseEvent ):void
 		{
-			CONFIG::debug
+			CONFIG::desktop
 			{
-				CONFIG::desktop
+				CONFIG::debug
+				{ stage.nativeWindow.close() }
+				
+				CONFIG::sandbox
 				{ stage.nativeWindow.close() }
 			}
 		}

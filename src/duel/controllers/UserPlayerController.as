@@ -2,11 +2,13 @@ package duel.controllers
 {
 	import duel.cards.Card;
 	import duel.GameUpdatable;
+	import duel.gui.GuiEvents;
 	import duel.players.Player;
 	import duel.processes.GameplayProcess;
 	import duel.table.CreatureField;
 	import duel.table.Field;
 	import duel.table.TrapField;
+	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
@@ -18,7 +20,6 @@ package duel.controllers
 	public class UserPlayerController extends GameUpdatable
 	{
 		public var selection:SelectionManager;
-		public var hoveredCard:Card;
 		
 		protected var faq:PlayerControllerFAQ;
 		protected var player:Player;
@@ -42,137 +43,54 @@ package duel.controllers
 			selection = new SelectionManager();
 			selection.initialize( player, faq );
 			selection.ctrl = this;
-			game.addEventListener( TouchEvent.TOUCH, onTouch );
+			
+			game.guiEvents.addEventListener( GuiEvents.CARD_CLICK, onClickCard );
+			game.guiEvents.addEventListener( GuiEvents.FIELD_CLICK, onClickField);
 		}
 		
-		private function onTouch( e:TouchEvent ):void {
-			
-			if ( !active )
-				hoverCard( null );
-			
-			var t:Touch = e.getTouch( game );
-			
-			/// HOVER
-			
-			onTouchCheck_Hover( t );
-			
-			if ( t == null )
-				return;
-			
-			/// BEGIN
-			
-			/// TAP
-			
-			onTouchCheck_Tap( t );
-			
-		}
-		
-		private function onTouchCheck_Tap( t:Touch ):void {
-			
-			if ( t == null )
-				return;
-			
-			if ( t.phase != TouchPhase.ENDED )
-				return;
-			
+		private function onClickCard( e:Event ):void
+		{
 			if ( !game.currentPlayer.controllable )
 			{
 				game.gui.pMsg( "It's the enemy's turn." );
 				return;
 			}
-				
-			var interrupt:Boolean;
 			
-			player.hand.forEachCard( checkHandCard );			if ( interrupt ) return;
-			player.fieldsC.forEachField( checkField );			if ( interrupt ) return;
-			player.fieldsT.forEachField( checkField );			if ( interrupt ) return;
-			checkField( player.deck );							if ( interrupt ) return;
-			checkField( player.grave);							if ( interrupt ) return;
+			var c:Card = e.data as Card;
 			
-			player.opponent.hand.forEachCard( checkHandCard );	if ( interrupt ) return;
-			player.opponent.fieldsC.forEachField( checkField );	if ( interrupt ) return;
-			player.opponent.fieldsT.forEachField( checkField );	if ( interrupt ) return;
-			checkField( player.opponent.deck );					if ( interrupt ) return;
-			checkField( player.opponent.grave);					if ( interrupt ) return;
-			
-			selection.selectCard( null );
-			
-			function checkHandCard( c:Card ):void
+			if ( c.isInHand )
 			{
-				if ( !t.isTouching( c.sprite ) ) return;
-				if ( !selection.contextInHand.isSelectable( c ) ) return;
-				interrupt = true;
+				if ( !selection.contextInHand.isSelectable( c ) )
+					return;
 				selection.contextInHand.onSelected( c );
+				return;
 			}
 			
-			function checkField( f:Field ):void
+			// MAYBE FIELD?
+			var f:Field = c.field;
+			if ( f == null )
+				return;
+			if ( !selection.contextOnField.isSelectable( f ) )
+				return;
+			selection.contextOnField.onSelected( f );
+		}
+		
+		private function onClickField( e:Event ):void
+		{
+			if ( !game.currentPlayer.controllable )
 			{
-				if ( !t.isTouching( f.sprite ) ) return;
-				if ( !selection.contextOnField.isSelectable( f ) ) return;
-				interrupt = true;
-				selection.contextOnField.onSelected( f );
+				game.gui.pMsg( "It's the enemy's turn." );
+				return;
 			}
+			
+			var f:Field = e.data as Field;
+			
+			if ( !selection.contextOnField.isSelectable( f ) )
+				return;
+			selection.contextOnField.onSelected( f );
 		}
 		
 		// POINTER HOVER UPDATE
-		
-		private function onTouchCheck_Hover( t:Touch ):void {
-			
-			if ( t == null )
-			{
-				hoverCard( null );
-				return;
-			}
-			
-			if ( hoveredCard != null && !t.isTouching( hoveredCard.sprite ) )
-				hoverCard( null );
-			
-			var interrupt:Boolean;
-			
-			player.hand.forEachCard( hoverCheckHandCard );	if ( interrupt ) return;
-			player.fieldsC.forEachField( hoverCheckField );	if ( interrupt ) return;
-			player.fieldsT.forEachField( hoverCheckField );	if ( interrupt ) return;
-			hoverCheckField( player.deck );					if ( interrupt ) return;
-			hoverCheckField( player.grave);					if ( interrupt ) return;
-			
-			function hoverCheckHandCard( c:Card ):void
-			{
-				if ( !t.isTouching( c.sprite ) ) return;
-				if ( !c.faceDown ) return;
-				interrupt = true;
-				hoverCard( c );
-			}
-			function hoverCheckField( f:Field ):void
-			{
-				if ( !t.isTouching( f.sprite ) ) return;
-				
-				var c:Card = f.topCard;
-				if ( c == null ) return;
-				if ( !c.faceDown ) return;
-				interrupt = true;
-				hoverCard( c );
-			}
-			
-			hoverCard( null );
-		}
-		
-		private function hoverCard( card:Card ):void
-		{
-			if ( hoveredCard == card )
-				return;
-			
-			/// OLD HOVER
-			if ( hoveredCard != null )
-				hoveredCard.sprite.peekThrough = false;
-			
-			/// /// /// /// ///
-			hoveredCard = card
-			/// /// /// /// ///
-			
-			/// NEW HOVER
-			if ( hoveredCard != null )
-				hoveredCard.sprite.peekThrough = true;
-		}
 		
 		// OTHER
 		
@@ -201,7 +119,7 @@ package duel.controllers
 			
 			if ( !active ) return;
 			
-			selection.onProcessUpdate();
+			//selection.update();
 		}
 		
 		// // // // //

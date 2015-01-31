@@ -6,11 +6,15 @@ package duel.display {
 	import duel.G;
 	import duel.GameSprite;
 	import duel.gui.AnimatedTextField;
+	import duel.gui.GuiEvents;
 	import starling.animation.IAnimatable;
 	import starling.animation.Transitions;
 	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.display.Quad;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	import starling.text.TextField;
 	
 	use namespace animation;
@@ -21,12 +25,12 @@ package duel.display {
 	public class CardSprite extends GameSprite implements IAnimatable
 	{
 		public var auraContainer:Sprite;
-		private var exhaustClock:Image;
 		public var selectableAura:Image;
 		public var selectedAura:Image;
 		
 		public var targetProps:TargetProps;
 		
+		private var quad:Quad;
 		private var front:Sprite;
 		private var back:Image;
 		private var pad:Image;
@@ -36,15 +40,15 @@ package duel.display {
 		private var tfDebug:TextField;
 		
 		///
-		private var _isSelectable:Boolean = false;
-		private var _exhaustClockVisible:Boolean = false;
-		private var _isFaceDown:Boolean = true;
-		private var _flippedness:Number = .0;
-		private var _peekThrough:Boolean;
-		public var backTranslucency:Number = .0;
-		
 		private var __attackSprite:Quad;
 		private var __bloodSprite:Quad;
+		
+		private var _peekThrough:Boolean = false;
+		private var _backTranslucency:Number = .0;
+		private var _flippedness:Number = .0;
+		public var isFocused:Boolean = false;
+		public var isSelectable:Boolean = false;
+		public var isSelected:Boolean = false;
 		
 		//
 		private var card:Card;
@@ -59,12 +63,15 @@ package duel.display {
 			front = new Sprite();
 			front.pivotX = G.CARD_W * 0.5;
 			front.pivotY = G.CARD_H * 0.5;
+			front.touchable = false;
 			addChild( front );
 			
 			back = assets.generateImage( "card-back", true, true );
+			back.touchable = false;
 			addChild( back );
 			
 			auraContainer = new Sprite();
+			auraContainer.touchable = false;
 			addChild( auraContainer );
 			
 			selectableAura = new CardAura( "card-aura" );
@@ -73,19 +80,15 @@ package duel.display {
 			//selectableAura.color = 0xFFE064;
 			//selectableAura.color = Temp.getColorForCard( card );
 			selectableAura.blendMode = "add";
+			selectableAura.touchable = false;
 			auraContainer.addChild( selectableAura );
 			
 			selectedAura = assets.generateImage( "card-aura-selected", false, true );
 			selectedAura.visible = false;
 			selectedAura.color = Temp.getColorForCard( card );
 			selectedAura.blendMode = "add";
+			selectedAura.touchable = false;
 			auraContainer.addChild( selectedAura );
-			
-			exhaustClock = assets.generateImage( "exhaustClock", false, true );
-			exhaustClock.x = G.CARD_W * 0.25;
-			exhaustClock.y = G.CARD_H * 0.00;
-			exhaustClock.alpha = 0.0;
-			auraContainer.addChild( exhaustClock );
 			
 			// MAIN - FRONT
 			pad = assets.generateImage( "card-front-bg", true, false );
@@ -114,7 +117,7 @@ package duel.display {
 			tfDebug.bold = true;
 			tfDebug.x = G.CARD_W * .5;
 			tfDebug.y = - 10;
-			front.addChild( tfDebug );
+			//front.addChild( tfDebug );
 			}
 			
 			tfDescr = new TextField( G.CARD_W, G.CARD_H, "", "Verdana", 10, 0x330011 );
@@ -160,6 +163,11 @@ package duel.display {
 					tfDescr.height = yy( .50 );
 			}
 			
+			quad = new Quad( G.CARD_W, G.CARD_H, 0xFF0000 );
+			quad.alpha = .0;
+			//quad.alpha = .1;
+			quad.alignPivot();
+			addChild( quad );
 			// ..
 			
 			targetProps = new TargetProps();
@@ -171,20 +179,53 @@ package duel.display {
 			
 			function xx( ratio:Number ):Number { return ratio * G.CARD_W }
 			function yy( ratio:Number ):Number { return ratio * G.CARD_H }
+			
+			addEventListener( TouchEvent.TOUCH, onTouch );
+			touchable = true;
+		}
+		
+		private function onTouch(e:TouchEvent):void 
+		{
+			var t:Touch = e.getTouch( quad );
+			
+			if ( t == null )
+			{
+				isFocused = false;
+				return;
+			}
+			
+			switch ( t.phase )
+			{
+				case TouchPhase.HOVER:
+					isFocused = true;
+					break;
+				case TouchPhase.ENDED:
+					guiEvents.dispatchEventWith( GuiEvents.CARD_CLICK, false, card );
+					break;
+			}
+			
 		}
 		
 		public function advanceTime(time:Number):void 
 		{
-			if ( _isFaceDown != card.faceDown )
-				setFaceDown( card.faceDown, false );
+			if ( time > .033 )
+				time = .033;
 			
-			_flippedness = lerp( _flippedness, card.faceDown ? -1.0 : 1.0, .20 );
+			useHandCursor = isSelectable;
 			
-			front.visible	= _flippedness > .0 || backTranslucency > .0;
+			if ( card.isInPlay && card.type.isCreature )
+				quad.color = card.exhausted ? 0x0 : 0xFFFF00;
+			
+			_peekThrough = card.faceDown && isFocused && game.p1.knowsCard( card );
+			_backTranslucency = lerp( _backTranslucency, _peekThrough ? .75 : .0, .15 );
+			
+			_flippedness = lerp( _flippedness, card.faceDown ? -1.0 : 1.0, card.faceDown ? .18 : .27 );
+			
+			front.visible	= _flippedness > .0 || _backTranslucency > .0;
 			back.visible	= _flippedness < .0;
 			
 			auraContainer.scaleX = .25 + .75 * Math.abs( _flippedness );
-			selectableAura.visible = _isSelectable && ( !selectedAura.visible || !card.isInPlay );
+			selectableAura.visible = game.interactable && isSelectable && ( !selectedAura.visible || !card.isInPlay );
 			
 			if ( selectedAura.visible )
 				selectedAura.rotation = y > 100 ? .0 : Math.PI;
@@ -200,7 +241,7 @@ package duel.display {
 			if ( back.visible )
 			{
 				back.scaleX = Math.abs( _flippedness );
-				back.alpha = game.interactable ? 1.0 - backTranslucency : 1.0;
+				back.alpha = game.interactable ? 1.0 - _backTranslucency : 1.0;
 			}
 		}
 		
@@ -212,18 +253,8 @@ package duel.display {
 					tfAttak.targetValue = card.statusC.currentAttackValue;
 					//tfDescr.text = card.statusC.toString();
 				}
-				
-				setExhaustClockVisible( card.isInPlay && card.exhausted );
 			}
-			
 			//flatten();
-		}
-		
-		private function setExhaustClockVisible( value:Boolean ):void 
-		{
-			if ( _exhaustClockVisible == value ) return;
-			_exhaustClockVisible = value;
-			juggler.xtween( exhaustClock, .500, { alpha : value ? 1.0 : .0 } );
 		}
 		
 		// ANIMATIONS
@@ -359,11 +390,7 @@ package duel.display {
 			
 			destroyAnimAttackSprite();
 		}
-		/// Plays ste standard flip-up animation, but in a way that pauses gameplay processes during it
-		animation function animSpecialFlip():void
-		{
-			setFaceDown( false, true );
-		}
+		
 		public function animFadeToNothing( dispose:Boolean ):void 
 		{
 			juggler.xtween( this, .150, { 
@@ -408,43 +435,6 @@ package duel.display {
 			parent.setChildIndex( this, parent.numChildren - 1 );
 		}
 		
-		// FLIPPING
-		protected function setFaceDown( faceDown:Boolean, strict:Boolean = false ):void 
-		{
-			_isFaceDown = faceDown;
-			_peekThrough = false;
-			backTranslucency = .0;
-			if ( strict )
-				jugglerStrict.delayCall( trace, .660 );
-		}
-		
-		protected function get isFaceDown():Boolean
-		{ return _isFaceDown }
-		
-		public function get flippedness():Number 
-		{ return _flippedness }
-		
-		public function set flippedness(value:Number):void 
-		{
-			if ( _flippedness == value ) return;
-			_flippedness = value;
-		}
-		
-		// PEEKING
-		public function get peekThrough():Boolean 
-		{ return _peekThrough }
-		
-		public function set peekThrough( value:Boolean ):void 
-		{
-			if ( _peekThrough == value ) return;
-			_peekThrough = value;
-			juggler.tween( this, .330,
-				{ 
-					backTranslucency : value ? .9 : .0,
-					transition : Transitions.EASE_OUT
-				} );
-		}
-		
 		// OTHER
 		public function get isTopSide():Boolean
 		{
@@ -452,14 +442,7 @@ package duel.display {
 		}
 		
 		//
-		public function get selectable():Boolean 
-		{ return _isSelectable }
-		
-		public function set selectable(value:Boolean):void 
-		{ _isSelectable = value }
-		
 	}
-
 }
 
 class TargetProps

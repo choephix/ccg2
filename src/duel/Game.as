@@ -15,6 +15,7 @@ package duel
 	import duel.display.TableSprite;
 	import duel.display.TableSide;
 	import duel.gui.Gui;
+	import duel.gui.GuiEvents;
 	import duel.gui.GuiJuggler;
 	import duel.network.RemoteConnectionController;
 	import duel.network.RemotePlayerActionReceiver;
@@ -26,6 +27,7 @@ package duel
 	import duel.processes.gameprocessing;
 	import duel.processes.ProcessEvent;
 	import duel.table.CreatureField;
+	import duel.table.IndexedField;
 	import duel.table.TrapField;
 	import flash.geom.Point;
 	import starling.animation.IAnimatable;
@@ -57,6 +59,7 @@ package duel
 		public var remote:RemoteConnectionController;
 		private var remoteInput:RemotePlayerActionReceiver;
 		
+		public var guiEvents:GuiEvents;
 		public var processes:GameplayProcessManager;
 		public var jugglerStrict:GuiJuggler;
 		public var jugglerGui:GuiJuggler;
@@ -71,9 +74,10 @@ package duel
 		
 		public var bg:Background;
 		
+		public var indexedFields:Vector.<IndexedField>;
+		public var cards:Vector.<Card>;
+		public var cardsCount:int = 0;
 		private var logicComponents:Vector.<GameUpdatable>;
-		private var cards:Vector.<Card>;
-		private var cardsCount:int = 0;
 		
 		//
 		public function Game() { current = this }
@@ -93,6 +97,9 @@ package duel
 			
 			logicComponents = new Vector.<GameUpdatable>();
 			cards = new Vector.<Card>();
+			indexedFields = new Vector.<IndexedField>();
+			
+			guiEvents = new GuiEvents();
 			
 			p1 = generatePlayer();
 			p2 = generatePlayer();
@@ -104,6 +111,12 @@ package duel
 			{ 
 				var p:Player = new Player( G.INIT_LP )
 				p.addEventListener( PlayerEvent.ACTION, onPlayerActionEvent );
+				
+				var i:int;
+				for ( i = 0; i < p.fieldsC.count; i++ )
+					indexedFields.push( p.fieldsC.getAt( i ) );
+				for ( i = 0; i < p.fieldsT.count; i++ )
+					indexedFields.push( p.fieldsT.getAt( i ) );
 				return p;
 			}
 		
@@ -162,7 +175,7 @@ package duel
 			if ( !meta.isMultiplayer )
 			{
 				logicComponents.push( new UserPlayerController( p1 ) );
-				logicComponents.push( new UserPlayerController( p2 ) );
+				//logicComponents.push( new UserPlayerController( p2 ) );
 				p1.updateDetails( meta.myUserName, meta.myUserColor );
 				p2.updateDetails( meta.myUserName + " 2", 0xFF0059 );
 				//p2.updateDetails( "Botko", 0xFF0059 );
@@ -187,6 +200,8 @@ package duel
 				//gui.pMsg( "Waiting for opponent...", false );
 				gui.pMsg( "Waiting for opponent in room " + meta.roomName, false );
 			}
+			
+			advanceTime(.0);
 		}
 		
 		private function onRemoteMessageReceived( userName:String, data:Object ):void 
@@ -314,6 +329,7 @@ package duel
 			
 			gui.visible = true;
 			gui.updateData();
+			advanceTime(.0);
 		}
 		
 		public function destroy():void
@@ -362,12 +378,12 @@ package duel
 			for ( var i:int = 0, iMax:int = logicComponents.length; i < iMax; i++ ) 
 				logicComponents[ i ].advanceTime( time );
 			
-			try
+			//try
 			{
 			if ( jugglerStrict.isIdle )
 				processes.advanceTime( time );
 			}
-			catch ( e:Error ) { log( e.message ) }
+			//catch ( e:Error ) { log( e.message ) }
 				
 			gui.advanceTime( time );
 			p1.handSprite.advanceTime( time );

@@ -48,14 +48,12 @@ package duel.display.cardlots
 		protected function onCardAdded( e:Event ):void
 		{ 
 			var cs:CardSprite = e.data.sprite;
-			cs.selectable = false;
 			tweenToPlace( cs );
 		}
 		
 		/// empty method
 		protected function onCardRemoved( e:Event ):void
 		{ 
-			CardSprite( e.data.sprite ).selectable = false;
 			arrangeAll();
 		}
 		

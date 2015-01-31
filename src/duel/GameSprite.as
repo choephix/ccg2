@@ -2,6 +2,7 @@ package duel
 {
 	import chimichanga.common.assets.AdvancedAssetManager;
 	import chimichanga.common.display.Sprite;
+	import duel.gui.GuiEvents;
 	import duel.gui.GuiJuggler;
 	import starling.display.DisplayObjectContainer;
 	/**
@@ -18,6 +19,9 @@ package duel
 		
 		protected function get jugglerStrict():GuiJuggler
 		{ return Game.current.jugglerStrict }
+		
+		protected function get guiEvents():GuiEvents
+		{ return Game.current.guiEvents }
 		
 		protected function get game():Game
 		{ return Game.current }
