@@ -2,6 +2,7 @@ package duel.network {
 	import com.reyco1.multiuser.data.UserObject;
 	import com.reyco1.multiuser.MultiUserSession;
 	import duel.Game;
+	import duel.GameMeta;
 	import flash.system.Capabilities;
 	import starling.animation.Juggler;
 	import starling.events.EventDispatcher;
@@ -24,9 +25,9 @@ package duel.network {
 		public var myUser:UserObject;
 		public var oppUser:UserObject;
 		
-		public function initialize( roomName:String ):void
+		public function initialize( meta:GameMeta ):void
 		{
-			connection = new MultiUserSession( SERVER_ADDRESS, "ccg2/" + roomName );
+			connection = new MultiUserSession( SERVER_ADDRESS, "ccg2/" + meta.roomName );
 			connection.onConnect 		= onConnected;
 			connection.onUserAdded 		= onUserAdded;
 			connection.onUserRemoved 	= onUserRemoved;
@@ -34,22 +35,19 @@ package duel.network {
 			connection.onObjectRecieve 	= onUserObjectRecieved;
 			
 			var myEnterTime:Number = new Date().time;
-			var myName:String = "User_" + myEnterTime.toString( 36 );
-			var myColor:uint = Math.random() * 0xFFFFFF;
-			
-			CONFIG::air
-			{ myName = File.userDirectory.name }
-			
-			CONFIG::mobile
-			{ myName = Capabilities.cpuArchitecture+"_"+ myEnterTime.toString( 36 ) }
-			
-			connection.connect(myName, { color:myColor, logtime:myEnterTime } );
+			connection.connect( meta.myUserName, { color:meta.myUserColor, logtime:myEnterTime } );
 		}
 		
 		public function destroy():void
 		{
 			connection.close();
+			connection.onConnect 		= null;
+			connection.onUserAdded 		= null;
+			connection.onUserRemoved 	= null;
+			connection.onUserExpired 	= null;
+			connection.onObjectRecieve 	= null;
 			connection = null;
+			
 			onOpponentFoundCallback = null;
 			onUserObjectRecievedCallback = null;
 			myUser = null;

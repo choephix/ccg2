@@ -45,5 +45,14 @@ package dev
 				} );
 		}
 		
+		static public function toCharCodeSum( text:String ):int
+		{
+			var r:int = 0;
+			var i:int = text.length;
+			while ( i-- >= 0 )
+				r += text.charCodeAt( i );
+			return r;
+		}
+		
 	}
 }

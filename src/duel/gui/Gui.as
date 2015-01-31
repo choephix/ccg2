@@ -30,8 +30,6 @@ package duel.gui
 		
 		public var button1:Button;
 		public var button2:Button;
-		public var button3:Button;
-		public var button4:Button;
 		
 		public function Gui()
 		{
@@ -99,6 +97,10 @@ package duel.gui
 				btn.y = buttonsContainer.height + 10;
 				btn.addEventListener( Event.TRIGGERED, func );
 				buttonsContainer.addChild( btn );
+				CONFIG::mobile {
+					btn.scaleX = 2.0;
+					btn.scaleY = 2.0;
+				}
 				return btn;
 			}
 			

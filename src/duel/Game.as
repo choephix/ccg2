@@ -94,14 +94,15 @@ package duel
 			logicComponents = new Vector.<GameUpdatable>();
 			cards = new Vector.<Card>();
 			
-			p1 = generatePlayer( "?" );
-			p2 = generatePlayer( "?" );
+			p1 = generatePlayer();
+			p2 = generatePlayer();
 			p1.opponent = p2;
 			p2.opponent = p1;
+			p1.updateDetails( meta.myUserName, meta.myUserColor );
 			
-			function generatePlayer( name:String ):Player
+			function generatePlayer():Player
 			{ 
-				var p:Player = new Player( name, G.INIT_LP )
+				var p:Player = new Player( G.INIT_LP )
 				p.addEventListener( PlayerEvent.ACTION, onPlayerActionEvent );
 				return p;
 			}
@@ -162,8 +163,9 @@ package duel
 			{
 				logicComponents.push( new UserPlayerController( p1 ) );
 				logicComponents.push( new UserPlayerController( p2 ) );
-				p1.updateDetails( "Player1", 0x33AAFF );
-				p2.updateDetails( "Player2", 0xFFAA33 );
+				p1.updateDetails( meta.myUserName, meta.myUserColor );
+				p2.updateDetails( meta.myUserName + " 2", 0xFF0059 );
+				//p2.updateDetails( "Botko", 0xFF0059 );
 				p1.controllable = true;
 				p2.controllable = true;
 				startGame();
@@ -178,7 +180,7 @@ package duel
 				p1.controllable = true;
 			
 				remote = new RemoteConnectionController();
-				remote.initialize( meta.roomName );
+				remote.initialize( meta );
 				remote.onOpponentFoundCallback = startGame;
 				remote.onUserObjectRecievedCallback = onRemoteMessageReceived;
 				
@@ -204,13 +206,9 @@ package duel
 			
 			if ( meta.isMultiplayer )
 			{
-				var p1u:UserObject = remote.myUser;
 				var p2u:UserObject = remote.oppUser;
-				
-				p1.updateDetails( p1u.name, p1u.details.color );
 				p2.updateDetails( p2u.name, p2u.details.color );
-				
-				amFirst = p1u.details.hasFirstTurn;
+				amFirst = remote.myUser.details.hasFirstTurn;
 			}
 			
 			//{ START GAME
@@ -320,6 +318,24 @@ package duel
 		
 		public function destroy():void
 		{
+			if ( state == GameState.DESTROYED )
+				return;
+			
+			state = GameState.DESTROYED;
+			
+			if ( remote != null )
+			{
+				remote.destroy();
+				remote = null;
+			}
+			
+			jugglerStrict.purge();
+			jugglerStrict = null;
+			jugglerGui.purge();
+			jugglerGui = null;
+			juggler.purge();
+			juggler = null;
+			
 			dispatchEventWith( GameEvents.DESTROY );
 			Starling.juggler.remove( this );
 			removeFromParent( true );

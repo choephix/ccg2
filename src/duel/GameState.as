@@ -9,6 +9,7 @@ package duel
 		public static const WAITING:GameState	= new GameState();
 		public static const ONGOING:GameState	= new GameState();
 		public static const OVER:GameState		= new GameState();
+		public static const DESTROYED:GameState	= new GameState();
 		
 		public function get isWaiting():Boolean		{ return this == WAITING }
 		public function get isOngoing():Boolean		{ return this == ONGOING }

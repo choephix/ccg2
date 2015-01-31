@@ -88,7 +88,6 @@ package duel.display.cardlots
 				YY = 1 - YY;
 				
 				YY = App.mouseXY.y / App.WINDOW_H > 1.0 - POR ? 0.0 : 1.0;
-				trace( YY );
 			}
 			else
 				YY = 1.0;

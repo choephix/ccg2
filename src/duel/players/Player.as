@@ -43,7 +43,7 @@ package duel.players {
 		// CONSTRUCTION
 		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
 		
-		public function Player( name:String, lifePoints:int )
+		public function Player( lifePoints:int )
 		{
 			hand = new Hand();
 			deck = new Field( CardLotType.DECK );
@@ -54,7 +54,7 @@ package duel.players {
 			
 			mana = new ManaPool();
 			
-			_name = name;
+			_name = "?";
 			_lp = lifePoints;
 			
 			setAsFieldsOwner();

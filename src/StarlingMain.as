@@ -7,6 +7,7 @@ package {
 	import duel.GameEvents;
 	import duel.GameMeta;
 	import flash.geom.Point;
+	import flash.system.Capabilities;
 	import flash.ui.Keyboard;
 	import screens.lobby.Lobby;
 	import starling.core.Starling;
@@ -21,6 +22,10 @@ package {
 	import starling.events.TouchPhase;
 	import starling.text.TextField;
 	
+	CONFIG::air
+	{
+	import flash.filesystem.File;
+	}
 	/**
 	 * ...
 	 * @author choephix
@@ -29,6 +34,7 @@ package {
 		private var g:Game;
 		private var loadingText:TextField;
 		private var gameMeta:GameMeta;
+		private var lobby:Lobby;
 		
 		public function StarlingMain() {
 			blendMode = BlendMode.NORMAL;
@@ -111,6 +117,19 @@ package {
 			loadingText.removeFromParent( true );
 			loadingText = null;
 			
+			/// META
+			const UID:String = new Date().time.toString( 36 );
+			
+			gameMeta = new GameMeta();
+			
+			gameMeta.myUserName = "User_" + UID;
+			CONFIG::air { gameMeta.myUserName = File.userDirectory.name }
+			CONFIG::mobile { gameMeta.myUserName = Capabilities.cpuArchitecture+"_"+UID }
+			
+			gameMeta.myUserColor = Math.random() * 0xFFFFFF;
+			//gameMeta.myUserColor = Temp.toCharCodeSum( gameMeta.myUserName ) % 0xFFFFFF;
+			
+			/// MENU
 			CONFIG::desktop
 			{ Temp.tweenAppSize( App.WINDOW_W, App.WINDOW_H, showMenu ); return; }
 			
@@ -147,8 +166,6 @@ package {
 			b2.alpha = .0;
 			Starling.juggler.tween( b2, .330, { delay : .200, alpha : 2.0 } );
 			
-			gameMeta = new GameMeta();
-			
 			stage.addEventListener( ResizeEvent.RESIZE, onResize );
 			function onResize( e:ResizeEvent ):void 
 			{
@@ -167,9 +184,10 @@ package {
 		
 		private function showLobby():void {
 			trace( "Opening Lobby" );
-			var lobby:Lobby = new Lobby();
+			lobby = new Lobby();
 			lobby.readyCallback = startMulti;
 			addChild( lobby );
+			lobby.initialize( gameMeta );
 		}
 		
 		private function startSingle():void {
@@ -186,6 +204,12 @@ package {
 		}
 		
 		private function startGame( meta:GameMeta ):void {
+			if ( lobby )
+			{
+				lobby.close();
+				lobby = null;
+			}
+			
 			trace( "Will start new game" );
 			g = new Game();
 			addChild( g );
@@ -208,6 +232,12 @@ package {
 				if ( Game.current && Game.current.currentPlayer && Game.current.currentPlayer.controllable )
 					Game.current.currentPlayer.performAction(
 						new PlayerAction().setTo( PlayerActionType.END_TURN ) );
+			}
+			
+			if ( e.keyCode == Keyboard.BACK ) {
+				e.preventDefault();
+				e.stopImmediatePropagation();
+				if ( g != null ) g.endGame();
 			}
 			
 			CONFIG::desktop

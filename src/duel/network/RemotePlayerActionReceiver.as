@@ -34,7 +34,7 @@ package duel.network
 		public function onMessage( msg:String ):void 
 		{
 			actionQueue.push.apply( null, msg.split("|") );
-			trace( "+=\n" + actionQueue );
+			trace( "Remote message: " + msg );
 		}
 		
 		private function doNextAction():void 

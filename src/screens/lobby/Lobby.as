@@ -6,11 +6,15 @@ package screens.lobby
 	import com.reyco1.multiuser.data.UserObject;
 	import com.reyco1.multiuser.MultiUserSession;
 	import duel.Game;
+	import duel.GameMeta;
 	import flash.system.Capabilities;
 	import starling.animation.Juggler;
+	import starling.core.Starling;
 	import starling.display.Button;
+	import starling.display.DisplayObject;
 	import starling.display.Quad;
 	import starling.events.Event;
+	import starling.events.ResizeEvent;
 	
 	CONFIG::air
 	{
@@ -31,15 +35,10 @@ package screens.lobby
 		public var readyCallback:Function;
 		
 		///
-		public var buttons:Sprite;
+		private var background:Quad;
+		private var buttons:Sprite;
 		
-		public function Lobby() 
-		{
-			super();
-			initialize();
-		}
-		
-		public function initialize():void
+		public function initialize( meta:GameMeta ):void
 		{
 			connection = new MultiUserSession( SERVER_ADDRESS, "ccg2/lobby" );
 			connection.onConnect 		= onConnected;
@@ -49,41 +48,58 @@ package screens.lobby
 			connection.onObjectRecieve 	= onUserObjectRecieved;
 			
 			var myEnterTime:Number = new Date().time;
-			var myName:String = "User_" + myEnterTime.toString( 36 ).toUpperCase();
-			var myColor:uint = Math.random() * 0xFFFFFF;
-			
-			trace ( myEnterTime );
-			
-			CONFIG::air
-			{ myName = File.userDirectory.name }
-			
-			CONFIG::mobile
-			{ myName = Capabilities.cpuArchitecture+"_"+ myEnterTime.toString( 36 ) }
-			
-			connection.connect( myName, new UserDetails( myColor, myEnterTime ) );
+			connection.connect( meta.myUserName, new UserDetails( meta.myUserColor, myEnterTime ) );
 			////
 			
-			var q:Quad = new Quad( App.STAGE_W, App.STAGE_H, 0x110044 );
-			addChild( q );
-			
+			background = new Quad( 10, 10, 0x110044 );
+			background.alpha = .5;
+			addChild( background );
 			buttons = new Sprite();
 			addChild( buttons );
-			buttons.y = 50;
-			buttons.x = .5 * q.width;
+			width = App.STAGE_W;
+			height = App.STAGE_H;
+			
+			addEventListener( Event.REMOVED_FROM_STAGE, onRemovedFromStage );
+			stage.addEventListener( ResizeEvent.RESIZE, onResize );
+			onResize( null );
+		}
+		
+		private function onRemovedFromStage(e:Event):void 
+		{
+			removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+			stage.removeEventListener( ResizeEvent.RESIZE, onResize );
 		}
 		
 		override public function dispose():void 
 		{
+			if ( connection == null )
+				return;
+			
 			connection.close();
+			connection.onConnect 		= null;
+			connection.onUserAdded 		= null;
+			connection.onUserRemoved 	= null;
+			connection.onUserExpired 	= null;
+			connection.onObjectRecieve 	= null;
 			connection = null;
 			
 			myUser = null;
 			readyCallback = null;
 			
+			background.removeFromParent( true );
+			background = null;
+			
 			buttons.removeFromParent( true );
 			buttons = null;
 			
 			super.dispose();
+		}
+		
+		private function onResize( e:ResizeEvent ):void 
+		{
+			x = .5 * stage.stageWidth;
+			width = .5 * stage.stageWidth;
+			height = stage.stageHeight;
 		}
 		
 		private function addButton( name:String, call:Function, clr:uint ):Button 
@@ -97,13 +113,6 @@ package screens.lobby
 			buttons.addChild( b );
 			b.addEventListener( Event.TRIGGERED, call );
 			return b;
-		}
-		
-		public function destroy():void
-		{
-			connection.close();
-			connection = null;
-			myUser = null;
 		}
 		
 		protected function onConnected(user:UserObject):void					
@@ -136,6 +145,9 @@ package screens.lobby
 			
 			if ( details.isHost )
 				onUserBecameHost( user, user.details.room );
+			
+			if ( myUser.details.isHost )
+				sendMyUserObject( { type : E.BECOME_HOST, detail : myUser.details.room } );
 		}
 		
 		protected function onUserRemoved(user:UserObject):void				
@@ -161,7 +173,7 @@ package screens.lobby
 				); 
 		}
 		
-		public function sendMyUserObject( data:Object ):void			
+		protected function sendMyUserObject( data:Object ):void			
 		{
 			log("sendMyUserObject: " + data ); 
 			connection.sendObject( data );			
@@ -203,9 +215,7 @@ package screens.lobby
 			details.isHost = true;
 			details.room = room;
 				
-			if ( details.button )
-				error( "User already had button" );
-			else
+			if ( details.button as Button == null )
 				details.button = addButton( "JOIN " + user.name, joinUser, details.color );
 				
 			function joinUser():void
@@ -214,7 +224,8 @@ package screens.lobby
 				sendMyUserObject( { type : E.JOIN, detail : user.id } );
 				trace( "I want to join " + user.name + " in " + room );
 				
-				onReady( user.details.room, user.name );
+				Starling.juggler.delayCall( onReady, 1.0, user.details.room, user.name );
+				//onReady( user.details.room, user.name );
 			}
 		}
 		
@@ -245,7 +256,33 @@ package screens.lobby
 			trace ( "ready to head to room '" + room + "' to play against " + enemy );
 			
 			readyCallback( room, enemy );
+		}
+		
+		public function close():void
+		{
 			removeFromParent( true );
+		}
+		
+		override public function get width():Number 
+		{
+			return background.width;
+		}
+		
+		override public function set width(value:Number):void 
+		{
+			background.width = value;
+			buttons.x = .5 * background.width;
+		}
+		
+		override public function get height():Number 
+		{
+			return background.height;
+		}
+		
+		override public function set height(value:Number):void 
+		{
+			background.height = value;
+			buttons.y = 50;
 		}
 		
 	}
