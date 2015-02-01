@@ -79,7 +79,7 @@ package duel.controllers
 			contextInHand = schEnabled;
 			contextOnField = scfNilSelected;
 			
-			var dcall:DelayedCall = new DelayedCall( update, .250 );
+			var dcall:DelayedCall = new DelayedCall( update, .440 );
 			dcall.repeatCount = 0;
 			juggler.add( dcall );
 		}
@@ -91,6 +91,7 @@ package duel.controllers
 		
 		public function update():void
 		{
+			
 			/// DESELECT CARD IF IMPOSSIBLE
 			if ( selectedCard != null )
 				deselectOnImpossible()
@@ -107,6 +108,9 @@ package duel.controllers
 			else
 			if ( selectedCard.isInPlay && selectedCard.type.isCreature )
 				contextOnField = scfFieldCreature
+			
+			if ( !ctrl.active )
+				return;
 			
 			var i:int;
 			
@@ -420,7 +424,7 @@ package duel.controllers
 			/// OLD SELECTION
 			if ( selectedCard != null )
 			{
-				selectedCard.sprite.selectedAura.visible = false;
+				selectedCard.sprite.isSelected = false;
 				
 				game.gui.hideTip();
 				
@@ -441,7 +445,7 @@ package duel.controllers
 				if ( player.hand.containsCard( selectedCard ) )
 					game.gui.showTip( selectedCard.name + '\n\n' + selectedCard.descr );
 				
-				selectedCard.sprite.selectedAura.visible = true;
+				selectedCard.sprite.isSelected = true;
 			}
 			
 			///

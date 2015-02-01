@@ -172,9 +172,9 @@ package duel.gui
 		
 		private function updateTf( t:AnimatedTextField, p:Player ):void
 		{
-			t.text = " " + p.name + ": " 
-						+ AnimatedTextField.DEFAULT_MARKER 
-						+ "\n" + manaText( p.mana );
+			t.text = " " + p.name
+						+ "\n" + manaText( p.mana )
+						+ "   LP: " + AnimatedTextField.DEFAULT_MARKER 
 			t.targetValue = p.lifePoints;
 			t.color = p.color;
 			t.alpha = p == game.currentPlayer ? 1.0 : 0.3;

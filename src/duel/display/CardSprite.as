@@ -25,8 +25,8 @@ package duel.display {
 	public class CardSprite extends GameSprite implements IAnimatable
 	{
 		public var auraContainer:Sprite;
-		public var selectableAura:Image;
-		public var selectedAura:Image;
+		private var selectableAura:Image;
+		private var selectedAura:Image;
 		
 		public var targetProps:TargetProps;
 		
@@ -75,19 +75,19 @@ package duel.display {
 			addChild( auraContainer );
 			
 			selectableAura = new CardAura( "card-aura" );
-			selectableAura.visible = false;
 			selectableAura.color = 0x669BEA;
 			//selectableAura.color = 0xFFE064;
 			//selectableAura.color = Temp.getColorForCard( card );
 			selectableAura.blendMode = "add";
 			selectableAura.touchable = false;
+			selectableAura.alpha = .0;
 			auraContainer.addChild( selectableAura );
 			
 			selectedAura = assets.generateImage( "card-aura-selected", false, true );
-			selectedAura.visible = false;
 			selectedAura.color = Temp.getColorForCard( card );
 			selectedAura.blendMode = "add";
 			selectedAura.touchable = false;
+			selectedAura.alpha = .0;
 			auraContainer.addChild( selectedAura );
 			
 			// MAIN - FRONT
@@ -211,7 +211,7 @@ package duel.display {
 			if ( time > .033 )
 				time = .033;
 			
-			useHandCursor = isSelectable;
+			useHandCursor = isSelectable || isSelected;
 			
 			if ( card.isInPlay && card.type.isCreature )
 				quad.color = card.exhausted ? 0x0 : 0xFFFF00;
@@ -225,8 +225,13 @@ package duel.display {
 			back.visible	= _flippedness < .0;
 			
 			auraContainer.scaleX = .25 + .75 * Math.abs( _flippedness );
-			selectableAura.visible = game.interactable && isSelectable && ( !selectedAura.visible || !card.isInPlay );
-			
+			selectableAura.visible = 
+				game.interactable && isSelectable && ( !isSelected || !card.isInPlay );
+				
+			selectedAura.visible = true;
+			//selectedAura.alpha = lerp ( selectableAura.alpha, 
+				//( game.interactable && isSelected ? 1.0 : 0.0 ), .22 );
+			selectedAura.alpha = isSelected ? 2.0 : 0.0;
 			if ( selectedAura.visible )
 				selectedAura.rotation = y > 100 ? .0 : Math.PI;
 			
