@@ -81,12 +81,12 @@ package duel.display.fields
 				( _isCardExhausted ? 1.0 : 0.0 ), .1 );
 			
 			aura.alpha = lerp ( aura.alpha, game.interactable && _showAura ? 1.0 : 0.0, .1 );
-			//overTip.alpha = lerp ( aura.alpha, game.interactable && _showTip ? 1.0 : 0.0, .1 );
-			if ( game.interactable && _showTip && overTip.alpha < .5 )
+			if ( game.interactable && _showTip && overTip.alpha < .1 )
 			{
+				overTip.alpha = .1;
 				overTip.scaleX = 1;
 				overTip.scaleY = 1;
-				juggler.xtween( overTip, .150, { scaleX: 1.5, scaleY: 1.5, transition : Transitions.EASE_OUT_BACK } );
+				juggler.xtween( overTip, .690, { scaleX: 1.5, scaleY: 1.5, transition : Transitions.EASE_OUT_ELASTIC } );
 			}
 			overTip.alpha = game.interactable && _showTip ? 1.0 : 0.0;
 			

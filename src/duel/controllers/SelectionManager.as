@@ -153,11 +153,24 @@ package duel.controllers
 			// -- // 					LOOP INDEXED FIELDS
 			// -- // 
 			// -- // -- // -- // -- // -- // -- // -- // -- // -- //
+			
+			//var f:IndexedField;
+			//for ( i  = 0; i < game.indexedFields.length; i++ ) 
+			//{
+				//f = game.indexedFields[ i ];
+				//f.sprite.setGuiState( judgeFieldGuiState( f ) );
+			//}
+			
 			var f:IndexedField;
+			var state:FieldSpriteGuiState;
+			var delay:Number = .0;
 			for ( i  = 0; i < game.indexedFields.length; i++ ) 
 			{
 				f = game.indexedFields[ i ];
-				f.sprite.setGuiState( judgeFieldGuiState( f ) );
+				state = judgeFieldGuiState( f );
+				f.sprite.setGuiState( FieldSpriteGuiState.NONE );
+				if ( state != FieldSpriteGuiState.NONE )
+					juggler.delayCall( f.sprite.setGuiState, delay += .066, state );
 			}
 			
 			// -- // -- // -- // -- // -- // -- // -- // -- // -- //

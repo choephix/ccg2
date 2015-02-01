@@ -225,15 +225,13 @@ package duel.display {
 			back.visible	= _flippedness < .0;
 			
 			auraContainer.scaleX = .25 + .75 * Math.abs( _flippedness );
-			selectableAura.visible = 
-				game.interactable && isSelectable && ( !isSelected || !card.isInPlay );
+			
+			selectableAura.visible = true;
+				//game.interactable && isSelectable && ( !isSelected || !card.isInPlay );
 				
-			selectedAura.visible = true;
-			//selectedAura.alpha = lerp ( selectableAura.alpha, 
-				//( game.interactable && isSelected ? 1.0 : 0.0 ), .22 );
-			selectedAura.alpha = isSelected ? 2.0 : 0.0;
-			if ( selectedAura.visible )
-				selectedAura.rotation = y > 100 ? .0 : Math.PI;
+			selectedAura.alpha = lerp ( selectedAura.alpha, 
+				( game.interactable && isSelected ? 1.0 : 0.0 ), .11 );
+			selectedAura.rotation = y > 100 ? .0 : Math.PI;
 			
 			if ( front.visible )
 			{
@@ -248,6 +246,8 @@ package duel.display {
 				back.scaleX = Math.abs( _flippedness );
 				back.alpha = game.interactable ? 1.0 - _backTranslucency : 1.0;
 			}
+			
+			//quad.alpha = isSelectable ? .5 : .0;
 		}
 		
 		internal function updateData():void 
