@@ -161,6 +161,8 @@ package duel.controllers
 				//f.sprite.setGuiState( judgeFieldGuiState( f ) );
 			//}
 			
+			//TODO Test performance withoud dcalls
+			//TODO Also clear dcalls before update or fast-clicking problem is problem
 			var f:IndexedField;
 			var state:FieldSpriteGuiState;
 			var delay:Number = .0;
@@ -170,7 +172,7 @@ package duel.controllers
 				state = judgeFieldGuiState( f );
 				f.sprite.setGuiState( FieldSpriteGuiState.NONE );
 				if ( state != FieldSpriteGuiState.NONE )
-					juggler.delayCall( f.sprite.setGuiState, delay += .066, state );
+					juggler.delayCall( f.sprite.setGuiState, delay += .070, state );
 			}
 			
 			// -- // -- // -- // -- // -- // -- // -- // -- // -- //

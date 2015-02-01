@@ -227,6 +227,8 @@ package duel.display {
 			auraContainer.scaleX = .25 + .75 * Math.abs( _flippedness );
 			
 			selectableAura.visible = true;
+			selectableAura.alpha = lerp ( selectableAura.alpha, 
+				( game.interactable && isSelectable ? 1.0 : 0.0 ), .08 );
 				//game.interactable && isSelectable && ( !isSelected || !card.isInPlay );
 				
 			selectedAura.alpha = lerp ( selectedAura.alpha, 
