@@ -58,6 +58,8 @@ package duel.controllers
 			
 			var c:Card = e.data as Card;
 			
+			trace( "click " + c );
+			
 			if ( c.isInHand )
 			{
 				if ( !selection.contextInHand.isSelectable( c ) )
@@ -84,6 +86,8 @@ package duel.controllers
 			}
 			
 			var f:Field = e.data as Field;
+			
+			trace( "click " + f );
 			
 			if ( !selection.contextOnField.isSelectable( f ) )
 				return;

@@ -39,7 +39,7 @@ package duel.display.fields
 			
 			aura = new CardAura( "card-aura-field" );
 			aura.touchable = false;
-			aura.visible = false;
+			aura.alpha = 0.0;
 			aura.x = x;
 			aura.y = y;
 			aura.scale = _z;
@@ -58,7 +58,7 @@ package duel.display.fields
 			
 			overTip = new FieldSpriteOverTip();
 			overTip.touchable = false;
-			overTip.visible = false;
+			overTip.alpha = 0.0;
 			overTip.x = x;
 			overTip.y = y;
 			overTip.scaleX = 1.5;
@@ -80,7 +80,19 @@ package duel.display.fields
 			exhaustClock.alpha = lerp( exhaustClock.alpha, 
 				( _isCardExhausted ? 1.0 : 0.0 ), .1 );
 			
+			aura.alpha = lerp ( aura.alpha, game.interactable && _showAura ? 1.0 : 0.0, .1 );
+			//overTip.alpha = lerp ( aura.alpha, game.interactable && _showTip ? 1.0 : 0.0, .1 );
+			if ( game.interactable && _showTip && overTip.alpha < .5 )
+			{
+				overTip.scaleX = 1;
+				overTip.scaleY = 1;
+				juggler.xtween( overTip, .150, { scaleX: 1.5, scaleY: 1.5, transition : Transitions.EASE_OUT_BACK } );
+			}
+			overTip.alpha = game.interactable && _showTip ? 1.0 : 0.0;
+			
 			//
+			return; //////////////////////////////////////
+			
 			if ( field.topCard )
 			{
 				aura.x = field.topCard.sprite.x - G.CARD_W * .5;
@@ -126,55 +138,55 @@ package duel.display.fields
 		
 		public function setGuiState( state:FieldSpriteGuiState ):void
 		{
-			overTip.visible = 
-			aura.visible = state != FieldSpriteGuiState.NONE;
-			
-			if ( state != FieldSpriteGuiState.NONE )
+			switch ( state ) 
 			{
-				switch ( state ) 
-				{
-					case FieldSpriteGuiState.SELECTABLE:
-						setShit( 0xFFFFFF, "", 0 );
-						break;
+				case FieldSpriteGuiState.NONE:
+					setShit( 0, "", 0 );
+					break;
+				case FieldSpriteGuiState.SELECTABLE:
+					setShit( 0xFFFFFF, "", 0 );
+					break;
+				
+				case FieldSpriteGuiState.NORMAL_SUMMON:
+					setShit( 0xE7360A, "Summon\nHere", 0xcc9966 );
+					break;
+				case FieldSpriteGuiState.TRIBUTE_SUMMON:
+					setShit( 0xE7360A, "Tribute\nSummon!", 0xFFFFFF );
+					break;
+				case FieldSpriteGuiState.SET_TRAP:
+					setShit( 0x6622ff, "Set Trap\nHere", 0xFF71BF );
+					break;
+				case FieldSpriteGuiState.REPLACE_TRAP:
+					setShit( 0x6622ff, "Replace\nTrap", 0xFF71BF );
+					break;
 					
-					case FieldSpriteGuiState.NORMAL_SUMMON:
-						setShit( 0xE7360A, "Summon\nHere", 0xcc9966 );
-						break;
-					case FieldSpriteGuiState.TRIBUTE_SUMMON:
-						setShit( 0xE7360A, "Tribute\nSummon!", 0xFFFFFF );
-						break;
-					case FieldSpriteGuiState.SET_TRAP:
-						setShit( 0x6622ff, "Set Trap\nHere", 0xFF71BF );
-						break;
-					case FieldSpriteGuiState.REPLACE_TRAP:
-						setShit( 0x6622ff, "Replace\nTrap", 0xFF71BF );
-						break;
-						
-					case FieldSpriteGuiState.SAFE_FLIP:
-						setShit( 0x9D9771, "Safe-Flip!", 0xFFFF80 );
-						break;
-					case FieldSpriteGuiState.RELOCATE_TO:
-						setShit( 0x2266DD, "Move\nHere", 0x65D2FC );
-						break;
-					case FieldSpriteGuiState.ATTACK_DIRECT:
-						setShit( 0xcc0011, "Attack\nDirectly!", 0xFFC600 );
-						break;
-					case FieldSpriteGuiState.ATTACK_CREATURE:
-						setShit( 0xcc0011, "Attack!", 0xFFFFFF );
-						break;
-					default:
-						error( "FieldSpriteGuiState = ?" );
-				}
+				case FieldSpriteGuiState.SAFE_FLIP:
+					setShit( 0x9D9771, "Safe-Flip!", 0xFFFF80 );
+					break;
+				case FieldSpriteGuiState.RELOCATE_TO:
+					setShit( 0x2266DD, "Move\nHere", 0x65D2FC );
+					break;
+				case FieldSpriteGuiState.ATTACK_DIRECT:
+					setShit( 0xcc0011, "Attack\nDirectly!", 0xFFC600 );
+					break;
+				case FieldSpriteGuiState.ATTACK_CREATURE:
+					setShit( 0xcc0011, "Attack!", 0xFFFFFF );
+					break;
+				default:
+					error( "FieldSpriteGuiState = ?" );
 			}
 		}
 		
 		public function setShit( auraColor:uint, tipText:String, tipTextColor:uint ):void
 		{
-			aura.color = auraColor;
-			aura.visible = auraColor > 0;
+			_showAura = auraColor > 0;
+			if ( _showAura ) 
+				aura.color = auraColor;
+			
 			overTip.text = tipText;
-			overTip.color = tipTextColor;
-			overTip.visible = tipTextColor > 0;
+			_showTip = tipTextColor > 0;
+			if ( _showTip )
+				overTip.color = tipTextColor;
 		}
 		
 		public function get z():Number 

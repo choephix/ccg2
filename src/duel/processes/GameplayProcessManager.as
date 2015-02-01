@@ -169,6 +169,7 @@ package duel.processes
 			
 			/// SUMMON_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.SUMMON_COMPLETE, c, field ) );
+			pro.delay = isManual ? .150 : NaN;
 			pro.abortable = true; //was false by default, cuz' "complete"
 			pro.abortCheck =
 			function completeAbortCheck( c:Card, field:CreatureField ):Boolean
@@ -181,6 +182,7 @@ package duel.processes
 				if ( !c.isInPlay ) return;
 				c.summonedThisTurn = true;
 				c.sprite.animSummon();
+				game.jugglerGui.addFakeTime( isManual ? .150 : 0.017 );
 			}
 			
 		}
@@ -326,6 +328,12 @@ package duel.processes
 			
 			/// SET_TRAP_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.SET_TRAP_COMPLETE, c, field ) );
+			pro.delay = isManual ? .150 : NaN;
+			pro.onEnd = 
+			function complete( c:Card, field:TrapField ):void
+			{
+				game.jugglerGui.addFakeTime( isManual ? .150 : 0.017 );
+			}
 		}
 		
 		gameprocessing function prepend_TrapActivation( c:Card ):void

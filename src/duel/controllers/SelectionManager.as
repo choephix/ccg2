@@ -34,6 +34,8 @@ package duel.controllers
 		public var selectedCard:Card;
 		public var ctrl:UserPlayerController;
 		
+		private var _updateFlag:Boolean = true;;
+		
 		public function initialize( player:Player, faq:PlayerControllerFAQ ):void
 		{
 			this.player = player;
@@ -79,18 +81,35 @@ package duel.controllers
 			contextInHand = schEnabled;
 			contextOnField = scfNilSelected;
 			
-			var dcall:DelayedCall = new DelayedCall( update, .440 );
-			dcall.repeatCount = 0;
-			juggler.add( dcall );
+			//var dcall:DelayedCall = new DelayedCall( update, .440 );
+			//dcall.repeatCount = 0;
+			//juggler.add( dcall );
 		}
 		
 		public function advanceTime(time:Number):void 
 		{
-			//update();
+			update();
 		}
 		
 		public function update():void
 		{
+			var i:int;
+			
+			if ( !game.interactable )
+			{
+				if ( !_updateFlag )
+				{
+					_updateFlag = true;
+					//for ( i = 0; i < game.cardsCount; i++ ) 
+						//game.cards[ i ].sprite.isSelectable = false;
+				}
+				return;
+			}
+			
+			if ( !_updateFlag )
+				return;
+				
+			trace ( "GUI Update" );
 			
 			/// DESELECT CARD IF IMPOSSIBLE
 			if ( selectedCard != null )
@@ -109,10 +128,8 @@ package duel.controllers
 			if ( selectedCard.isInPlay && selectedCard.type.isCreature )
 				contextOnField = scfFieldCreature
 			
-			if ( !ctrl.active )
-				return;
-			
-			var i:int;
+			//if ( !ctrl.active )
+				//return;
 			
 			// -- // -- // -- // -- // -- // -- // -- // -- // -- //
 			// -- // 
@@ -148,12 +165,15 @@ package duel.controllers
 			// -- // 						DECK
 			// -- // 
 			// -- // -- // -- // -- // -- // -- // -- // -- // -- //
-			
 			if ( !player.deck.isEmpty )
 				player.deck.topCard.sprite.isSelectable = 
 					ctrl.active && 
 					selectedCard == null &&
 					player.mana.current > 0;
+			
+					
+			
+			_updateFlag = false;
 		}
 		
 		private function judgeFieldGuiState( f:IndexedField ):FieldSpriteGuiState
@@ -449,7 +469,7 @@ package duel.controllers
 			}
 			
 			///
-			//update();
+			_updateFlag = true;
 		}
 		
 		public function tryToSelectFieldCard( card:Card ):void
