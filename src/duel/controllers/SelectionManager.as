@@ -461,8 +461,6 @@ package duel.controllers
 			{
 				selectedCard.sprite.isSelected = false;
 				
-				game.gui.hideTip();
-				
 				if ( player.hand.containsCard( selectedCard ) )
 					player.handSprite.unshow( selectedCard );
 			}
@@ -476,9 +474,6 @@ package duel.controllers
 			{
 				if ( player.hand.containsCard( selectedCard ) )
 					player.handSprite.show( selectedCard );
-				
-				if ( player.hand.containsCard( selectedCard ) )
-					game.gui.showTip( selectedCard.name + '\n\n' + selectedCard.descr );
 				
 				selectedCard.sprite.isSelected = true;
 			}

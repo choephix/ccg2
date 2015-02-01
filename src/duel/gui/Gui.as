@@ -1,6 +1,7 @@
 package duel.gui
 {
 	import chimichanga.common.display.Sprite;
+	import duel.cards.Card;
 	import duel.controllers.PlayerAction;
 	import duel.controllers.PlayerActionType;
 	import duel.controllers.UserPlayerController;
@@ -26,10 +27,12 @@ package duel.gui
 		
 		public var buttonsContainer:Sprite;
 		
-		public var cardTip:Button;
+		public var cardTip:TipBox;
 		
 		public var button1:Button;
 		public var button2:Button;
+		
+		private var _focusedCard:Card;
 		
 		public function Gui()
 		{
@@ -71,17 +74,9 @@ package duel.gui
 			logBox.height = 380;
 			}
 			
-			cardTip = new Button( assets.getTexture( "tipspace" ) );
+			cardTip = new TipBox();
 			addChild( cardTip );
-			cardTip.alignPivot();
-			cardTip.x = App.W * .5;
-			cardTip.y = App.H * .3;
-			cardTip.scaleX = CONFIG::mobile?2.0:1.50;
-			cardTip.scaleY = CONFIG::mobile?2.0:1.25;
-			cardTip.alpha = .88;
-			cardTip.addEventListener( Event.TRIGGERED, hideTip );
 			cardTip.visible = false;
-			cardTip.touchable = false;
 			
 			// BUTTONS
 			
@@ -122,17 +117,31 @@ package duel.gui
 			buttonsContainer.alignPivot( "right", "top" );
 			buttonsContainer.x = App.W;
 			buttonsContainer.y = 0;
+			
+			//
+			
+			game.guiEvents.addEventListener( GuiEvents.CARD_FOCUS, onCardFocus );
+			game.guiEvents.addEventListener( GuiEvents.CARD_UNFOCUS, onCardUnfocus );
 		}
 		
-		public function showTip( tip:String ):void
+		private function onCardFocus(e:Event):void 
 		{
+			_focusedCard = e.data as Card;
+			
+			if ( !game.p1.knowsCard( _focusedCard ) )
+				return;
+			
 			cardTip.visible = true;
-			cardTip.text = tip;
-			cardTip.y = game.currentPlayer == game.p1 ? App.H * .3 : App.H * .7;
+			cardTip.text = _focusedCard.name + "\n\n" + _focusedCard.descr;
+			cardTip.x = .5 * App.W;
+			cardTip.y = _focusedCard.sprite.y > .0 ? .25 * App.H : .75 * App.H;
 		}
 		
-		public function hideTip():void
+		private function onCardUnfocus(e:Event):void 
 		{
+			if ( _focusedCard != e.data as Card )
+				return;
+			
 			cardTip.visible = false;
 		}
 		
@@ -140,6 +149,8 @@ package duel.gui
 		{
 			t1.advanceTime( time );
 			t2.advanceTime( time );
+			
+			cardTip.advanceTime( time );
 			
 			buttonsContainer.visible =
 				game.state.isOngoing &&

@@ -190,6 +190,8 @@ package duel.display {
 			
 			if ( t == null )
 			{
+				if ( isFocused )
+					guiEvents.dispatchEventWith( GuiEvents.CARD_UNFOCUS, false, card );
 				isFocused = false;
 				return;
 			}
@@ -197,6 +199,8 @@ package duel.display {
 			switch ( t.phase )
 			{
 				case TouchPhase.HOVER:
+					if ( !isFocused )
+						guiEvents.dispatchEventWith( GuiEvents.CARD_FOCUS, false, card );
 					isFocused = true;
 					break;
 				case TouchPhase.ENDED:

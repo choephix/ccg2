@@ -58,7 +58,6 @@ package duel.display {
 			
 			quad = new Quad( G.CARD_W, G.CARD_H, 0xFF0000 );
 			quad.alpha = .0;
-			//quad.alpha = .1;
 			quad.alignPivot();
 			addChild( quad );
 			
