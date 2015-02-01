@@ -9,6 +9,7 @@ package duel.controllers
 	import duel.table.Field;
 	import duel.table.IndexedField;
 	import duel.table.TrapField;
+	import starling.animation.DelayedCall;
 	
 	/**
 	 * ...
@@ -77,11 +78,15 @@ package duel.controllers
 			
 			contextInHand = schEnabled;
 			contextOnField = scfNilSelected;
+			
+			var dcall:DelayedCall = new DelayedCall( update, .250 );
+			dcall.repeatCount = 0;
+			juggler.add( dcall );
 		}
 		
 		public function advanceTime(time:Number):void 
 		{
-			update();
+			//update();
 		}
 		
 		public function update():void
@@ -131,75 +136,7 @@ package duel.controllers
 			for ( i  = 0; i < game.indexedFields.length; i++ ) 
 			{
 				f = game.indexedFields[ i ];
-				
-				f.sprite.setGuiState( FieldSpriteGuiState.NONE );
-				
-				if ( !player.isMyTurn ) continue;
-				
-				if ( !game.interactable ) continue;
-				
-				if ( selectedCard == null )
-				{
-					if ( ctrl.active && !f.isEmpty && canPlayFieldCard( f.topCard ) )
-						f.sprite.setGuiState( FieldSpriteGuiState.SELECTABLE );
-					continue;
-				}
-				
-				if ( selectedCard.isInHand )
-				{
-					if ( selectedCard.cost > player.mana.current )
-						continue;
-					
-					if ( selectedCard.type.isCreature )
-						if ( f is CreatureField )
-							if ( faq.canSummonCreatureOn( selectedCard, f, true ) == null )
-							{
-								f.sprite.setGuiState( 
-									selectedCard.statusC.needTribute ? 
-									FieldSpriteGuiState.TRIBUTE_SUMMON : 
-									FieldSpriteGuiState.NORMAL_SUMMON );
-								continue;
-							}
-					if ( selectedCard.type.isTrap )
-						if ( f is TrapField )
-							if ( faq.canSetTrapOn( selectedCard, f, true ) == null )
-							{
-								f.sprite.setGuiState(
-									f.isEmpty ?
-									FieldSpriteGuiState.SET_TRAP : 
-									FieldSpriteGuiState.REPLACE_TRAP );
-								continue;
-							}
-				}
-				
-				if ( !selectedCard.isInPlay ) continue;
-				
-				if ( !selectedCard.type.isCreature ) continue;
-				
-				if ( f == selectedCard.indexedField )
-					if ( faq.canCreatureSafeFlip( selectedCard, true ) == null )
-					{
-						f.sprite.setGuiState( FieldSpriteGuiState.SAFE_FLIP );
-						continue;
-					}
-				
-				if ( faq.canCreatureRelocateTo( selectedCard, f, true ) == null )
-				{
-					f.sprite.setGuiState( FieldSpriteGuiState.RELOCATE_TO );
-					continue;
-				}
-				
-				if ( f.index == selectedCard.indexedField.index )
-					if ( f.owner == player.opponent )
-						if ( f is CreatureField )
-							if ( faq.canCreatureAttack( selectedCard, true ) == null )
-							{
-								f.sprite.setGuiState( 
-									f.isEmpty ?
-									FieldSpriteGuiState.ATTACK_DIRECT : 
-									FieldSpriteGuiState.ATTACK_CREATURE );
-								continue;
-							}
+				f.sprite.setGuiState( judgeFieldGuiState( f ) );
 			}
 			
 			// -- // -- // -- // -- // -- // -- // -- // -- // -- //
@@ -209,7 +146,67 @@ package duel.controllers
 			// -- // -- // -- // -- // -- // -- // -- // -- // -- //
 			
 			if ( !player.deck.isEmpty )
-				player.deck.topCard.sprite.isSelectable = ctrl.active && player.mana.current > 0;
+				player.deck.topCard.sprite.isSelectable = 
+					ctrl.active && 
+					selectedCard == null &&
+					player.mana.current > 0;
+		}
+		
+		private function judgeFieldGuiState( f:IndexedField ):FieldSpriteGuiState
+		{
+			if ( !player.isMyTurn ) return FieldSpriteGuiState.NONE;
+			if ( !game.interactable ) return FieldSpriteGuiState.NONE;
+			
+			if ( selectedCard == null )
+				if ( ctrl.active && !f.isEmpty && canPlayFieldCard( f.topCard ) )
+					return FieldSpriteGuiState.SELECTABLE;
+				else
+					return FieldSpriteGuiState.NONE;
+			
+			if ( selectedCard.isInHand )
+			{
+				if ( selectedCard.cost > player.mana.current )
+					return FieldSpriteGuiState.NONE;
+				
+				if ( selectedCard.type.isCreature )
+				{
+					if ( f is CreatureField )
+						if ( faq.canSummonCreatureOn( selectedCard, f, true ) == null )
+							return selectedCard.statusC.needTribute ? 
+								FieldSpriteGuiState.TRIBUTE_SUMMON : 
+								FieldSpriteGuiState.NORMAL_SUMMON;
+					return FieldSpriteGuiState.NONE;
+				}
+				if ( selectedCard.type.isTrap )
+				{
+					if ( f is TrapField )
+						if ( faq.canSetTrapOn( selectedCard, f, true ) == null )
+							return f.isEmpty ?
+								FieldSpriteGuiState.SET_TRAP : 
+								FieldSpriteGuiState.REPLACE_TRAP;
+					return FieldSpriteGuiState.NONE
+				}
+			}
+			
+			if ( !selectedCard.isInPlay ) return FieldSpriteGuiState.NONE;
+			if ( !selectedCard.type.isCreature ) return FieldSpriteGuiState.NONE;
+			
+			if ( f == selectedCard.indexedField )
+				if ( faq.canCreatureSafeFlip( selectedCard, true ) == null )
+					return FieldSpriteGuiState.SAFE_FLIP;
+			
+			if ( faq.canCreatureRelocateTo( selectedCard, f, true ) == null )
+				return FieldSpriteGuiState.RELOCATE_TO;
+			
+			if ( f.index == selectedCard.indexedField.index )
+				if ( f.owner == player.opponent )
+					if ( f is CreatureField )
+						if ( faq.canCreatureAttack( selectedCard, true ) == null )
+							return f.isEmpty ?
+								FieldSpriteGuiState.ATTACK_DIRECT : 
+								FieldSpriteGuiState.ATTACK_CREATURE;
+			
+			return FieldSpriteGuiState.NONE
 		}
 		
 		private function canPlayFieldCard( c:Card ):Boolean 
@@ -448,7 +445,7 @@ package duel.controllers
 			}
 			
 			///
-			update();
+			//update();
 		}
 		
 		public function tryToSelectFieldCard( card:Card ):void
