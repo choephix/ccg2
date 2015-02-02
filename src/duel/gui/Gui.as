@@ -134,7 +134,7 @@ package duel.gui
 			cardTip.visible = true;
 			cardTip.text = _focusedCard.name + "\n\n" + _focusedCard.descr;
 			cardTip.x = .5 * App.W;
-			cardTip.y = _focusedCard.sprite.y > .0 ? .25 * App.H : .75 * App.H;
+			cardTip.y = _focusedCard.sprite.y > .0 ? .33 * App.H : .67 * App.H;
 		}
 		
 		private function onCardUnfocus(e:Event):void 

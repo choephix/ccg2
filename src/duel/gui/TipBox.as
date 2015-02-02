@@ -1,6 +1,5 @@
 package duel.gui
 {
-	import chimichanga.common.display.Sprite;
 	import duel.GameSprite;
 	import starling.animation.IAnimatable;
 	import starling.display.Quad;

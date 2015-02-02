@@ -303,11 +303,14 @@ package duel.controllers
 		
 		private function schEnabledOnSelected( o:* ):void
 		{
-			//if ( !player.canPerformAction() )
-				//game.gui.pMsg( "Not enough mana" );
-			//else
+			if ( player.mana.current < Card( o ).cost  )
+				game.gui.pMsg( "You do not have enough AP to play " + o );
+			else
 			if ( Card( o ).controller != player )
 				game.gui.pMsg( "This is not your card" );
+			else
+			if ( !canPlayHandCard( o as Card ) )
+				game.gui.pMsg( "You cannot play " + o + " anywhere right now" );
 			else
 			if ( !canSelectHandCard( o as Card ) )
 				game.gui.pMsg( "You cannot select this card for reasons" );
@@ -462,7 +465,7 @@ package duel.controllers
 				selectedCard.sprite.isSelected = false;
 				
 				if ( player.hand.containsCard( selectedCard ) )
-					player.handSprite.unshow( selectedCard );
+					player.handSprite.selectedCard = null;
 			}
 			
 			/// /// /// /// ///
@@ -473,7 +476,7 @@ package duel.controllers
 			if ( selectedCard != null )
 			{
 				if ( player.hand.containsCard( selectedCard ) )
-					player.handSprite.show( selectedCard );
+					player.handSprite.selectedCard = selectedCard;
 				
 				selectedCard.sprite.isSelected = true;
 			}
