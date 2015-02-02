@@ -108,7 +108,7 @@ package duel.display.cardlots
 			var o:CardSprite;
 			var i:int = list.cardsCount;
 			var jj:int = 0;
-			var sideDir:Number = topSide ? 1.0 : -1.0;
+			var sideDir:Number = topSide ? -1.0 : 1.0;
 			while ( --i >= 0 )
 			{
 				o = list.getCardAt( i ).sprite;
@@ -121,19 +121,19 @@ package duel.display.cardlots
 				if ( _active )
 					if ( selectedCard == null )
 						if ( o.isFocused )
-							y = sideDir * G.CARD_H * .5;
+							y = sideDir * G.CARD_H * -.5;
 						else
 						if ( o.isSelectable )
-							y = G.CARD_H * -.03;
+							y = sideDir * G.CARD_H * -.03;
 						else
 							y = G.CARD_H * .0;
 					else
 						if ( o == selectedCard.sprite )
-							y = sideDir * G.CARD_H * .88;
+							y = sideDir * G.CARD_H * -.88;
 						else
-							y = sideDir * G.CARD_H * -.4;
+							y = sideDir * G.CARD_H * .4;
 				else
-					y = sideDir * G.CARD_H * -.4;
+					y = sideDir * G.CARD_H * .4;
 					
 				o.targetProps.y = this.y + y;
 				

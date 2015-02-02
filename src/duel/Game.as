@@ -175,7 +175,7 @@ package duel
 			if ( !meta.isMultiplayer )
 			{
 				logicComponents.push( new UserPlayerController( p1 ) );
-				//logicComponents.push( new UserPlayerController( p2 ) );
+				logicComponents.push( new UserPlayerController( p2 ) );
 				p1.updateDetails( meta.myUserName, meta.myUserColor );
 				p2.updateDetails( meta.myUserName + " II", 0xFF0059 ); // "Botko"
 				p1.controllable = true;
