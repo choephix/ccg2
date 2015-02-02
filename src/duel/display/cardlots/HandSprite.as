@@ -121,10 +121,10 @@ package duel.display.cardlots
 				if ( _active )
 					if ( selectedCard == null )
 						if ( o.isFocused )
-							y = G.CARD_H * -.5;
+							y = sideDir * G.CARD_H * .5;
 						else
 						if ( o.isSelectable )
-							y = G.CARD_H * -.02;
+							y = G.CARD_H * -.03;
 						else
 							y = G.CARD_H * .0;
 					else
@@ -139,8 +139,6 @@ package duel.display.cardlots
 				
 				if ( o.isSelected )
 				{
-					o.targetProps.x = .41 * App.W;
-					o.targetProps.y = .0;
 					o.targetProps.x = .0;
 					o.targetProps.y = -.2 * App.H;
 				}

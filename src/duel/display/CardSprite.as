@@ -163,7 +163,7 @@ package duel.display {
 					tfDescr.height = yy( .50 );
 			}
 			
-			quad = new Quad( G.CARD_W, G.CARD_H, 0xFF0000 );
+			quad = new Quad( G.CARD_W, G.CARD_H, 0x0 );
 			quad.alpha = .0;
 			//quad.alpha = .1;
 			quad.alignPivot();
@@ -196,8 +196,6 @@ package duel.display {
 				return;
 			}
 			
-			trace ( t.phase );
-			
 			switch ( t.phase )
 			{
 				case TouchPhase.HOVER:
@@ -207,11 +205,13 @@ package duel.display {
 					break;
 				case TouchPhase.ENDED:
 					guiEvents.dispatchEventWith( GuiEvents.CARD_CLICK, false, card );
+					quad.alpha = .0;
 					break;
 				case TouchPhase.BEGAN:
-					if ( isFocused )
-						guiEvents.dispatchEventWith( GuiEvents.CARD_UNFOCUS, false, card );
-					isFocused = false;
+					quad.alpha = .15;
+					//if ( isFocused )
+						//guiEvents.dispatchEventWith( GuiEvents.CARD_UNFOCUS, false, card );
+					//isFocused = false;
 					break;
 			}
 			
