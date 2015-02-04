@@ -18,7 +18,6 @@ package duel.display
 		{
 			super( App.assets.getTexture( assetName ) );
 			this.touchable = false;
-			this.useHandCursor = false;
 			this.blendMode = BlendMode.ADD;
 			alignPivot();
 			

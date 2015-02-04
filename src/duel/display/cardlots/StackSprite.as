@@ -43,9 +43,6 @@ package duel.display.cardlots
 			o.scaleX = z;
 			o.scaleY = z;
 			cardsParent.addChild( o );
-		
-			//o.touchable = false;
-			//o.useHandCursor = false;
 		}
 		
 		override protected function tweenToPlace( o:CardSprite ):void
@@ -65,9 +62,6 @@ package duel.display.cardlots
 				} );
 				
 			cardsParent.addChild( o );
-			
-			//o.touchable = false;
-			//o.useHandCursor = false;
 		}
 		
 	}

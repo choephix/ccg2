@@ -1,5 +1,6 @@
 package duel.display {
 	import chimichanga.common.display.Sprite;
+	import chimichanga.debug.logging.error;
 	import dev.Temp;
 	import duel.cards.Card;
 	import duel.cards.CardType;
@@ -7,6 +8,10 @@ package duel.display {
 	import duel.GameSprite;
 	import duel.gui.AnimatedTextField;
 	import duel.gui.GuiEvents;
+	import flash.events.FocusEvent;
+	import flash.geom.Rectangle;
+	import flash.ui.Mouse;
+	import flash.ui.MouseCursor;
 	import starling.animation.IAnimatable;
 	import starling.animation.Transitions;
 	import starling.display.BlendMode;
@@ -46,12 +51,14 @@ package duel.display {
 		private var _peekThrough:Boolean = false;
 		private var _backTranslucency:Number = .0;
 		private var _flippedness:Number = .0;
-		public var isFocused:Boolean = false;
+		private var _isFocused:Boolean = false;
+		public var _isPressed:Boolean = false;
 		public var isSelectable:Boolean = false;
 		public var isSelected:Boolean = false;
 		
 		//
 		private var card:Card;
+		private static var helperRect:Rectangle = new Rectangle();
 		
 		public function initialize( card:Card ):void
 		{
@@ -180,38 +187,50 @@ package duel.display {
 			function xx( ratio:Number ):Number { return ratio * G.CARD_W }
 			function yy( ratio:Number ):Number { return ratio * G.CARD_H }
 			
-			addEventListener( TouchEvent.TOUCH, onTouch );
+			quad.addEventListener( TouchEvent.TOUCH, onTouch );
 			touchable = true;
 		}
 		
 		private function onTouch(e:TouchEvent):void 
 		{
+			// UPDATE FOCUS
+			
 			var t:Touch = e.getTouch( quad );
 			
 			if ( t == null )
 			{
-				if ( isFocused )
-					guiEvents.dispatchEventWith( GuiEvents.CARD_UNFOCUS, false, card );
-				isFocused = false;
+				setIsFocused( false );
 				return;
 			}
 			
+			setIsFocused( t.phase != TouchPhase.ENDED );
+			
 			switch ( t.phase )
 			{
-				case TouchPhase.HOVER:
-					if ( !isFocused )
-						guiEvents.dispatchEventWith( GuiEvents.CARD_FOCUS, false, card );
-					isFocused = true;
+				case TouchPhase.BEGAN:
+					if ( !isPressed )
+						setIsPressed( true );
+					break;
+				case TouchPhase.MOVED:
+					if ( isPressed )
+					{
+						// reset "isPressed" state when user dragged too far away after pushing
+						getBounds( stage, helperRect );
+						if (t.globalX < helperRect.x - 10 ||
+							t.globalY < helperRect.y - 10 ||
+							t.globalX > helperRect.x + helperRect.width + 10 ||
+							t.globalY > helperRect.y + helperRect.height + 10)
+						{
+							setIsPressed( false );
+						}
+					}
 					break;
 				case TouchPhase.ENDED:
-					guiEvents.dispatchEventWith( GuiEvents.CARD_CLICK, false, card );
-					quad.alpha = .0;
-					break;
-				case TouchPhase.BEGAN:
-					quad.alpha = .15;
-					//if ( isFocused )
-						//guiEvents.dispatchEventWith( GuiEvents.CARD_UNFOCUS, false, card );
-					//isFocused = false;
+					if ( isPressed )
+					{
+						guiEvents.dispatchEventWith( GuiEvents.CARD_CLICK, false, card );
+						setIsPressed( false );
+					}
 					break;
 			}
 			
@@ -221,8 +240,6 @@ package duel.display {
 		{
 			if ( time > .033 )
 				time = .033;
-			
-			useHandCursor = isSelectable || isSelected;
 			
 			if ( card.isInPlay && card.type.isCreature )
 				quad.color = card.exhausted ? 0x0 : 0xFFFF00;
@@ -457,6 +474,31 @@ package duel.display {
 		public function get isTopSide():Boolean
 		{
 			return card.controller == game.p2;
+		}
+		
+		public function get isFocused():Boolean 
+		{
+			return _isFocused;
+		}
+		
+		private function setIsFocused( value:Boolean ):void 
+		{
+			if ( _isFocused == value )
+				return;
+			
+			_isFocused = value;
+			game.guiEvents.dispatchEventWith( value ? GuiEvents.CARD_FOCUS : GuiEvents.CARD_UNFOCUS, false, card );
+			Mouse.cursor = value && ( isSelectable || isSelected ) ? MouseCursor.BUTTON : MouseCursor.AUTO;
+		}
+		public function get isPressed():Boolean 
+		{
+			return _isPressed;
+		}
+		
+		private function setIsPressed( value:Boolean ):void 
+		{
+			_isPressed = value;
+			quad.alpha = value ? .2 : .0;
 		}
 		
 		//
