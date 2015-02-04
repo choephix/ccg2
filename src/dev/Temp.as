@@ -14,7 +14,7 @@ package dev
 	{
 		public static function getColorForCard( card:Card ):uint 
 		{
-			if ( card.type.isCreature )
+			if ( card.isCreature )
 			{
 				if ( card.propsC.isToken ) 
 					return ColorScheme.getColorForCreatureToken( true );
@@ -24,7 +24,7 @@ package dev
 					return ColorScheme.getColorForCreatureFlippable( true );
 				return ColorScheme.getColorForCreature( true );
 			}
-			if ( card.type.isTrap )
+			if ( card.isTrap )
 			{
 				if ( card.propsT.isPersistent )
 					return ColorScheme.getColorForTrapPersistent( true );	

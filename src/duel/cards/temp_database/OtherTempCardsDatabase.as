@@ -243,7 +243,7 @@ package duel.cards.temp_database
 					
 					function isViableTarget( cc:Card ):Boolean {
 						if ( cc == c ) return false;
-						return cc.type.isCreature;
+						return cc.isCreature;
 					}
 				},
 				/* * */

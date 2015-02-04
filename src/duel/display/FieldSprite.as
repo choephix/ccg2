@@ -1,20 +1,17 @@
 package duel.display {
 	import chimichanga.common.display.Sprite;
-	import chimichanga.debug.logging.error;
 	import duel.display.cardlots.DeckStackSprite;
 	import duel.display.cardlots.GraveStackSprite;
 	import duel.display.cardlots.StackSprite;
-	import duel.display.fields.IndexedFieldOverlay;
 	import duel.display.fields.FieldSpriteGuiState;
+	import duel.display.fields.IndexedFieldOverlay;
 	import duel.G;
 	import duel.GameSprite;
 	import duel.gui.GuiEvents;
-	import duel.table.CreatureField;
-	import duel.table.Field;
 	import duel.table.CardLotType;
+	import duel.table.Field;
 	import duel.table.IndexedField;
 	import starling.animation.IAnimatable;
-	import starling.animation.Transitions;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.events.Touch;

@@ -168,7 +168,7 @@ package duel.gui
 		{
 			return ctrl != null &&
 				ctrl.selection.selectedCard != null && 
-				ctrl.selection.selectedCard.type.isCreature && 
+				ctrl.selection.selectedCard.isCreature && 
 				ctrl.selection.selectedCard.canAttack;
 		}
 		
@@ -176,7 +176,7 @@ package duel.gui
 		{
 			return ctrl != null &&
 				ctrl.selection.selectedCard != null && 
-				ctrl.selection.selectedCard.type.isCreature && 
+				ctrl.selection.selectedCard.isCreature && 
 				ctrl.selection.selectedCard.faceDown &&
 				ctrl.selection.selectedCard.exhausted == false;
 		}

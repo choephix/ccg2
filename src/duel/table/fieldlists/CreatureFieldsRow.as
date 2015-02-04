@@ -55,7 +55,7 @@ package duel.table.fieldlists
 		{ 
 			var r:int = 0;
 			for ( var i:int = 0; i < _count; i++ ) 
-				if ( _list[ i ].topCard != null && _list[ i ].topCard.type.isCreature )
+				if ( _list[ i ].topCard != null && _list[ i ].topCard.isCreature )
 					r++;
 			return r;
 		}

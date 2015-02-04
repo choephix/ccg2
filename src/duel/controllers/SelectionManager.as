@@ -1,7 +1,6 @@
 package duel.controllers
 {
 	import duel.cards.Card;
-	import duel.cards.properties.CreatureCardProperties;
 	import duel.display.fields.FieldSpriteGuiState;
 	import duel.GameEntity;
 	import duel.players.Player;
@@ -9,7 +8,6 @@ package duel.controllers
 	import duel.table.Field;
 	import duel.table.IndexedField;
 	import duel.table.TrapField;
-	import starling.animation.DelayedCall;
 	
 	/**
 	 * ...
@@ -119,13 +117,13 @@ package duel.controllers
 			if ( selectedCard == null )
 				contextOnField = scfNilSelected
 			else
-			if ( selectedCard.isInHand && selectedCard.type.isCreature )
+			if ( selectedCard.isInHand && selectedCard.isCreature )
 				contextOnField = scfHandCreature
 			else
-			if ( selectedCard.isInHand && selectedCard.type.isTrap )
+			if ( selectedCard.isInHand && selectedCard.isTrap )
 				contextOnField = scfHandTrap
 			else
-			if ( selectedCard.isInPlay && selectedCard.type.isCreature )
+			if ( selectedCard.isInPlay && selectedCard.isCreature )
 				contextOnField = scfFieldCreature
 			
 			//if ( !ctrl.active )
@@ -207,7 +205,7 @@ package duel.controllers
 				if ( selectedCard.cost > player.mana.current )
 					return FieldSpriteGuiState.NONE;
 				
-				if ( selectedCard.type.isCreature )
+				if ( selectedCard.isCreature )
 				{
 					if ( f is CreatureField )
 						if ( faq.canSummonCreatureOn( selectedCard, f, true ) == null )
@@ -216,7 +214,7 @@ package duel.controllers
 								FieldSpriteGuiState.NORMAL_SUMMON;
 					return FieldSpriteGuiState.NONE;
 				}
-				if ( selectedCard.type.isTrap )
+				if ( selectedCard.isTrap )
 				{
 					if ( f is TrapField )
 						if ( faq.canSetTrapOn( selectedCard, f, true ) == null )
@@ -228,7 +226,7 @@ package duel.controllers
 			}
 			
 			if ( !selectedCard.isInPlay ) return FieldSpriteGuiState.NONE;
-			if ( !selectedCard.type.isCreature ) return FieldSpriteGuiState.NONE;
+			if ( !selectedCard.isCreature ) return FieldSpriteGuiState.NONE;
 			
 			if ( f == selectedCard.indexedField )
 				if ( faq.canCreatureSafeFlip( selectedCard, true ) == null )
@@ -253,7 +251,7 @@ package duel.controllers
 			if ( !player.isMyTurn )
 				return false;
 			
-			if ( c.type.isCreature )
+			if ( c.isCreature )
 				return !c.exhausted;
 			return false;
 		}
@@ -266,9 +264,9 @@ package duel.controllers
 			if ( c.cost > player.mana.current )
 				return false;
 				
-			if ( c.type.isCreature )
+			if ( c.isCreature )
 				return player.fieldsC.hasAnyFieldThat( canSummonTo );
-			if ( c.type.isTrap )
+			if ( c.isTrap )
 				return player.fieldsT.hasAnyFieldThat( canSetTrapTo );
 			
 			function canSummonTo( f:CreatureField ):Boolean
@@ -284,7 +282,7 @@ package duel.controllers
 			if ( selectedCard.isInHand )
 				if ( canSelectHandCard( selectedCard ) )
 					return;
-			if ( selectedCard.isInPlay && selectedCard.type.isCreature )
+			if ( selectedCard.isInPlay && selectedCard.isCreature )
 				if ( canSelectCreature( selectedCard ) )
 					return;
 			selectCard( null );

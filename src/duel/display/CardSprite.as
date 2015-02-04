@@ -1,14 +1,11 @@
 package duel.display {
 	import chimichanga.common.display.Sprite;
-	import chimichanga.debug.logging.error;
 	import dev.Temp;
 	import duel.cards.Card;
-	import duel.cards.CardType;
 	import duel.G;
 	import duel.GameSprite;
 	import duel.gui.AnimatedTextField;
 	import duel.gui.GuiEvents;
-	import flash.events.FocusEvent;
 	import flash.geom.Rectangle;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
@@ -132,9 +129,8 @@ package duel.display {
 			tfDescr.autoScale = true;
 			front.addChild( tfDescr );
 			
-			switch( card.type )
+			if ( card.isCreature )
 			{
-				case CardType.CREATURE:
 					tfDescr.bold = false;
 					tfDescr.hAlign = "center";
 					tfDescr.vAlign = "center";
@@ -158,8 +154,10 @@ package duel.display {
 					tfAttak.x = .21 * G.CARD_W;
 					tfAttak.y = .75* G.CARD_H;
 					tfAttak.alignPivot();
-					break;
-				case CardType.TRAP:
+			}
+			else
+			if ( card.isTrap )
+			{
 					tfDescr.text = card.descr == null ? "?" : card.descr;
 					tfDescr.fontSize = 18;
 					tfDescr.x = 0;
@@ -241,7 +239,7 @@ package duel.display {
 			if ( time > .033 )
 				time = .033;
 			
-			if ( card.isInPlay && card.type.isCreature )
+			if ( card.isInPlay && card.isCreature )
 				quad.color = card.exhausted ? 0x0 : 0xFFFF00;
 			
 			_peekThrough = card.faceDown && isFocused && game.p1.knowsCard( card );
@@ -282,7 +280,7 @@ package duel.display {
 		
 		internal function updateData():void 
 		{
-			if ( card.type.isCreature )
+			if ( card.isCreature )
 			{
 				if ( !card.faceDown ) {
 					tfAttak.targetValue = card.statusC.currentAttackValue;

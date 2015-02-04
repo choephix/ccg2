@@ -31,7 +31,6 @@ package duel.cards
 		public var id:int;
 		public var name:String;
 		public var descr:String;
-		public var type:CardType;
 		public var classes:Vector.<CardClass> = new <CardClass>[];
 		public var cost:int = 1;
 		private var _status:CardStatus;
@@ -56,8 +55,6 @@ package duel.cards
 		{
 			CONFIG::development
 			{
-				if ( type == null )
-					throw VerifyError( "You left " + this + "'s type = NULL, you shitcunt." );
 				if ( _props == null )
 					throw VerifyError( "You left " + this + "'s behaviour = NULL, you dickface." );
 				if ( _status == null )
@@ -129,6 +126,14 @@ package duel.cards
 		
 		public function get history():CardHistory 
 		{ return _history }
+		
+		// GETTERS & SETTERS - TYPE
+		
+		public function get isCreature():Boolean
+		{ return props is CreatureCardProperties }
+		
+		public function get isTrap():Boolean
+		{ return props is TrapCardProperties }
 		
 		// GETTERS & SETTERS - CLASS
 		
@@ -203,14 +208,14 @@ package duel.cards
 		
 		// GETTERS & SETTERS - 3
 		public function get canAttack():Boolean { 
-			if ( !type.isCreature ) return false;
+			if ( !isCreature ) return false;
 			if ( !isInPlay ) return false;
 			if ( exhausted ) return false;
 			if ( statusC.hasNoAttack ) return false;
 			return actionsAttack == 0;
 		}
 		public function get canRelocate():Boolean { 
-			if ( !type.isCreature ) return false;
+			if ( !isCreature ) return false;
 			if ( !isInPlay ) return false;
 			if ( exhausted ) return false;
 			if ( statusC.hasNoRelocation ) return false;

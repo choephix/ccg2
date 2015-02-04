@@ -45,12 +45,12 @@ package duel.display
 			{
 				if ( card.lot is Hand )
 				{
-					if ( card.type.isTrap )
+					if ( card.isTrap )
 					{
 						clr = 0xB062FF; cond = canSetTrapTo;
 						currentPlayer.fieldsT.forEachField( setFieldAuraColor );
 					}
-					if ( card.type.isCreature )
+					if ( card.isCreature )
 					{
 						clr = 0xCC530B; cond = canSummonTo;
 						currentPlayer.fieldsC.forEachField( setFieldAuraColor );
@@ -59,7 +59,7 @@ package duel.display
 				else
 				if ( card.isInPlay )
 				{
-					if ( card.type.isCreature && !card.exhausted )
+					if ( card.isCreature && !card.exhausted )
 					{
 						if ( CommonCardQuestions.canPerformAttack( card ) )
 						{

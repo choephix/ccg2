@@ -136,7 +136,7 @@ package duel.processes
 		
 		gameprocessgetter function getAttacker():Card
 		{
-			if ( args[ 0 ] is Card && Card( args[ 0 ] ).type.isCreature ) 
+			if ( args[ 0 ] is Card && Card( args[ 0 ] ).isCreature ) 
 				return Card( args[ 0 ] );
 			
 			CONFIG::development
@@ -146,7 +146,7 @@ package duel.processes
 		
 		gameprocessgetter function getSummoned():Card
 		{
-			if ( args[ 0 ] is Card && Card( args[ 0 ] ).type.isCreature ) 
+			if ( args[ 0 ] is Card && Card( args[ 0 ] ).isCreature ) 
 				return Card( args[ 0 ] );
 			
 			CONFIG::development

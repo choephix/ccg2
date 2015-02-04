@@ -226,10 +226,10 @@ package duel.display.cardlots
 			if ( c.sprite.isSelected )
 				_tipSprite.text = "Cancel?";
 			else
-			if ( c.type.isTrap )
+			if ( c.isTrap )
 				_tipSprite.text = "Set Me?";
 			else
-			if ( c.type.isCreature )
+			if ( c.isCreature )
 				if ( c.propsC.flippable )
 					_tipSprite.text = "Summon Me Face-Down?";
 				else

@@ -1,12 +1,10 @@
 package duel.display.fields 
 {
 	import chimichanga.debug.logging.error;
-	import duel.cards.Card;
 	import duel.display.CardAura;
 	import duel.display.FieldSpriteOverTip;
 	import duel.G;
 	import duel.GameSprite;
-	import duel.table.CreatureField;
 	import duel.table.IndexedField;
 	import starling.animation.IAnimatable;
 	import starling.animation.Transitions;
@@ -76,7 +74,7 @@ package duel.display.fields
 			}
 			
 			// CREATURE EXHAUSTED
-			_isCardExhausted = !field.isEmpty && field.topCard.type.isCreature && field.topCard.exhausted;
+			_isCardExhausted = !field.isEmpty && field.topCard.isCreature && field.topCard.exhausted;
 			exhaustClock.alpha = lerp( exhaustClock.alpha, 
 				( _isCardExhausted ? 1.0 : 0.0 ), .1 );
 			
