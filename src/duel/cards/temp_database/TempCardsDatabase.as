@@ -72,12 +72,12 @@ package duel.cards.temp_database
 					var special:SpecialEffect;
 					special = c.propsC.addTriggered();
 					special.allowIn( CardLotType.CREATURE_FIELD );
-					special.watch( GameplayProcess.ATTACK );
+					special.watch( GameplayProcess.ATTACK_COMPLETE );
 					special.funcCondition =
 					function( p:GameplayProcess ):Boolean {
-						if ( ! c.isInPlay ) return false;
-						if ( c.indexedField.index != p.getIndex() ) return false;
+						if ( !c.isInPlay ) return false;
 						if ( c.controller.opponent != p.getAttacker().controller ) return false;
+						if ( c.indexedField.index != p.getAttacker().history.lastFieldIndex ) return false;
 						return true;
 					}
 					special.funcActivate =
@@ -85,7 +85,7 @@ package duel.cards.temp_database
 						TempDatabaseUtils.doPutInHand( c, c.controller );
 					}
 					
-					c.descr = "When this card is attacked - return it to your hand.";
+					c.descr = "After this card is attacked - return it to your hand.";
 				},
 				/* * */
 				function( c:Card ):void ///		..C		Eternal Bob

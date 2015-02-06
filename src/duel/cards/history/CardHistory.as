@@ -10,6 +10,9 @@ package duel.cards.history
 		
 		public var lastIndexedField:IndexedField = null;
 		
+		public function get lastFieldIndex():int 
+		{ return lastIndexedField == null ? -1 : lastIndexedField.index }
+		
 	}
 
 }
