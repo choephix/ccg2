@@ -98,6 +98,8 @@ package duel.controllers
 				if ( !_updateFlag )
 				{
 					_updateFlag = true;
+					if ( selectedCard != null )
+						selectCard( null );
 					//for ( i = 0; i < game.cardsCount; i++ ) 
 						//game.cards[ i ].sprite.isSelectable = false;
 				}
@@ -440,6 +442,8 @@ package duel.controllers
 		{
 			if ( card.controller != player )
 				return false;
+			if ( !player.hand.containsCard( card ) )
+				return false;
 			return true;
 		}
 		
@@ -448,6 +452,8 @@ package duel.controllers
 			if ( card.controller != player )
 				return false;
 			if ( card.exhausted )
+				return false;
+			if ( !card.isInPlay )
 				return false;
 			return true;
 		}
@@ -493,7 +499,7 @@ package duel.controllers
 				game.gui.pMsg( "This card is exhausted" );
 			else
 			if ( card.controller != player )
-				game.gui.pMsg( "This is not your creature" );
+				game.gui.pMsg( "You don't control this card." );
 			else
 				selectCard( card );
 		}
