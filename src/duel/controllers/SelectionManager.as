@@ -481,8 +481,14 @@ package duel.controllers
 			{
 				if ( player.hand.containsCard( selectedCard ) )
 					player.handSprite.selectedCard = selectedCard;
-				
+					
 				selectedCard.sprite.isSelected = true;
+			}
+			else
+			{
+				var i:int;
+				for ( i = 0; i < game.indexedFields.length; i++ ) 
+					game.indexedFields[ i ].sprite.setGuiState( FieldSpriteGuiState.NONE );
 			}
 			
 			///

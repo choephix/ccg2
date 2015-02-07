@@ -274,8 +274,6 @@ package duel.display {
 				back.scaleX = Math.abs( _flippedness );
 				back.alpha = game.interactable ? 1.0 - _backTranslucency : 1.0;
 			}
-			
-			//quad.alpha = isSelectable ? .5 : .0;
 		}
 		
 		internal function updateData():void 

@@ -1,5 +1,6 @@
 package duel.cards.history 
 {
+	import duel.cards.CardListBase;
 	import duel.table.IndexedField;
 	/**
 	 * ...
@@ -7,6 +8,8 @@ package duel.cards.history
 	 */
 	public class CardHistory 
 	{
+		
+		public var lastValidLot:CardListBase = null;
 		
 		public var lastIndexedField:IndexedField = null;
 		

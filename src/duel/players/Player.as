@@ -37,9 +37,6 @@ package duel.players {
 		public var tableSide:TableSide;
 		public var handSprite:HandSprite;
 		
-		// helpers
-		private var e:PlayerEvent = new PlayerEvent('');
-		
 		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
 		// CONSTRUCTION
 		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
@@ -87,7 +84,6 @@ package duel.players {
 		
 		public function performAction( a:PlayerAction ):void
 		{
-			//dispatchEvent( e.reset( PlayerEvent.ACTION, false, a ) );
 			dispatchEvent( new PlayerEvent( PlayerEvent.ACTION, false, a ) );
 		}
 		

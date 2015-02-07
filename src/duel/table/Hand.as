@@ -1,5 +1,7 @@
-package duel.table {
+package duel.table
+{
 	import duel.cards.CardListBase;
+	
 	/**
 	 * ...
 	 * @author choephix
@@ -9,5 +11,4 @@ package duel.table {
 		public function Hand()
 		{ _type = CardLotType.HAND }
 	}
-
 }

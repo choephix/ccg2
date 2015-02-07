@@ -58,7 +58,7 @@ package duel.cards.temp_database
 						TempDatabaseUtils.doKill( p.getSourceCard() );
 					}
 					
-					c.descr = "When enemy creature is summoned to he opposing field and there is no friendly creature on your side of it - destroy enemy creature.";
+					c.descr = "When enemy creature is summoned to the opposing field and there is no friendly creature on your side of it - destroy enemy creature.";
 				},
 				/* * */
 				function( c:Card ):void ///		.`C		Cowardly Golem
