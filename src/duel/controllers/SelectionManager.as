@@ -3,11 +3,13 @@ package duel.controllers
 	import duel.cards.Card;
 	import duel.display.fields.FieldSpriteGuiState;
 	import duel.GameEntity;
+	import duel.gameplay.CardEvents;
 	import duel.players.Player;
 	import duel.table.CreatureField;
 	import duel.table.Field;
 	import duel.table.IndexedField;
 	import duel.table.TrapField;
+	import flash.events.Event;
 	
 	/**
 	 * ...
@@ -79,9 +81,7 @@ package duel.controllers
 			contextInHand = schEnabled;
 			contextOnField = scfNilSelected;
 			
-			//var dcall:DelayedCall = new DelayedCall( update, .440 );
-			//dcall.repeatCount = 0;
-			//juggler.add( dcall );
+			game.cardEvents.addEventListener( CardEvents.LEAVE_LOT, onCardLeaveLot );
 		}
 		
 		public function advanceTime(time:Number):void 
@@ -95,14 +95,7 @@ package duel.controllers
 			
 			if ( !game.interactable )
 			{
-				if ( !_updateFlag )
-				{
-					_updateFlag = true;
-					if ( selectedCard != null )
-						selectCard( null );
-					//for ( i = 0; i < game.cardsCount; i++ ) 
-						//game.cards[ i ].sprite.isSelectable = false;
-				}
+				_updateFlag = true;
 				return;
 			}
 			
@@ -185,8 +178,6 @@ package duel.controllers
 					ctrl.active && 
 					selectedCard == null &&
 					player.mana.current > 0;
-			
-					
 			
 			_updateFlag = false;
 		}
@@ -508,6 +499,12 @@ package duel.controllers
 				game.gui.pMsg( "You don't control this card." );
 			else
 				selectCard( card );
+		}
+		
+		private function onCardLeaveLot( ce:CardEvents ):void 
+		{
+			if ( ce.card == selectedCard )
+				selectCard( null );
 		}
 		
 		// // // // //

@@ -12,6 +12,7 @@ package duel.cards
 	import duel.display.CardSprite;
 	import duel.Game;
 	import duel.GameEntity;
+	import duel.gameplay.CardEvents;
 	import duel.players.Player;
 	import duel.processes.GameplayProcess;
 	import duel.table.CreatureField;
@@ -147,9 +148,13 @@ package duel.cards
 		
 		public function set lot(value:CardListBase):void 
 		{ 
+			if ( _lot == value )
+				return;
 			if ( lot is IndexedField )
 				history.lastIndexedField = lot as IndexedField;
+			game.cardEvents.dispatchEventWith( CardEvents.LEAVE_LOT, this, _lot );
 			_lot = value;
+			game.cardEvents.dispatchEventWith( CardEvents.ENTER_LOT, this, _lot );
 		}
 		
 		public function get lot():CardListBase 

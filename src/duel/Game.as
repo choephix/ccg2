@@ -12,8 +12,9 @@ package duel
 	import duel.controllers.PlayerActionType;
 	import duel.controllers.UserPlayerController;
 	import duel.display.cardlots.HandSprite;
-	import duel.display.TableSprite;
 	import duel.display.TableSide;
+	import duel.display.TableSprite;
+	import duel.gameplay.CardEvents;
 	import duel.gui.Gui;
 	import duel.gui.GuiEvents;
 	import duel.gui.GuiJuggler;
@@ -60,6 +61,7 @@ package duel
 		private var remoteInput:RemotePlayerActionReceiver;
 		
 		public var guiEvents:GuiEvents;
+		public var cardEvents:CardEvents;
 		public var processes:GameplayProcessManager;
 		public var jugglerStrict:GuiJuggler;
 		public var jugglerGui:GuiJuggler;
@@ -100,6 +102,7 @@ package duel
 			indexedFields = new Vector.<IndexedField>();
 			
 			guiEvents = new GuiEvents();
+			cardEvents = new CardEvents();
 			
 			p1 = generatePlayer();
 			p2 = generatePlayer();

@@ -26,6 +26,5 @@ package duel
 			if ( !_initialized )
 				initialize()
 		}
-	
 	}
 }

@@ -18,7 +18,5 @@ package duel.gui
 		static public const CARD_CLICK:String = "cardClick";
 		static public const FIELD_CLICK:String = "fieldClick";
 		
-		
-		
 	}
 }
