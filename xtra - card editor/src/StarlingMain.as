@@ -4,6 +4,7 @@ package
 	import editor.Card;
 	import editor.CardGroup;
 	import editor.Space;
+	import flash.ui.Keyboard;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.Image;
@@ -123,6 +124,11 @@ package
 		CONFIG::development
 		private function onkey( e:KeyboardEvent ):void
 		{
+			if ( e.keyCode == Keyboard.A )
+				space.generateNewCard();
+			else
+			if ( e.keyCode >= Keyboard.NUMBER_1 && e.keyCode <= Keyboard.NUMBER_9 )
+				space.setView( e.keyCode - Keyboard.NUMBER_1 );
 		}
 	}
 }

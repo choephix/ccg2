@@ -13,6 +13,7 @@ package editor
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import starling.text.TextField;
 	import ui.OButton;
 	
 	/**
@@ -24,13 +25,17 @@ package editor
 		private static const TITLE_H:Number = 20;
 		private static const CARD_SPACING:Number = 10;
 		
+		public var tag:String = "";
+		public var view:SpaceView;
+		
 		private var bg:Quad;
-		private var titlepad:Quad;
+		private var titlePad:Quad;
 		private var b1:OButton;
 		private var b2:OButton;
 		private var b3:OButton;
 		private var b4:OButton;
 		private var b5:OButton;
+		private var titleLabel:TextField;
 		private var titleContainer:Sprite;
 		private var cardsContainer:Sprite;
 		private var cardsParent:Sprite;
@@ -46,8 +51,10 @@ package editor
 		
 		private static var helperPoint:Point = new Point();
 		
-		public function initialize():void
+		public function initialize( tag:String ):void
 		{
+			this.tag = tag;
+			
 			bg = new Quad( 100, 100, 0x505A60, true );
 			//bg.alpha = .0;
 			addChild( bg );
@@ -68,9 +75,15 @@ package editor
 			titleContainer.y = -TITLE_H;
 			addChild( titleContainer );
 			
-			titlepad = new Quad( 100, TITLE_H, 0x589CD3 );
-			titlepad.alpha = .25;
-			titleContainer.addChild( titlepad );
+			titlePad = new Quad( 100, TITLE_H, 0x589CD3 );
+			titlePad.alpha = .25;
+			titleContainer.addChild( titlePad );
+			
+			titleLabel = new TextField( titlePad.width, titlePad.height, tag?tag:"?", "Lucida Console", 16, 0xFFFFFF, true );
+			titleLabel.x = titleContainer.x;
+			titleLabel.y = titleContainer.y;
+			titleLabel.touchable = false;
+			addChild( titleLabel );
 			
 			b1 = new OButton( "-", onButtonToggleExpanded );
 			b1.y = .5 * TITLE_H;
@@ -156,19 +169,24 @@ package editor
 			tformMaximized.width = App.STAGE_W;
 			tformMaximized.height = App.STAGE_H - tformMaximized.y;
 			
-			bg.alpha = lerp( bg.alpha, _focused ? .67 : .0, G.DAMP1 );
+			bg.alpha = lerp( bg.alpha, _focused ? .67 : .33, G.DAMP1 );
 			titleContainer.alpha = lerp( titleContainer.alpha, _focused ? 1.0 : .0, G.DAMP2 );
+			titleLabel.alpha = lerp( titleLabel.alpha, _focused ? 1.0 : .4, G.DAMP1 );
 			
+			b2.visible = tformCurrent != tformContracted;
 			b3.visible = tformCurrent == tformExpanded;
+			b4.visible = tformCurrent != tformContracted;
+			b5.visible = tformCurrent != tformContracted;
 			
 			x = lerp( x, tformCurrent.x, G.DAMP3 );
-			y = lerp( y, tformCurrent.y, G.DAMP2 );
+			y = lerp( y, tformCurrent.y + view.y, G.DAMP2 );
 			width  = lerp( width, tformCurrent.width, G.DAMP2 );
 			height = lerp( height, tformCurrent.height, G.DAMP1 );
 			
 			cardsParent.y = lerp( cardsParent.y, CARD_SPACING - cardsContainerScroll, G.DAMP1 );
 			
 			titleContainer.y = lerp( titleContainer.y, tformCurrent == tformContracted ? height : -TITLE_H, G.DAMP3 );
+			titleLabel.y = titleContainer.y;
 		}
 		
 		private function onMouseWheel( e:Event ):void 
@@ -191,7 +209,7 @@ package editor
 			
 			if ( tformCurrent == tformExpanded )
 			{
-				t = e.getTouch( titlepad, TouchPhase.ENDED );
+				t = e.getTouch( titlePad, TouchPhase.ENDED );
 				
 				if ( t != null && t.tapCount > 1 )
 				{
@@ -200,7 +218,7 @@ package editor
 					return;
 				}
 				
-				t = e.getTouch( titlepad, TouchPhase.MOVED );
+				t = e.getTouch( titlePad, TouchPhase.MOVED );
 				
 				if ( t == null )
 					t = e.getTouch( bg, TouchPhase.MOVED );
@@ -237,7 +255,7 @@ package editor
 			
 			if ( tformCurrent == tformContracted )
 			{
-				t = e.getTouch( titlepad, TouchPhase.MOVED );
+				t = e.getTouch( titlePad, TouchPhase.MOVED );
 				
 				if ( t != null )
 				{
@@ -316,6 +334,8 @@ package editor
 					y = 3 * ( countCards - i );
 					c.targetX = x;
 					c.targetY = y;
+					
+					c.isOnTop = i == countCards - 1;
 				}
 				else
 				{
@@ -327,6 +347,8 @@ package editor
 					c.targetX = x;
 					c.targetY = y;
 					x += G.CARD_W + CARD_SPACING; 
+					
+					c.isOnTop = true;
 				}
 			}
 			
@@ -389,7 +411,8 @@ package editor
 		override public function set width( value:Number ):void
 		{
 			bg.width = value;
-			titlepad.width = value;
+			titlePad.width = value;
+			titleLabel.width = value;
 			b1.x = value - 20;
 			b2.x = b1.x - 40;
 			b3.x = value;

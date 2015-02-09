@@ -23,10 +23,15 @@ package editor
 		private var q2:Quad;
 		private var t:TextField;
 		
+		private var _type:int;
+		
 		private var _focused:Boolean;
 		private var _inDrag:Boolean;
+		private var _isOnTop:Boolean;
 		
 		private static var helperPoint:Point = new Point();
+		
+		public const tags:Vector.<String> = new Vector.<String>();
 		
 		public function Card() 
 		{
@@ -39,9 +44,10 @@ package editor
 			addChild( q1 );
 			
 			q2 = new Quad( 1, 1, 0xB0B0B0, true );
+			q2.alpha = .99;
 			addChild( q2 );
 			
-			t = new TextField( 1, 1, Math.random().toFixed(10) );
+			t = new TextField( 1, 1, "" );
 			t.bold = true;
 			t.touchable = false;
 			addChild( t );
@@ -89,8 +95,7 @@ package editor
 				y = lerp( y, targetY, G.DAMP3 );
 			}
 			
-			t.alpha = lerp( t.alpha, _focused ? 1.0 : .7, G.DAMP1 );
-			q1.alpha = lerp( q1.alpha, _focused ? 1.0 : .3, G.DAMP1 );
+			q1.alpha = lerp( q1.alpha, _focused ? .99 : .3, G.DAMP1 );
 		}
 		
 		private function setFocused( value:Boolean ):void 
@@ -99,6 +104,11 @@ package editor
 				return;
 			
 			_focused = value;
+		}
+		
+		public function hasTag( tag:String ):Boolean
+		{
+			return tags.indexOf( tag ) > -1;
 		}
 		
 		//
@@ -158,6 +168,47 @@ package editor
 			
 			touchable = !value;
 			alpha = value ? .8 : 1.0;
+		}
+		
+		//
+		
+		public function get type():int 
+		{
+			return _type;
+		}
+		
+		public function set type(value:int):void 
+		{
+			var i:int;
+			
+			i = tags.indexOf( "type" + _type );
+			if ( i > -1 )
+				tags.splice( i, 1 );
+			
+			_type = value;
+			
+			tags.push( "type" + _type );
+			
+			switch ( _type )
+			{
+				case CardType.TRAP : color = 0x5577CC; break;
+				case CardType.CREATURE_NORMAL : color = 0xCC9966; break;
+				case CardType.CREATURE_FLIPPABLE: color = 0xCC6644; break;
+				case CardType.CREATURE_GRAND: color = 0xEECC66; break;
+			}
+			
+			t.text = tags + "\n" + Math.random().toFixed( 10 );
+		}
+		
+		public function get isOnTop():Boolean 
+		{
+			return _isOnTop;
+		}
+		
+		public function set isOnTop(value:Boolean):void 
+		{
+			_isOnTop = value;
+			t.visible = value;
 		}
 	}
 }
