@@ -1,21 +1,20 @@
 package editor
 {
+	import chimichanga.common.display.Sprite;
+	import starling.core.Starling;
 	
 	/**
 	 * ...
 	 * @author choephix
 	 */
-	public class SpaceView
+	public class SpaceView extends Sprite
 	{
 		public const groups:Vector.<CardGroup> = new Vector.<CardGroup>();
 		private var _space:Space;
 		private var _active:Boolean;
 		
-		private var _y:Number;
-		
-		public function SpaceView( space:Space, y:Number, defaultGroup:CardGroup )
+		public function SpaceView( space:Space, defaultGroup:CardGroup )
 		{
-			this._y = y;
 			this._space = space;
 			addGroup( defaultGroup );
 		}
@@ -23,8 +22,9 @@ package editor
 		public function addGroup( g:CardGroup ):void
 		{
 			g.view = this;
-			g.tformContracted.y = _y + .5 * ( _space.height - 100 );
+			g.tformContracted.y = .5 * ( _space.height - 300 );
 			g.tformContracted.x = 90 + groups.length * 180;
+			addChild( g );
 			groups.push( g );
 		}
 		
@@ -36,16 +36,30 @@ package editor
 		public function set active( value:Boolean ):void
 		{
 			_active = value;
-			var gi:int;
+			
+			Starling.juggler.removeTweens( this );
+			Starling.juggler.tween( this, .200, { y : value ? .0 : _space.height } );
+			Starling.juggler.tween( this, .200, { alpha : value ? 1 : 0 } );
+			
 			//for ( gi = 0; gi < groups.length; gi++ )
 				//groups[ gi ].visible = value;
+			var gi:int;
+			var ci:int;
+				
+			var c:Card;
+			var g:CardGroup;
+			for ( ci = 0; ci < _space.cards.length; ci++ )
+			{
+				c = _space.cards[ ci ];
+				g = groups[ 0 ];
+				for ( gi = 1; gi < groups.length; gi++ )
+					if ( c.hasTag( groups[ gi ].tag ) )
+						g = groups[ gi ];
+				g.addCard( c );
+			}
+			
 		}
 		
-		public function get y():Number
-		{
-			return _y;
-		}
-	
 	}
 
 }

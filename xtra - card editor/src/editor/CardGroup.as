@@ -40,8 +40,7 @@ package editor
 		private var cardsContainer:Sprite;
 		private var cardsParent:Sprite;
 		
-		private var cardsContainerScroll:Number = .0;
-		
+		private var _cardsScroll:Number = .0;
 		private var _focused:Boolean;
 		
 		public var tformExpanded:CardGroupTransform;
@@ -183,7 +182,7 @@ package editor
 			width  = lerp( width, tformCurrent.width, G.DAMP2 );
 			height = lerp( height, tformCurrent.height, G.DAMP1 );
 			
-			cardsParent.y = lerp( cardsParent.y, CARD_SPACING - cardsContainerScroll, G.DAMP1 );
+			cardsParent.y = lerp( cardsParent.y, CARD_SPACING - _cardsScroll, G.DAMP1 );
 			
 			titleContainer.y = lerp( titleContainer.y, tformCurrent == tformContracted ? height : -TITLE_H, G.DAMP3 );
 			titleLabel.y = titleContainer.y;
@@ -194,11 +193,7 @@ package editor
 			if ( !_focused ) return;
 			if ( tformCurrent == tformContracted ) return;
 			
-			cardsContainerScroll -= Number( e.data ) * G.CARD_H / 6;
-			if ( cardsContainerScroll < 0 )
-				cardsContainerScroll = 0;
-			if ( cardsContainerScroll > cardsParent.height - G.CARD_H )
-				cardsContainerScroll = cardsParent.height - G.CARD_H;
+			setCardsScroll( _cardsScroll - Number( e.data ) * G.CARD_H / 6 );
 		}
 		
 		private function onTouch( e:TouchEvent ):void 
@@ -370,6 +365,15 @@ package editor
 			_focused = value;
 			
 			parent.setChildIndex( this, parent.numChildren - 1 );
+		}
+		
+		private function setCardsScroll( value:Number ):void 
+		{
+			if ( value < 0 )
+				value = 0;
+			if ( value > cardsParent.height - G.CARD_H )
+				value = cardsParent.height - G.CARD_H;
+			_cardsScroll = value;
 		}
 		
 		private function setExpanded( value:Boolean ):void 

@@ -34,7 +34,7 @@ package editor
 			//
 			
 			for ( var i:int = 0; i < views.length; i++ )
-				views[ i ] = new SpaceView( this, i * height, generateNewGroup( null ) );
+				views[ i ] = generateNewSpaceView( i );
 			
 			views[ 0 ].addGroup( generateNewGroup( "type0" ) );
 			views[ 0 ].addGroup( generateNewGroup( "type1" ) );
@@ -42,6 +42,17 @@ package editor
 			views[ 0 ].addGroup( generateNewGroup( "type3" ) );
 				
 			setView( 0 );
+		}
+		
+		private function generateNewSpaceView( index:int ):SpaceView 
+		{
+			var v:SpaceView = new SpaceView( this, generateNewGroup( null ) );
+			
+			addChild( v );
+			
+			v.active = false;
+			
+			return v;
 		}
 		
 		private function generateNewGroup( tag:String = null ):CardGroup 
@@ -75,37 +86,18 @@ package editor
 		
 		public function setView( index:uint ):void 
 		{
+			if ( view == views[ index ] )
+				return;
+			
 			viewLabel.text = String( index + 1 );
 			
-			var gi:int;
-			var ci:int;
-			
 			if ( view != null )
-			{
 				view.active = false;
-			}
 			
 			view = views[ index ];
 			
 			if ( view != null )
-			{
 				view.active = true;
-				y = -view.y;
-				
-				//var c:Card;
-				//var g:CardGroup;
-				//for ( ci = 0; gi < cards.length; gi++ )
-				//{
-					//c = cards[ ci ];
-					//g = view.groups[ 0 ];
-					//for ( gi = 1; gi < view.groups.length; gi++ )
-						//if ( c.hasTag( view.groups[ gi ].tag ) )
-							//g = view.groups[ gi ];
-					//g.addCard( c );
-				//}
-				
-			}
-			
 		}
 		
 		//
