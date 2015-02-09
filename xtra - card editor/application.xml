@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<application xmlns="http://ns.adobe.com/air/application/15.0">
+  <id>CardEditor</id>
+  <versionNumber>0.0</versionNumber>
+  <filename>CardEditor</filename>
+  <name>CardEditor</name>
+  <initialWindow>
+    <title>Card Editor</title>
+    <content>CardEditor.swf</content>
+    <systemChrome>standard</systemChrome>
+    <transparent>false</transparent>
+    <visible>true</visible>
+    <minimizable>true</minimizable>
+    <maximizable>true</maximizable>
+    <resizable>true</resizable>
+    <renderMode>direct</renderMode>
+    <aspectRatio>landscape</aspectRatio>
+    <fullScreen>true</fullScreen>
+  </initialWindow>
+  <!-- 
+	More options:
+	http://livedocs.adobe.com/flex/3/html/File_formats_1.html#1043413
+	-->
+  <versionLabel>CardEditor</versionLabel>
+  <supportedLanguages>en</supportedLanguages>
+  <iPhone>
+    <InfoAdditions><![CDATA[<key>UIDeviceFamily</key>
+<array>
+	<string>1</string>
+	<string>2</string>
+</array>
+<key>UIStatusBarStyle</key>
+<string>UIStatusBarStyleBlackTranslucent</string>]]></InfoAdditions>
+  </iPhone>
+  <android>
+    <manifestAdditions><![CDATA[<manifest android:installLocation="auto" xmlns:android="http://schemas.android.com/apk/res/android" />]]></manifestAdditions>
+  </android>
+</application>
