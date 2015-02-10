@@ -182,7 +182,7 @@ package editor
 			width  = lerp( width, tformCurrent.width, G.DAMP2 );
 			height = lerp( height, tformCurrent.height, G.DAMP1 );
 			
-			cardsParent.y = lerp( cardsParent.y, CARD_SPACING - _cardsScroll, G.DAMP1 );
+			cardsParent.y = lerp( cardsParent.y, CARD_SPACING - ( tformCurrent == tformContracted ? .0 : _cardsScroll ), G.DAMP1 );
 			
 			//titleContainer.y = lerp( titleContainer.y, tformCurrent == tformContracted ? height : -TITLE_H, G.DAMP3 );
 			//titleLabel.y = titleContainer.y;

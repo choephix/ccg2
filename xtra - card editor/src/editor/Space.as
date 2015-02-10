@@ -56,11 +56,8 @@ package editor
 		private function generateNewSpaceView( index:int ):SpaceView 
 		{
 			var v:SpaceView = new SpaceView( this, generateNewGroup( null ) );
-			
 			addChild( v );
-			
 			v.active = false;
-			
 			return v;
 		}
 		
@@ -78,6 +75,7 @@ package editor
 		{
 			var d:CardData = new CardData();
 			
+			d.id = cards.length;
 			d.name = int( Math.random() * int.MAX_VALUE ).toString( 36 );
 			d.type = Math.random() * 4;
 			var i:int = Math.random() * 5;
@@ -99,6 +97,9 @@ package editor
 			return c;
 		}
 		
+		public function getCardWithId( id:int ):Card
+		{ return cards[ id ] }
+		
 		public function setView( index:uint ):void 
 		{
 			if ( context.currentView == views[ index ] )
@@ -118,23 +119,15 @@ package editor
 		//
 		
 		override public function get width():Number 
-		{
-			return App.STAGE_W;
-		}
+		{ return App.STAGE_W }
 		
 		override public function set width(value:Number):void 
-		{
-			throw new Error( "Don't do that!" );
-		}
+		{ throw new Error( "Don't do that!" ) }
 		
 		override public function get height():Number 
-		{
-			return App.STAGE_H;
-		}
+		{ return App.STAGE_H }
 		
 		override public function set height(value:Number):void 
-		{
-			throw new Error( "Don't do that!" );
-		}
+		{ throw new Error( "Don't do that!" ) }
 	}
 }

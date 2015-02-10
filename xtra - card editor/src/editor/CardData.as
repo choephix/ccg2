@@ -6,6 +6,7 @@ package editor
 	 */
 	public class CardData 
 	{
+		public var id:int = -1;
 		public var name:String = "Unnamed";
 		public var slug:String = "unnamed";
 		public var description:String = "...";

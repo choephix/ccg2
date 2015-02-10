@@ -34,12 +34,14 @@ package editor
 		
 		public function CardThing()
 		{
-			pivotX = .5 * W;
-			pivotY = .5 * H;
+			pivotX = .5 * G.CARD_W;
+			pivotY = .5 * G.CARD_H;
 			
 			pad = new Quad( W, H, 0xFFFFFF );
+			pad.x = -BORDER;
+			pad.y = -BORDER;
 			pad.touchable = false;
-			pad.alpha = .75;
+			pad.alpha = .90;
 			addChild( pad );
 			
 			Card.txtfTitle.align = "center";
@@ -78,11 +80,15 @@ package editor
 			iFaction = new OButton( "", onButtonChangeFaction );
 			iFaction.x = G.CARD_W - PADDING;
 			iFaction.y = 10;
+			iFaction.scaleX = .5;
+			iFaction.scaleY = .5;
 			addChild( iFaction );
 			
 			iType = new OButton( "", onButtonChangeType );
 			iType.x = PADDING;
 			iType.y = 10;
+			iType.scaleX = .5;
+			iType.scaleY = .5;
 			addChild( iType );
 			
 			
@@ -159,6 +165,7 @@ package editor
 		{
 			_type = value;
 			pad.color = CardType.toColor( _type ) + 0x101010;
+			iType.color = CardType.toColor( _type );
 		}
 		
 		public function setFaction( value:Faction ):void
