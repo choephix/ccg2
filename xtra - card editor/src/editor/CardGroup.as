@@ -28,6 +28,9 @@ package editor
 		public var tag:String = "";
 		public var view:SpaceView;
 		
+		public var auto:AutoGrouper = null;
+		public var locked:Boolean;
+		
 		private var bg:Quad;
 		private var titlePad:Quad;
 		private var b1:OButton;
@@ -285,6 +288,13 @@ package editor
 					return;
 				}
 				
+				if ( !locked && t != null )
+				{
+					if ( y > space.height - 100 )
+					space.deleteGroup( this );
+					return;
+				}
+				
 				t = e.getTouch( titlePad, TouchPhase.MOVED );
 				
 				if ( t != null )
@@ -321,8 +331,7 @@ package editor
 		
 		private function onButtonSort():void 
 		{
-			cardsParent.sortChildren( SortFunctions.byType );
-			arrange();
+			sortCards( SortFunctions.byType );
 		}
 		
 		//
@@ -340,12 +349,23 @@ package editor
 			return c;
 		}
 		
-		private function removeCard( c:Card ):void 
+		public function removeCard( c:Card ):void 
 		{
 			c.x += x;
 			c.y += y;
 			c.isOnTop = true;
 			space.addChild( c );
+		}
+		
+		public function getCardAt( index:int ):Card
+		{
+			return cardsParent.getChildAt( index ) as Card;
+		}
+		
+		public function sortCards( f:Function ):void
+		{
+			cardsParent.sortChildren( f );
+			arrange();
 		}
 		
 		private function arrange():void 

@@ -16,6 +16,9 @@ package editor
 		public function SpaceView( space:Space, defaultGroup:CardGroup )
 		{
 			this._space = space;
+			
+			defaultGroup.locked = true;
+			defaultGroup.name = "--";
 			addGroup( defaultGroup );
 		}
 		
@@ -26,6 +29,13 @@ package editor
 			g.tformContracted.x = 90 + groups.length * 180;
 			addChild( g );
 			groups.push( g );
+		}
+		
+		public function removeGroup( g:CardGroup ):void
+		{
+			g.view = null;
+			removeChild( g );
+			groups.splice( groups.indexOf( g ), 1 );
 		}
 		
 		public function get active():Boolean

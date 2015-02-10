@@ -1,10 +1,7 @@
 package
 {
 	import chimichanga.common.display.Sprite;
-	import editor.Card;
-	import editor.CardGroup;
 	import editor.Space;
-	import flash.ui.Keyboard;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.Image;
@@ -97,10 +94,7 @@ package
 		
 		private function onLoadingAppComplete():void
 		{
-			CONFIG::development
-			{
-				stage.addEventListener( KeyboardEvent.KEY_DOWN, onkey );
-			}
+			stage.addEventListener( KeyboardEvent.KEY_DOWN, onkey );
 			
 			loadingText.removeFromParent( true );
 			loadingText = null;
@@ -121,18 +115,10 @@ package
 			addChild( space );
 		}
 		
-		CONFIG::development
 		private function onkey( e:KeyboardEvent ):void
 		{
-			if ( e.keyCode == Keyboard.A )
-			{
-				var c:Card = space.generateNewCard();
-				if ( space.context.focusedGroup )
-					space.context.focusedGroup.addCard( c );
-			}
-			else
-			if ( e.keyCode >= Keyboard.NUMBER_1 && e.keyCode <= Keyboard.NUMBER_9 )
-				space.setView( e.keyCode - Keyboard.NUMBER_1 );
+			if ( space )
+				space.onKeyDown( e );
 		}
 	}
 }

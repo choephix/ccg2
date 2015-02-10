@@ -25,6 +25,8 @@ package editor
 		
 		public static function byPower( a:Card, b:Card ):int
 		{
+			if ( a.type == CardType.TRAP ) return -1;
+			if ( b.type == CardType.TRAP ) return  1;
 			return a.data.power - b.data.power;
 		}
 	}
