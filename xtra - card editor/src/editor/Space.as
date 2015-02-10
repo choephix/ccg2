@@ -34,8 +34,9 @@ package editor
 			addChild( viewLabel );
 			
 			//
+			var i:int;
 			
-			for ( var i:int = 0; i < views.length; i++ )
+			for ( i = 0; i < views.length; i++ )
 				views[ i ] = generateNewSpaceView( i );
 			
 			views[ 0 ].addGroup( generateNewGroup( "type0" ) );
@@ -45,6 +46,9 @@ package editor
 			
 			addChild( context.cardThing );
 			context.cardThing.visible = false;
+			
+			for ( i = 0; i < 88; i++ )
+				generateNewCard();
 			
 			setView( 0 );
 		}
@@ -63,26 +67,28 @@ package editor
 		private function generateNewGroup( tag:String = null ):CardGroup 
 		{
 			var g:CardGroup;
-			
 			g = new CardGroup();
 			g.space = this;
 			addChild( g );
-			
 			g.initialize( tag );
-			
-			g.addCard( generateNewCard() );
-			g.addCard( generateNewCard() );
-			
-			//g.visible = false;
-			
 			return g;
 		}
 		
 		public function generateNewCard():Card
 		{
 			var d:CardData = new CardData();
-			d.type = Math.random() * 4;
+			
 			d.name = int( Math.random() * int.MAX_VALUE ).toString( 36 );
+			d.type = Math.random() * 4;
+			var i:int = Math.random() * 5;
+			switch( i )
+			{
+				case 0: d.faction = Faction.SCIENCE; break;
+				case 1: d.faction = Faction.NATURE; break;
+				case 2: d.faction = Faction.MAGIC; break;
+				default: d.faction = null;
+			}
+			d.power = Math.random() * 10.0;
 			
 			var c:Card = new Card();
 			c.initialize( d );

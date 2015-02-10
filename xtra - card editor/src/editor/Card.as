@@ -23,7 +23,7 @@ package editor
 		public static var txtfTitle:TextFormat = new TextFormat( "Verdana", 15, 0x330814, true );
 		public static var txtfDescr:TextFormat = new TextFormat( "Arial", 12, 0x330814, false );
 		public static var txtfExtra:TextFormat = new TextFormat( "Arial", 32, 0x330814, true );
-		public static const PADDING:Number = 10;
+		public static const PADDING:Number = 6;
 		
 		public var targetX:Number;
 		public var targetY:Number;
@@ -34,6 +34,7 @@ package editor
 		private var tTitle:TextField;
 		private var tDescr:TextField;
 		private var tExtra:TextField;
+		private var iFaction:Quad;
 		
 		public var data:CardData;
 		public const tags:Vector.<String> = new Vector.<String>();
@@ -69,7 +70,7 @@ package editor
 			
 			tTitle = new TextField( 1, 1, "", txtfTitle.font, txtfTitle.size as Number, txtfTitle.color as uint, txtfTitle.bold  );
 			tTitle.scaleX = .80;
-			tTitle.border = true;
+			//tTitle.border = true;
 			tTitle.x = PADDING;
 			tTitle.y = 0;
 			tTitle.width = ( G.CARD_W - PADDING - PADDING ) / tTitle.scaleX;
@@ -79,23 +80,28 @@ package editor
 			
 			tDescr = new TextField( 1, 1, "", txtfDescr.font, txtfDescr.size as Number, txtfDescr.color as uint, txtfDescr.bold  );
 			tDescr.vAlign = "top";
-			tDescr.border = true;
+			//tDescr.border = true;
 			tDescr.x = PADDING;
 			tDescr.y = tTitle.y + tTitle.height;
 			tDescr.width = G.CARD_W - PADDING - PADDING;
-			tDescr.height = G.CARD_H - PADDING - PADDING - tDescr.y;
+			tDescr.height = G.CARD_H - PADDING - tDescr.y;
 			tDescr.touchable = false;
 			addChild( tDescr );
 			
 			tExtra = new TextField( 1, 1, "", txtfExtra.font, txtfExtra.size as Number, txtfExtra.color as uint, txtfExtra.bold  );
 			tExtra.hAlign = "left";
-			tExtra.border = true;
-			tExtra.width  = 35;
+			//tExtra.border = true;
+			tExtra.width  = 100;
 			tExtra.height = 50;
 			tExtra.x = 0;
 			tExtra.y = G.CARD_H - tExtra.height;
 			tExtra.touchable = false;
 			addChild( tExtra );
+			
+			iFaction = new Quad( 15, tTitle.height, 0x0, true );
+			iFaction.x = G.CARD_W - iFaction.width;
+			iFaction.y = 0;
+			addChild( iFaction );
 			
 			addEventListener( EnterFrameEvent.ENTER_FRAME, advanceTime );
 			addEventListener( TouchEvent.TOUCH, onTouch );
@@ -122,6 +128,8 @@ package editor
 			}
 			
 			type = data.type;
+			
+			iFaction.color = Faction.toColor( data.faction );
 		}
 		
 		private function onTouch(e:TouchEvent):void 
@@ -264,16 +272,9 @@ package editor
 				tags.splice( i, 1 );
 			
 			_type = value;
+			pad.color = CardType.toColor( _type );
 			
 			tags.push( "type" + _type );
-			
-			switch ( _type )
-			{
-				case CardType.TRAP:					pad.color = 0x5577CC; break;
-				case CardType.CREATURE_NORMAL: 		pad.color = 0xCC9966; break;
-				case CardType.CREATURE_FLIPPABLE: 	pad.color = 0xCC6644; break;
-				case CardType.CREATURE_GRAND: 		pad.color = 0xEECC66; break;
-			}
 		}
 		
 		public function get isOnTop():Boolean 

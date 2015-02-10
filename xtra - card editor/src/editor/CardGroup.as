@@ -184,8 +184,8 @@ package editor
 			
 			cardsParent.y = lerp( cardsParent.y, CARD_SPACING - _cardsScroll, G.DAMP1 );
 			
-			titleContainer.y = lerp( titleContainer.y, tformCurrent == tformContracted ? height : -TITLE_H, G.DAMP3 );
-			titleLabel.y = titleContainer.y;
+			//titleContainer.y = lerp( titleContainer.y, tformCurrent == tformContracted ? height : -TITLE_H, G.DAMP3 );
+			//titleLabel.y = titleContainer.y;
 		}
 		
 		private function onMouseWheel( e:Event ):void 
@@ -208,8 +208,15 @@ package editor
 				
 				if ( t != null && t.tapCount > 1 )
 				{
-					tformExpanded.y = tformMaximized.y;
-					tformExpanded.height = tformMaximized.height;
+					if ( tformExpanded.height == tformMaximized.height )
+					{
+						setExpanded( false );
+					}
+					else
+					{
+						tformExpanded.y = tformMaximized.y;
+						tformExpanded.height = tformMaximized.height;
+					}
 					return;
 				}
 				
@@ -250,6 +257,14 @@ package editor
 			
 			if ( tformCurrent == tformMaximized )
 			{
+				t = e.getTouch( titlePad, TouchPhase.ENDED );
+				
+				if ( t != null && t.tapCount > 1 )
+				{
+					setExpanded( false );
+					return;
+				}
+				
 				t = e.getTouch( bg, TouchPhase.MOVED );
 					
 				if ( t != null )
@@ -329,6 +344,7 @@ package editor
 		{
 			c.x += x;
 			c.y += y;
+			c.isOnTop = true;
 			space.addChild( c );
 		}
 		

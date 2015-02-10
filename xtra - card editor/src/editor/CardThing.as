@@ -1,4 +1,4 @@
-package editor 
+package editor
 {
 	import chimichanga.common.display.Sprite;
 	import feathers.controls.TextArea;
@@ -10,42 +10,49 @@ package editor
 	 * ...
 	 * @author choephix
 	 */
-	public class CardThing extends SpaceObject 
+	public class CardThing extends SpaceObject
 	{
 		static public const PADDING:Number = Card.PADDING;
 		static public const BORDER:Number = 2.0;
 		static public const W:Number = G.CARD_W + BORDER + BORDER;
 		static public const H:Number = G.CARD_H + BORDER + BORDER;
 		
-		private var border:Quad;
+		private var pad:Quad;
 		
 		private var tTitle:TextArea;
 		private var tDescr:TextArea;
 		private var tExtra:TextArea;
+		private var iFaction:OButton;
+		private var iType:OButton;
 		
 		private var tagsQuad:Quad;
 		private var tagsInput:TextArea;
 		private var bOk:OButton;
 		
-		public function CardThing() 
+		private var _faction:Faction;
+		private var _type:int;
+		
+		public function CardThing()
 		{
 			pivotX = .5 * W;
 			pivotY = .5 * H;
 			
-			border = new Quad( W, H, 0xFFFFFF );
-			border.touchable = false;
-			border.alpha = .75;
-			addChild( border );
+			pad = new Quad( W, H, 0xFFFFFF );
+			pad.touchable = false;
+			pad.alpha = .75;
+			addChild( pad );
 			
 			Card.txtfTitle.align = "center";
 			Card.txtfDescr.align = "center";
 			
+			
+			
 			tTitle = new TextArea();
 			tTitle.textEditorProperties.textFormat = Card.txtfTitle;
-			tTitle.x = PADDING;
-			tTitle.y = 0;
-			tTitle.width = G.CARD_W - PADDING - PADDING;
+			tTitle.width = G.CARD_W * 2.0;
 			tTitle.height = 22;
+			tTitle.x = -G.CARD_W * .5;
+			tTitle.y = 0;
 			addChild( tTitle );
 			tTitle.validate();
 			
@@ -55,9 +62,30 @@ package editor
 			tDescr.y = tTitle.y + tTitle.height;
 			tDescr.width = G.CARD_W - PADDING - PADDING;
 			tDescr.height = G.CARD_H - PADDING - PADDING - tDescr.y;
-			tDescr.text = "...\n...\n...\n...\n...";
+			tDescr.text = "...";
 			addChild( tDescr );
 			tDescr.validate();
+			
+			tExtra = new TextArea();
+			tExtra.textEditorProperties.textFormat = Card.txtfExtra;
+			tExtra.width = 100;
+			tExtra.height = 50;
+			tExtra.x = 0;
+			tExtra.y = G.CARD_H - 40;
+			addChild( tExtra );
+			tExtra.validate();
+			
+			iFaction = new OButton( "", onButtonChangeFaction );
+			iFaction.x = G.CARD_W - PADDING;
+			iFaction.y = 10;
+			addChild( iFaction );
+			
+			iType = new OButton( "", onButtonChangeType );
+			iType.x = PADDING;
+			iType.y = 10;
+			addChild( iType );
+			
+			
 			
 			tagsQuad = new Quad( W, 100, 0x0 );
 			tagsQuad.alpha = .60;
@@ -76,11 +104,30 @@ package editor
 			
 			bOk = new OButton( "OK", onButtonOk );
 			bOk.x = W + 20;
-			bOk.y = 20;
+			bOk.y = 10;
 			addChild( bOk );
 		}
 		
-		private function onButtonOk():void 
+		private function onButtonChangeType():void 
+		{
+			setType( ( _type+1 ) % 4 ); 
+		}
+		
+		private function onButtonChangeFaction():void
+		{
+			if ( _faction == Faction.SCIENCE )
+				setFaction( Faction.NATURE );
+			else
+			if ( _faction == Faction.NATURE )
+				setFaction( Faction.MAGIC );
+			else
+			if ( _faction == Faction.MAGIC )
+				setFaction( null );
+			else
+				setFaction( Faction.SCIENCE );
+		}
+		
+		private function onButtonOk():void
 		{
 			context.selectedCard.setSelected( false );
 		}
@@ -89,18 +136,37 @@ package editor
 		{
 			tTitle.text = source.data.name;
 			tDescr.text = source.data.description;
-			tagsInput.text = source.tags.join("\n");
+			tExtra.text = source.data.power.toString();
+			tagsInput.text = source.tags.join( "\n" );
+			
+			setType( source.data.type );
+			setFaction( source.data.faction );
 		}
 		
 		public function saveDataTo( c:Card ):void
 		{
+			c.data.type = _type;
+			c.data.faction = _faction;
 			c.data.name = tTitle.text;
 			c.data.description = tDescr.text;
+			c.data.power = int( tExtra.text );
 			c.tags.length = 0;
-			c.tags.push.apply( null, tagsInput.text.split("\n") );
+			c.tags.push.apply( null, tagsInput.text.split( "\n" ) );
 			c.onDataChange();
 		}
 		
+		public function setType( value:int ):void
+		{
+			_type = value;
+			pad.color = CardType.toColor( _type ) + 0x101010;
+		}
+		
+		public function setFaction( value:Faction ):void
+		{
+			_faction = value;
+			iFaction.color = Faction.toColor( value );
+		}
+	
 	}
 
 }
