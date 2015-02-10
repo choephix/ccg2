@@ -45,7 +45,7 @@
     <option loadExterns="" />
     <option staticLinkRSL="True" />
     <option additional="" />
-    <option compilerConstants="CONFIG::development,true&#xA;CONFIG::desktop,true&#xA;CONFIG::web, false&#xA;CONFIG::slowmode,false&#xA;CONFIG::quickplay,true&#xA;CONFIG::sandbox,true" />
+    <option compilerConstants="CONFIG::development,true&#xA;CONFIG::sandbox,false" />
     <option minorVersion="" />
   </build>
   <!-- SWC Include Libraries -->

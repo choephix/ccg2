@@ -1,5 +1,6 @@
 package editor 
 {
+	import chimichanga.common.display.Sprite;
 	import editor.SpaceObject;
 	import flash.geom.Point;
 	import other.EditorEvents;
@@ -19,6 +20,7 @@ package editor
 		public var targetX:Number;
 		public var targetY:Number;
 		
+		private var thingParent:Sprite;
 		private var q1:Quad;
 		private var q2:Quad;
 		private var t:TextField;
@@ -26,6 +28,7 @@ package editor
 		private var _type:int;
 		
 		private var _focused:Boolean;
+		private var _selected:Boolean;
 		private var _inDrag:Boolean;
 		private var _isOnTop:Boolean;
 		
@@ -36,6 +39,11 @@ package editor
 		public function Card() 
 		{
 			super();
+			
+			thingParent = new Sprite();
+			thingParent.x = .5 * G.CARD_W;
+			thingParent.y = .5 * G.CARD_H;
+			addChild( thingParent );
 			
 			q1 = new Quad( 1, 1, 0x0, true );
 			q1.x = -1;
@@ -73,6 +81,11 @@ package editor
 					targetY = y;
 					inDrag = false;
 				}
+				else
+				if ( _isOnTop && t != null && t.phase == TouchPhase.ENDED )
+				{
+					setSelected( !_selected );
+				}
 				return;
 			}
 			
@@ -104,6 +117,36 @@ package editor
 				return;
 			
 			_focused = value;
+		}
+		
+		private function setSelected( value:Boolean ):void 
+		{
+			if ( _selected == value )
+				return;
+			
+			_selected = value;
+			
+			if ( value )
+			{
+				if ( context.selectedCard )
+					context.selectedCard.setSelected( false );
+				context.selectedCard = this;
+				
+				helperPoint.setTo( .5 * G.CARD_W, .5 * G.CARD_H );
+				localToGlobal( helperPoint, helperPoint );
+				context.cardThing.x = helperPoint.x;
+				context.cardThing.y = helperPoint.y;
+				context.cardThing.visible = true;
+				context.cardThing.updateData( this );
+			}
+			else
+			{
+				context.selectedCard = null;
+				
+				context.cardThing.visible = false;
+			}
+			
+			trace( this, _selected );
 		}
 		
 		public function hasTag( tag:String ):Boolean

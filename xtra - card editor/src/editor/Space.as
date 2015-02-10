@@ -17,7 +17,7 @@ package editor
 		public const cards:Vector.<Card> = new Vector.<Card>();
 		public const views:Vector.<SpaceView> = new Vector.<SpaceView>( 9 );
 		
-		public var view:SpaceView = null;
+		public var context:SpaceContext = new SpaceContext();
 		
 		private var viewLabel:TextField;
 		
@@ -40,7 +40,10 @@ package editor
 			views[ 0 ].addGroup( generateNewGroup( "type1" ) );
 			views[ 0 ].addGroup( generateNewGroup( "type2" ) );
 			views[ 0 ].addGroup( generateNewGroup( "type3" ) );
-				
+			
+			addChild( context.cardThing );
+			context.cardThing.visible = false;
+			
 			setView( 0 );
 		}
 		
@@ -86,18 +89,18 @@ package editor
 		
 		public function setView( index:uint ):void 
 		{
-			if ( view == views[ index ] )
+			if ( context.currentView == views[ index ] )
 				return;
 			
 			viewLabel.text = String( index + 1 );
 			
-			if ( view != null )
-				view.active = false;
+			if ( context.currentView != null )
+				context.currentView.active = false;
 			
-			view = views[ index ];
+			context.currentView = views[ index ];
 			
-			if ( view != null )
-				view.active = true;
+			if ( context.currentView != null )
+				context.currentView.active = true;
 		}
 		
 		//

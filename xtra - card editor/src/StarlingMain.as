@@ -125,7 +125,11 @@ package
 		private function onkey( e:KeyboardEvent ):void
 		{
 			if ( e.keyCode == Keyboard.A )
-				space.generateNewCard();
+			{
+				var c:Card = space.generateNewCard();
+				if ( space.context.focusedGroup )
+					space.context.focusedGroup.addCard( c );
+			}
 			else
 			if ( e.keyCode >= Keyboard.NUMBER_1 && e.keyCode <= Keyboard.NUMBER_9 )
 				space.setView( e.keyCode - Keyboard.NUMBER_1 );

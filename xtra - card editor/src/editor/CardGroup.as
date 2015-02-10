@@ -248,6 +248,18 @@ package editor
 				}
 			}
 			
+			if ( tformCurrent == tformMaximized )
+			{
+				t = e.getTouch( bg, TouchPhase.MOVED );
+					
+				if ( t != null )
+				{
+					t.getMovement( parent, helperPoint );
+					setCardsScroll( _cardsScroll - 4 * helperPoint.y );
+				}
+				
+			}
+			
 			if ( tformCurrent == tformContracted )
 			{
 				t = e.getTouch( titlePad, TouchPhase.MOVED );
@@ -364,7 +376,14 @@ package editor
 			
 			_focused = value;
 			
-			parent.setChildIndex( this, parent.numChildren - 1 );
+			if ( value )
+				context.focusedGroup = this;
+			else
+			if ( context.focusedGroup == this )
+				context.focusedGroup = null;
+			
+			if ( value )
+				parent.setChildIndex( this, parent.numChildren - 1 );
 		}
 		
 		private function setCardsScroll( value:Number ):void 

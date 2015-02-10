@@ -10,16 +10,10 @@ package editor
 	{
 		public var space:Space;
 		
-		public function SpaceObject() 
-		{
-			super();
-		}
+		protected function get context():SpaceContext
+		{ return space.context }
 		
 		protected function lerp( from:Number, to:Number, ratio:Number ):Number
-		{
-			return from + ( to - from ) * ratio;
-		}
-		
+		{ return from + ( to - from ) * ratio }
 	}
-
 }
