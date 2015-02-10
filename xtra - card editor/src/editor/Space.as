@@ -25,6 +25,8 @@ package editor
 		{
 			super();
 			
+			context.cardThing.space = this;
+			
 			viewLabel = new TextField( 200, 200, "0", "Consolas", 100, 0x909090, true );
 			viewLabel.alignPivot();
 			viewLabel.x = .5 * width;
@@ -78,8 +80,12 @@ package editor
 		
 		public function generateNewCard():Card
 		{
+			var d:CardData = new CardData();
+			d.type = Math.random() * 4;
+			d.name = int( Math.random() * int.MAX_VALUE ).toString( 36 );
+			
 			var c:Card = new Card();
-			c.type = Math.random() * 4;
+			c.initialize( d );
 			c.x = width * ( 0.25 + 0.50 * Math.random() );
 			c.y = height * ( 0.25 + 0.50 * Math.random() );
 			addChild( c );

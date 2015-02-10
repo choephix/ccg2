@@ -262,6 +262,14 @@ package editor
 			
 			if ( tformCurrent == tformContracted )
 			{
+				t = e.getTouch( titlePad, TouchPhase.ENDED );
+				
+				if ( t != null && t.tapCount > 1 )
+				{
+					setExpanded( true );
+					return;
+				}
+				
 				t = e.getTouch( titlePad, TouchPhase.MOVED );
 				
 				if ( t != null )

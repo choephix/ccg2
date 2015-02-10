@@ -2,7 +2,10 @@ package editor
 {
 	import chimichanga.common.display.Sprite;
 	import editor.SpaceObject;
+	import feathers.controls.TextArea;
+	import feathers.controls.TextInput;
 	import flash.geom.Point;
+	import flash.text.TextFormat;
 	import other.EditorEvents;
 	import starling.display.Quad;
 	import starling.events.EnterFrameEvent;
@@ -17,13 +20,23 @@ package editor
 	 */
 	public class Card extends SpaceObject 
 	{
+		public static var txtfTitle:TextFormat = new TextFormat( "Verdana", 15, 0x330814, true );
+		public static var txtfDescr:TextFormat = new TextFormat( "Arial", 12, 0x330814, false );
+		public static var txtfExtra:TextFormat = new TextFormat( "Arial", 32, 0x330814, true );
+		public static const PADDING:Number = 10;
+		
 		public var targetX:Number;
 		public var targetY:Number;
 		
 		private var thingParent:Sprite;
-		private var q1:Quad;
-		private var q2:Quad;
-		private var t:TextField;
+		private var border:Quad;
+		private var pad:Quad;
+		private var tTitle:TextField;
+		private var tDescr:TextField;
+		private var tExtra:TextField;
+		
+		public var data:CardData;
+		public const tags:Vector.<String> = new Vector.<String>();
 		
 		private var _type:int;
 		
@@ -34,42 +47,87 @@ package editor
 		
 		private static var helperPoint:Point = new Point();
 		
-		public const tags:Vector.<String> = new Vector.<String>();
-		
-		public function Card() 
+		public function initialize( data:CardData ):void
 		{
-			super();
+			this.data = data == null ? new CardData() : data;
 			
 			thingParent = new Sprite();
 			thingParent.x = .5 * G.CARD_W;
 			thingParent.y = .5 * G.CARD_H;
 			addChild( thingParent );
 			
-			q1 = new Quad( 1, 1, 0x0, true );
-			q1.x = -1;
-			q1.y = -1;
-			q1.alpha = .3;
-			addChild( q1 );
+			border = new Quad( G.CARD_W + 2, G.CARD_H + 2, 0x0, true );
+			border.x = -1;
+			border.y = -1;
+			border.alpha = .3;
+			border.touchable = false;
+			addChild( border );
 			
-			q2 = new Quad( 1, 1, 0xB0B0B0, true );
-			q2.alpha = .99;
-			addChild( q2 );
+			pad = new Quad( G.CARD_W, G.CARD_H, 0xB0B0B0, true );
+			pad.alpha = .99;
+			addChild( pad );
 			
-			t = new TextField( 1, 1, "" );
-			t.bold = true;
-			t.touchable = false;
-			addChild( t );
+			tTitle = new TextField( 1, 1, "", txtfTitle.font, txtfTitle.size as Number, txtfTitle.color as uint, txtfTitle.bold  );
+			tTitle.scaleX = .80;
+			tTitle.border = true;
+			tTitle.x = PADDING;
+			tTitle.y = 0;
+			tTitle.width = ( G.CARD_W - PADDING - PADDING ) / tTitle.scaleX;
+			tTitle.height = 22;
+			tTitle.touchable = false;
+			addChild( tTitle );
 			
-			width  = G.CARD_W;
-			height = G.CARD_H;
+			tDescr = new TextField( 1, 1, "", txtfDescr.font, txtfDescr.size as Number, txtfDescr.color as uint, txtfDescr.bold  );
+			tDescr.vAlign = "top";
+			tDescr.border = true;
+			tDescr.x = PADDING;
+			tDescr.y = tTitle.y + tTitle.height;
+			tDescr.width = G.CARD_W - PADDING - PADDING;
+			tDescr.height = G.CARD_H - PADDING - PADDING - tDescr.y;
+			tDescr.touchable = false;
+			addChild( tDescr );
+			
+			tExtra = new TextField( 1, 1, "", txtfExtra.font, txtfExtra.size as Number, txtfExtra.color as uint, txtfExtra.bold  );
+			tExtra.hAlign = "left";
+			tExtra.border = true;
+			tExtra.width  = 35;
+			tExtra.height = 50;
+			tExtra.x = 0;
+			tExtra.y = G.CARD_H - tExtra.height;
+			tExtra.touchable = false;
+			addChild( tExtra );
 			
 			addEventListener( EnterFrameEvent.ENTER_FRAME, advanceTime );
 			addEventListener( TouchEvent.TOUCH, onTouch );
+			
+			onDataChange();
+		}
+		
+		//
+		
+		public function onDataChange():void 
+		{
+			tTitle.text = data.name;
+			tDescr.text = data.description;
+			
+			if ( data.type == CardType.TRAP )
+			{
+				tExtra.text = "";
+				tExtra.visible = false;
+			}
+			else 
+			{
+				tExtra.visible = true;
+				tExtra.text = data.power.toString();
+			}
+			
+			type = data.type;
 		}
 		
 		private function onTouch(e:TouchEvent):void 
 		{
-			var t:Touch = e.getTouch( q2 );
+			var t:Touch;
+			t = e.getTouch( this );
 			
 			setFocused( t != null && t.phase != TouchPhase.ENDED );
 			
@@ -82,14 +140,14 @@ package editor
 					inDrag = false;
 				}
 				else
-				if ( _isOnTop && t != null && t.phase == TouchPhase.ENDED )
+				if ( _isOnTop && !_selected && t != null && t.phase == TouchPhase.ENDED )
 				{
-					setSelected( !_selected );
+					setSelected( true );
 				}
 				return;
 			}
 			
-			if ( t.phase == TouchPhase.MOVED )
+			if ( t.phase == TouchPhase.MOVED && !_selected )
 			{
 				inDrag = true;
 				t.getMovement( parent, helperPoint );
@@ -108,7 +166,7 @@ package editor
 				y = lerp( y, targetY, G.DAMP3 );
 			}
 			
-			q1.alpha = lerp( q1.alpha, _focused ? .99 : .3, G.DAMP1 );
+			border.alpha = lerp( border.alpha, _focused ? .99 : .3, G.DAMP1 );
 		}
 		
 		private function setFocused( value:Boolean ):void 
@@ -119,7 +177,7 @@ package editor
 			_focused = value;
 		}
 		
-		private function setSelected( value:Boolean ):void 
+		public function setSelected( value:Boolean ):void 
 		{
 			if ( _selected == value )
 				return;
@@ -137,12 +195,13 @@ package editor
 				context.cardThing.x = helperPoint.x;
 				context.cardThing.y = helperPoint.y;
 				context.cardThing.visible = true;
-				context.cardThing.updateData( this );
+				context.cardThing.loadDataFrom( this );
 			}
 			else
+			if ( context.selectedCard == this )
 			{
 				context.selectedCard = null;
-				
+				context.cardThing.saveDataTo( this );
 				context.cardThing.visible = false;
 			}
 			
@@ -158,38 +217,14 @@ package editor
 		///
 		//
 		
-		public function get color():uint
-		{
-			return q2.color;
-		}
-		
-		public function set color( value:uint ):void
-		{
-			q2.color = value;
-		}
-		
-		override public function get height():Number
-		{
-			return q2.height;
-		}
-		
 		override public function set height( value:Number ):void
 		{
-			q1.height = value + 2;
-			q2.height = value;
-			t.height = value;
-		}
-		
-		override public function get width():Number
-		{
-			return q2.width;
+			throw new Error( "Hey!" );
 		}
 		
 		override public function set width( value:Number ):void
 		{
-			q1.width = value + 2;
-			q2.width = value;
-			t.width = value;
+			throw new Error( "Hey!" );
 		}
 		
 		public function get inDrag():Boolean 
@@ -234,13 +269,11 @@ package editor
 			
 			switch ( _type )
 			{
-				case CardType.TRAP : color = 0x5577CC; break;
-				case CardType.CREATURE_NORMAL : color = 0xCC9966; break;
-				case CardType.CREATURE_FLIPPABLE: color = 0xCC6644; break;
-				case CardType.CREATURE_GRAND: color = 0xEECC66; break;
+				case CardType.TRAP:					pad.color = 0x5577CC; break;
+				case CardType.CREATURE_NORMAL: 		pad.color = 0xCC9966; break;
+				case CardType.CREATURE_FLIPPABLE: 	pad.color = 0xCC6644; break;
+				case CardType.CREATURE_GRAND: 		pad.color = 0xEECC66; break;
 			}
-			
-			t.text = tags + "\n" + Math.random().toFixed( 10 );
 		}
 		
 		public function get isOnTop():Boolean 
@@ -251,7 +284,9 @@ package editor
 		public function set isOnTop(value:Boolean):void 
 		{
 			_isOnTop = value;
-			t.visible = value;
+			tTitle.visible = value;
+			tDescr.visible = value;
+			tExtra.visible = value && tExtra.text != "";
 		}
 	}
 }

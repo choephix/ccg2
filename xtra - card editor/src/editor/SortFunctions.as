@@ -9,7 +9,7 @@ package editor
 		
 		public static function byType( a:Card, b:Card ):int
 		{
-			return a.color - b.color;
+			return a.data.type - b.data.type;
 		}
 		
 	}
