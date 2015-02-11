@@ -67,6 +67,7 @@ package editor
 				cd.type			= CardType.fromInt( o.type );
 				cd.faction		= Faction.fromInt( o.fctn );
 				cd.power		= o.pwr;
+				cd.tags			= o.tags;
 				c = generateNewCard( cd );
 			}
 			
@@ -265,7 +266,7 @@ package editor
 				o.type = CardType.toInt( c.data.type );
 				o.fctn = Faction.toInt( c.data.faction );
 				o.pwr  = c.data.power;
-				//o.tags = c.tags;
+				o.tags = c.data.tags;
 				r.cards.push( o );
 			}
 			

@@ -37,7 +37,6 @@ package editor
 		private var iFaction:Quad;
 		
 		public var data:CardData;
-		public const tags:Vector.<String> = new Vector.<String>();
 		
 		private var _type:int;
 		
@@ -218,7 +217,7 @@ package editor
 		
 		public function hasTag( tag:String ):Boolean
 		{
-			return tags.indexOf( tag ) > -1;
+			return data.tags.indexOf( tag ) > -1;
 		}
 		
 		//
@@ -266,15 +265,8 @@ package editor
 		public function set type(value:int):void 
 		{
 			var i:int;
-			
-			i = tags.indexOf( "type" + _type );
-			if ( i > -1 )
-				tags.splice( i, 1 );
-			
 			_type = value;
 			pad.color = CardType.toColor( _type );
-			
-			tags.push( "type" + _type );
 		}
 		
 		public function get isOnTop():Boolean 

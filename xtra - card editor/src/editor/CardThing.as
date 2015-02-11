@@ -149,7 +149,7 @@ package editor
 			tTitle.text = source.data.name;
 			tDescr.text = source.data.description;
 			tExtra.text = source.data.power.toString();
-			tagsInput.text = source.tags.join( "\n" );
+			tagsInput.text = source.data.tags.join( "\n" );
 			
 			setType( source.data.type );
 			setFaction( source.data.faction );
@@ -162,8 +162,7 @@ package editor
 			c.data.name = tTitle.text;
 			c.data.description = tDescr.text;
 			c.data.power = int( tExtra.text );
-			c.tags.length = 0;
-			c.tags.push.apply( null, tagsInput.text.split( "\n" ) );
+			c.data.tags = tagsInput.text.split( "\n" );
 			c.onDataChange();
 		}
 		

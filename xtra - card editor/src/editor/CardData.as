@@ -13,5 +13,6 @@ package editor
 		public var power:int = 0;
 		public var type:int = 0;
 		public var faction:Faction = null;
+		public var tags:Array = [];
 	}
 }
