@@ -55,7 +55,7 @@ package editor
 		
 		public function initialize( name:String ):void
 		{
-			this.name = name ? name : "--";
+			this.name = name != null ? name : "--";
 			//this.tag = tag;
 			
 			bg = new Quad( 100, 100, 0x505A60, true );
@@ -82,7 +82,7 @@ package editor
 			titlePad.alpha = .25;
 			titleContainer.addChild( titlePad );
 			
-			titleLabel = new TextField( titlePad.width, titlePad.height, name, "Arial Black", 12, 0xFFFFFF, true );
+			titleLabel = new TextField( titlePad.width, titlePad.height, this.name, "Arial Black", 12, 0xFFFFFF, true );
 			titleLabel.x = titleContainer.x;
 			titleLabel.y = titleContainer.y;
 			titleLabel.touchable = false;
@@ -471,6 +471,12 @@ package editor
 		{
 			tformCurrent = value ? tformMaximized : tformExpanded;
 			arrange();
+		}
+		
+		public function setName( value:String ):void
+		{
+			name = value;
+			titleLabel.text = name;
 		}
 		
 		//

@@ -7,6 +7,7 @@ package editor
 	import other.EditorEvents;
 	import starling.events.KeyboardEvent;
 	import starling.text.TextField;
+	import ui.StringInput;
 	
 	/**
 	 * ...
@@ -32,8 +33,8 @@ package editor
 			
 			viewLabel = new TextField( 200, 200, "0", "Impact", 120, 0x909090, true );
 			viewLabel.alignPivot();
-			viewLabel.x = .5 * width;
-			viewLabel.y = .5 * height;
+			viewLabel.x = .50 * width;
+			viewLabel.y = .13 * height;
 			addChild( viewLabel );
 			
 			for ( i = 0; i < views.length; i++ )
@@ -95,7 +96,7 @@ package editor
 		
 		private function generateNewSpaceView( index:int ):SpaceView 
 		{
-			var v:SpaceView = new SpaceView( this, generateNewGroup( null ) );
+			var v:SpaceView = new SpaceView( this, generateNewGroup( "" ) );
 			addChild( v );
 			v.active = false;
 			return v;
@@ -196,6 +197,12 @@ package editor
 					var c:Card = generateNewCard();
 					if ( context.focusedGroup )
 						context.focusedGroup.addCard( c, -1, true );
+				}
+				else
+				if ( e.keyCode == Keyboard.N )
+				{
+					if ( context.focusedGroup && !context.focusedGroup.locked )
+						StringInput.generate( stage, context.focusedGroup.setName );
 				}
 				else
 				if ( e.keyCode == Keyboard.G )
