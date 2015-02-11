@@ -51,11 +51,8 @@ package editor
 			Starling.juggler.tween( this, .200, { y : value ? .0 : _space.height } );
 			Starling.juggler.tween( this, .200, { alpha : value ? 1 : 0 } );
 			
-			//for ( gi = 0; gi < groups.length; gi++ )
-				//groups[ gi ].visible = value;
 			var gi:int;
 			var ci:int;
-				
 			var c:Card;
 			var g:CardGroup;
 			for ( ci = 0; ci < _space.cards.length; ci++ )
@@ -63,7 +60,7 @@ package editor
 				c = _space.cards[ ci ];
 				g = groups[ 0 ];
 				for ( gi = 1; gi < groups.length; gi++ )
-					if ( c.hasTag( groups[ gi ].tag ) )
+					if ( groups[ gi ].registeredCards.indexOf( c.data.id ) > -1 )
 						g = groups[ gi ];
 				g.addCard( c );
 			}

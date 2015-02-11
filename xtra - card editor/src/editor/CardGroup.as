@@ -25,11 +25,11 @@ package editor
 		private static const TITLE_H:Number = 20;
 		private static const CARD_SPACING:Number = 10;
 		
-		public var tag:String = "";
 		public var view:SpaceView;
 		
 		public var auto:AutoGrouper = null;
 		public var locked:Boolean;
+		public var registeredCards:Array = [];
 		
 		private var bg:Quad;
 		private var titlePad:Quad;
@@ -53,9 +53,10 @@ package editor
 		
 		private static var helperPoint:Point = new Point();
 		
-		public function initialize( tag:String ):void
+		public function initialize( name:String ):void
 		{
-			this.tag = tag;
+			this.name = name ? name : "--";
+			//this.tag = tag;
 			
 			bg = new Quad( 100, 100, 0x505A60, true );
 			//bg.alpha = .0;
@@ -81,7 +82,7 @@ package editor
 			titlePad.alpha = .25;
 			titleContainer.addChild( titlePad );
 			
-			titleLabel = new TextField( titlePad.width, titlePad.height, tag?tag:name, "Lucida Console", 16, 0xFFFFFF, true );
+			titleLabel = new TextField( titlePad.width, titlePad.height, name, "Arial Black", 12, 0xFFFFFF, true );
 			titleLabel.x = titleContainer.x;
 			titleLabel.y = titleContainer.y;
 			titleLabel.touchable = false;
@@ -135,7 +136,7 @@ package editor
 		private function onCardDragStart( e:Event ):void 
 		{
 			if ( cardsParent.contains( e.data as Card ) )
-				removeCard( e.data as Card )
+				removeCard( e.data as Card, true )
 		}
 		
 		private function onCardDragStop( e:Event ):void 
@@ -149,21 +150,24 @@ package editor
 			if ( !bg.getBounds( stage ).containsPoint( App.mouseXY ) )
 				return;
 			
-			cardsParent.globalToLocal( c.parent.localToGlobal( new Point( c.x, c.y ) ), helperPoint );
-			helperPoint.x += .5 * c.width;
-			helperPoint.y += .5 * c.height;
-			var columns:int = Math.round( ( cardsParent.width - CARD_SPACING ) / ( G.CARD_W + CARD_SPACING ) );
-			var index:int = 
-				Math.floor( helperPoint.y / ( G.CARD_H + CARD_SPACING ) ) * columns + 
-				Math.floor( helperPoint.x / ( G.CARD_W + CARD_SPACING ) );
+			var index:int;
 			
-			if ( index >= countCards )
+			if ( tformCurrent == tformContracted )
+				index = 0
+			else
 			{
-				error( "index much large" );
-				index = countCards;
+				cardsParent.globalToLocal( c.parent.localToGlobal( new Point( c.x, c.y ) ), helperPoint );
+				helperPoint.x += .5 * c.width;
+				helperPoint.y += .5 * c.height;
+				var columns:int = Math.round( ( cardsParent.width - CARD_SPACING ) / ( G.CARD_W + CARD_SPACING ) );
+				index = 
+					Math.floor( helperPoint.y / ( G.CARD_H + CARD_SPACING ) ) * columns + 
+					Math.floor( helperPoint.x / ( G.CARD_W + CARD_SPACING ) );
+				if ( index >= countCards )
+					index = countCards;
 			}
 			
-			addCard( c, index );
+			addCard( c, index, true );
 			arrange();
 		}
 		
@@ -327,7 +331,7 @@ package editor
 		
 		private function onButtonAdd():void
 		{
-			addCard( space.generateNewCard() );
+			addCard( space.generateNewCard(), -1, true );
 		}
 		
 		private function onButtonSort():void 
@@ -337,8 +341,11 @@ package editor
 		
 		//
 		
-		public function addCard( c:Card, index:int=-1 ):Card
+		public function addCard( c:Card, index:int = -1, register:Boolean = false ):Card
 		{
+			if ( register )
+				registerCard( c );
+			
 			if ( index > -1 )
 				cardsParent.addChildAt( c, countCards-index );
 			else
@@ -350,8 +357,11 @@ package editor
 			return c;
 		}
 		
-		public function removeCard( c:Card ):void 
+		public function removeCard( c:Card, unregister:Boolean = false ):void 
 		{
+			if ( unregister )
+				unregisterCard( c );
+				
 			c.x += x;
 			c.y += y;
 			c.isOnTop = true;
@@ -410,6 +420,16 @@ package editor
 		public function get countCards():int
 		{
 			return cardsParent.numChildren;
+		}
+		
+		private function registerCard( c:Card ):void
+		{
+			registeredCards.push( c.data.id );
+		}
+		
+		private function unregisterCard( c:Card ):void
+		{
+			registeredCards.splice( registeredCards.indexOf( c.data.id ), 1 );
 		}
 		
 		//

@@ -1,5 +1,6 @@
 package {
 	import chimichanga.common.assets.AdvancedAssetManager;
+	import editor.Remote;
 	import flash.display.StageDisplayState;
 	import flash.display.Stage;
 	import flash.geom.Point;
@@ -52,6 +53,8 @@ package {
 		public static var input:InputEvents = new InputEvents();
 		
 		public static var mouseXY:Point = new Point();
+		
+		public static var remote:Remote = new Remote();
 		
 		public static function initialize( root:StarlingMain ):void {
 			

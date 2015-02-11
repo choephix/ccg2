@@ -13,7 +13,7 @@ package editor
 		
 		public static function toColor( type:int ):uint
 		{
-			if ( type == TRAP ) return 0x5577CC;
+			if ( type == TRAP ) return 0x52A087;
 			if ( type == CREATURE_NORMAL ) return 0xCC9966;
 			if ( type == CREATURE_FLIPPABLE ) return 0xCC6644;
 			if ( type == CREATURE_GRAND ) return 0xEECC66;
@@ -21,6 +21,11 @@ package editor
 		}
 		
 		static public function toInt( type:int ):int 
+		{
+			return type;
+		}
+		
+		static public function fromInt( type:int ):int
 		{
 			return type;
 		}

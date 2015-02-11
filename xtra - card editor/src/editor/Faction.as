@@ -10,6 +10,7 @@ package editor
 		public static const NATURE:Faction 	= new Faction();
 		public static const MAGIC:Faction 	= new Faction();
 		
+		//
 		public static function toName( f:Faction ):String
 		{
 			if ( f == SCIENCE ) return "Tech";
@@ -32,6 +33,15 @@ package editor
 			if ( f == NATURE ) return 1;
 			if ( f == MAGIC ) return 2;
 			return 3;
+		}
+		
+		//
+		static public function fromInt( f:int ):Faction
+		{
+			if ( f == 0 ) return SCIENCE;
+			if ( f == 1 ) return NATURE;
+			if ( f == 2 ) return MAGIC;
+			return null;
 		}
 	}
 }

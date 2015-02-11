@@ -23,35 +23,71 @@ package editor
 		
 		private var viewLabel:TextField;
 		
-		public function Space() 
+		public function initialize( jsonData:String ):void 
 		{
-			super();
+			var i:int;
+			var j:int;
 			
-			context.cardThing.space = this;
+			// PREP
 			
-			viewLabel = new TextField( 200, 200, "0", "Consolas", 100, 0x909090, true );
+			viewLabel = new TextField( 200, 200, "0", "Impact", 120, 0x909090, true );
 			viewLabel.alignPivot();
 			viewLabel.x = .5 * width;
 			viewLabel.y = .5 * height;
 			addChild( viewLabel );
 			
-			//
-			var i:int;
-			
 			for ( i = 0; i < views.length; i++ )
 				views[ i ] = generateNewSpaceView( i );
 			
-			views[ 0 ].addGroup( generateNewGroup( "type0" ) );
-			views[ 0 ].addGroup( generateNewGroup( "type1" ) );
-			views[ 0 ].addGroup( generateNewGroup( "type2" ) );
-			views[ 0 ].addGroup( generateNewGroup( "type3" ) );
-			
-			addChild( context.cardThing );
+			context.cardThing.space = this;
 			context.cardThing.visible = false;
+			addChild( context.cardThing );
 			
-			for ( i = 0; i < 88; i++ )
-				generateNewCard();
 			
+			
+			
+			// PARSE DATA
+			
+			var data:Object = JSON.parse( jsonData );
+			
+			var o:Object;
+			
+			var c:Card;
+			var cd:CardData;
+			for ( i = 0; i < data.cards.length; i++ ) 
+			{
+				o = data.cards[ i ];
+				cd = new CardData();
+				cd.id			= o.id;
+				cd.name			= o.name;
+				cd.slug			= o.slug;
+				cd.description	= o.desc;
+				cd.type			= CardType.fromInt( o.type );
+				cd.faction		= Faction.fromInt( o.fctn );
+				cd.power		= o.pwr;
+				c = generateNewCard( cd );
+			}
+			
+			var g:CardGroup;
+			for ( j = 0; j < data.views.length; j++ ) 
+			{
+				for ( i = 0; i < data.views[ j ].groups.length; i++ ) 
+				{
+					o = data.views[ j ].groups[ i ];
+					g = generateNewGroup( name );
+					views[ j ].addGroup( g );
+					
+					g.registeredCards = o.cards;
+					g.tformContracted.x = o.xc;
+					g.tformContracted.y = o.yc;
+					g.tformExpanded.x = o.xe;
+					g.tformExpanded.y = o.ye;
+					g.tformExpanded.width = o.we;
+					g.tformExpanded.height = o.he;
+				}
+			}
+			
+			///
 			setView( 0 );
 		}
 		
@@ -83,20 +119,20 @@ package editor
 		
 		// CARD GROUPS
 		
-		public function generateNewGroup( tag:String = null ):CardGroup 
+		public function generateNewGroup( name:String = null ):CardGroup 
 		{
 			var g:CardGroup;
 			g = new CardGroup();
 			g.space = this;
 			addChild( g );
-			g.initialize( tag );
+			g.initialize( name );
 			return g;
 		}
 		
 		public function deleteGroup( g:CardGroup ):void 
 		{
 			while ( g.countCards > 0 )
-				context.currentView.groups[ 0 ].addCard( g.getCardAt( 0 ) );
+				context.currentView.groups[ 0 ].addCard( g.getCardAt( 0 ), -1, true );
 			
 			g.view.removeGroup( g );
 			g.space = null;
@@ -105,22 +141,24 @@ package editor
 		
 		// CARDS
 		
-		public function generateNewCard():Card
+		public function generateNewCard( d:CardData = null ):Card
 		{
-			var d:CardData = new CardData();
-			
-			d.id = cards.length;
-			d.name = int( Math.random() * int.MAX_VALUE ).toString( 36 );
-			d.type = Math.random() * 4;
-			var i:int = Math.random() * 5;
-			switch( i )
+			if ( d == null )
 			{
-				case 0: d.faction = Faction.SCIENCE; break;
-				case 1: d.faction = Faction.NATURE; break;
-				case 2: d.faction = Faction.MAGIC; break;
-				default: d.faction = null;
+				d = new CardData();
+				d.id = cards.length;
+				d.name = int( Math.random() * int.MAX_VALUE ).toString( 36 );
+				d.type = Math.random() * 4;
+				var i:int = Math.random() * 5;
+				switch( i )
+				{
+					case 0: d.faction = Faction.SCIENCE; break;
+					case 1: d.faction = Faction.NATURE; break;
+					case 2: d.faction = Faction.MAGIC; break;
+					default: d.faction = null;
+				}
+				d.power = Math.random() * 10.0;
 			}
-			d.power = Math.random() * 10.0;
 			
 			var c:Card = new Card();
 			c.initialize( d );
@@ -138,45 +176,51 @@ package editor
 		
 		public function onKeyDown(e:KeyboardEvent):void 
 		{
-			if ( e.keyCode == Keyboard.SPACE )
+			if ( e.ctrlKey )
 			{
-				trace( "\n\n\n" );
-				trace( toJson() );
-				trace( "\n\n\n" );
+				if ( e.keyCode == Keyboard.SPACE )
+				{
+					App.remote.save( this );
+				}
+				else
+				if ( e.keyCode >= Keyboard.NUMBER_1 && e.keyCode <= Keyboard.NUMBER_9 )
+					setView( e.keyCode - Keyboard.NUMBER_1 );
+				else
+				if ( e.keyCode == Keyboard.Z )
+				{
+					App.remote.load( null );
+				}
+				else
+				if ( e.keyCode == Keyboard.A )
+				{
+					var c:Card = generateNewCard();
+					if ( context.focusedGroup )
+						context.focusedGroup.addCard( c, -1, true );
+				}
+				else
+				if ( e.keyCode == Keyboard.G )
+				{
+					context.currentView.addGroup( generateNewGroup() );
+				}
+				else
+				if ( e.keyCode == Keyboard.Q )
+				{
+					if ( context.focusedGroup )
+						context.focusedGroup.sortCards( SortFunctions.byFaction );
+				}
+				else
+				if ( e.keyCode == Keyboard.W )
+				{
+					if ( context.focusedGroup )
+						context.focusedGroup.sortCards( SortFunctions.byType );
+				}
+				else
+				if ( e.keyCode == Keyboard.E )
+				{
+					if ( context.focusedGroup )
+						context.focusedGroup.sortCards( SortFunctions.byPower );
+				}
 			}
-			else
-			if ( e.keyCode == Keyboard.A )
-			{
-				var c:Card = generateNewCard();
-				if ( context.focusedGroup )
-					context.focusedGroup.addCard( c );
-			}
-			else
-			if ( e.keyCode == Keyboard.G )
-			{
-				context.currentView.addGroup( generateNewGroup() );
-			}
-			else
-			if ( e.keyCode == Keyboard.Q )
-			{
-				if ( context.focusedGroup )
-					context.focusedGroup.sortCards( SortFunctions.byFaction );
-			}
-			else
-			if ( e.keyCode == Keyboard.W )
-			{
-				if ( context.focusedGroup )
-					context.focusedGroup.sortCards( SortFunctions.byType );
-			}
-			else
-			if ( e.keyCode == Keyboard.E )
-			{
-				if ( context.focusedGroup )
-					context.focusedGroup.sortCards( SortFunctions.byPower );
-			}
-			else
-			if ( e.keyCode >= Keyboard.NUMBER_1 && e.keyCode <= Keyboard.NUMBER_9 )
-				setView( e.keyCode - Keyboard.NUMBER_1 );
 		}
 		
 		//
@@ -195,6 +239,7 @@ package editor
 			{
 				c = cards[ i ];
 				o = { };
+				o.id   = c.data.id;
 				o.name = c.data.name;
 				o.slug = c.data.slug;
 				o.desc = c.data.description;
@@ -212,7 +257,11 @@ package editor
 			{
 				r.views.push( { } );
 				r.views[ i ].groups = new Array();
-				for ( j = 0; j < views[ i ].groups.length; j++ ) 
+				
+				if ( views[ i ].groups.length <= 1 )
+					continue;
+				
+				for ( j = 1; j < views[ i ].groups.length; j++ ) 
 				{
 					g = views[ i ].groups[ j ];
 					o = { };
@@ -223,17 +272,9 @@ package editor
 					o.ye = g.tformExpanded.y;
 					o.we = g.tformExpanded.width;
 					o.he = g.tformExpanded.height;
-					o.cards = groupExtractIds( g );
+					o.cards = g.registeredCards;
 					r.views[ i ].groups.push( o );
 				}
-			}
-			
-			function groupExtractIds( g:CardGroup ):Array 
-			{
-				var a:Array = [];
-				for ( var k:int = 0; k < g.countCards; k++ ) 
-					a.push( g.getCardAt( k ).data.id );
-				return a;
 			}
 			
 			return JSON.stringify( r );

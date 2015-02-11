@@ -99,11 +99,6 @@ package
 			loadingText.removeFromParent( true );
 			loadingText = null;
 			
-			initialize();
-		}
-		
-		private function initialize():void
-		{
 			bg = App.assets.generateImage( "bg", false, false );
 			bg.alpha = .0;
 			addChild( bg );
@@ -111,7 +106,13 @@ package
 			
 			onResize( null );
 			
+			App.remote.load( onDataLoaded );
+		}
+		
+		private function onDataLoaded( data:String ):void
+		{
 			space = new Space();
+			space.initialize( data );
 			addChild( space );
 		}
 		
