@@ -15,6 +15,7 @@ package editor
 	import starling.events.TouchPhase;
 	import starling.text.TextField;
 	import ui.OButton;
+	import ui.StringInput;
 	
 	/**
 	 * ...
@@ -115,6 +116,7 @@ package editor
 			addEventListener( EnterFrameEvent.ENTER_FRAME, advanceTime );
 			addEventListener( TouchEvent.TOUCH, onTouch );
 			App.input.addEventListener( InputEvents.MOUSE_WHEEL, onMouseWheel );
+			App.input.addEventListener( InputEvents.RIGHT_CLICK, onMouseRightClick );
 			space.addEventListener( EditorEvents.CARD_DRAG_START, onCardDragStart );
 			space.addEventListener( EditorEvents.CARD_DRAG_STOP, onCardDragStop );
 			
@@ -195,6 +197,17 @@ package editor
 			
 			//titleContainer.y = lerp( titleContainer.y, tformCurrent == tformContracted ? height : -TITLE_H, G.DAMP3 );
 			//titleLabel.y = titleContainer.y;
+		}
+		
+		private function onMouseRightClick( e:Event ):void 
+		{
+			helperPoint.setTo( e.data.stageX, e.data.stageY );
+			titlePad.globalToLocal( helperPoint, helperPoint );
+			if ( helperPoint.x > titlePad.width ) return;
+			if ( helperPoint.y > titlePad.height ) return;
+			if ( helperPoint.x < 0 ) return;
+			if ( helperPoint.y < 0 ) return;
+			StringInput.generate( stage, setName );
 		}
 		
 		private function onMouseWheel( e:Event ):void 
