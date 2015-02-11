@@ -19,5 +19,10 @@ package editor
 			if ( type == CREATURE_GRAND ) return 0xEECC66;
 			return 0xFFFFFF;
 		}
+		
+		static public function toInt( type:int ):int 
+		{
+			return type;
+		}
 	}
 }

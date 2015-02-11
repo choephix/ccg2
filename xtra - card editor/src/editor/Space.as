@@ -138,6 +138,13 @@ package editor
 		
 		public function onKeyDown(e:KeyboardEvent):void 
 		{
+			if ( e.keyCode == Keyboard.SPACE )
+			{
+				trace( "\n\n\n" );
+				trace( toJson() );
+				trace( "\n\n\n" );
+			}
+			else
 			if ( e.keyCode == Keyboard.A )
 			{
 				var c:Card = generateNewCard();
@@ -170,6 +177,66 @@ package editor
 			else
 			if ( e.keyCode >= Keyboard.NUMBER_1 && e.keyCode <= Keyboard.NUMBER_9 )
 				setView( e.keyCode - Keyboard.NUMBER_1 );
+		}
+		
+		//
+		
+		public function toJson():String
+		{
+			var i:int;
+			var j:int;
+			var o:Object;
+			var r:Object = { };
+			
+			r.cards = new Array();
+			
+			var c:Card;
+			for ( i = 0; i < cards.length; i++ ) 
+			{
+				c = cards[ i ];
+				o = { };
+				o.name = c.data.name;
+				o.slug = c.data.slug;
+				o.desc = c.data.description;
+				o.type = CardType.toInt( c.data.type );
+				o.fctn = Faction.toInt( c.data.faction );
+				o.pwr  = c.data.power;
+				//o.tags = c.tags;
+				r.cards.push( o );
+			}
+			
+			r.views = new Array();
+			
+			var g:CardGroup;
+			for ( i = 0; i < views.length; i++ ) 
+			{
+				r.views.push( { } );
+				r.views[ i ].groups = new Array();
+				for ( j = 0; j < views[ i ].groups.length; j++ ) 
+				{
+					g = views[ i ].groups[ j ];
+					o = { };
+					o.name = g.name;
+					o.xc = g.tformContracted.x;
+					o.yc = g.tformContracted.y;
+					o.xe = g.tformExpanded.x;
+					o.ye = g.tformExpanded.y;
+					o.we = g.tformExpanded.width;
+					o.he = g.tformExpanded.height;
+					o.cards = groupExtractIds( g );
+					r.views[ i ].groups.push( o );
+				}
+			}
+			
+			function groupExtractIds( g:CardGroup ):Array 
+			{
+				var a:Array = [];
+				for ( var k:int = 0; k < g.countCards; k++ ) 
+					a.push( g.getCardAt( k ).data.id );
+				return a;
+			}
+			
+			return JSON.stringify( r );
 		}
 		
 		//

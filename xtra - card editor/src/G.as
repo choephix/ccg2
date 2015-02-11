@@ -6,6 +6,11 @@ package
 	 */
 	public class G 
 	{
+		public static const URL_BASE:String = "http://dev.thechoephix.com/ccg2/editor/";
+		public static const URL_SAVE:String = "write.php";
+		public static const URL_LOAD:String = "read.php";
+		
+		
 		public static const CARD_W:Number = 150;
 		public static const CARD_H:Number = 200;
 		

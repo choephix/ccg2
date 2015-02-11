@@ -81,7 +81,7 @@ package editor
 			titlePad.alpha = .25;
 			titleContainer.addChild( titlePad );
 			
-			titleLabel = new TextField( titlePad.width, titlePad.height, tag?tag:"?", "Lucida Console", 16, 0xFFFFFF, true );
+			titleLabel = new TextField( titlePad.width, titlePad.height, tag?tag:name, "Lucida Console", 16, 0xFFFFFF, true );
 			titleLabel.x = titleContainer.x;
 			titleLabel.y = titleContainer.y;
 			titleLabel.touchable = false;
@@ -145,7 +145,8 @@ package editor
 			var c:Card = e.data as Card;
 			if ( c.parent != space )
 				return;
-			if ( !bg.getBounds( space ).intersects( c.getBounds( space ) ) )
+			
+			if ( !bg.getBounds( stage ).containsPoint( App.mouseXY ) )
 				return;
 			
 			cardsParent.globalToLocal( c.parent.localToGlobal( new Point( c.x, c.y ) ), helperPoint );
