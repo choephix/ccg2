@@ -25,8 +25,8 @@ package editor
 		public function addGroup( g:CardGroup ):void
 		{
 			g.view = this;
-			g.tformContracted.y = .5 * ( _space.height - 300 );
-			g.tformContracted.x = 90 + groups.length * 180;
+			g.tformContracted.y = .5 * _space.height - 200;
+			g.tformContracted.x = 40 + groups.length * 160;
 			addChild( g );
 			groups.push( g );
 		}

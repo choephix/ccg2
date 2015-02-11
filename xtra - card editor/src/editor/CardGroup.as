@@ -23,7 +23,7 @@ package editor
 	public class CardGroup extends SpaceObject
 	{
 		private static const TITLE_H:Number = 20;
-		private static const CARD_SPACING:Number = 10;
+		private static const CARD_SPACING:Number = 4;
 		
 		public var view:SpaceView;
 		
@@ -245,6 +245,13 @@ package editor
 					if ( y > space.height - tformExpanded.height ) y = space.height - tformExpanded.height;
 					tformExpanded.x = x;
 					tformExpanded.y = y;
+					
+					t.getLocation( parent, helperPoint );
+					if ( helperPoint.x <= 0 || helperPoint.x > space.width )
+					{
+						tformExpanded.y = tformMaximized.y;
+						tformExpanded.height = tformMaximized.height;
+					}
 					return;
 				}
 				
