@@ -28,6 +28,7 @@ package editor
 		private var tagsQuad:Quad;
 		private var tTags:TextArea;
 		private var bOk:OButton;
+		private var bX:OButton;
 		
 		private var _faction:Faction;
 		private var _type:int;
@@ -118,6 +119,14 @@ package editor
 			bOk.x = W + 20;
 			bOk.y = 10;
 			addChild( bOk );
+			
+			bX = new OButton( "", onButtonDiscard );
+			bX.color = 0x776666;
+			bX.x = W + 38;
+			bX.y = -5;
+			bX.scaleX = .33;
+			bX.scaleY = .33;
+			addChild( bX );
 		}
 		
 		private function onButtonChangeType():void 
@@ -140,6 +149,12 @@ package editor
 		}
 		
 		private function onButtonOk():void
+		{
+			saveDataTo( context.selectedCard );
+			context.selectedCard.setSelected( false );
+		}
+		
+		private function onButtonDiscard():void
 		{
 			context.selectedCard.setSelected( false );
 		}

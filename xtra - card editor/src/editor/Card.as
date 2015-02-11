@@ -208,7 +208,6 @@ package editor
 			if ( context.selectedCard == this )
 			{
 				context.selectedCard = null;
-				context.cardThing.saveDataTo( this );
 				context.cardThing.visible = false;
 			}
 			
