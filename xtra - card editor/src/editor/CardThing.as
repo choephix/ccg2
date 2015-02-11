@@ -26,7 +26,7 @@ package editor
 		private var iType:OButton;
 		
 		private var tagsQuad:Quad;
-		private var tagsInput:TextArea;
+		private var tTags:TextArea;
 		private var bOk:OButton;
 		
 		private var _faction:Faction;
@@ -105,14 +105,14 @@ package editor
 			tagsQuad.y = H;
 			addChild( tagsQuad );
 			
-			tagsInput = new TextArea();
-			tagsInput.textEditorProperties.textFormat = new TextFormat( "Lucida Console", 16, 0xFFFFFF );
-			tagsInput.x = tagsQuad.x;
-			tagsInput.y = tagsQuad.y;
-			tagsInput.width = tagsQuad.width;
-			tagsInput.height = tagsQuad.height;
-			addChild( tagsInput );
-			tagsInput.validate();
+			tTags = new TextArea();
+			tTags.textEditorProperties.textFormat = new TextFormat( "Lucida Console", 16, 0xFFFFFF );
+			tTags.x = tagsQuad.x;
+			tTags.y = tagsQuad.y;
+			tTags.width = tagsQuad.width;
+			tTags.height = tagsQuad.height;
+			addChild( tTags );
+			tTags.validate();
 			
 			bOk = new OButton( "OK", onButtonOk );
 			bOk.x = W + 20;
@@ -149,7 +149,7 @@ package editor
 			tTitle.text = source.data.name;
 			tDescr.text = source.data.description;
 			tExtra.text = source.data.power.toString();
-			tagsInput.text = source.data.tags.join( "\n" );
+			tTags.text = source.data.tags.join( "\n" );
 			
 			setType( source.data.type );
 			setFaction( source.data.faction );
@@ -162,7 +162,7 @@ package editor
 			c.data.name = tTitle.text;
 			c.data.description = tDescr.text;
 			c.data.power = int( tExtra.text );
-			c.data.tags = tagsInput.text.split( "\n" );
+			c.data.tags = tTags.text.split( "\n" );
 			c.onDataChange();
 		}
 		
