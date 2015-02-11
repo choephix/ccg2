@@ -2,6 +2,7 @@ package
 {
 	import chimichanga.common.display.Sprite;
 	import editor.Space;
+	import feathers.core.FocusManager;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.Image;
@@ -78,7 +79,6 @@ package
 		
 		private function startLoadingAssets():void
 		{
-			
 			loadingText = new TextField( stage.stageWidth, stage.stageHeight, "...", "Arial Black", 80, 0x304050, true );
 			addChild( loadingText );
 			
@@ -109,6 +109,8 @@ package
 		
 		private function onDataLoaded( data:String ):void
 		{
+			FocusManager.setEnabledForStage( this.stage, true );
+			
 			space = new Space();
 			addChild( space );
 			space.initialize( data );

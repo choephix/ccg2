@@ -47,7 +47,7 @@ package editor
 			Card.txtfTitle.align = "center";
 			Card.txtfDescr.align = "center";
 			
-			
+			//
 			
 			tTitle = new TextArea();
 			tTitle.textEditorProperties.textFormat = Card.txtfTitle;
@@ -74,8 +74,14 @@ package editor
 			tExtra.height = 50;
 			tExtra.x = 0;
 			tExtra.y = G.CARD_H - 40;
+			tExtra.maxChars = 2;
+			tExtra.restrict = "0-9";
 			addChild( tExtra );
 			tExtra.validate();
+			
+			tTitle.nextTabFocus = tDescr;
+			tDescr.nextTabFocus = tExtra;
+			tExtra.nextTabFocus = tTitle;
 			
 			iFaction = new OButton( "", onButtonChangeFaction );
 			iFaction.x = G.CARD_W - PADDING;
@@ -91,7 +97,7 @@ package editor
 			iType.scaleY = .5;
 			addChild( iType );
 			
-			
+			//
 			
 			tagsQuad = new Quad( W, 100, 0x0 );
 			tagsQuad.alpha = .60;
