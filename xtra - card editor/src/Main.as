@@ -84,10 +84,12 @@
 		
 		private function onRightClick( e:MouseEvent ):void
 		{
+			App.input.dispatchEventWith( InputEvents.RIGHT_CLICK, false, e );
 		}
 		
 		private function onMiddleClick( e:MouseEvent ):void
 		{
+			App.input.dispatchEventWith( InputEvents.MIDDLE_CLICK, false, e );
 		}
 		
 		private function onWheel( e:MouseEvent ):void

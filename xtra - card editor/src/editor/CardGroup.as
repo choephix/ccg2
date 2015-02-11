@@ -50,6 +50,7 @@ package editor
 		public var tformContracted:CardGroupTransform;
 		public var tformMaximized:CardGroupTransform;
 		public var tformCurrent:CardGroupTransform;
+		private var _isExpanded:Boolean;
 		
 		private static var helperPoint:Point = new Point();
 		
@@ -273,12 +274,26 @@ package editor
 					return;
 				}
 				
+				t = e.getTouch( titlePad, TouchPhase.MOVED );
+				
+				if ( t != null )
+				{
+					setExpanded( true );
+					t.getLocation( parent, helperPoint );
+					x = helperPoint.x - .5 * tformExpanded.width;
+					y = helperPoint.y - .5 * TITLE_H;
+					tformExpanded.x = x;
+					tformExpanded.y = y;
+					return;
+				}
+				
 				t = e.getTouch( bg, TouchPhase.MOVED );
 					
 				if ( t != null )
 				{
 					t.getMovement( parent, helperPoint );
 					setCardsScroll( _cardsScroll - 4 * helperPoint.y );
+					return;
 				}
 				
 			}
@@ -289,7 +304,7 @@ package editor
 				
 				if ( t != null && t.tapCount > 1 )
 				{
-					setExpanded( true );
+					setMaximized( true );
 					return;
 				}
 				
@@ -460,14 +475,14 @@ package editor
 			_cardsScroll = value;
 		}
 		
-		private function setExpanded( value:Boolean ):void 
+		public function setExpanded( value:Boolean ):void 
 		{
 			setMaximized( false );
 			tformCurrent = value ? tformExpanded : tformContracted;
 			arrange();
 		}
 		
-		private function setMaximized( value:Boolean ):void 
+		public function setMaximized( value:Boolean ):void 
 		{
 			tformCurrent = value ? tformMaximized : tformExpanded;
 			arrange();
@@ -480,6 +495,21 @@ package editor
 		}
 		
 		//
+		
+		public function get isExpanded():Boolean 
+		{
+			return tformCurrent == tformExpanded;
+		}
+		
+		public function get isContracted():Boolean 
+		{
+			return tformCurrent == tformContracted;
+		}
+		
+		public function get isMaximized():Boolean 
+		{
+			return tformCurrent == tformMaximized;
+		}
 		
 		override public function get hasVisibleArea():Boolean
 		{

@@ -94,8 +94,6 @@ package
 		
 		private function onLoadingAppComplete():void
 		{
-			stage.addEventListener( KeyboardEvent.KEY_DOWN, onkey );
-			
 			loadingText.removeFromParent( true );
 			loadingText = null;
 			
@@ -112,8 +110,8 @@ package
 		private function onDataLoaded( data:String ):void
 		{
 			space = new Space();
-			space.initialize( data );
 			addChild( space );
+			space.initialize( data );
 		}
 		
 		private function onkey( e:KeyboardEvent ):void

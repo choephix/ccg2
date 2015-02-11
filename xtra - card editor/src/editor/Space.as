@@ -1,10 +1,11 @@
 package editor 
 
 {
-	import adobe.utils.CustomActions;
 	import chimichanga.common.display.Sprite;
 	import flash.ui.Keyboard;
 	import other.EditorEvents;
+	import other.InputEvents;
+	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	import starling.text.TextField;
 	import ui.StringInput;
@@ -31,6 +32,9 @@ package editor
 			
 			// PREP
 			
+			stage.addEventListener( KeyboardEvent.KEY_DOWN, onKeyDown );
+			App.input.addEventListener( InputEvents.MIDDLE_CLICK, onMiddleClick );
+			
 			viewLabel = new TextField( 200, 200, "0", "Impact", 120, 0x909090, true );
 			viewLabel.alignPivot();
 			viewLabel.x = .50 * width;
@@ -43,9 +47,6 @@ package editor
 			context.cardThing.space = this;
 			context.cardThing.visible = false;
 			addChild( context.cardThing );
-			
-			
-			
 			
 			// PARSE DATA
 			
@@ -173,9 +174,20 @@ package editor
 		public function getCardWithId( id:int ):Card
 		{ return cards[ id ] }
 		
-		// HANDLERS
+		// INPUT HANDLERS
 		
-		public function onKeyDown(e:KeyboardEvent):void 
+		private function onMiddleClick( e:Event ):void 
+		{
+			if ( context.focusedGroup )
+				context.focusedGroup.setExpanded( context.focusedGroup.isContracted );
+				
+				//if ( context.focusedGroup.isContracted )
+					//context.focusedGroup.setMaximized( true );
+				//else
+					//context.focusedGroup.setExpanded( false );
+		}
+		
+		public function onKeyDown( e:KeyboardEvent ):void 
 		{
 			if ( e.ctrlKey )
 			{
