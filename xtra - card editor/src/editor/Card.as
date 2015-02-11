@@ -210,8 +210,6 @@ package editor
 				context.selectedCard = null;
 				context.cardThing.visible = false;
 			}
-			
-			trace( this, _selected );
 		}
 		
 		public function hasTag( tag:String ):Boolean
