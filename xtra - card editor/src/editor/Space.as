@@ -204,22 +204,23 @@ package editor
 				else
 				// ARRANGE VIEW
 				if ( e.keyCode == Keyboard.SPACE )
-				{
 					context.currentView.arrangeGroups();
-				}
 				else
+				// GROUP PURGE
 				if ( e.keyCode == Keyboard.X )
 				{
 					if ( g && !g.locked )
 						g.purgeCards();
 				}
 				else
+				// GROUP RENAME
 				if ( e.keyCode == Keyboard.R )
 				{
 					if ( g && !g.locked )
 						StringInput.generate( stage, g.setName );
 				}
 				else
+				// GROUP ADD BY TEXT
 				if ( e.keyCode == Keyboard.F )
 				{
 					if ( g && !g.locked )
@@ -227,12 +228,14 @@ package editor
 					
 					function fFindByText( txt:String ):void
 					{
+						if ( txt == null || txt == "" ) return;
 						for ( var i:int = 0; i < cards.length; i++ ) 
 							if ( cards[ i ].data.hasText( txt.toLowerCase() ) )
 								g.addCard( cards[ i ], 0 );
 					}
 				}
 				else
+				// GROUP ADD BY TAG
 				if ( e.keyCode == Keyboard.T )
 				{
 					if ( g && !g.locked )
@@ -240,6 +243,7 @@ package editor
 					
 					function fFindByTag( tag:String ):void
 					{
+						if ( tag == null || tag == "" ) return;
 						for ( var i:int = 0; i < cards.length; i++ ) 
 							if ( cards[ i ].data.hasTag( tag ) )
 								g.addCard( cards[ i ], 0 );
