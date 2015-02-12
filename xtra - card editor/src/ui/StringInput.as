@@ -94,9 +94,7 @@ package ui
 			}
 			else
 			if ( e.keyCode == Keyboard.ESCAPE )
-			{
 				animateOut();
-			}
 		}
 		
 		//

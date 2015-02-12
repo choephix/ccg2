@@ -194,7 +194,11 @@ package editor
 			if ( value )
 			{
 				if ( context.selectedCard )
+				{
+					context.cardThing.saveDataTo( context.selectedCard );
 					context.selectedCard.setSelected( false );
+				}
+				
 				context.selectedCard = this;
 				
 				helperPoint.setTo( .5 * G.CARD_W, .5 * G.CARD_H );

@@ -4,6 +4,7 @@ package
 	import editor.Space;
 	import feathers.core.FocusManager;
 	import other.Input;
+	import starling.animation.IAnimatable;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.Image;
@@ -23,12 +24,13 @@ package
 	 * ...
 	 * @author choephix
 	 */
-	public class StarlingMain extends Sprite
+	public class StarlingMain extends Sprite implements IAnimatable
 	{
 		private var loadingText:TextField;
 		private var bg:Image;
 		
 		private var space:Space;
+		private var barrier:Image;
 		
 		public function StarlingMain()
 		{
@@ -52,6 +54,12 @@ package
 		{
 			bg.width = stage.stageWidth;
 			bg.height = stage.stageHeight;
+			
+			if ( barrier )
+			{
+				barrier.width = bg.width;
+				barrier.height = bg.height;
+			}
 			
 			if ( space )
 				space.onResize();
@@ -111,6 +119,22 @@ package
 			space = new Space();
 			addChild( space );
 			space.initialize( data );
+			
+			barrier = App.assets.generateImage( "bg", false, false ); 
+			barrier.alpha = .9;
+			barrier.color = 0x404040;
+			addChild( barrier );
+			barrier.visible = false;
+			
+			onResize( null );
+			
+			Starling.juggler.add( this );
+		}
+		
+		public function advanceTime(time:Number):void 
+		{
+			if ( barrier )
+				barrier.visible = App.remote.busy;
 		}
 	}
 }

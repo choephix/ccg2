@@ -65,5 +65,8 @@ package editor
 			
 			trace( "\nSENT REMOTE DATA:\n" + vars[ "data" ] );
 		}
+		
+		public function get busy():Boolean 
+		{ return _busy }
 	}
 }

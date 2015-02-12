@@ -157,17 +157,9 @@ package editor
 			{
 				d = new CardData();
 				d.id = cards.length;
-				d.name = int( Math.random() * int.MAX_VALUE ).toString( 36 );
-				d.type = Math.random() * 4;
-				var i:int = Math.random() * 5;
-				switch( i )
-				{
-					case 0: d.faction = Faction.SCIENCE; break;
-					case 1: d.faction = Faction.NATURE; break;
-					case 2: d.faction = Faction.MAGIC; break;
-					default: d.faction = null;
-				}
-				d.power = Math.random() * 10.0;
+				d.slug = "nameless";
+				d.name = "Nameless";
+				d.type = CardType.CREATURE_NORMAL;
 			}
 			
 			var c:Card = new Card();
@@ -189,6 +181,22 @@ package editor
 			return c;
 		}
 		
+		public function randomizeCardData( d:CardData = null ):CardData
+		{
+			d.name = int( Math.random() * int.MAX_VALUE ).toString( 36 );
+			d.type = Math.random() * 4;
+			var i:int = Math.random() * 5;
+			switch( i )
+			{
+				case 0: d.faction = Faction.SCIENCE; break;
+				case 1: d.faction = Faction.NATURE; break;
+				case 2: d.faction = Faction.MAGIC; break;
+				default: d.faction = null;
+			}
+			d.power = Math.random() * 10.0;
+			return d;
+		}
+		
 		// INPUT HANDLERS
 		
 		private function onMiddleClick( e:Event ):void 
@@ -204,7 +212,7 @@ package editor
 		
 		public function onKeyDown( e:KeyboardEvent ):void 
 		{
-			if ( e.ctrlKey )
+			if ( e.ctrlKey || e.altKey )
 			{
 				var g:CardGroup = context.focusedGroup;
 				
@@ -263,9 +271,8 @@ package editor
 				// NEW CARD
 				if ( e.keyCode == Keyboard.A )
 				{
-					var c:Card = generateNewCard();
 					if ( g )
-						g.addCard( c, -1, true );
+						g.addCard( generateNewCard(), -1, true );
 				}
 				else
 				// NEW GROUP
