@@ -36,8 +36,6 @@ package editor
 			App.input.addEventListener( InputEvents.MIDDLE_CLICK, onMiddleClick );
 			
 			viewLabel = new TextField( 100, 100, "..", "Impact", 80, 0x909090, true );
-			viewLabel.x = width - viewLabel.width;
-			viewLabel.y = 0;
 			addChild( viewLabel );
 			
 			for ( i = 0; i < views.length; i++ )
@@ -90,7 +88,14 @@ package editor
 			}
 			
 			///
+			onResize();
 			setView( 0 );
+		}
+		
+		public function onResize():void 
+		{
+			viewLabel.x = width - viewLabel.width;
+			viewLabel.y = 0;
 		}
 		
 		// VIEWS

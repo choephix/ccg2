@@ -51,6 +51,9 @@ package
 		{
 			bg.width = stage.stageWidth;
 			bg.height = stage.stageHeight;
+			
+			if ( space )
+				space.onResize();
 		}
 		
 		private function onTouch( e:TouchEvent ):void
