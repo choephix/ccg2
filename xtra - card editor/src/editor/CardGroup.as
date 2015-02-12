@@ -81,7 +81,7 @@ package editor
 			addChild( titleContainer );
 			
 			titlePad = new Quad( 100, TITLE_H, 0x589CD3 );
-			titlePad.alpha = .25;
+			titlePad.alpha = .0;
 			titleContainer.addChild( titlePad );
 			
 			titleLabel = new TextField( titlePad.width, titlePad.height, this.name, "Arial Black", 12, 0xFFFFFF, true );

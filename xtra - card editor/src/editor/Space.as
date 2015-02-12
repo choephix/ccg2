@@ -35,10 +35,9 @@ package editor
 			stage.addEventListener( KeyboardEvent.KEY_DOWN, onKeyDown );
 			App.input.addEventListener( InputEvents.MIDDLE_CLICK, onMiddleClick );
 			
-			viewLabel = new TextField( 200, 200, "0", "Impact", 120, 0x909090, true );
-			viewLabel.alignPivot();
-			viewLabel.x = .50 * width;
-			viewLabel.y = .13 * height;
+			viewLabel = new TextField( 100, 100, "..", "Impact", 80, 0x909090, true );
+			viewLabel.x = width - viewLabel.width;
+			viewLabel.y = 0;
 			addChild( viewLabel );
 			
 			for ( i = 0; i < views.length; i++ )
@@ -197,6 +196,12 @@ package editor
 				// CHANGE VIEW
 				if ( e.keyCode >= Keyboard.NUMBER_1 && e.keyCode <= Keyboard.NUMBER_9 )
 					setView( e.keyCode - Keyboard.NUMBER_1 );
+				else
+				// ARRANGE VIEW
+				if ( e.keyCode == Keyboard.SPACE )
+				{
+					context.currentView.arrangeGroups();
+				}
 				else
 				if ( e.keyCode == Keyboard.X )
 				{
