@@ -6,6 +6,7 @@ package editor
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import other.EditorEvents;
+	import other.Input;
 	import other.InputEvents;
 	import starling.display.Quad;
 	import starling.events.EnterFrameEvent;
@@ -138,8 +139,18 @@ package editor
 		
 		private function onCardDragStart( e:Event ):void 
 		{
-			if ( cardsParent.contains( e.data as Card ) )
-				removeCard( e.data as Card, true )
+			var c:Card = e.data as Card;
+			
+			if ( !cardsParent.contains( c ) )
+				return;
+			
+			if ( Input.ctrl ) // LEAVE A COPY
+				addCard( space.generateCardCopy( c ), cardsParent.numChildren - 1 -cardsParent.getChildIndex( c ), true );
+			
+			removeCard( c, true );
+			
+			if ( Input.ctrl )
+				arrange();
 		}
 		
 		private function onCardDragStop( e:Event ):void 
@@ -171,6 +182,7 @@ package editor
 			}
 			
 			addCard( c, index, true );
+			
 			arrange();
 			updateRegisteredCards();
 		}

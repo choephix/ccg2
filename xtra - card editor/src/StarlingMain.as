@@ -3,6 +3,7 @@ package
 	import chimichanga.common.display.Sprite;
 	import editor.Space;
 	import feathers.core.FocusManager;
+	import other.Input;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.Image;
@@ -64,10 +65,6 @@ package
 				return;
 			
 			t.getLocation( stage, App.mouseXY );
-		
-			//if ( t.phase == TouchPhase.ENDED )
-			//if ( t.tapCount == 2 ) 
-			//App.toggleFullScreen();
 		}
 		
 		private function enqueueAssets():void
@@ -109,16 +106,11 @@ package
 		private function onDataLoaded( data:String ):void
 		{
 			FocusManager.setEnabledForStage( this.stage, true );
+			Input.initialize();
 			
 			space = new Space();
 			addChild( space );
 			space.initialize( data );
-		}
-		
-		private function onkey( e:KeyboardEvent ):void
-		{
-			if ( space )
-				space.onKeyDown( e );
 		}
 	}
 }

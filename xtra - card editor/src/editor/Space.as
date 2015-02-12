@@ -179,6 +179,16 @@ package editor
 			return c;
 		}
 		
+		public function generateCardCopy( c:Card ):Card 
+		{
+			var d:CardData = c.data.clone();
+			var c:Card = new Card();
+			c.initialize( d );
+			addChild( c );
+			cards.push( c );
+			return c;
+		}
+		
 		// INPUT HANDLERS
 		
 		private function onMiddleClick( e:Event ):void 

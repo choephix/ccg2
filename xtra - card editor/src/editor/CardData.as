@@ -26,5 +26,19 @@ package editor
 			if ( description.toLowerCase().search( txt ) > -1 ) return true;
 			return false;
 		}
+		
+		public function clone():CardData 
+		{
+			var r:CardData = new CardData();
+			r.id = id;
+			r.name = name;
+			r.slug = slug;
+			r.description = description;
+			r.power = power;
+			r.type = type;
+			r.faction = faction;
+			r.tags = tags;
+			return r;
+		}
 	}
 }
