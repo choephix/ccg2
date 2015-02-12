@@ -121,7 +121,7 @@ package
 			space.initialize( data );
 			
 			barrier = App.assets.generateImage( "bg", false, false ); 
-			barrier.alpha = .9;
+			barrier.alpha = .6;
 			barrier.color = 0x404040;
 			addChild( barrier );
 			barrier.visible = false;

@@ -3,6 +3,7 @@ package editor
 	import chimichanga.common.display.Sprite;
 	import feathers.controls.TextArea;
 	import flash.text.TextFormat;
+	import starling.core.Starling;
 	import starling.display.Quad;
 	import ui.OButton;
 	
@@ -19,11 +20,11 @@ package editor
 		
 		private var pad:Quad;
 		
-		private var tTitle:TextArea;
-		private var tDescr:TextArea;
-		private var tExtra:TextArea;
-		private var iFaction:OButton;
-		private var iType:OButton;
+		public var tTitle:TextArea;
+		public var tDescr:TextArea;
+		public var tExtra:TextArea;
+		public var iFaction:OButton;
+		public var iType:OButton;
 		
 		private var tagsQuad:Quad;
 		private var tTags:TextArea;
@@ -127,6 +128,12 @@ package editor
 			bX.scaleX = .33;
 			bX.scaleY = .33;
 			addChild( bX );
+		}
+		
+		public function animateIn():void
+		{
+			touchable = false;
+			Starling.juggler.tween( this, .100, { alpha : 1.0, onComplete :  } );
 		}
 		
 		private function onButtonChangeType():void 

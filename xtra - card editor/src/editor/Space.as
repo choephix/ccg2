@@ -74,7 +74,7 @@ package editor
 				for ( i = 0; i < data.views[ j ].groups.length; i++ ) 
 				{
 					o = data.views[ j ].groups[ i ];
-					g = generateNewGroup( name );
+					g = generateNewGroup( o.name );
 					views[ j ].addGroup( g );
 					
 					g.registeredCards = o.cards;

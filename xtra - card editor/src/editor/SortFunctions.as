@@ -12,7 +12,7 @@ package editor
 			if ( a.data.type == b.data.type )
 				return byPower( a, b );
 			
-			return a.data.type - b.data.type;
+			return CardType.toInt( b.data.type ) - CardType.toInt( a.data.type );
 		}
 		
 		public static function byFaction( a:Card, b:Card ):int

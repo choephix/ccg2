@@ -21,9 +21,9 @@ package editor
 		
 		public static function toColor( f:Faction ):uint
 		{
-			if ( f == SCIENCE ) return 0x0080FF;
-			if ( f == NATURE ) return 0x80FF00;
-			if ( f == MAGIC ) return 0xFF0080;
+			if ( f == SCIENCE ) return 0x0060F0;
+			if ( f == NATURE ) return 0x60F000;
+			if ( f == MAGIC ) return 0xF00060;
 			return 0x999999;
 		}
 		

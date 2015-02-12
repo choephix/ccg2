@@ -97,9 +97,12 @@ package editor
 			tExtra.touchable = false;
 			addChild( tExtra );
 			
-			iFaction = new Quad( 15, tTitle.height, 0x0, true );
+			iFaction = new Quad( 5, tTitle.height, 0x0, true );
 			iFaction.x = G.CARD_W - iFaction.width;
 			iFaction.y = 0;
+			//iFaction = new Quad( G.CARD_W, 3, 0x0, true );
+			//iFaction.x = G.CARD_W - iFaction.width;
+			//iFaction.y = G.CARD_H - 6;
 			addChild( iFaction );
 			
 			addEventListener( EnterFrameEvent.ENTER_FRAME, advanceTime );
@@ -128,7 +131,9 @@ package editor
 			
 			type = data.type;
 			
-			iFaction.color = Faction.toColor( data.faction );
+			iFaction.visible = data.faction != null;
+			if ( iFaction.visible )
+				iFaction.color = Faction.toColor( data.faction );
 		}
 		
 		private function onTouch(e:TouchEvent):void 
@@ -150,6 +155,22 @@ package editor
 				if ( _isOnTop && !_selected && t != null && t.phase == TouchPhase.ENDED )
 				{
 					setSelected( true );
+					
+					t.getLocation( this, helperPoint );
+					if ( tTitle.getBounds( this ).containsPoint( helperPoint ) )
+					{
+						context.cardThing.tTitle.selectRange( 0 );
+						context.cardThing.tTitle.hideFocus();
+						trace( "FOCUS ON TITLE" );
+						context.cardThing.tTitle.setFocus();
+						context.cardThing.tTitle.selectRange( 0, context.cardThing.tTitle.text.length );
+					}
+					//else
+					//if ( t.isTouching( tDescr ) )
+						//context.cardThing.tDescr.setFocus();
+					//else
+					//if ( t.isTouching( tExtra ) )
+						//context.cardThing.tExtra.setFocus();
 				}
 				return;
 			}
