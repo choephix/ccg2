@@ -25,7 +25,7 @@ package editor
 		public function addGroup( g:CardGroup ):void
 		{
 			g.view = this;
-			g.tformContracted.y = .5 * _space.height - 200;
+			g.tformContracted.y = 100;
 			g.tformContracted.x = 40 + groups.length * 160;
 			addChild( g );
 			groups.push( g );
@@ -36,6 +36,27 @@ package editor
 			g.view = null;
 			removeChild( g );
 			groups.splice( groups.indexOf( g ), 1 );
+		}
+		
+		public function arrangeGroups():void 
+		{
+			var g:CardGroup;
+			var x:Number = 40;
+			var y:Number = 40;
+			for ( var i:int = 0; i < groups.length; i++ ) 
+			{
+				g = groups[ i ];
+				
+				if ( x > _space.width - 200 )
+				{
+					x = 40;
+					y += 300;
+				}
+				g.tformContracted.x = x;
+				g.tformContracted.y = y;
+				
+				x += 160;
+			}
 		}
 		
 		public function get active():Boolean
