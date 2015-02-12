@@ -69,12 +69,8 @@ package
 		
 		private function enqueueAssets():void
 		{
-			
-			CONFIG::air
-			{
-				App.assets.enqueue( "assets/" );
-				return;
-			}
+			App.assets.enqueue( "assets/bg.jpg" );
+			App.assets.enqueue( "assets/b.png" );
 		}
 		
 		private function startLoadingAssets():void
