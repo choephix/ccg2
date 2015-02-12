@@ -64,7 +64,11 @@ package editor
 						g = groups[ gi ];
 				g.addCard( c );
 			}
+			for ( gi = 1; gi < groups.length; gi++ )
+				groups[ gi ].sortCards( sortF );
 			
+			function sortF( a:Card, b:Card ):int
+			{ return groups[ gi ].registeredCards.indexOf( a.data.id ) - groups[ gi ].registeredCards.indexOf( b.data.id ) }
 		}
 		
 	}

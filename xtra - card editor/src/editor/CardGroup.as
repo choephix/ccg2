@@ -172,6 +172,7 @@ package editor
 			
 			addCard( c, index, true );
 			arrange();
+			updateRegisteredCards();
 		}
 		
 		private function advanceTime( e:EnterFrameEvent ):void 
@@ -381,6 +382,9 @@ package editor
 			if ( register )
 				registerCard( c );
 			
+			if ( index >= countCards )
+				index = countCards;
+				
 			if ( index > -1 )
 				cardsParent.addChildAt( c, countCards-index );
 			else
@@ -403,6 +407,14 @@ package editor
 			space.addChild( c );
 		}
 		
+		public function purgeCards():void
+		{
+			if ( locked )
+				return;
+			while ( countCards > 0 )
+				space.handleReleasedCard( getCardAt( 0 ) );
+		}
+		
 		public function getCardAt( index:int ):Card
 		{
 			return cardsParent.getChildAt( index ) as Card;
@@ -412,6 +424,12 @@ package editor
 		{
 			cardsParent.sortChildren( f );
 			arrange();
+			updateRegisteredCards();
+		}
+		
+		public function get countCards():int
+		{
+			return cardsParent.numChildren;
 		}
 		
 		private function arrange():void 
@@ -452,10 +470,7 @@ package editor
 			tformContracted.height = 3 * countCards + G.CARD_H + CARD_SPACING + CARD_SPACING;
 		}
 		
-		public function get countCards():int
-		{
-			return cardsParent.numChildren;
-		}
+		// CARD REGISTERING
 		
 		private function registerCard( c:Card ):void
 		{
@@ -465,6 +480,13 @@ package editor
 		private function unregisterCard( c:Card ):void
 		{
 			registeredCards.splice( registeredCards.indexOf( c.data.id ), 1 );
+		}
+		
+		public function updateRegisteredCards():void
+		{
+			registeredCards.length = 0;
+			for ( var i:int = 0; i < countCards; i++ ) 
+				registeredCards.push( getCardAt( i ).data.id );
 		}
 		
 		//

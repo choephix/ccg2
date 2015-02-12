@@ -26,7 +26,7 @@ package editor
 		{
 			_busy = false;
 			
-			trace( loader.data );
+			trace( "\nRECEIVED REMOTE DATA:\n" + loader.data );
 			
 			if ( onComplete != null ) 
 				onComplete( loader.data );
@@ -62,6 +62,8 @@ package editor
 			vars[ "data" ] = space.toJson();
 			request.data = vars;
 			loader.load( request );
+			
+			trace( "\nSENT REMOTE DATA:\n" + vars[ "data" ] );
 		}
 	}
 }

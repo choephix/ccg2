@@ -7,10 +7,10 @@ package editor
 	public class CardGroupTransform 
 	{
 		
-		public var x:Number = .0;
-		public var y:Number = .0;
-		public var width:Number = .0;
-		public var height:Number = .0;
+		public var x:int = 0;
+		public var y:int = 0;
+		public var width:int = 0;
+		public var height:int = 0;
 		
 	}
 

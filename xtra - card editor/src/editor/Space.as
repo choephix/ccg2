@@ -134,12 +134,15 @@ package editor
 		
 		public function deleteGroup( g:CardGroup ):void 
 		{
-			while ( g.countCards > 0 )
-				context.currentView.groups[ 0 ].addCard( g.getCardAt( 0 ), -1, true );
-			
+			g.purgeCards();
 			g.view.removeGroup( g );
 			g.space = null;
 			g.removeFromParent( true );
+		}
+		
+		public function handleReleasedCard( c:Card ):void 
+		{
+			context.currentView.groups[ 0 ].addCard( c );
 		}
 		
 		// CARDS
@@ -172,9 +175,6 @@ package editor
 			return c;
 		}
 		
-		public function getCardWithId( id:int ):Card
-		{ return cards[ id ] }
-		
 		// INPUT HANDLERS
 		
 		private function onMiddleClick( e:Event ):void 
@@ -192,53 +192,87 @@ package editor
 		{
 			if ( e.ctrlKey )
 			{
-				if ( e.keyCode == Keyboard.SPACE )
-				{
-					App.remote.save( this );
-				}
-				else
+				var g:CardGroup = context.focusedGroup;
+				
+				// CHANGE VIEW
 				if ( e.keyCode >= Keyboard.NUMBER_1 && e.keyCode <= Keyboard.NUMBER_9 )
 					setView( e.keyCode - Keyboard.NUMBER_1 );
 				else
-				if ( e.keyCode == Keyboard.Z )
+				if ( e.keyCode == Keyboard.X )
 				{
-					App.remote.load( null );
+					if ( g && !g.locked )
+						g.purgeCards();
 				}
 				else
+				if ( e.keyCode == Keyboard.R )
+				{
+					if ( g && !g.locked )
+						StringInput.generate( stage, g.setName );
+				}
+				else
+				if ( e.keyCode == Keyboard.F )
+				{
+					if ( g && !g.locked )
+						StringInput.generate( stage, fFindByText );
+					
+					function fFindByText( txt:String ):void
+					{
+						for ( var i:int = 0; i < cards.length; i++ ) 
+							if ( cards[ i ].data.hasText( txt.toLowerCase() ) )
+								g.addCard( cards[ i ], 0 );
+					}
+				}
+				else
+				if ( e.keyCode == Keyboard.T )
+				{
+					if ( g && !g.locked )
+						StringInput.generate( stage, fFindByText );
+					
+					function fFindByTag( tag:String ):void
+					{
+						for ( var i:int = 0; i < cards.length; i++ ) 
+							if ( cards[ i ].data.hasTag( tag ) )
+								g.addCard( cards[ i ], 0 );
+					}
+				}
+				else
+				// NEW CARD
 				if ( e.keyCode == Keyboard.A )
 				{
 					var c:Card = generateNewCard();
-					if ( context.focusedGroup )
-						context.focusedGroup.addCard( c, -1, true );
+					if ( g )
+						g.addCard( c, -1, true );
 				}
 				else
-				if ( e.keyCode == Keyboard.N )
-				{
-					if ( context.focusedGroup && !context.focusedGroup.locked )
-						StringInput.generate( stage, context.focusedGroup.setName );
-				}
-				else
+				// NEW GROUP
 				if ( e.keyCode == Keyboard.G )
 				{
 					context.currentView.addGroup( generateNewGroup() );
 				}
 				else
+				// SORTING
 				if ( e.keyCode == Keyboard.Q )
 				{
-					if ( context.focusedGroup )
-						context.focusedGroup.sortCards( SortFunctions.byFaction );
+					if ( g )
+						g.sortCards( SortFunctions.byFaction );
 				}
 				else
 				if ( e.keyCode == Keyboard.W )
 				{
-					if ( context.focusedGroup )
-						context.focusedGroup.sortCards( SortFunctions.byType );
+					if ( g )
+						g.sortCards( SortFunctions.byType );
 				}
 				else
 				if ( e.keyCode == Keyboard.E )
 				{
-					if ( context.focusedGroup )
-						context.focusedGroup.sortCards( SortFunctions.byPower );
+					if ( g )
+						g.sortCards( SortFunctions.byPower );
+				}
+				else
+				// // // SAVE CHANGES // // //
+				if ( e.keyCode == Keyboard.S )
+				{
+					App.remote.save( this );
 				}
 			}
 		}
