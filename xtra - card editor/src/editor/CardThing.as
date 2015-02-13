@@ -1,7 +1,7 @@
 package editor
 {
-	import chimichanga.common.display.Sprite;
 	import feathers.controls.TextArea;
+	import flash.geom.Point;
 	import flash.text.TextFormat;
 	import starling.core.Starling;
 	import starling.display.Quad;
@@ -53,9 +53,9 @@ package editor
 			
 			tTitle = new TextArea();
 			tTitle.textEditorProperties.textFormat = Card.txtfTitle;
-			tTitle.width = G.CARD_W * 2.0;
+			tTitle.width = G.CARD_W * 1.5;
 			tTitle.height = 22;
-			tTitle.x = -G.CARD_W * .5;
+			tTitle.x = -G.CARD_W * .25;
 			tTitle.y = 0;
 			addChild( tTitle );
 			tTitle.validate();
@@ -133,7 +133,30 @@ package editor
 		public function animateIn():void
 		{
 			touchable = false;
-			Starling.juggler.tween( this, .100, { alpha : 1.0, onComplete :  } );
+			
+			alpha = .0;
+			Starling.juggler.tween( this, .100, { alpha : 1.0, onComplete : f } );
+			
+			function f():void
+			{ touchable = true }
+		}
+		
+		public function setFocus( p:Point ):void
+		{
+			var o:TextArea;
+			if ( tTitle.getBounds( stage ).containsPoint( p ) )
+				o = tTitle;
+			else
+			if ( tDescr.getBounds( stage ).containsPoint( p ) )
+				o = tDescr;
+			else
+			if ( tExtra.getBounds( stage ).containsPoint( p ) )
+				o = tExtra;
+			else
+				return;
+			
+			o.setFocus();
+			o.selectRange( 0, o.text.length );
 		}
 		
 		private function onButtonChangeType():void 
@@ -179,6 +202,8 @@ package editor
 		
 		public function saveDataTo( c:Card ):void
 		{
+			tDescr.text = tDescr.text.split( "\"" ).join( "" );
+			
 			c.data.type = _type;
 			c.data.faction = _faction;
 			c.data.name = tTitle.text;

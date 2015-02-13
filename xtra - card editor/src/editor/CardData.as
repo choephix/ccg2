@@ -27,7 +27,7 @@ package editor
 			return false;
 		}
 		
-		public function clone():CardData 
+		public function clone( id:int ):CardData 
 		{
 			var r:CardData = new CardData();
 			r.id = id;

@@ -1,7 +1,6 @@
 package editor
 {
 	import chimichanga.common.display.Sprite;
-	import chimichanga.debug.logging.error;
 	import editor.SpaceObject;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -486,19 +485,29 @@ package editor
 		
 		private function registerCard( c:Card ):void
 		{
+			if ( registeredCards.indexOf( c.data.id ) > -1 )
+				return;
 			registeredCards.push( c.data.id );
 		}
 		
 		private function unregisterCard( c:Card ):void
 		{
+			if ( registeredCards.indexOf( c.data.id ) == -1 )
+				return;
 			registeredCards.splice( registeredCards.indexOf( c.data.id ), 1 );
 		}
 		
 		public function updateRegisteredCards():void
 		{
 			registeredCards.length = 0;
+			
+			trace( "> > >" );
 			for ( var i:int = 0; i < countCards; i++ ) 
+			{
 				registeredCards.push( getCardAt( i ).data.id );
+				trace( getCardAt( i ).data.name );
+			}
+			trace( "< < <" );
 		}
 		
 		//

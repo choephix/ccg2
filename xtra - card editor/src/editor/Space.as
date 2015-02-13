@@ -16,6 +16,8 @@ package editor
 	 */
 	public class Space extends Sprite 
 	{
+		public var nextCardID:int = 1;
+		
 		public const events:EditorEvents = new EditorEvents();
 		
 		public const cards:Vector.<Card> = new Vector.<Card>();
@@ -50,6 +52,11 @@ package editor
 			var data:Object = JSON.parse( jsonData );
 			
 			var o:Object;
+			
+			if ( data.conf != undefined )
+			{
+				nextCardID = data.conf.nextCardID;
+			}
 			
 			var c:Card;
 			var cd:CardData;
@@ -156,11 +163,13 @@ package editor
 			if ( d == null )
 			{
 				d = new CardData();
-				d.id = cards.length;
+				d.id = nextCardID++;
 				d.slug = "nameless";
 				d.name = "Nameless";
 				d.type = CardType.CREATURE_NORMAL;
 			}
+			
+			//d.id = nextCardID++;
 			
 			var c:Card = new Card();
 			c.initialize( d );
@@ -173,7 +182,8 @@ package editor
 		
 		public function generateCardCopy( c:Card ):Card 
 		{
-			var d:CardData = c.data.clone();
+			var d:CardData = c.data.clone( nextCardID++ );
+			
 			var c:Card = new Card();
 			c.initialize( d );
 			addChild( c );
@@ -317,6 +327,15 @@ package editor
 			var o:Object;
 			var r:Object = { };
 			
+			// SETTINGS
+			
+			r.conf = 
+			{
+				nextCardID : nextCardID
+			};
+			
+			// CARDS
+			
 			r.cards = new Array();
 			
 			var c:Card;
@@ -334,6 +353,8 @@ package editor
 				o.tags = c.data.tags;
 				r.cards.push( o );
 			}
+			
+			// VIEWS & GROUPS
 			
 			r.views = new Array();
 			
@@ -361,6 +382,8 @@ package editor
 					r.views[ i ].groups.push( o );
 				}
 			}
+			
+			// done
 			
 			return JSON.stringify( r );
 		}

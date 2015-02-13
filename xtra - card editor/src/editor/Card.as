@@ -2,8 +2,6 @@ package editor
 {
 	import chimichanga.common.display.Sprite;
 	import editor.SpaceObject;
-	import feathers.controls.TextArea;
-	import feathers.controls.TextInput;
 	import flash.geom.Point;
 	import flash.text.TextFormat;
 	import other.EditorEvents;
@@ -155,22 +153,10 @@ package editor
 				if ( _isOnTop && !_selected && t != null && t.phase == TouchPhase.ENDED )
 				{
 					setSelected( true );
+					context.cardThing.animateIn();
 					
-					t.getLocation( this, helperPoint );
-					if ( tTitle.getBounds( this ).containsPoint( helperPoint ) )
-					{
-						context.cardThing.tTitle.selectRange( 0 );
-						context.cardThing.tTitle.hideFocus();
-						trace( "FOCUS ON TITLE" );
-						context.cardThing.tTitle.setFocus();
-						context.cardThing.tTitle.selectRange( 0, context.cardThing.tTitle.text.length );
-					}
-					//else
-					//if ( t.isTouching( tDescr ) )
-						//context.cardThing.tDescr.setFocus();
-					//else
-					//if ( t.isTouching( tExtra ) )
-						//context.cardThing.tExtra.setFocus();
+					t.getLocation( stage, helperPoint );
+					context.cardThing.setFocus( helperPoint );
 				}
 				return;
 			}

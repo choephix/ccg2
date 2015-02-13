@@ -25,7 +25,7 @@ package editor
 		public function addGroup( g:CardGroup ):void
 		{
 			g.view = this;
-			g.tformContracted.y = 100;
+			g.tformContracted.y = 40;
 			g.tformContracted.x = 40 + groups.length * 160;
 			addChild( g );
 			groups.push( g );
@@ -85,6 +85,8 @@ package editor
 						g = groups[ gi ];
 				g.addCard( c );
 			}
+			//for ( gi = 1; gi < groups.length; gi++ )
+				//groups[ gi ].updateRegisteredCards();
 			for ( gi = 1; gi < groups.length; gi++ )
 				groups[ gi ].sortCards( sortF );
 			
