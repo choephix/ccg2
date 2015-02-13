@@ -169,8 +169,6 @@ package editor
 				d.type = CardType.CREATURE_NORMAL;
 			}
 			
-			//d.id = nextCardID++;
-			
 			var c:Card = new Card();
 			c.initialize( d );
 			c.x = width * ( 0.25 + 0.50 * Math.random() );

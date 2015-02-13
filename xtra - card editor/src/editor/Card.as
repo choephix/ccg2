@@ -181,6 +181,10 @@ package editor
 			}
 			
 			border.alpha = lerp( border.alpha, _focused ? .99 : .3, G.DAMP1 );
+			
+			helperPoint.setTo( 0, 0 );
+			localToGlobal( helperPoint, helperPoint );
+			visible = helperPoint.y < stage.stageHeight && helperPoint.y > -G.CARD_H;
 		}
 		
 		private function setFocused( value:Boolean ):void 
