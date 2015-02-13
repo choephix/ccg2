@@ -5,6 +5,8 @@ package editor
 	import flash.ui.Keyboard;
 	import other.EditorEvents;
 	import other.InputEvents;
+	import starling.animation.DelayedCall;
+	import starling.core.Starling;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	import starling.text.TextField;
@@ -26,6 +28,7 @@ package editor
 		public var context:SpaceContext = new SpaceContext();
 		
 		private var viewLabel:TextField;
+		private var statLabel:TextField;
 		
 		public function initialize( jsonData:String ):void 
 		{
@@ -39,6 +42,15 @@ package editor
 			
 			viewLabel = new TextField( 100, 100, "..", "Impact", 80, 0x909090, true );
 			addChild( viewLabel );
+			
+			statLabel = new TextField( 500, 200, "..", "Consolas", 14, 0x909090, false );
+			statLabel.hAlign = "right";
+			statLabel.vAlign = "bottom";
+			addChild( statLabel );
+			
+			var dcall:DelayedCall = new DelayedCall( updateStats, 1.000 );
+			dcall.repeatCount = 0;
+			Starling.juggler.add( dcall );
 			
 			for ( i = 0; i < views.length; i++ )
 				views[ i ] = generateNewSpaceView( i );
@@ -103,6 +115,13 @@ package editor
 		{
 			viewLabel.x = width - viewLabel.width;
 			viewLabel.y = 0;
+			statLabel.x = width - statLabel.width - 10;
+			statLabel.y = height - statLabel.height - 10;
+		}
+		
+		public function updateStats():void
+		{
+			statLabel.text = "Cards: " + cards.length;
 		}
 		
 		// VIEWS
@@ -255,9 +274,10 @@ package editor
 					function fFindByText( txt:String ):void
 					{
 						if ( txt == null || txt == "" ) return;
-						for ( var i:int = 0; i < cards.length; i++ ) 
-							if ( cards[ i ].data.hasText( txt.toLowerCase() ) )
-								g.addCard( cards[ i ], 0 );
+						for ( var i:int = 0; i < cards.length; i++ )
+							if ( g.view.groups[0].containsCard( cards[ i ] ) )
+								if ( cards[ i ].data.hasText( txt.toLowerCase() ) )
+									g.addCard( cards[ i ], 0 );
 					}
 				}
 				else
@@ -271,8 +291,9 @@ package editor
 					{
 						if ( tag == null || tag == "" ) return;
 						for ( var i:int = 0; i < cards.length; i++ ) 
-							if ( cards[ i ].data.hasTag( tag ) )
-								g.addCard( cards[ i ], 0 );
+							if ( g.view.groups[0].containsCard( cards[ i ] ) )
+								if ( cards[ i ].data.hasTag( tag ) )
+									g.addCard( cards[ i ], 0 );
 					}
 				}
 				else

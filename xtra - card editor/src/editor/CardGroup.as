@@ -60,8 +60,7 @@ package editor
 			this.name = name != null ? name : "--";
 			//this.tag = tag;
 			
-			bg = new Quad( 100, 100, 0x505A60, true );
-			//bg.alpha = .0;
+			bg = new Quad( 100, 100, 0x585A5c, true );
 			addChild( bg );
 			
 			cardsContainer = new Sprite();
@@ -80,8 +79,8 @@ package editor
 			titleContainer.y = -TITLE_H;
 			addChild( titleContainer );
 			
-			titlePad = new Quad( 100, TITLE_H, 0x589CD3 );
-			titlePad.alpha = .0;
+			titlePad = new Quad( 100, TITLE_H, 0x000000 );
+			titlePad.alpha = .16;
 			titleContainer.addChild( titlePad );
 			
 			titleLabel = new TextField( titlePad.width, titlePad.height, this.name, "Arial Black", 12, 0xFFFFFF, true );
@@ -195,6 +194,8 @@ package editor
 			titleContainer.alpha = lerp( titleContainer.alpha, _focused ? 1.0 : .0, G.DAMP2 );
 			titleLabel.alpha = lerp( titleLabel.alpha, _focused ? 1.0 : .4, G.DAMP1 );
 			
+			b1.scaleX = lerp( b1.scaleX, tformCurrent == tformContracted ? .67 : 1.0, G.DAMP1 );
+			b1.scaleY = lerp( b1.scaleY, tformCurrent == tformContracted ? .67 : 1.0, G.DAMP3 );
 			b2.visible = tformCurrent != tformContracted;
 			b3.visible = tformCurrent == tformExpanded;
 			b4.visible = tformCurrent != tformContracted;
@@ -411,9 +412,12 @@ package editor
 		{
 			if ( unregister )
 				unregisterCard( c );
-				
-			c.x += x;
-			c.y += y;
+			
+			helperPoint.setTo( 0, 0 );
+			c.localToGlobal( helperPoint, helperPoint );
+			
+			c.x = helperPoint.x;
+			c.y = helperPoint.y;
 			c.isOnTop = true;
 			space.addChild( c );
 		}
@@ -443,10 +447,17 @@ package editor
 			return cardsParent.numChildren;
 		}
 		
+		public function containsCard( c:Card ):Boolean
+		{
+			return cardsParent.contains( c );
+		}
+		
 		private function arrange():void 
 		{
 			if ( countCards == 0 )
 				return;
+			
+			var spc:Number = countCards > 250 ? 1 : 2;
 			
 			var x:Number = .0;
 			var y:Number = .0;
@@ -457,7 +468,7 @@ package editor
 				
 				if ( tformCurrent == tformContracted )
 				{
-					y = 3 * ( countCards - i );
+					y = spc * ( countCards - i );
 					c.targetX = x;
 					c.targetY = y;
 					
@@ -478,7 +489,7 @@ package editor
 				}
 			}
 			
-			tformContracted.height = 3 * countCards + G.CARD_H + CARD_SPACING + CARD_SPACING;
+			tformContracted.height = spc * countCards + G.CARD_H + CARD_SPACING + CARD_SPACING;
 		}
 		
 		// CARD REGISTERING
