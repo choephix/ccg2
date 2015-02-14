@@ -88,6 +88,8 @@ package ui
 		{
 			if ( e.keyCode == Keyboard.ENTER )
 			{
+				e.stopImmediatePropagation();
+				t.text = t.text.replace( "\n", "" );
 				if ( onDone != null )
 					onDone( t.text );
 				animateOut();
@@ -97,17 +99,24 @@ package ui
 				animateOut();
 		}
 		
+		public function get text():String 
+		{ return t.text }
+		
+		public function set text(value:String):void 
+		{ t.text = value }
+		
 		//
-		public static function generate( stage:Stage, onDone:Function ):StringInput
+		public static function generate( stage:Stage, onDone:Function, text:String="" ):StringInput
 		{
 			var o:StringInput = new StringInput();
 			stage.addChild( o );
 			o.x = .5 * stage.stageWidth;
 			o.y = .5 * stage.stageHeight;
 			o.initialize( onDone );
+			o.text = text;
 			return o;
 		}
-	
+		
 	}
 
 }

@@ -220,7 +220,7 @@ package editor
 			if ( helperPoint.y > titlePad.height ) return;
 			if ( helperPoint.x < 0 ) return;
 			if ( helperPoint.y < 0 ) return;
-			StringInput.generate( stage, setName );
+			StringInput.generate( stage, setName, name );
 		}
 		
 		private function onMouseWheel( e:Event ):void 

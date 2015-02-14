@@ -28,6 +28,7 @@ package editor
 		public var context:SpaceContext = new SpaceContext();
 		
 		private var viewLabel:TextField;
+		private var viewNameLabel:TextField;
 		private var statLabel:TextField;
 		
 		public function initialize( jsonData:String ):void 
@@ -43,7 +44,10 @@ package editor
 			viewLabel = new TextField( 100, 100, "..", "Impact", 80, 0x909090, true );
 			addChild( viewLabel );
 			
-			statLabel = new TextField( 500, 200, "..", "Consolas", 14, 0x909090, false );
+			viewNameLabel = new TextField( 320, 50, "", "Impact", 24, 0x909090, false );
+			addChild( viewNameLabel );
+			
+			statLabel = new TextField( 500, 200, "Waiting for stats update...", "Consolas", 14, 0x909090, false );
 			statLabel.hAlign = "right";
 			statLabel.vAlign = "bottom";
 			addChild( statLabel );
@@ -90,6 +94,8 @@ package editor
 			var g:CardGroup;
 			for ( j = 0; j < data.views.length; j++ ) 
 			{
+				views[ j ].name = data.views[ j ].name;
+				
 				for ( i = 0; i < data.views[ j ].groups.length; i++ ) 
 				{
 					o = data.views[ j ].groups[ i ];
@@ -115,6 +121,8 @@ package editor
 		{
 			viewLabel.x = width - viewLabel.width;
 			viewLabel.y = 0;
+			viewNameLabel.x = .5 * ( width - viewNameLabel.width );
+			viewNameLabel.y = height - viewNameLabel.height;
 			statLabel.x = width - statLabel.width - 10;
 			statLabel.y = height - statLabel.height - 10;
 		}
@@ -139,12 +147,12 @@ package editor
 			if ( context.currentView == views[ index ] )
 				return;
 			
-			viewLabel.text = String( index + 1 );
-			
 			if ( context.currentView != null )
 				context.currentView.active = false;
 			
 			context.currentView = views[ index ];
+			viewLabel.text = String( index + 1 );
+			viewNameLabel.text = context.currentView.name;
 			
 			if ( context.currentView != null )
 				context.currentView.active = true;
@@ -241,6 +249,7 @@ package editor
 		{
 			if ( e.ctrlKey || e.altKey )
 			{
+				var v:SpaceView = context.currentView;
 				var g:CardGroup = context.focusedGroup;
 				
 				// CHANGE VIEW
@@ -262,7 +271,9 @@ package editor
 				if ( e.keyCode == Keyboard.R )
 				{
 					if ( g && !g.locked )
-						StringInput.generate( stage, g.setName );
+						StringInput.generate( stage, g.setName, g.name );
+					else
+						StringInput.generate( stage, v.setName, v.name );
 				}
 				else
 				// GROUP ADD BY TEXT
@@ -381,6 +392,7 @@ package editor
 			for ( i = 0; i < views.length; i++ ) 
 			{
 				r.views.push( { } );
+				r.views[ i ].name = views[ i ].name;
 				r.views[ i ].groups = new Array();
 				
 				if ( views[ i ].groups.length <= 1 )

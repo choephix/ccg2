@@ -59,10 +59,11 @@ package editor
 			}
 		}
 		
+		public function setName( name:String ):void 
+		{ this.name = name }
+		
 		public function get active():Boolean
-		{
-			return _active;
-		}
+		{ return _active }
 		
 		public function set active( value:Boolean ):void
 		{
