@@ -202,7 +202,7 @@ package editor
 		
 		public function saveDataTo( c:Card ):void
 		{
-			tDescr.text = tDescr.text.split( "\"" ).join( "" );
+			tTitle.text = tTitle.text.split( "\n" ).join( "" );
 			
 			c.data.type = _type;
 			c.data.faction = _faction;
@@ -210,6 +210,12 @@ package editor
 			c.data.description = tDescr.text;
 			c.data.power = int( tExtra.text );
 			c.data.tags = tTags.text.split( "\n" );
+			
+			if ( c.data.slug == "" || c.data.slug == "unnamed" )
+				c.data.slug = c.data.name
+					.replace( new RegExp( /[^a-zA-Z 0-9]+/g ), "" )
+					.toLowerCase();
+			
 			c.onDataChange();
 		}
 		

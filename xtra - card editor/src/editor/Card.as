@@ -29,6 +29,7 @@ package editor
 		private var thingParent:Sprite;
 		private var border:Quad;
 		private var pad:Quad;
+		private var padTitle:Quad;
 		private var tTitle:TextField;
 		private var tDescr:TextField;
 		private var tExtra:TextField;
@@ -65,12 +66,17 @@ package editor
 			pad.alpha = .99;
 			addChild( pad );
 			
+			//padTitle = new Quad( G.CARD_W, 22, 0xFfFfFf, true );
+			padTitle = new Quad( G.CARD_W, G.CARD_H-22, 0xFfFfFf, true );
+			padTitle.alpha = .09;
+			padTitle.y = 22
+			addChild( padTitle );
+			
 			tTitle = new TextField( 1, 1, "", txtfTitle.font, txtfTitle.size as Number, txtfTitle.color as uint, txtfTitle.bold  );
-			tTitle.scaleX = .80;
 			//tTitle.border = true;
-			tTitle.x = PADDING;
+			tTitle.x = 0;
 			tTitle.y = 0;
-			tTitle.width = ( G.CARD_W - PADDING - PADDING ) / tTitle.scaleX;
+			//tTitle.width = G.CARD_W - PADDING - PADDING;
 			tTitle.height = 22;
 			tTitle.touchable = false;
 			addChild( tTitle );
@@ -82,6 +88,7 @@ package editor
 			tDescr.y = tTitle.y + tTitle.height;
 			tDescr.width = G.CARD_W - PADDING - PADDING;
 			tDescr.height = G.CARD_H - PADDING - tDescr.y;
+			tDescr.autoScale = true;
 			tDescr.touchable = false;
 			addChild( tDescr );
 			
@@ -113,7 +120,11 @@ package editor
 		
 		public function onDataChange():void 
 		{
+			tTitle.width = 1000;
 			tTitle.text = data.name;
+			tTitle.width = Math.max( tTitle.textBounds.width + PADDING + PADDING, G.CARD_W );
+			tTitle.scaleX = Math.min( 1.0, G.CARD_W / tTitle.width );
+			
 			tDescr.text = data.description;
 			
 			if ( data.type == CardType.TRAP )
