@@ -43,9 +43,9 @@ package duel.display.fields
 			aura.scale = _z;
 			addChild( aura );
 			
-			exhaustClock = assets.generateImage( "exhaustClock", false, true );
-			exhaustClock.x = G.CARD_W * 0.25;
-			exhaustClock.y = G.CARD_H * 0.00;
+			exhaustClock = assets.generateImage( "exhaustClock", false, false );
+			exhaustClock.pivotX = -G.CARD_W * 0.100;
+			exhaustClock.pivotY = exhaustClock.height * 0.50;
 			exhaustClock.alpha = 0.0;
 			exhaustClock.touchable = false;
 			addChild( exhaustClock );
