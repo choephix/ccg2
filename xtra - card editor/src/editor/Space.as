@@ -33,9 +33,6 @@ package editor
 		
 		public function initialize( jsonData:String ):void 
 		{
-			var i:int;
-			var j:int;
-			
 			// PREP
 			
 			stage.addEventListener( KeyboardEvent.KEY_DOWN, onKeyDown );
@@ -56,6 +53,7 @@ package editor
 			dcall.repeatCount = 0;
 			Starling.juggler.add( dcall );
 			
+			var i:int;
 			for ( i = 0; i < views.length; i++ )
 				views[ i ] = generateNewSpaceView( i );
 			
@@ -65,52 +63,7 @@ package editor
 			
 			// PARSE DATA
 			
-			var data:Object = JSON.parse( jsonData );
-			
-			var o:Object;
-			
-			if ( data.conf != undefined )
-			{
-				nextCardID = data.conf.nextCardID;
-			}
-			
-			var c:Card;
-			var cd:CardData;
-			for ( i = 0; i < data.cards.length; i++ ) 
-			{
-				o = data.cards[ i ];
-				cd = new CardData();
-				cd.id			= o.id;
-				cd.name			= o.name;
-				cd.slug			= o.slug;
-				cd.description	= o.desc;
-				cd.type			= CardType.fromInt( o.type );
-				cd.faction		= Faction.fromInt( o.fctn );
-				cd.power		= o.pwr;
-				cd.tags			= o.tags;
-				c = generateNewCard( cd );
-			}
-			
-			var g:CardGroup;
-			for ( j = 0; j < data.views.length; j++ ) 
-			{
-				views[ j ].name = data.views[ j ].name;
-				
-				for ( i = 0; i < data.views[ j ].groups.length; i++ ) 
-				{
-					o = data.views[ j ].groups[ i ];
-					g = generateNewGroup( o.name );
-					views[ j ].addGroup( g );
-					
-					g.registeredCards = o.cards;
-					g.tformContracted.x = o.xc;
-					g.tformContracted.y = o.yc;
-					g.tformExpanded.x = o.xe;
-					g.tformExpanded.y = o.ye;
-					g.tformExpanded.width = o.we;
-					g.tformExpanded.height = o.he;
-				}
-			}
+			initFromJson( JSON.parse( jsonData ) );
 			
 			///
 			onResize();
@@ -349,6 +302,56 @@ package editor
 		}
 		
 		//
+		
+		public function initFromJson( data:Object ):void
+		{
+			var i:int;
+			var j:int;
+			var o:Object;
+			
+			if ( data.conf != undefined )
+			{
+				nextCardID = data.conf.nextCardID;
+			}
+			
+			var c:Card;
+			var cd:CardData;
+			for ( i = 0; i < data.cards.length; i++ ) 
+			{
+				o = data.cards[ i ];
+				cd = new CardData();
+				cd.id			= o.id;
+				cd.name			= o.name;
+				cd.slug			= o.slug;
+				cd.description	= o.desc;
+				cd.type			= CardType.fromInt( o.type );
+				cd.faction		= Faction.fromInt( o.fctn );
+				cd.power		= o.pwr;
+				cd.tags			= o.tags;
+				c = generateNewCard( cd );
+			}
+			
+			var g:CardGroup;
+			for ( j = 0; j < data.views.length; j++ ) 
+			{
+				views[ j ].name = data.views[ j ].name;
+				
+				for ( i = 0; i < data.views[ j ].groups.length; i++ ) 
+				{
+					o = data.views[ j ].groups[ i ];
+					g = generateNewGroup( o.name );
+					views[ j ].addGroup( g );
+					
+					g.registeredCards = o.cards;
+					g.tformContracted.x = o.xc;
+					g.tformContracted.y = o.yc;
+					g.tformExpanded.x = o.xe;
+					g.tformExpanded.y = o.ye;
+					g.tformExpanded.width = o.we;
+					g.tformExpanded.height = o.he;
+				}
+			}
+		}
 		
 		public function toJson():String
 		{

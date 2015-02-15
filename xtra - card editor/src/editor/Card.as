@@ -34,6 +34,7 @@ package editor
 		private var tTitle:TextField;
 		private var tDescr:TextField;
 		private var tExtra:TextField;
+		private var tSlug:TextField;
 		private var iFaction:Quad;
 		
 		public var data:CardData;
@@ -71,18 +72,6 @@ package editor
 			padTitle.y = 22
 			addChild( padTitle );
 			
-			/* * * /
-			tTitle = new TextField( 150, 1, "", txtfTitle.font, 9, 0x330814, false  );
-			tTitle.hAlign = "right";
-			tTitle.vAlign = "bottom";
-			tTitle.x = 0;
-			tTitle.y = 184;
-			tTitle.height = 16;
-			tTitle.touchable = false;
-			tTitle.text = data.slug;
-			addChild( tTitle );
-			/* * */
-			
 			tTitle = new TextField( 1, 1, "", txtfTitle.font, txtfTitle.size as Number, txtfTitle.color as uint, txtfTitle.bold  );
 			//tTitle.border = true;
 			tTitle.x = 0;
@@ -112,12 +101,21 @@ package editor
 			tExtra.touchable = false;
 			addChild( tExtra );
 			
+			tSlug = new TextField( 150, 1, "", txtfTitle.font, 9, 0x330814, false  );
+			tSlug.hAlign = "right";
+			tSlug.vAlign = "bottom";
+			tSlug.x = 0;
+			tSlug.y = 184;
+			tSlug.height = 16;
+			tSlug.autoScale = true;
+			tSlug.touchable = false;
+			tSlug.text = data.slug;
+			addChild( tSlug );
+			//CONFIG::sandbox { tSlug.removeFromParent() }
+			
 			iFaction = new Quad( 5, tTitle.height, 0x0, true );
 			iFaction.x = G.CARD_W - iFaction.width;
 			iFaction.y = 0;
-			//iFaction = new Quad( G.CARD_W, 3, 0x0, true );
-			//iFaction.x = G.CARD_W - iFaction.width;
-			//iFaction.y = G.CARD_H - 6;
 			addChild( iFaction );
 			
 			addEventListener( EnterFrameEvent.ENTER_FRAME, advanceTime );
@@ -131,11 +129,14 @@ package editor
 		public function onDataChange():void 
 		{
 			tTitle.width = 1000;
-			tTitle.text = CONFIG::sandbox ? data.slug : data.name;
+			tTitle.text = data.name;
 			tTitle.width = Math.max( tTitle.textBounds.width + PADDING + PADDING, G.CARD_W );
 			tTitle.scaleX = Math.min( 1.0, G.CARD_W / tTitle.width );
 			
 			tDescr.text = data.description;
+			tDescr.height = G.CARD_H - tDescr.y - ( data.type == CardType.TRAP ? PADDING : 30);
+			
+			tSlug.text = data.slug;
 			
 			if ( data.type == CardType.TRAP )
 			{

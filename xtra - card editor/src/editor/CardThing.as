@@ -17,15 +17,19 @@ package editor
 		static public const BORDER:Number = 2.0;
 		static public const W:Number = G.CARD_W + BORDER + BORDER;
 		static public const H:Number = G.CARD_H + BORDER + BORDER;
+		public static const FORMAT_SLUG:TextFormat = new TextFormat( "Arial", 11, 0xFFFFFF );
+		public static const FORMAT_TAGS:TextFormat = new TextFormat( "Lucida Console", 14, 0xFFFFFF );
 		
 		private var pad:Quad;
 		
 		public var tTitle:TextArea;
 		public var tDescr:TextArea;
 		public var tExtra:TextArea;
+		public var tSlug:TextArea;
 		public var iFaction:OButton;
 		public var iType:OButton;
 		
+		private var slugQuad:Quad;
 		private var tagsQuad:Quad;
 		private var tTags:TextArea;
 		private var bOk:OButton;
@@ -48,8 +52,23 @@ package editor
 			
 			Card.txtfTitle.align = "center";
 			Card.txtfDescr.align = "center";
+			FORMAT_SLUG.align = "center";
 			
 			//
+			
+			slugQuad = new Quad( W, 22, 0x0 );
+			slugQuad.alpha = .60;
+			slugQuad.x = 0;
+			slugQuad.y = -22;
+			addChild( slugQuad );
+			
+			tSlug = new TextArea();
+			tSlug.textEditorProperties.textFormat = FORMAT_SLUG
+			tSlug.width = G.CARD_W;
+			tSlug.height = 22;
+			tSlug.y = -22;
+			addChild( tSlug );
+			tSlug.validate();
 			
 			tTitle = new TextArea();
 			tTitle.textEditorProperties.textFormat = Card.txtfTitle;
@@ -84,6 +103,7 @@ package editor
 			tTitle.nextTabFocus = tDescr;
 			tDescr.nextTabFocus = tExtra;
 			tExtra.nextTabFocus = tTitle;
+			tSlug.nextTabFocus = tTitle;
 			
 			iFaction = new OButton( "", onButtonChangeFaction );
 			iFaction.x = G.CARD_W - PADDING;
@@ -101,14 +121,14 @@ package editor
 			
 			//
 			
-			tagsQuad = new Quad( W, 100, 0x0 );
-			tagsQuad.alpha = .60;
+			tagsQuad = new Quad( W, 48, 0x0 );
+			tagsQuad.alpha = .40;
 			tagsQuad.x = 0;
 			tagsQuad.y = H;
 			addChild( tagsQuad );
 			
 			tTags = new TextArea();
-			tTags.textEditorProperties.textFormat = new TextFormat( "Lucida Console", 16, 0xFFFFFF );
+			tTags.textEditorProperties.textFormat = FORMAT_TAGS;
 			tTags.x = tagsQuad.x;
 			tTags.y = tagsQuad.y;
 			tTags.width = tagsQuad.width;
@@ -191,6 +211,7 @@ package editor
 		
 		public function loadDataFrom( source:Card ):void
 		{
+			tSlug.text = source.data.slug;
 			tTitle.text = source.data.name;
 			tDescr.text = source.data.description;
 			tExtra.text = source.data.power.toString();
@@ -205,6 +226,7 @@ package editor
 			tTitle.text = tTitle.text.split( "\n" ).join( "" );
 			c.data.type = _type;
 			c.data.faction = _faction;
+			c.data.slug = tSlug.text;
 			c.data.name = tTitle.text;
 			c.data.description = tDescr.text;
 			c.data.power = int( tExtra.text );
