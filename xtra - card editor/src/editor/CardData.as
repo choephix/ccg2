@@ -28,13 +28,24 @@ package editor
 		public function updateNameAndSlug():void 
 		{
 			if ( _name == "" && _slug != "" )
-				_name = _slug;
+				_name = _slug.replace( new RegExp( /_/g ), " " );
 			
 			if ( _slug == "" && _name != "" )
-				_slug = _name
+				_slug = _name;
+				
+			_slug = _slug
 					.replace( new RegExp( / /g ), "_" )
 					.replace( new RegExp( /[^a-zA-Z_0-9]+/g ), "" )
 					.toLowerCase();
+			
+			if ( description.length > 0 )
+			{
+				var s:String = int( Math.random() * int.MAX_VALUE ).toString( 36 );
+				if ( _name.length == 0 )
+					_name = s;
+				if ( _slug.length == 0 )
+					_slug = s;
+			}
 		}
 		
 		public function get name():String 

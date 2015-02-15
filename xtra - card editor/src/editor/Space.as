@@ -144,8 +144,6 @@ package editor
 			{
 				d = new CardData();
 				d.id = nextCardID++;
-				d.slug = "nameless";
-				d.name = "Nameless";
 				d.type = CardType.CREATURE_NORMAL;
 			}
 			

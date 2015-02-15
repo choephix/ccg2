@@ -3,6 +3,7 @@ package editor
 	import feathers.controls.TextArea;
 	import flash.geom.Point;
 	import flash.text.TextFormat;
+	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.Quad;
 	import ui.OButton;
@@ -142,7 +143,6 @@ package editor
 			addChild( bOk );
 			
 			bX = new OButton( "", onButtonDiscard );
-			bX.color = 0x776666;
 			bX.x = W + 38;
 			bX.y = -5;
 			bX.scaleX = .33;
@@ -155,7 +155,18 @@ package editor
 			touchable = false;
 			
 			alpha = .0;
-			Starling.juggler.tween( this, .100, { alpha : 1.0, onComplete : f } );
+			Starling.juggler.tween( this, .150, { alpha : 1.0, onComplete : f } );
+			
+			bOk.scaleX = .1;
+			bOk.scaleY = .1;
+			Starling.juggler.tween( bOk, .250, { scaleX : 1.0, scaleY : 1.0, transition : Transitions.EASE_OUT_BACK } );
+			
+			tagsQuad.scaleY = .1;
+			Starling.juggler.tween( tagsQuad, .150, { scaleY : 1.0, transition : Transitions.EASE_OUT } );
+			
+			slugQuad.scaleY = .0;
+			slugQuad.y = .0;
+			Starling.juggler.tween( slugQuad, .150, { scaleY : 1.0, y : -22, transition : Transitions.EASE_OUT } );
 			
 			function f():void
 			{ touchable = true }
@@ -211,8 +222,8 @@ package editor
 		
 		public function loadDataFrom( source:Card ):void
 		{
-			tSlug.text = source.data.slug;
-			tTitle.text = source.data.name;
+			tSlug.text = CONFIG::sandbox ? source.data.name : source.data.slug;
+			tTitle.text = CONFIG::sandbox ? source.data.slug : source.data.name;
 			tDescr.text = source.data.description;
 			tExtra.text = source.data.power.toString();
 			tTags.text = source.data.tags.join( "\n" );
@@ -224,10 +235,12 @@ package editor
 		public function saveDataTo( c:Card ):void
 		{
 			tTitle.text = tTitle.text.split( "\n" ).join( "" );
+			tSlug.text = tSlug.text.split( "\n" ).join( "" );
+			
 			c.data.type = _type;
 			c.data.faction = _faction;
-			c.data.slug = tSlug.text;
-			c.data.name = tTitle.text;
+			c.data.slug = CONFIG::sandbox ? tTitle.text : tSlug.text;
+			c.data.name = CONFIG::sandbox ? tSlug.text : tTitle.text;
 			c.data.description = tDescr.text;
 			c.data.power = int( tExtra.text );
 			c.data.tags = tTags.text.split( "\n" );

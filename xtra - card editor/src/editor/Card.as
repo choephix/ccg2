@@ -129,14 +129,14 @@ package editor
 		public function onDataChange():void 
 		{
 			tTitle.width = 1000;
-			tTitle.text = data.name;
+			tTitle.text = CONFIG::sandbox ? data.slug : data.name;
 			tTitle.width = Math.max( tTitle.textBounds.width + PADDING + PADDING, G.CARD_W );
 			tTitle.scaleX = Math.min( 1.0, G.CARD_W / tTitle.width );
 			
 			tDescr.text = data.description;
 			tDescr.height = G.CARD_H - tDescr.y - ( data.type == CardType.TRAP ? PADDING : 30);
 			
-			tSlug.text = data.slug;
+			tSlug.text = CONFIG::sandbox ? data.name : data.slug;
 			
 			if ( data.type == CardType.TRAP )
 			{
@@ -174,6 +174,9 @@ package editor
 				else
 				if ( _isOnTop && !_selected && t != null && t.phase == TouchPhase.ENDED )
 				{
+					if ( currentGroup.isContracted )
+						return;
+					
 					setSelected( true );
 					context.cardThing.animateIn();
 					
@@ -300,8 +303,9 @@ package editor
 		{
 			_isOnTop = value;
 			tTitle.visible = value;
-			tDescr.visible = value;
+			tDescr.visible = value && tDescr.text != "";
 			tExtra.visible = value && tExtra.text != "";
+			tSlug.visible = value && tSlug.text != "";
 		}
 	}
 }
