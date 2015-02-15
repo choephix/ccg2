@@ -236,7 +236,7 @@ package editor
 			if ( !_focused ) return;
 			if ( tformCurrent == tformContracted ) return;
 			
-			setCardsScroll( _cardsScroll - Number( e.data ) * G.CARD_H / 6 );
+			setCardsScroll( _cardsScroll - Number( e.data ) * ( G.CARD_H + CARD_SPACING ) / 6 );
 		}
 		
 		private function onTouch( e:TouchEvent ):void 

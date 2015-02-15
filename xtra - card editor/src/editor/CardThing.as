@@ -192,7 +192,7 @@ package editor
 		
 		private function onButtonChangeType():void 
 		{
-			setType( ( _type+1 ) % 4 ); 
+			setType( ( _type % 4 ) + 1 ); 
 		}
 		
 		private function onButtonChangeFaction():void
@@ -204,8 +204,12 @@ package editor
 				setFaction( Faction.MAGIC );
 			else
 			if ( _faction == Faction.MAGIC )
+				setFaction( Faction.NEUTRAL );
+			else
+			if ( _faction == Faction.NEUTRAL )
 				setFaction( null );
 			else
+			if ( _faction == null )
 				setFaction( Faction.SCIENCE );
 		}
 		
@@ -222,9 +226,9 @@ package editor
 		
 		public function loadDataFrom( source:Card ):void
 		{
+			tDescr.text = source.data.description;
 			tSlug.text = CONFIG::sandbox ? source.data.name : source.data.slug;
 			tTitle.text = CONFIG::sandbox ? source.data.slug : source.data.name;
-			tDescr.text = source.data.description;
 			tExtra.text = source.data.power.toString();
 			tTags.text = source.data.tags.join( "\n" );
 			
@@ -252,6 +256,7 @@ package editor
 			_type = value;
 			pad.color = CardType.toColor( _type ) + 0x101010;
 			iType.color = CardType.toColor( _type );
+			tExtra.visible = _type != CardType.TRAP;
 		}
 		
 		public function setFaction( value:Faction ):void

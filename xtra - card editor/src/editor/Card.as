@@ -154,6 +154,10 @@ package editor
 			iFaction.visible = data.faction != null;
 			if ( iFaction.visible )
 				iFaction.color = Faction.toColor( data.faction );
+				
+			tDescr.visible = _isOnTop && tDescr.text != "";
+			tExtra.visible = _isOnTop && tExtra.text != "";
+			tSlug.visible = _isOnTop && tSlug.text != "";
 		}
 		
 		private function onTouch(e:TouchEvent):void 
