@@ -156,11 +156,19 @@ package editor
 			arrange();
 			
 			var c:Card = e.data as Card;
-			if ( c.parent != space )
-				return;
 			
 			if ( !bg.getBounds( stage ).containsPoint( App.mouseXY ) )
 				return;
+			
+			if ( c.currentGroup != null )
+				if ( parent.getChildIndex( c.currentGroup ) > parent.getChildIndex( this ) )
+					return;
+				else
+				{
+					var g:CardGroup = c.currentGroup;
+					g.removeCard( c, true );
+					g.arrange();
+				}
 			
 			var index:int;
 			
@@ -333,7 +341,7 @@ package editor
 			
 			if ( tformCurrent == tformContracted )
 			{
-				t = e.getTouch( titlePad, TouchPhase.ENDED );
+				t = e.getTouch( this, TouchPhase.ENDED );
 				
 				if ( t != null && t.tapCount > 1 )
 				{
@@ -401,9 +409,13 @@ package editor
 				cardsParent.addChildAt( c, countCards-index );
 			else
 				cardsParent.addChild( c );
+			
+			c.currentGroup = this;
 			c.space = space;
-			c.x -= x;
-			c.y -= y;
+			
+			c.x = c.x - x - cardsParent.x;
+			c.y = c.y - y - cardsParent.y;
+			
 			arrange();
 			return c;
 		}
@@ -413,11 +425,13 @@ package editor
 			if ( unregister )
 				unregisterCard( c );
 			
+			c.currentGroup = null;
+			
 			helperPoint.setTo( 0, 0 );
 			c.localToGlobal( helperPoint, helperPoint );
-			
 			c.x = helperPoint.x;
 			c.y = helperPoint.y;
+			
 			c.isOnTop = true;
 			space.addChild( c );
 		}
@@ -511,14 +525,8 @@ package editor
 		public function updateRegisteredCards():void
 		{
 			registeredCards.length = 0;
-			
-			trace( "> > >" );
 			for ( var i:int = 0; i < countCards; i++ ) 
-			{
 				registeredCards.push( getCardAt( i ).data.id );
-				trace( getCardAt( i ).data.name );
-			}
-			trace( "< < <" );
 		}
 		
 		//
@@ -554,6 +562,9 @@ package editor
 			setMaximized( false );
 			tformCurrent = value ? tformExpanded : tformContracted;
 			arrange();
+			
+			if ( !value )
+				parent.setChildIndex( this, 0 );
 		}
 		
 		public function setMaximized( value:Boolean ):void 

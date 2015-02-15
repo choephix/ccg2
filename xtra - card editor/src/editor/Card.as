@@ -25,6 +25,7 @@ package editor
 		
 		public var targetX:Number;
 		public var targetY:Number;
+		public var currentGroup:CardGroup;
 		
 		private var thingParent:Sprite;
 		private var border:Quad;
@@ -72,11 +73,22 @@ package editor
 			padTitle.y = 22
 			addChild( padTitle );
 			
+			/* * * /
+			tTitle = new TextField( 150, 1, "", txtfTitle.font, 9, 0x330814, false  );
+			tTitle.hAlign = "right";
+			tTitle.vAlign = "bottom";
+			tTitle.x = 0;
+			tTitle.y = 184;
+			tTitle.height = 16;
+			tTitle.touchable = false;
+			tTitle.text = data.slug;
+			addChild( tTitle );
+			/* * */
+			
 			tTitle = new TextField( 1, 1, "", txtfTitle.font, txtfTitle.size as Number, txtfTitle.color as uint, txtfTitle.bold  );
 			//tTitle.border = true;
 			tTitle.x = 0;
 			tTitle.y = 0;
-			//tTitle.width = G.CARD_W - PADDING - PADDING;
 			tTitle.height = 22;
 			tTitle.touchable = false;
 			addChild( tTitle );
@@ -121,7 +133,7 @@ package editor
 		public function onDataChange():void 
 		{
 			tTitle.width = 1000;
-			tTitle.text = data.name;
+			tTitle.text = CONFIG::sandbox ? data.slug : data.name;
 			tTitle.width = Math.max( tTitle.textBounds.width + PADDING + PADDING, G.CARD_W );
 			tTitle.scaleX = Math.min( 1.0, G.CARD_W / tTitle.width );
 			

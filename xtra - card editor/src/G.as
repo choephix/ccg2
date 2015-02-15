@@ -6,7 +6,7 @@ package
 	 */
 	public class G 
 	{
-		public static const URL_BASE:String = CONFIG::air||CONFIG::sandbox?"http://dev.thechoephix.com/ccg2/editor/":"";
+		public static const URL_BASE:String = CONFIG::air||CONFIG::development?"http://dev.thechoephix.com/ccg2/editor/":"";
 		public static const URL_SAVE:String = "write.php";
 		public static const URL_LOAD:String = "read.php";
 		
