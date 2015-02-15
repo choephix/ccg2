@@ -18,9 +18,9 @@ package editor
 	 */
 	public class Card extends SpaceObject 
 	{
-		public static var txtfTitle:TextFormat = new TextFormat( "Verdana", 15, 0x330814, true );
-		public static var txtfDescr:TextFormat = new TextFormat( "Arial", 12, 0x330814, false );
-		public static var txtfExtra:TextFormat = new TextFormat( "Arial", 32, 0x330814, true );
+		public static var FORMAT_TITLE:TextFormat = new TextFormat( "Verdana", 15, 0x330814, true );
+		public static var FORMAT_DESCR:TextFormat = new TextFormat( "Arial", 12, 0x330814, false );
+		public static var FORMAT_EXTRA:TextFormat = new TextFormat( "Arial", 32, 0x330814, true );
 		public static const PADDING:Number = 6;
 		
 		public var targetX:Number;
@@ -72,7 +72,7 @@ package editor
 			padTitle.y = 22
 			addChild( padTitle );
 			
-			tTitle = new TextField( 1, 1, "", txtfTitle.font, txtfTitle.size as Number, txtfTitle.color as uint, txtfTitle.bold  );
+			tTitle = new TextField( 1, 1, "", FORMAT_TITLE.font, FORMAT_TITLE.size as Number, FORMAT_TITLE.color as uint, FORMAT_TITLE.bold  );
 			//tTitle.border = true;
 			tTitle.x = 0;
 			tTitle.y = 0;
@@ -80,7 +80,7 @@ package editor
 			tTitle.touchable = false;
 			addChild( tTitle );
 			
-			tDescr = new TextField( 1, 1, "", txtfDescr.font, txtfDescr.size as Number, txtfDescr.color as uint, txtfDescr.bold  );
+			tDescr = new TextField( 1, 1, "", FORMAT_DESCR.font, FORMAT_DESCR.size as Number, FORMAT_DESCR.color as uint, FORMAT_DESCR.bold  );
 			tDescr.vAlign = "top";
 			//tDescr.border = true;
 			tDescr.x = PADDING;
@@ -91,7 +91,7 @@ package editor
 			tDescr.touchable = false;
 			addChild( tDescr );
 			
-			tExtra = new TextField( 1, 1, "", txtfExtra.font, txtfExtra.size as Number, txtfExtra.color as uint, txtfExtra.bold  );
+			tExtra = new TextField( 1, 1, "", FORMAT_EXTRA.font, FORMAT_EXTRA.size as Number, FORMAT_EXTRA.color as uint, FORMAT_EXTRA.bold  );
 			tExtra.hAlign = "left";
 			//tExtra.border = true;
 			tExtra.width  = 100;
@@ -101,7 +101,7 @@ package editor
 			tExtra.touchable = false;
 			addChild( tExtra );
 			
-			tSlug = new TextField( 150, 1, "", txtfTitle.font, 9, 0x330814, false  );
+			tSlug = new TextField( 150, 1, "", FORMAT_TITLE.font, 9, 0x330814, false  );
 			tSlug.hAlign = "right";
 			tSlug.vAlign = "bottom";
 			tSlug.x = 0;

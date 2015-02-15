@@ -50,8 +50,8 @@ package editor
 			pad.alpha = .90;
 			addChild( pad );
 			
-			Card.txtfTitle.align = "center";
-			Card.txtfDescr.align = "center";
+			Card.FORMAT_TITLE.align = "center";
+			Card.FORMAT_DESCR.align = "center";
 			FORMAT_SLUG.align = "center";
 			
 			//
@@ -71,7 +71,7 @@ package editor
 			tSlug.validate();
 			
 			tTitle = new TextArea();
-			tTitle.textEditorProperties.textFormat = Card.txtfTitle;
+			tTitle.textEditorProperties.textFormat = Card.FORMAT_TITLE;
 			tTitle.width = G.CARD_W * 1.5;
 			tTitle.height = 22;
 			tTitle.x = -G.CARD_W * .25;
@@ -80,7 +80,7 @@ package editor
 			tTitle.validate();
 			
 			tDescr = new TextArea();
-			tDescr.textEditorProperties.textFormat = Card.txtfDescr;
+			tDescr.textEditorProperties.textFormat = Card.FORMAT_DESCR;
 			tDescr.x = PADDING;
 			tDescr.y = tTitle.y + tTitle.height;
 			tDescr.width = G.CARD_W - PADDING - PADDING;
@@ -90,7 +90,7 @@ package editor
 			tDescr.validate();
 			
 			tExtra = new TextArea();
-			tExtra.textEditorProperties.textFormat = Card.txtfExtra;
+			tExtra.textEditorProperties.textFormat = Card.FORMAT_EXTRA;
 			tExtra.width = 100;
 			tExtra.height = 50;
 			tExtra.x = 0;
