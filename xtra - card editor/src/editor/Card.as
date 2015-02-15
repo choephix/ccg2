@@ -38,8 +38,6 @@ package editor
 		
 		public var data:CardData;
 		
-		private var _type:int;
-		
 		private var _focused:Boolean;
 		private var _selected:Boolean;
 		private var _inDrag:Boolean;
@@ -150,7 +148,7 @@ package editor
 				tExtra.text = data.power.toString();
 			}
 			
-			type = data.type;
+			pad.color = CardType.toColor( data.type );
 			
 			iFaction.visible = data.faction != null;
 			if ( iFaction.visible )
@@ -291,18 +289,6 @@ package editor
 		}
 		
 		//
-		
-		public function get type():int 
-		{
-			return _type;
-		}
-		
-		public function set type(value:int):void 
-		{
-			var i:int;
-			_type = value;
-			pad.color = CardType.toColor( _type );
-		}
 		
 		public function get isOnTop():Boolean 
 		{
