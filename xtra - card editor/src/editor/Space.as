@@ -297,6 +297,14 @@ package editor
 					App.remote.save( this );
 				}
 			}
+			
+			CONFIG::desktop
+			{
+				// TOGGLE FULLSCREEN
+				if ( e.keyCode == Keyboard.F11 )
+					App.toggleFullScreen();
+			}
+			
 		}
 		
 		//
@@ -333,6 +341,16 @@ package editor
 			for ( j = 0; j < data.views.length; j++ ) 
 			{
 				views[ j ].name = data.views[ j ].name;
+				
+				o = data.views[ j ].g0;
+				if ( o != null )
+				{
+					g = views[ j ].groups[ 0 ];
+					g.tformExpanded.x = o.xe;
+					g.tformExpanded.y = o.ye;
+					g.tformExpanded.width = o.we;
+					g.tformExpanded.height = o.he;
+				}
 				
 				for ( i = 0; i < data.views[ j ].groups.length; i++ ) 
 				{
@@ -395,6 +413,14 @@ package editor
 				r.views.push( { } );
 				r.views[ i ].name = views[ i ].name;
 				r.views[ i ].groups = new Array();
+				
+				g = views[ i ].groups[ 0 ];
+				o = { };
+				o.xe = g.tformExpanded.x;
+				o.ye = g.tformExpanded.y;
+				o.we = g.tformExpanded.width;
+				o.he = g.tformExpanded.height;
+				r.views[ i ].g0 = o;
 				
 				if ( views[ i ].groups.length <= 1 )
 					continue;
