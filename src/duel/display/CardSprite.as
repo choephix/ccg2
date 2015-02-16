@@ -135,7 +135,7 @@ package duel.display {
 					tfDescr.hAlign = "center";
 					tfDescr.vAlign = "center";
 					tfDescr.fontSize = 15;
-					tfDescr.text = card.descr == null ? "" : card.descr;
+					tfDescr.text = card.description == null ? "" : card.description;
 					tfDescr.x = xx( .37 );
 					tfDescr.y = yy( .50 );
 					tfDescr.width  = xx( .63 );
@@ -158,7 +158,7 @@ package duel.display {
 			else
 			if ( card.isTrap )
 			{
-					tfDescr.text = card.descr == null ? "?" : card.descr;
+					tfDescr.text = card.description == null ? "?" : card.description;
 					tfDescr.fontSize = 18;
 					tfDescr.x = 0;
 					tfDescr.y = 30;

@@ -12,6 +12,19 @@ package dev
 	 */
 	public class Temp 
 	{
+		public static const DECK1:Array = [
+			"zig", "zag",
+			"banana_a", "banana_b",
+			"marco", "polo",
+		];
+		
+		public static const DECK2:Array = [
+			"marco", "polo",
+			"zig", "zag",
+			"banana_a", "banana_b",
+		];
+		
+		
 		public static function getColorForCard( card:Card ):uint 
 		{
 			if ( card.isCreature )

@@ -1,7 +1,6 @@
 package duel.cards
 {
 	import duel.cards.CardListBase;
-	import duel.cards.classes.CardClass;
 	import duel.cards.history.CardHistory;
 	import duel.cards.properties.CardProperties;
 	import duel.cards.properties.CreatureCardProperties;
@@ -20,6 +19,7 @@ package duel.cards
 	import duel.table.Hand;
 	import duel.table.IndexedField;
 	import duel.table.TrapField;
+	import global.CardPrimalData;
 	
 	/**
 	 * ...
@@ -29,11 +29,12 @@ package duel.cards
 	{
 		// PERSISTENT
 		public var uid:int;
-		public var id:int;
-		public var name:String;
-		public var descr:String;
-		public var classes:Vector.<CardClass> = new <CardClass>[];
+		private var _id:int;
+		private var _name:String;
+		private var _description:String;
 		public var cost:int = 1;
+		
+		public var primalData:CardPrimalData;
 		private var _status:CardStatus;
 		private var _props:CardProperties;
 		private var _history:CardHistory;
@@ -136,14 +137,6 @@ package duel.cards
 		public function get isTrap():Boolean
 		{ return props is TrapCardProperties }
 		
-		// GETTERS & SETTERS - CLASS
-		
-		public function get isHybridClass():Boolean
-		{ return classes.length > 1 }
-		
-		public function get isNeutralClass():Boolean
-		{ return classes.length == 1 }
-		
 		// GETTERS & SETTERS - 1
 		
 		public function set lot(value:CardListBase):void 
@@ -226,6 +219,18 @@ package duel.cards
 			if ( statusC.hasNoRelocation ) return false;
 			return actionsRelocate == 0;
 		}
+		
+		public function get id():int 
+		{ return primalData.id }
+		
+		public function get slug():String 
+		{ return primalData.slug }
+		
+		public function get name():String 
+		{ return primalData.name }
+		
+		public function get description():String 
+		{ return primalData.description }
 		
 		//
 		public function toString():String 

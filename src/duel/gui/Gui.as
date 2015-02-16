@@ -132,7 +132,7 @@ package duel.gui
 				return;
 			
 			cardTip.visible = true;
-			cardTip.text = _focusedCard.name + "\n\n" + _focusedCard.descr;
+			cardTip.text = _focusedCard.name + "\n\n" + _focusedCard.description;
 			cardTip.x = .5 * App.W;
 			cardTip.y = _focusedCard.sprite.y > .0 ? .33 * App.H : .67 * App.H;
 		}

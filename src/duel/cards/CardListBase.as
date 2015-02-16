@@ -38,6 +38,7 @@ package duel.cards {
 		
 		// FIND
 		
+		/// Returns the first card found with the specified UID
 		public function findByUid( uid:int ):Card
 		{
 			for ( var i:int = 0; i < _count; i++ ) 
@@ -46,10 +47,11 @@ package duel.cards {
 			return null;
 		}
 		
-		public function findByName( name:String ):Card
+		/// Returns the first card found with the specified slug
+		public function findBySlug( slug:String ):Card
 		{
 			for ( var i:int = 0; i < _count; i++ ) 
-				if ( name == _list[ i ].name )
+				if ( slug == _list[ i ].slug )
 					return _list[ i ];
 			return null;
 		}

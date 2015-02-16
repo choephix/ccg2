@@ -127,13 +127,12 @@ package {
 			CONFIG::mobile { gameMeta.myUserName = Capabilities.cpuArchitecture+"_"+UID }
 			
 			gameMeta.myUserColor = Math.random() * 0xFFFFFF;
-			//gameMeta.myUserColor = Temp.toCharCodeSum( gameMeta.myUserName ) % 0xFFFFFF;
 			
 			/// MENU
-			CONFIG::desktop
-			{ Temp.tweenAppSize( App.WINDOW_W, App.WINDOW_H, showMenu ); return; }
+			//CONFIG::desktop
+			//{ Temp.tweenAppSize( App.WINDOW_W, App.WINDOW_H, showMenu ); return; }
 			
-			showMenu();
+			App.cardsData.load( showMenu );
 		}
 		
 		private function showMenu():void {

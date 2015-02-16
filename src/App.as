@@ -3,6 +3,7 @@ package {
 	import flash.display.StageDisplayState;
 	import flash.display.Stage;
 	import flash.geom.Point;
+	import global.CardsDataLoader;
 	import starling.display.Stage;
 	
 	CONFIG::desktop {
@@ -45,9 +46,8 @@ package {
 		public static var root:StarlingMain;
 		
 		public static var initialized:Boolean;
-		
 		public static var assets:AdvancedAssetManager;
-		
+		public static var cardsData:CardsDataLoader;
 		public static var mouseXY:Point = new Point();
 		
 		public static function initialize( root:StarlingMain ):void {
@@ -55,6 +55,7 @@ package {
 			App.root = root;
 			stage = root.stage;
 			assets = new AdvancedAssetManager();
+			cardsData = new CardsDataLoader();
 		}
 		
 		public static function get W():int

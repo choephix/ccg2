@@ -87,7 +87,7 @@ package duel.processes
 		  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
 		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //
 		
-		gameprocessgetter function getIndex():int
+		public function getIndex():int
 		{
 			if ( args[ 0 ] is Card ) 
 			{
@@ -104,7 +104,7 @@ package duel.processes
 			return -1;
 		}
 		
-		gameprocessgetter function getController():Player
+		public function getController():Player
 		{
 			if ( args[ 0 ] is Card ) 
 				return Card( args[ 0 ] ).controller;
@@ -114,7 +114,7 @@ package duel.processes
 			return null;
 		}
 		
-		gameprocessgetter function getPlayer():Player
+		public function getPlayer():Player
 		{
 			if ( args[ 0 ] is Player ) 
 				return Player( args[ 0 ] );
@@ -124,7 +124,17 @@ package duel.processes
 			return null;
 		}
 		
-		gameprocessgetter function getSourceCard():Card
+		public function getDrawnCard():Card
+		{
+			if ( args[ 1 ] is Card ) 
+				return Card( args[ 1 ] );
+			
+			CONFIG::development
+			{ throw new ArgumentError( "What to do... getDrawnCard..." ); }
+			return null;
+		}
+		
+		public function getSourceCard():Card
 		{
 			if ( args[ 0 ] is Card ) 
 				return Card( args[ 0 ] );
@@ -134,7 +144,7 @@ package duel.processes
 			return null;
 		}
 		
-		gameprocessgetter function getAttacker():Card
+		public function getAttacker():Card
 		{
 			if ( args[ 0 ] is Card && Card( args[ 0 ] ).isCreature ) 
 				return Card( args[ 0 ] );
@@ -144,7 +154,7 @@ package duel.processes
 			return null;
 		}
 		
-		gameprocessgetter function getSummoned():Card
+		public function getSummoned():Card
 		{
 			if ( args[ 0 ] is Card && Card( args[ 0 ] ).isCreature ) 
 				return Card( args[ 0 ] );
@@ -154,7 +164,7 @@ package duel.processes
 			return null;
 		}
 		
-		gameprocessgetter function getSummonedField():CreatureField
+		public function getSummonedField():CreatureField
 		{
 			if ( args.length > 1 && args[ 1 ] is CreatureField ) 
 				return CreatureField( args[ 1 ] );
@@ -164,7 +174,7 @@ package duel.processes
 			return null;
 		}
 		
-		gameprocessgetter function getDamage():Damage
+		public function getDamage():Damage
 		{
 			if ( args[ 1 ] is Damage ) 
 				return args[ 1 ] as Damage;
@@ -174,7 +184,7 @@ package duel.processes
 			return -1;
 		}
 		
-		gameprocessgetter function getDeathIsFromCombat():Boolean
+		public function getDeathIsFromCombat():Boolean
 		{
 			if ( args.length > 1 && args[ 1 ] is Boolean )
 				return args[ 1 ] as Boolean;

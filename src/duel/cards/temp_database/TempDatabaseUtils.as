@@ -130,7 +130,7 @@ package duel.cards.temp_database
 		static public function doSpawnTokenCreatureIfEmpty( field:CreatureField ):void
 		{
 			if ( !field.isEmpty ) return;
-			Game.current.processes.append_SummonHere( Game.current.produceCard( -1 ), field, false );
+			Game.current.processes.append_SummonHere( Game.current.produceCard( "token1" ), field, false );
 		}
 		
 		static public function doResurrectCreature( c:Card, field:CreatureField ):void

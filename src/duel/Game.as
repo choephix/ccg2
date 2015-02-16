@@ -5,9 +5,9 @@ package duel
 	import chimichanga.debug.logging.error;
 	import com.reyco1.multiuser.data.UserObject;
 	import dev.ProcessManagementInspector;
+	import dev.Temp;
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
-	import duel.cards.temp_database.TempCardsDatabase;
 	import duel.controllers.PlayerAction;
 	import duel.controllers.PlayerActionType;
 	import duel.controllers.UserPlayerController;
@@ -31,6 +31,7 @@ package duel
 	import duel.table.IndexedField;
 	import duel.table.TrapField;
 	import flash.geom.Point;
+	import global.CardPrimalData;
 	import starling.animation.IAnimatable;
 	import starling.core.Starling;
 	import starling.display.DisplayObjectContainer;
@@ -246,53 +247,15 @@ package duel
 			
 			//}
 			
-			//{ PREPARE DECKS
-			var DECK1:Array = [];
-			var DECK2:Array = [];
-			
-			var i:int;
-			
-			i = 0;
-			
-			do
-				DECK1.push( i );
-			while ( TempCardsDatabase.F[ ++i ] != null )
-			
-			++i
-			
-			do
-				DECK2.push( i );
-			while ( TempCardsDatabase.F[ ++i ] != null )
-			
-			++i
-			
-			do
-			{
-				DECK1.push( i );
-				DECK2.push( i );
-			}
-			while ( TempCardsDatabase.F[ ++i ] != null )
-			
-			//}
-			
-			//{ PREPARE DECKS AGAIN (double the cards, dowble the fun!) (not really) (whatever, it's proof of concept!)
-			
-			i = 0;
-			do DECK1.push( i ); 
-			while ( TempCardsDatabase.F[ ++i ] != null )
-			++i
-			do DECK2.push( i ); 
-			while ( TempCardsDatabase.F[ ++i ] != null )
-			++i
-			do { DECK1.push( i ); DECK2.push( i ); }
-			while ( TempCardsDatabase.F[ ++i ] != null )
-			
-			//}
-			
 			//{ PREPARE GAMEPLAY
 			
+			var DECK1:Array = Temp.DECK1;
+			var DECK2:Array = Temp.DECK2;
+			
 			var time:Number = 0.7;
+			var i:int;
 			var c:Card;
+			var d:CardPrimalData;
 			
 			if ( amFirst )
 			{
@@ -307,12 +270,12 @@ package duel
 				p1.mana.raiseCap();
 			}
 			
-			function populatePlayerDeck( p:Player, cardIds:Array ):void
+			function populatePlayerDeck( p:Player, arr:Array ):void
 			{
-				for ( i = 0; i < cardIds.length && i < G.MAX_DECK_SIZE; i++ )
+				for ( i = 0; i < arr.length && i < G.MAX_DECK_SIZE; i++ )
 				{
 					time += .010;
-					c = produceCard( cardIds[ i ] );
+					c = produceCard( arr[ i ] );
 					c.owner = p;
 					c.faceDown = true;
 					jugglerStrict.delayCall( p.deck.addCard, time, c, true );
@@ -421,10 +384,10 @@ package duel
 				currentPlayer.isMyTurn = true;
 		}
 		
-		public function produceCard( id:int ):Card
+		public function produceCard( data:* ):Card
 		{ 
 			var c:Card;
-			c = CardFactory.produceCard( id );
+			c = CardFactory.produceCard( data );
 			cardsCount = cards.push( c );
 			c.uid = cardsCount;
 			return c;
