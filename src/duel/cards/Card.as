@@ -52,6 +52,9 @@ package duel.cards
 		//
 		public var sprite:CardSprite;
 		
+		CONFIG::development
+		public var unimplemented:Boolean;
+		
 		//
 		public function initialize():void
 		{

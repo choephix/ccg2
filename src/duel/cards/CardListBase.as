@@ -47,12 +47,22 @@ package duel.cards {
 			return null;
 		}
 		
-		/// Returns the first card found with the specified slug
-		public function findBySlug( slug:String ):Card
+		/// Returns the first card found with the specified slug. 
+		public function findBySlug( slug:String, exact:Boolean = true ):Card
 		{
-			for ( var i:int = 0; i < _count; i++ ) 
-				if ( slug == _list[ i ].slug )
-					return _list[ i ];
+			var i:int;
+			if ( exact )
+			{
+				for ( i = 0; i < _count; i++ ) 
+					if ( slug == _list[ i ].slug )
+						return _list[ i ];
+			}
+			else
+			{
+				for ( i = 0; i < _count; i++ ) 
+					if ( _list[ i ].slug.indexOf( slug ) > -1 )
+						return _list[ i ];
+			}
 			return null;
 		}
 		

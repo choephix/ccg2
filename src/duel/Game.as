@@ -250,7 +250,7 @@ package duel
 			//{ PREPARE GAMEPLAY
 			
 			var DECK1:Array = Temp.DECK1;
-			var DECK2:Array = Temp.DECK2;
+			var DECK2:Array = Temp.DECK1;
 			
 			var time:Number = 0.7;
 			var i:int;

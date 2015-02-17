@@ -139,6 +139,11 @@ package duel.cards.temp_database
 			Game.current.processes.append_SummonHere( Game.current.produceCard( "token1" ), field, false );
 		}
 		
+		static public function doSummonFromDeck( c:Card, field:CreatureField ):void 
+		{
+			Game.current.processes.append_SummonHere( c, field, false );
+		}
+		
 		static public function doResurrectCreature( c:Card, field:CreatureField ):void
 		{
 			Game.current.processes.prepend_ResurrectHere( c, field );

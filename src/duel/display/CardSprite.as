@@ -170,9 +170,11 @@ package duel.display {
 			
 			quad = new Quad( G.CARD_W, G.CARD_H, 0x0 );
 			quad.alpha = .0;
-			//quad.alpha = .1;
 			quad.alignPivot();
 			addChild( quad );
+			
+			CONFIG::development
+			{ quad.alpha = card.unimplemented ? .3 : .0 }
 			// ..
 			
 			targetProps = new TargetProps();
