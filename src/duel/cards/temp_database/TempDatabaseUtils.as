@@ -12,6 +12,7 @@ package duel.cards.temp_database
 	import duel.players.Player;
 	import duel.processes.gameprocessing;
 	import duel.table.CreatureField;
+	import duel.table.IndexedField;
 	
 	use namespace gameprocessing;
 	
@@ -74,6 +75,11 @@ package duel.cards.temp_database
 		static public function doForceAttack( c:Card, free:Boolean ):void
 		{
 			Game.current.processes.append_Attack( c, free );
+		}
+		
+		static public function doForceRelocate( c:Card, field:CreatureField, free:Boolean ):void 
+		{
+			Game.current.processes.append_Relocation( c, field, free );
 		}
 		
 		static public function doDealDirectDamage( p:Player, amount:int, source:* ):void

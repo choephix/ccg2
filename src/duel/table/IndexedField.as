@@ -23,16 +23,16 @@ package duel.table
 		public function get isLocked():Boolean { return locks > 0 }
 		
 		// SAME-COLUMN FIELDS
-		public function get opposingCreatureField():IndexedField
+		public function get opposingCreatureField():CreatureField
 		{ return owner.opponent.fieldsC.getAt( index ) }
 		
-		public function get opposingTrapField():IndexedField
+		public function get opposingTrapField():TrapField
 		{ return owner.opponent.fieldsT.getAt( index ) }
 		
-		public function get samesideCreatureField():IndexedField
+		public function get samesideCreatureField():CreatureField
 		{ return owner.fieldsC.getAt( index ) }
 		
-		public function get samesideTrapField():IndexedField
+		public function get samesideTrapField():TrapField
 		{ return owner.fieldsT.getAt( index ) }
 		
 		// SAME-COLUMN CARDS
