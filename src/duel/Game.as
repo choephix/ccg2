@@ -252,7 +252,7 @@ package duel
 			var DECK1:Array = Temp.DECK1;
 			var DECK2:Array = Temp.DECK1;
 			
-			var time:Number = 0.7;
+			var time:Number = 0.880;
 			var i:int;
 			var c:Card;
 			var d:CardPrimalData;
@@ -274,7 +274,7 @@ package duel
 			{
 				for ( i = 0; i < arr.length && i < G.MAX_DECK_SIZE; i++ )
 				{
-					time += .010;
+					time += .033;
 					c = produceCard( arr[ i ] );
 					c.owner = p;
 					c.faceDown = true;

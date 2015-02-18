@@ -1,5 +1,6 @@
 package duel.otherlogic 
 {
+	import duel.cards.Card;
 	import duel.processes.GameplayProcess;
 	import duel.table.CardLotType;
 	/**
@@ -13,17 +14,25 @@ package duel.otherlogic
 		/// must accept one arg of type Process
 		public var funcActivate:Function = ERROR;
 		
+		private var _isInProgress:Boolean;
+		
 		private var _ftypes:Vector.<CardLotType> = new <CardLotType>[];
 		private var _ftcount:int = 0;
 		
 		private var _pnames:Vector.<String> = new <String>[];
 		private var _pncount:int = 0;
+		private var _pany:Boolean = false;
 		
 		private var _lastP:GameplayProcess;
 		
 		public function watch( ...names ):void
 		{
 			_pncount = _pnames.push.apply( null, names );
+		}
+		
+		public function watchAll():void
+		{
+			_pany = true;
 		}
 		
 		public function allowIn( ...cardLotTypes ):void
@@ -43,7 +52,7 @@ package duel.otherlogic
 		
 		protected function isWatched( p:GameplayProcess ):Boolean
 		{
-			if ( _pncount <= 0 ) return false;
+			if ( _pncount <= 0 ) return _pany;
 			if ( _pncount == 1 ) return _pnames[0] == p.name;
 			var i:int = _pncount;
 			while ( --i >= 0 ) 
@@ -53,6 +62,7 @@ package duel.otherlogic
 		
 		public function mustInterrupt( p:GameplayProcess ):Boolean
 		{
+			if ( _isInProgress ) return false;
 			if ( _lastP == p ) return false;
 			if ( !isWatched( p )  ) return false;
 			if ( !meetsCondition( p ) ) return false;
@@ -65,13 +75,19 @@ package duel.otherlogic
 			return funcCondition( p );
 		}
 		
-		public function activateNow( p:GameplayProcess ):void
+		public function performEffect( p:GameplayProcess ):void
 		{
 			CONFIG::development
-			{ if ( _pncount == 0 || !isWatched( p ) || !funcCondition( p ) ) throw new Error("Idiot"); }
-			 
+			{ if ( !isWatched( p ) || !funcCondition( p ) ) throw new Error("Idiot"); }
+			
 			funcActivate( p );
 		}
+		
+		public function startActivation():void 
+		{ _isInProgress = true }
+		
+		public function finishActivation( c:Card ):void
+		{ _isInProgress = false }
 		
 		public function get isNone():Boolean
 		{ return _pncount == 0 }

@@ -222,6 +222,12 @@ package editor
 				return;
 			
 			_focused = value;
+			
+			if ( value ) 
+				context.focusedCard = this;
+			else
+			if ( context.focusedCard == this )
+				context.focusedCard = null;
 		}
 		
 		public function setSelected( value:Boolean ):void 

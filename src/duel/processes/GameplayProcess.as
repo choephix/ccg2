@@ -20,6 +20,10 @@ package duel.processes
 		static public const TURN_START:String	= "turnStart";
 		/// p:Player
 		static public const TURN_START_COMPLETE:String	= "turnStartComplete";
+		/// p:Player amount:int
+		static public const SPEND_MANA:String	= "spendMana";
+		/// p:Player amount:int
+		static public const SPEND_MANA_COMPLETE:String	= "spendManaComplete";
 		
 		/// p:Player
 		static public const DRAW_CARD:String	= "drawCard";

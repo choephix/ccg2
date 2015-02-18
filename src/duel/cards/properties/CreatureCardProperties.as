@@ -22,6 +22,12 @@ package duel.cards.properties {
 		cardprops var noAttack:Boolean 	= false; 	// CANNOT ATTACK
 		cardprops var noMove:Boolean	= false; 	// CANNOT MOVE
 		
+		public function get isGrand():Boolean 
+		{ return needTribute }
+		
+		public function get isFlippable():Boolean 
+		{ return flippable }
+		
 		// SUMMONING CONDITION
 		cardprops var summonCondition:Function;
 		

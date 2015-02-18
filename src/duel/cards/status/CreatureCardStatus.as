@@ -125,9 +125,6 @@ package duel.cards.status {
 		public function get currentPowerValue():int
 		{ return propsC.basePower + buffs.getSUM( Buff.POWER_OFFSET ) }
 		
-		public function get currentAttackValue():int
-		{ return currentPowerValue }
-		
 		// IN-HAND LOGIC
 		
 		public function maySummonOn( f:Field ):Boolean

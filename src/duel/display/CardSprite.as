@@ -101,7 +101,8 @@ package duel.display {
 			pad.y = .5 * ( G.CARD_H - pad.height );
 			front.addChild( pad );
 			
-			tfTitle = new TextField( 500, G.CARD_H, card.name, "Arial Black", 24, 0x53001B );
+			var title:String = CONFIG::sandbox ? card.slug : card.name;
+			tfTitle = new TextField( 500, G.CARD_H, title, "Arial Black", 24, 0x53001B );
 			tfTitle.touchable = false;
 			tfTitle.hAlign = "center";
 			tfTitle.vAlign = "top";
@@ -283,7 +284,7 @@ package duel.display {
 			if ( card.isCreature )
 			{
 				if ( !card.faceDown ) {
-					tfAttak.targetValue = card.statusC.currentAttackValue;
+					tfAttak.targetValue = card.statusC.currentPowerValue;
 					//tfDescr.text = card.statusC.toString();
 				}
 			}

@@ -10,6 +10,7 @@ package duel.cards.temp_database
 	import duel.G;
 	import duel.Game;
 	import duel.players.Player;
+	import duel.processes.GameplayProcess;
 	import duel.processes.gameprocessing;
 	import duel.table.CreatureField;
 	import duel.table.IndexedField;
@@ -32,6 +33,16 @@ package duel.cards.temp_database
 		{
 			c.props = new TrapCardProperties();
 			c.status = new TrapCardStatus();
+		}
+		
+		// 
+		
+		public static function isInBattle( c:Card, p:GameplayProcess ):Boolean
+		{
+			var atker:Card = p.getAttacker();
+			if ( c == atker ) return true;
+			if ( c == atker.indexedField.opposingCreature ) return true;
+			return false;
 		}
 		
 		// PROCESSES

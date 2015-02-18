@@ -155,18 +155,11 @@
 			}
 		}
 		
-		private function deactivate( e:Event ):void {
-			
-			CONFIG::mobile
-			{ if ( starling ) starling.stop() }
-		}
+		private function deactivate( e:Event ):void
+		{ if ( starling ) starling.stop() }
 		
-		private function activate( e:Event ):void {
-			
-			CONFIG::mobile
-			{ if ( starling ) starling.start() }
-			
-		}
+		private function activate( e:Event ):void
+		{ if ( starling ) starling.start() }
 		
 		///
 		

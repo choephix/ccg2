@@ -203,6 +203,16 @@ package editor
 				var v:SpaceView = context.currentView;
 				var g:CardGroup = context.focusedGroup;
 				
+				// MARK CARD
+				if ( e.keyCode == Keyboard.M )
+				{
+					var c:Card = context.focusedCard;
+					if ( c )
+					{
+						//TODO implement card marking
+					}
+				}
+				else
 				// CHANGE VIEW
 				if ( e.keyCode >= Keyboard.NUMBER_1 && e.keyCode <= Keyboard.NUMBER_9 )
 					setView( e.keyCode - Keyboard.NUMBER_1 );

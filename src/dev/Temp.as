@@ -16,26 +16,50 @@ package dev
 			"___kami___", 
 			
 			// TEST
-			"reversepiercer", "drawson2",  "drawson1", 
-			"harsh_fred", "turn_healer", 
-			"darkassasin2", "darkassasin3",
-			"draw_healer", "deckstructor1",
-			"direct_rager", "fair_healer", 
-			"man_of_honor", "mike",
-			"final_rage", "haggler", 
 			
 			// DONE
-			"saviour", "drawttack",
-			"traitor", "fate_up", 
+			"immortal1",
+			"immortal2",
+			"man_of_honor",
+			"deathdraw",
+			"directrager",
+			"witchbetsy", 
+			"unbreakable", 
+			"finalrage", 
+			"haggler", 
+			"drawhealer", 
+			"deckstructor1",
+			"battle_healer", 
+			"fairturnhealer",
+			"powerhealer2", 
+			"fairhealer",
+			"saviour",
+			"reversepiercer",
+			"darkassasin2",
+			"darkassasin",
+			"harshfred", 
+			"turnhealer", 
+			"bloodhaggler", 
+			"grand_bloodhaggler", 
+			"drawson2",
+			"drawson1", 
+			"drawttack",
+			"traitor",
+			"fateup", 
 			"marco", "polo",
 			"zig", "zag",
-			"joe1", "joe2", "joe3",
-			"doe1", "doe2", "doe3",
 			"banana_a", "banana_b",
 			"8ball_1", 
 		    "8ball_2", 
 		    "8ball_3", 
 		    "8ball_4", 
+			"joe1", "joe2", "joe3",
+			"doe1", "doe2", "doe3",
+			
+			// TO DO
+			
+			// FROZEN
+			"grand_powerhealer", 
 		];
 		
 		public static const DECK2:Array = DECK1;

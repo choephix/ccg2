@@ -384,6 +384,9 @@ package duel.controllers
 			if ( f == null )
 				return;
 			
+			if ( selectedCard == null )
+				return;
+			
 			///SAFE FLIP
 			if ( f  == selectedCard.lot )
 			{

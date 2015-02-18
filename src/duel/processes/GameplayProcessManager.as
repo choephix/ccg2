@@ -64,6 +64,22 @@ package duel.processes
 			pro.delay = .333;
 		}
 		
+		gameprocessing function prepend_SpendMana( p:Player, amount:int ):void
+		{
+			var pro:GameplayProcess;
+			
+			/// TURN_START
+			pro = chain( pro, gen( GameplayProcess.SPEND_MANA, p ) );
+			pro.onEnd = 
+			function onEnd( p:Player ):void
+			{
+				p.mana.useMana( amount );
+			}
+			
+			/// TURN_START_COMPLETE
+			pro = chain ( pro, gen( GameplayProcess.SPEND_MANA_COMPLETE, p ) );
+		}
+		
 		//}
 		//{ DRAW & DISCARD
 		
@@ -74,15 +90,19 @@ package duel.processes
 			{
 				/// SiNGLE DRAW_CARD
 				pro = chain( pro, gen( GameplayProcess.DRAW_CARD, p ) );
-				pro.onEnd = onComplete;
+				pro.onStart = onStart;
+				pro.onEnd = onEnd;
 				pro.delay = NaN;
 			}
 			
-			function onComplete( p:Player ):void 
+			function onStart( p:Player ):void
 			{
 				if ( isManual )
-					p.mana.useMana( 1 );
-				
+					prepend_SpendMana( p, 1 );
+			}
+			
+			function onEnd( p:Player ):void 
+			{
 				if ( p.deck.isEmpty )
 				{
 					prepend_DirectDamage( p, new Damage( 1, DamageType.SPECIAL, null ) );
@@ -138,7 +158,7 @@ package duel.processes
 			function onStart( c:Card, field:CreatureField ):void
 			{
 				if ( isManual )
-					c.controller.mana.useMana();
+					prepend_SpendMana( c.controller, c.cost );
 			}
 			pro.onEnd = 
 			function onEnd( c:Card, field:CreatureField ):void
@@ -308,12 +328,12 @@ package duel.processes
 			pro.onStart = 
 			function onStart( c:Card, field:TrapField ):void
 			{
-				if ( isManual )
-					c.controller.mana.useMana();
-				
 				if ( field.topCard )
 					/// DESTROY OLD TRAP
 					prepend_DestroyTrap( field.topCard );
+					
+				if ( isManual )
+					prepend_SpendMana( c.controller, c.cost );
 			}
 			pro.abortCheck = GameplayFAQ.cannotPlaceTrapHere;
 			pro.onAbort = onAbort;
@@ -407,13 +427,18 @@ package duel.processes
 			
 			/// ACTIVATE_SPECIAL
 			pro = chain( pro, gen( GameplayProcess.ACTIVATE_SPECIAL, c ) );
+			pro.delay = .250;
+			pro.abortable = true;
 			pro.abortCheck = abortCheck;
 			pro.onStart = onStart;
 			pro.onEnd = onEnd;
+			pro.onAbort = special.finishActivation;
 			
 			function onStart( c:Card ):void
 			{
+				special.startActivation();
 				c.lot.moveCardToTop( c );
+				c.sprite.animSpecialEffect();
 				
 				if ( c.faceDown )
 					/// SILENT_FLIP
@@ -423,8 +448,7 @@ package duel.processes
 			}
 			function onEnd( c:Card ):void
 			{
-				c.sprite.animSpecialEffect();
-				special.activateNow( interruptedProcess );
+				special.performEffect( interruptedProcess );
 			}
 			function abortCheck( c:Card ):Boolean
 			{ 
@@ -434,6 +458,9 @@ package duel.processes
 			
 			/// ACTIVATE_SPECIAL_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.ACTIVATE_SPECIAL_COMPLETE, c ) );
+			pro.delay = .500;
+			pro.abortable = false;
+			pro.onEnd = special.finishActivation;
 		}
 		
 		//}
@@ -516,17 +543,17 @@ package duel.processes
 				if ( !c.isInPlay ) 
 					return;
 				
-				if ( c.statusC.currentAttackValue <= dmg.amount )
+				if ( c.statusC.currentPowerValue <= dmg.amount )
 				{
 					prepend_Death( c, true );
 					game.showFloatyText( c.sprite.localToGlobal( new Point() ), 
-						c.statusC.currentAttackValue + "-" + dmg.amount + "=DEATH!", 0xFF0000 );
+						c.statusC.currentPowerValue + "-" + dmg.amount + "=DEATH!", 0xFF0000 );
 				}
 				else
 				{
 					c.sprite.animDamageOnly();
 					game.showFloatyText( c.sprite.localToGlobal( new Point() ), 
-						c.statusC.currentAttackValue + "-" + dmg.amount + "=" + (c.statusC.currentAttackValue - dmg.amount), 0x00FFFF );
+						c.statusC.currentPowerValue + "-" + dmg.amount + "=" + (c.statusC.currentPowerValue - dmg.amount), 0x00FFFF );
 				}
 			}
 			pro.onAbort =
@@ -700,6 +727,7 @@ package duel.processes
 			
 			/// SILENT_FLIP_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.SILENT_FLIP_COMPLETE, c ) );
+			pro.abortable = false;
 		}
 		
 		//}
@@ -724,6 +752,7 @@ package duel.processes
 			pro.onEnd =
 			function onEnd( c:Card ):void
 			{
+				c.faceDown = false;
 				c.resetState();
 				c.owner.grave.addCard( c );
 			}
@@ -735,11 +764,6 @@ package duel.processes
 			
 			/// ENTER_GRAVE_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.ENTER_GRAVE_COMPLETE, c ) );
-			pro.onEnd =
-			function complete( c:Card ):void 
-			{
-				c.faceDown = false;
-			}
 		}
 		
 		gameprocessing function prepend_AddToHand( c:Card, p:Player ):void 

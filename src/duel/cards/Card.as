@@ -196,7 +196,7 @@ package duel.cards
 		
 		public function get exhausted():Boolean {
 			if ( firstTurnExhaustion ) return true;
-			if ( statusC.hasSwift ) return actionsAttack > 0 && actionsRelocate > 0;
+			if ( statusC.hasSwift ) return actionsAttack * actionsRelocate > 0;
 			return actionsRelocate + actionsAttack > 0;
 		}
 		
