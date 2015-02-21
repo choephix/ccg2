@@ -23,6 +23,7 @@ package duel.table.fieldlists
 			return _list[ i ] as CreatureField;
 		}
 		
+		/// must accfept one arg of type Card
 		public function forEachCreature( f:Function ):void
 		{ 
 			for ( var i:int = 0; i < _count; i++ )
@@ -46,6 +47,20 @@ package duel.table.fieldlists
 				if ( f( _list[ i ] ) )
 					return true;
 			return false;
+		}
+		
+		public function countCreaturesThat( f:Function ):int
+		{
+			var r:int = 0;
+			for ( var i:int = 0; i < _count; i++ )
+			{
+				if ( _list[ i ].isEmpty )
+					continue;
+				if ( !f( _list[ i ].topCard ) )
+					continue;
+				r ++;
+			}
+			return r;
 		}
 		
 		public function get count():int 

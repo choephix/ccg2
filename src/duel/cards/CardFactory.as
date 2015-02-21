@@ -29,18 +29,341 @@ package duel.cards
 		//
 		private static function initialize():void
 		{
-			/* * * /
+			/// /// /// TEST SPACE /// /// ///
 			
-			F[ "unnamed" ] = 
+			F[ "forsaken1" ] = 
+			F[ "forsaken2" ] = 
+			F[ "forsaken3" ] = 
+			F[ "forsaken4" ] = 
 			function( c:Card ):void
 			{
+				var ongoing:OngoingEffect;
+				ongoing = c.propsC.addOngoing();
+				ongoing.funcUpdate =
+				function( p:GameplayProcess ):void {
+					var bros:Boolean = 0;
+					bros = c.controller.fieldsC.countCreaturesThat( checkBro );
+					c.propsC.basePower = c.primalData.power + 
+						( bros >= 4 ? c.primalData.getVarInt( 2 ) : 0 );
+				}
+				function checkBro( c:Card ):Boolean {
+					return c.slug.indexOf( c.primalData.getVarString( 0 ) ) > -1;
+				}
 			}
 			
-			/* * */
+			/// /// /// /// /// /// /// ///
+			
+			F[ "hired_mage" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.TURN_END );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getPlayer() && c.controller.mana.current <= 0;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doKill( c );
+				}
+			}
+			
+			F[ "drawban3" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.GRAVEYARD );
+				special.watch( GameplayProcess.DRAW_CARD_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getPlayer() && p.getDrawIsManual();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doDiscard( c.controller.opponent, p.getDrawnCard() );
+				}
+			}
+			
+			F[ "drawban2" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.DRAW_CARD_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getPlayer();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doDiscard( c.controller.opponent, p.getDrawnCard() );
+					TempDatabaseUtils.doDealDirectDamage( c.controller, c.primalData.getVarInt( 0 ), c );
+				}
+			}
+			
+			F[ "drawban" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.DRAW_CARD_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getPlayer() && p.getDrawIsManual();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doDiscard( c.controller.opponent, p.getDrawnCard() );
+					TempDatabaseUtils.doDealDirectDamage( c.controller, c.primalData.getVarInt( 0 ), c );
+				}
+			}
+			
+			F[ "grandnecro" ] = 
+			function( c:Card ):void
+			{
+				var field:CreatureField;
+				
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.TURN_END );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c.controller != p.getPlayer() ) return false;
+					
+					field = c.fieldC;
+					return c.controller.grave.findFirstCard( isViableTarget ) != null;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					field = c.fieldC;
+					const TARGET:Card = c.controller.grave.findFirstCard( isViableTarget );
+					if ( TARGET == null )
+						return;
+					TempDatabaseUtils.doKill( c );
+					TempDatabaseUtils.doResurrectCreature( TARGET, field );
+					TempDatabaseUtils.doDealDirectDamage( c.controller, TARGET.propsC.basePower, c );
+					field = null;
+				}
+				function isViableTarget( cc:Card ):Boolean {
+					if ( cc == c ) return false;
+					if ( !cc.isCreature ) return false;
+					if ( !cc.propsC.isGrand ) return false;
+					if ( cc.statusC.maySummonOn( field ) ) return false;
+					return true;
+				}
+			}
+			
+			F[ "blocker" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.DIE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c != p.getSourceCard() ) return false;
+					if ( !p.getDeathIsFromCombat() ) return false;
+					if ( c.controller.creatureCount > 1 ) return false;
+					return  true;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					p.abort();
+				}
+			}
+			
+			F[ "jack" ] = 
+			F[ "jill" ] = 
+			function( c:Card ):void
+			{
+				const BROTHER:String = c.primalData.getVarString( 0 );
+				
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c != p.getSourceCard() ) return false;
+					
+					const FIELD:CreatureField = c.slug == "jack" ? c.fieldC.adjacentRight : c.fieldC.adjacentLeft;
+					if ( !FIELD.isEmpty ) return false;
+					
+					if ( c.controller.grave.findBySlug( BROTHER ) == null ) return false;
+					return true;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					const FIELD:CreatureField = c.slug == "jack" ? c.fieldC.adjacentRight : c.fieldC.adjacentLeft;
+					TempDatabaseUtils.doResurrectCreature( c.controller.grave.findBySlug( BROTHER ), FIELD );
+				}
+			}
+			
+			F[ "tripplemana" ] = 
+			function( c:Card ):void
+			{
+				c.cost = 3;
+			}
+			
+			F[ "doublemana" ] = 
+			function( c:Card ):void
+			{
+				c.cost = 2;
+			}
+			
+			F[ "nona" ] = 
+			function( c:Card ):void
+			{
+				//TODO make buff
+				c.propsC.onSafeFlipFunc =
+				function():void {
+					c.propsC.basePower = c.primalData.getVarInt( 0 )
+				}
+			}
+			
+			F[ "emptyshell" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.haste = true;
+			}
+			
+			F[ "rebirth" ] = 
+			function( c:Card ):void
+			{
+				var field:CreatureField;
+				
+				c.propsC.onSafeFlipFunc =
+				function():void {
+					field = c.fieldC;
+					TempDatabaseUtils.doKill( c );
+					TempDatabaseUtils.doResurrectCreature
+						( c.controller.grave.findFirstCard( isViableTarget ), field );
+					field = null;
+				}
+				function isViableTarget( cc:Card ):Boolean {
+					if ( cc == c ) return false;
+					if ( !cc.isCreature ) return false;
+					if ( cc.statusC.maySummonOn( field ) ) return false;
+					return true;
+				}
+			}
+			
+			F[ "stunner" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.onCombatFlipFunc =
+				function():void {
+					if ( c.indexedField.opposingCreature == null )
+						return;
+					
+					//TODO ....
+				}
+			}
+			
+			F[ "kamikaze2" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.onCombatFlipFunc =
+				function():void {
+					if ( c.indexedField.opposingCreature == null )
+						return;
+					const DMG:int = c.indexedField.opposingCreature.statusC.currentPowerValue;
+					TempDatabaseUtils.doKill( c );
+					TempDatabaseUtils.doKill( c.indexedField.opposingCreature );
+					TempDatabaseUtils.doDealDirectDamage( c.controller, DMG, c );
+				}
+			}
+			
+			F[ "kamikaze" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.indexedField.opposingCreature != null;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					const DMG:int = c.indexedField.opposingCreature.statusC.currentPowerValue;
+					TempDatabaseUtils.doKill( c );
+					TempDatabaseUtils.doKill( c.indexedField.opposingCreature );
+					TempDatabaseUtils.doDealDirectDamage( c.controller, DMG, c );
+				}
+			}
+			
+			F[ "badclown" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.TURN_END );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c.controller.opponent != p.getPlayer() ) return false;
+					if ( !c.controller.grave.topCard.isTrap ) return false;
+					return true;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doDealDirectDamage( c.controller.opponent, c.primalData.getVarInt( 0 ), c );
+				}
+			}
+			
+			F[ "freefred" ] = 
+			function( c:Card ):void
+			{
+				c.cost = 0;
+			}
 			
 			/// /// /// TEST SPACE /// /// ///
 			
-			/// /// /// TEST SPACE /// /// ///
+			F[ "darkassasin3" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.ATTACK );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c == p.getAttacker() ) return true;
+					if ( c.indexedField.opposingCreature == p.getAttacker() ) return true;
+					return false;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doDealDirectDamage( c.controller, c.primalData.getVarInt( 0 ), c );
+				}
+			}
+			
+			F[ "darkassasin2" ] = 
+			F[ "darkassasin1" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.ATTACK );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getAttacker();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doDealDirectDamage( c.controller, c.primalData.getVarInt( 0 ), c );
+				}
+			}
 			
 			F[ "immortal2" ] = 
 			function( c:Card ):void
@@ -89,7 +412,7 @@ package duel.cards
 				}
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doDraw( c.controller, 2 );
+					TempDatabaseUtils.doDraw( c.controller, c.primalData.getVarInt( 0 ) );
 				}
 			}
 			
@@ -106,7 +429,7 @@ package duel.cards
 				}
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doDealDirectDamage( c.controller.opponent, 1, c );
+					TempDatabaseUtils.doDealDirectDamage( c.controller.opponent, c.primalData.getVarInt( 0 ), c );
 				}
 			}
 			
@@ -173,7 +496,8 @@ package duel.cards
 				ongoing = c.propsC.addOngoing();
 				ongoing.funcUpdate =
 				function( p:GameplayProcess ):void {
-					c.propsC.basePower = c.controller.lifePoints <= 2 ? 9 : 3;
+					c.propsC.basePower = c.primalData.power + 
+						( c.controller.lifePoints <= 2 ? c.primalData.getVarInt( 0 ) : 0 );
 				}
 			}
 			
@@ -212,7 +536,7 @@ package duel.cards
 				}
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doHeal( c.controller, 1 );
+					TempDatabaseUtils.doHeal( c.controller, c.primalData.getVarInt( 0 ) );
 				}
 			}
 			
@@ -264,7 +588,7 @@ package duel.cards
 				special.watch( GameplayProcess.TURN_START );
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doHeal( p.getPlayer(), 2 );
+					TempDatabaseUtils.doHeal( p.getPlayer(), c.primalData.getVarInt( 0 ) );
 				}
 			}
 			
@@ -303,8 +627,8 @@ package duel.cards
 				}
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doHeal( c.controller, 4 );
-					TempDatabaseUtils.doHeal( c.controller.opponent, 4 );
+					TempDatabaseUtils.doHeal( c.controller, c.primalData.getVarInt( 0 ) );
+					TempDatabaseUtils.doHeal( c.controller.opponent, c.primalData.getVarInt( 0 ) );
 				}
 			}
 			
@@ -321,7 +645,7 @@ package duel.cards
 				}
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doHeal( c.controller, 1 );
+					TempDatabaseUtils.doHeal( c.controller, c.primalData.getVarInt( 0 ) );
 				}
 			}
 			
@@ -334,43 +658,7 @@ package duel.cards
 				special.watch( GameplayProcess.SPEND_MANA_COMPLETE );
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doDealDirectDamage( p.getPlayer(), 1, c );
-				}
-			}
-			
-			F[ "darkassasin" ] = 
-			function( c:Card ):void
-			{
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.ATTACK );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( c == p.getAttacker() ) return true;
-					if ( c.indexedField.opposingCreature == p.getAttacker() ) return true;
-					return false;
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doDealDirectDamage( c.controller, 2, c );
-				}
-			}
-			
-			F[ "darkassasin2" ] = 
-			function( c:Card ):void
-			{
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.ATTACK );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c == p.getAttacker();
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doDealDirectDamage( c.controller, 3, c );
+					TempDatabaseUtils.doDealDirectDamage( p.getPlayer(), c.primalData.getVarInt( 0 ), c );
 				}
 			}
 			
@@ -383,11 +671,11 @@ package duel.cards
 				special.watch( GameplayProcess.ATTACK );
 				special.funcCondition =
 				function( p:GameplayProcess ):Boolean {
-					return c == p.getAttacker() && c.controller.opponent.deck.cardsCount >= 2;
+					return c == p.getAttacker() && c.controller.opponent.deck.cardsCount >= c.primalData.getVarInt( 0 );
 				}
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doDraw( c.controller.opponent, 2 );
+					TempDatabaseUtils.doDraw( c.controller.opponent, c.primalData.getVarInt( 0 ) );
 				}
 			}
 			
@@ -404,14 +692,14 @@ package duel.cards
 				}
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doDraw( c.controller.opponent, 1 );
+					TempDatabaseUtils.doDraw( c.controller.opponent, c.primalData.getVarInt( 0 ) );
 				}
 			}
 			
 			F[ "grand_bloodhaggler" ] = 
 			function( c:Card ):void
 			{
-				const LP_PRICE:uint = 5;
+				const LP_PRICE:uint = c.primalData.getVarInt( 0 );
 				
 				var special:SpecialEffect;
 				special = c.propsC.addTriggered();
@@ -442,7 +730,7 @@ package duel.cards
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
 					p.abort();
-					TempDatabaseUtils.doDealDirectDamage( c.controller, 3, c );
+					TempDatabaseUtils.doDealDirectDamage( c.controller, c.primalData.getVarInt( 0 ), c );
 				}
 			}
 			
@@ -498,7 +786,7 @@ package duel.cards
 				}
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doDraw( c.controller, 1 );
+					TempDatabaseUtils.doDraw( c.controller, c.primalData.getVarInt( 0 ) );
 				}
 			}
 			
@@ -533,6 +821,7 @@ package duel.cards
 				special.funcCondition =
 				function( p:GameplayProcess ):Boolean {
 					if ( c.controller != p.getPlayer() ) return false;
+					if ( c.controller.lifePoints >= c.controller.opponent.lifePoints ) return false;
 					return c.indexedField.opposingCreature == null;
 				}
 				special.funcActivate =
@@ -545,8 +834,7 @@ package duel.cards
 			F[ "polo" ] = 
 			function( c:Card ):void
 			{
-				const IS_1:Boolean = c.slug == "marco";
-				const BROTHER:String = IS_1 ? "polo" : "marco";
+				const BROTHER:String = c.primalData.getVarString( 0 );
 				
 				var f:Function =
 				function ():void {
@@ -555,7 +843,7 @@ package duel.cards
 						TempDatabaseUtils.doPutInHand( cc, c.controller );
 				}
 				
-				if ( IS_1 )
+				if ( c.slug == "marco" )
 					c.propsC.onSafeFlipFunc = f;
 				else
 					c.propsC.onCombatFlipFunc = f;
@@ -565,8 +853,7 @@ package duel.cards
 			F[ "zag" ] = 
 			function( c:Card ):void
 			{
-				const IS_1:Boolean = c.slug == "zig";
-				const BROTHER:String = IS_1 ? "zag" : "zig";
+				const BROTHER:String = c.primalData.getVarString( 0 );
 				
 				var special:SpecialEffect;
 				special = c.propsC.addTriggered();
@@ -590,8 +877,7 @@ package duel.cards
 			F[ "banana_b" ] = 
 			function( c:Card ):void
 			{
-				const IS_1:Boolean = c.slug == "banana_a";
-				const BROTHER:String = IS_1 ? "banana_b" : "banana_a";
+				const BROTHER:String = c.primalData.getVarString( 0 );
 				
 				var special:SpecialEffect;
 				special = c.propsC.addTriggered();
@@ -616,7 +902,7 @@ package duel.cards
 			F[ "8ball_4" ] = 
 			function( c:Card ):void
 			{
-				const GROUP:String = "8ball";
+				const GROUP:String = "8ball_";
 				
 				var special:SpecialEffect;
 				special = c.propsC.addTriggered();

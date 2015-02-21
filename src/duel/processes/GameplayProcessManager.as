@@ -89,19 +89,19 @@ package duel.processes
 			while ( --count >= 0 )
 			{
 				/// SiNGLE DRAW_CARD
-				pro = chain( pro, gen( GameplayProcess.DRAW_CARD, p ) );
+				pro = chain( pro, gen( GameplayProcess.DRAW_CARD, p, isManual ) );
 				pro.onStart = onStart;
 				pro.onEnd = onEnd;
 				pro.delay = NaN;
 			}
 			
-			function onStart( p:Player ):void
+			function onStart( p:Player, isManual:Boolean ):void
 			{
 				if ( isManual )
 					prepend_SpendMana( p, 1 );
 			}
 			
-			function onEnd( p:Player ):void 
+			function onEnd( p:Player, isManual:Boolean ):void 
 			{
 				if ( p.deck.isEmpty )
 				{
@@ -114,7 +114,7 @@ package duel.processes
 				
 				/// SiNGLE DRAW_CARD_COMPLETE
 				
-				var proComplete:GameplayProcess = gen( GameplayProcess.DRAW_CARD_COMPLETE, p, c );
+				var proComplete:GameplayProcess = gen( GameplayProcess.DRAW_CARD_COMPLETE, p, isManual, c );
 				proComplete.delay = NaN;
 				prependProcess( proComplete );
 				prepend_AddToHand( c, p );

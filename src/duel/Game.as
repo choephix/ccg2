@@ -135,25 +135,6 @@ package duel
 			table.y = App.H * 0.50;
 			addChild( table );
 			
-			const CHAR_SCALE:Number = 0.75;
-			const CHAR_MARGIN_Y:Number = 60;
-			
-			var char1:Image = assets.generateImage( "char1" );
-			char1.alignPivot( "right", "bottom" );
-			char1.x = App.W;
-			char1.y = App.H - CHAR_MARGIN_Y;
-			char1.scaleX = CHAR_SCALE;
-			char1.scaleY = CHAR_SCALE;
-			addChild( char1 );
-			
-			var char2:Image = assets.generateImage( "char2" );
-			char2.alignPivot( "right", "top" );
-			char2.x = 0;
-			char2.y = CHAR_MARGIN_Y;
-			char2.scaleX = -CHAR_SCALE;
-			char2.scaleY = CHAR_SCALE;
-			addChild( char2 );
-			
 			p1.tableSide = new TableSide( p1, table, false );
 			p2.tableSide = new TableSide( p2, table, true );
 			

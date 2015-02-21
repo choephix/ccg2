@@ -186,12 +186,22 @@ package duel.processes
 		
 		public function getDrawnCard():Card
 		{
-			if ( args[ 1 ] is Card ) 
-				return Card( args[ 1 ] );
+			if ( args[ 2 ] is Card ) 
+				return Card( args[ 2 ] );
 			
 			CONFIG::development
 			{ throw new ArgumentError( "What to do... getDrawnCard..." ); }
 			return null;
+		}
+		
+		public function getDrawIsManual():Boolean 
+		{
+			if ( args[ 1 ] is Boolean ) 
+				return Boolean( args[ 1 ] );
+			
+			CONFIG::development
+			{ throw new ArgumentError( "What to do... getDrawIsManual..." ); }
+			return false;
 		}
 		
 		public function getSourceCard():Card

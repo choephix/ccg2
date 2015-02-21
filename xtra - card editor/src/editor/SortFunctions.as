@@ -1,5 +1,7 @@
 package editor 
 {
+	import flash.globalization.Collator;
+	import flash.globalization.CollatorMode;
 	/**
 	 * ...
 	 * @author choephix
@@ -25,9 +27,31 @@ package editor
 		
 		public static function byPower( a:Card, b:Card ):int
 		{
-			if ( a.data.type == CardType.TRAP ) return -1;
-			if ( b.data.type == CardType.TRAP ) return  1;
+			if ( a.data.type == CardType.TRAP_NORMAL ) return -1;
+			if ( b.data.type == CardType.TRAP_NORMAL ) return  1;
 			return a.data.power - b.data.power;
+		}
+		
+		public static function bySlug( a:Card, b:Card ):int
+		{
+			var sorter:Collator = new Collator( "fr-FR", CollatorMode.SORTING );
+			return sorter.compare( b.data.slug, a.data.slug );
+		}
+		
+		public static function byName( a:Card, b:Card ):int
+		{
+			var sorter:Collator = new Collator( "fr-FR", CollatorMode.SORTING );
+			return sorter.compare( b.data.name, a.data.name );
+		}
+		
+		public static function byID( a:Card, b:Card ):int
+		{
+			return a.data.id - b.data.id;
+		}
+		
+		public static function byRandom( a:Card, b:Card ):int
+		{
+			return Math.random() >= .5 ? -1 : 1;
 		}
 	}
 

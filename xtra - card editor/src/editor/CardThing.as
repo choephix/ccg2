@@ -192,7 +192,7 @@ package editor
 		
 		private function onButtonChangeType():void 
 		{
-			setType( ( _type % 4 ) + 1 ); 
+			setType( ( _type % 5 ) + 1 ); 
 		}
 		
 		private function onButtonChangeFaction():void
@@ -230,7 +230,8 @@ package editor
 			tSlug.text = CONFIG::sandbox ? source.data.name : source.data.slug;
 			tTitle.text = CONFIG::sandbox ? source.data.slug : source.data.name;
 			tExtra.text = source.data.power.toString();
-			tTags.text = source.data.tags.join( "\n" );
+			//tTags.text = source.data.tags.join( "\n" );
+			tTags.text = source.data.vars.join( "," );
 			
 			setType( source.data.type );
 			setFaction( source.data.faction );
@@ -238,8 +239,10 @@ package editor
 		
 		public function saveDataTo( c:Card ):void
 		{
-			tTitle.text = tTitle.text.split( "\n" ).join( "" );
-			tSlug.text = tSlug.text.split( "\n" ).join( "" );
+			//tTitle.text = tTitle.text.split( "\n" ).join( "" );
+			//tSlug.text = tSlug.text.split( "\n" ).join( "" );
+			tTitle.text = tTitle.text.replace( new RegExp( /\n/g ), "" );
+			tSlug.text = tSlug.text.replace( new RegExp( /\n/g ), "" );
 			
 			c.data.type = _type;
 			c.data.faction = _faction;
@@ -247,7 +250,12 @@ package editor
 			c.data.name = CONFIG::sandbox ? tSlug.text : tTitle.text;
 			c.data.description = tDescr.text;
 			c.data.power = int( tExtra.text );
-			c.data.tags = tTags.text.split( "\n" );
+			//c.data.tags = tTags.text.split( "\n" );
+			//c.data.tags = tTags.text.replace( new RegExp( /\n/g ), "," ).split( "," );
+			c.data.vars = tTags.text
+				.replace( new RegExp( / /g ), "" )
+				.replace( new RegExp( /\n/g ), "," )
+				.split( "," );
 			c.onDataChange();
 		}
 		
@@ -256,7 +264,7 @@ package editor
 			_type = value;
 			pad.color = CardType.toColor( _type ) + 0x101010;
 			iType.color = CardType.toColor( _type );
-			tExtra.visible = _type != CardType.TRAP;
+			tExtra.visible = CardType.isCreature( _type );
 		}
 		
 		public function setFaction( value:Faction ):void

@@ -90,8 +90,6 @@ package {
 			App.assets.enqueue( "assets/ring.png" )
 			App.assets.enqueue( "assets/tipspace.jpg" )
 			App.assets.enqueue( "assets/mainbg.jpg" )
-			App.assets.enqueue( "assets/characters/char1.png" )
-			App.assets.enqueue( "assets/characters/char2.png" )
 		}
 		
 		private function startLoadingAssets():void {

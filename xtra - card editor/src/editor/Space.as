@@ -18,6 +18,8 @@ package editor
 	 */
 	public class Space extends Sprite 
 	{
+		public static var me:Space;
+		
 		public var nextCardID:int = 1;
 		
 		public const events:EditorEvents = new EditorEvents();
@@ -33,6 +35,8 @@ package editor
 		
 		public function initialize( jsonData:String ):void 
 		{
+			me = this;
+			
 			// PREP
 			
 			stage.addEventListener( KeyboardEvent.KEY_DOWN, onKeyDown );
@@ -54,7 +58,8 @@ package editor
 			Starling.juggler.add( dcall );
 			
 			var i:int;
-			for ( i = 0; i < views.length; i++ )
+			var len:int;
+			for ( i = 0, len = views.length; i < len; i++ )
 				views[ i ] = generateNewSpaceView( i );
 			
 			context.cardThing.space = this;
@@ -64,6 +69,12 @@ package editor
 			// PARSE DATA
 			
 			initFromJson( JSON.parse( jsonData ) );
+			
+			for ( i = 0, len = cards.length; i < len; i++ )
+			{
+				cards[ i ].data.updatePrettyDescription();
+				cards[ i ].onDataChange();
+			}
 			
 			///
 			onResize();
@@ -203,14 +214,33 @@ package editor
 				var v:SpaceView = context.currentView;
 				var g:CardGroup = context.focusedGroup;
 				
+				// SORTING
+				if ( e.shiftKey && e.keyCode >= Keyboard.NUMBER_0 && e.keyCode <= Keyboard.NUMBER_9 )
+					switch ( e.keyCode - Keyboard.NUMBER_0 )
+					{
+						case 1: g.sortCards( SortFunctions.bySlug ); break;
+						case 2: g.sortCards( SortFunctions.byName ); break;
+						case 3: g.sortCards( SortFunctions.byType ); break;
+						case 4: g.sortCards( SortFunctions.byFaction); break;
+						case 5: g.sortCards( SortFunctions.byPower ); break;
+						case 8: g.sortCards( SortFunctions.byID ); break;
+						case 9: g.sortCards( SortFunctions.byRandom ); break;
+						default: return;
+					}
+				else
 				// MARK CARD
 				if ( e.keyCode == Keyboard.M )
 				{
 					var c:Card = context.focusedCard;
-					if ( c )
+					if ( c == null ) return;
+					switch ( c.data.mark )
 					{
-						//TODO implement card marking
+						case 0x000000 : c.data.mark = 0x111111; break;
+						case 0x111111 : c.data.mark = 0x0088FF; break;
+						case 0x0088FF : c.data.mark = 0xFF4400; break;
+						case 0xFF4400 : c.data.mark = 0x000000; break;
 					}
+					c.onDataChange();
 				}
 				else
 				// CHANGE VIEW
@@ -282,25 +312,6 @@ package editor
 					context.currentView.addGroup( generateNewGroup() );
 				}
 				else
-				// SORTING
-				if ( e.keyCode == Keyboard.Q )
-				{
-					if ( g )
-						g.sortCards( SortFunctions.byFaction );
-				}
-				else
-				if ( e.keyCode == Keyboard.W )
-				{
-					if ( g )
-						g.sortCards( SortFunctions.byType );
-				}
-				else
-				if ( e.keyCode == Keyboard.E )
-				{
-					if ( g )
-						g.sortCards( SortFunctions.byPower );
-				}
-				else
 				// // // SAVE CHANGES // // //
 				if ( e.keyCode == Keyboard.S )
 				{
@@ -344,6 +355,8 @@ package editor
 				cd.faction		= Faction.fromInt( o.fctn );
 				cd.power		= o.pwr;
 				cd.tags			= o.tags;
+				cd.vars			= o.vars;
+				cd.mark			= o.mark;
 				c = generateNewCard( cd );
 			}
 			
@@ -410,6 +423,8 @@ package editor
 				o.fctn = Faction.toInt( c.data.faction );
 				o.pwr  = c.data.power;
 				o.tags = c.data.tags;
+				o.vars = c.data.vars;
+				o.mark = c.data.mark;
 				r.cards.push( o );
 			}
 			
@@ -469,5 +484,15 @@ package editor
 		
 		override public function set height(value:Number):void 
 		{ throw new Error( "Don't do that!" ) }
+		
+		//
+		
+		public static function findCardBySlug( slug:String ):Card
+		{
+			for ( var i:int = 0, iMax:int = me.cards.length; i < iMax; i++ )
+				if ( me.cards[ i ].data.slug == slug )
+					return me.cards[ i ];
+			return null;
+		}
 	}
 }

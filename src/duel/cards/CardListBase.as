@@ -60,7 +60,7 @@ package duel.cards {
 			else
 			{
 				for ( i = 0; i < _count; i++ ) 
-					if ( _list[ i ].slug.indexOf( slug ) > -1 )
+					if ( _list[ i ].slug.indexOf( slug ) == 0 )
 						return _list[ i ];
 			}
 			return null;

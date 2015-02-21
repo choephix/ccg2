@@ -24,5 +24,12 @@ package global
 		public var power:int;
 		public var faction:int;
 		public var type:int;
+		public var vars:Array;
+		
+		public function getVarString( index:int ):String
+		{ return vars.length > index ? vars[ index ] as String : "!ERROR!" }
+		
+		public function getVarInt( index:int ):int
+		{ return vars.length > index ? int( vars[ index ] ) : 0 }
 	}
 }

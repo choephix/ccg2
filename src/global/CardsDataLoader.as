@@ -53,6 +53,7 @@ package global
 					cpd.power = o.pwr;
 					cpd.faction = o.fctn;
 					cpd.type = o.type;
+					cpd.vars = o.vars;
 					_cards.push( cpd );
 				}
 				_numCards = _cards.length;

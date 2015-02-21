@@ -36,6 +36,7 @@ package editor
 		private var tExtra:TextField;
 		private var tSlug:TextField;
 		private var iFaction:Quad;
+		private var marker:Quad;
 		
 		public var data:CardData;
 		
@@ -118,6 +119,15 @@ package editor
 			iFaction.y = 0;
 			addChild( iFaction );
 			
+			marker = new Quad( pad.width, 10, 0x0 );
+			marker.alignPivot();
+			marker.x = .5 * pad.width;
+			marker.y = .5 * pad.height;
+			marker.rotation = -.33 * Math.PI;
+			marker.alpha = .5;
+			marker.visible = false;
+			addChild( marker );
+			
 			addEventListener( EnterFrameEvent.ENTER_FRAME, advanceTime );
 			addEventListener( TouchEvent.TOUCH, onTouch );
 			
@@ -133,21 +143,15 @@ package editor
 			tTitle.width = Math.max( tTitle.textBounds.width + PADDING + PADDING, G.CARD_W );
 			tTitle.scaleX = Math.min( 1.0, G.CARD_W / tTitle.width );
 			
-			tDescr.text = data.description;
-			tDescr.height = G.CARD_H - tDescr.y - ( data.type == CardType.TRAP ? PADDING : 30);
+			tDescr.text = data.prettyDescription;
+			tDescr.height = G.CARD_H - tDescr.y - ( data.type == CardType.TRAP_NORMAL ? PADDING : 30);
 			
 			tSlug.text = CONFIG::sandbox ? data.name : data.slug;
 			
-			if ( data.type == CardType.TRAP )
-			{
-				tExtra.text = "";
+			if ( CardType.isTrap( data.type ) )
 				tExtra.visible = false;
-			}
 			else 
-			{
-				tExtra.visible = true;
 				tExtra.text = data.power.toString();
-			}
 			
 			pad.color = CardType.toColor( data.type );
 			
@@ -158,6 +162,10 @@ package editor
 			tDescr.visible = _isOnTop && tDescr.text != "";
 			tExtra.visible = _isOnTop && tExtra.text != "";
 			tSlug.visible = _isOnTop && tSlug.text != "";
+			
+			marker.visible = data.mark > 0;
+			if ( marker.visible )
+				marker.color = data.mark;
 		}
 		
 		private function onTouch(e:TouchEvent):void 
