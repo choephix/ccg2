@@ -1,5 +1,6 @@
 package global 
 {
+	import chimichanga.debug.logging.error;
 	/**
 	 * ...
 	 * @author choephix
@@ -25,6 +26,48 @@ package global
 		public var faction:int;
 		public var type:int;
 		public var vars:Array;
+		
+		private var _prettyDescription:String;
+		public function get prettyDescription():String { return _prettyDescription }
+		
+		public function updatePrettyDescription( all:CardsDataLoader ):void 
+		{
+			_prettyDescription = description;
+		
+			if ( vars == null || vars.length == 0 )
+				return;
+			
+			var s:String;
+			for ( var i:int = 0; i < vars.length; i++ )
+			{
+				s = vars[ i ];
+				if ( s.charAt( 0 ) == "#" )
+				{
+					s = s.substr( 1, s.length - 1 );
+					var c:CardPrimalData = all.findBySlug( s );
+					if ( c == null )
+					{
+						s = s.toUpperCase();
+						CONFIG::development
+						{ error ( "card " + s + " not found!!" ) }
+					}
+					else
+						s = c.name;
+				}
+				_prettyDescription = _prettyDescription.split( "%%" + i ).join( s );
+			}
+		}
+		
+		public function getVarSlug( index:int ):String
+		{ 
+			if ( vars.length <= index )
+			{
+				return slug;
+				CONFIG::development
+				{ throw new Error( "VAR #" + index + " NOT FOUND" ) };
+			}
+			return String( vars[ index ] ).substr( 1, vars[index].length - 1 );
+		}
 		
 		public function getVarString( index:int ):String
 		{ return vars.length > index ? vars[ index ] as String : "!ERROR!" }

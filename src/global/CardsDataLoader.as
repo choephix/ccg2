@@ -31,6 +31,7 @@ package global
 			_loader.addEventListener( Event.COMPLETE, onRequestComplete );
 			_loader.load( new URLRequest( URL ) );
 			
+			var _this:CardsDataLoader = this;
 			function onRequestComplete( e:Event ):void 
 			{
 				_loader.removeEventListener( Event.COMPLETE, onRequestComplete );
@@ -40,9 +41,10 @@ package global
 				// Populate cards primal data vector
 				_cards.length = 0;
 				var ca:Array = JSON.parse( _loader.data ).cards as Array;
+				var i:int;
 				var o:Object;
 				var cpd:CardPrimalData;
-				for ( var i:int = 0; i < ca.length; i++ )
+				for ( i = 0; i < ca.length; i++ )
 				{
 					o = ca[ i ];
 					cpd = new CardPrimalData();
@@ -57,6 +59,9 @@ package global
 					_cards.push( cpd );
 				}
 				_numCards = _cards.length;
+				
+				for ( i = 0; i < _numCards; i++ )
+					_cards[ i ].updatePrettyDescription( _this );
 				
 				onComplete();
 			}

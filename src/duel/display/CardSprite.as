@@ -242,9 +242,6 @@ package duel.display {
 			if ( time > .033 )
 				time = .033;
 			
-			if ( card.isInPlay && card.isCreature )
-				quad.color = card.exhausted ? 0x0 : 0xFFFF00;
-			
 			_peekThrough = card.faceDown && isFocused && game.p1.knowsCard( card );
 			_backTranslucency = lerp( _backTranslucency, _peekThrough ? .75 : .0, .15 );
 			

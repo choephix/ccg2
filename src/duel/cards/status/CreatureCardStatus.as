@@ -20,14 +20,17 @@ package duel.cards.status {
 	 */
 	public class CreatureCardStatus extends CardStatus
 	{
+		public var actionsRelocate:int = 0;
+		public var actionsAttack:int = 0;
+		public var hasSummonExhaustion:Boolean = false;
+		
 		public function get propsC():CreatureCardProperties
 		{ return props as CreatureCardProperties }
 		
 		override public function initialize():void
 		{
 			super.initialize();
-			this.buffs = new BuffManager();
-			this.buffs.card = card;
+			this.buffs = new BuffManager( card );
 		}
 		
 		override public function onGameProcess( p:GameplayProcess ):void
@@ -91,31 +94,56 @@ package duel.cards.status {
 					}
 				}
 			}
-				
+			
+		}
+		
+		public function onLeavePlay():void
+		{
+			reset();
+			buffs.removeAllWeak();
+		}
+		
+		public function onTurnEnd():void
+		{
+			reset();
+		}
+		
+		/// This must be called on turn start as well as when the card leaves play
+		public function reset():void
+		{
+			actionsRelocate = 0;
+			actionsAttack = 0;
+			hasSummonExhaustion = false;
 		}
 		
 		// PROP FLAGS
 		
-		public function get isFlippable():Boolean
-		{ return propsC.flippable || buffs.getOR( Buff.FLIPPABLE ) }
+		public function get canAttack():Boolean { 
+			if ( hasSummonExhaustion ) return false;
+			if ( hasActionExhaustion ) return false;
+			if ( buffs.cannotAttack ) return false;
+			return true;
+		}
+		public function get canRelocate():Boolean { 
+			if ( hasSummonExhaustion ) return false;
+			if ( hasActionExhaustion ) return false;
+			if ( buffs.cannotRelocate ) return false;
+			return true;
+		}
 		
-		public function get needTribute():Boolean
-		{ return propsC.needTribute || buffs.getOR( Buff.NEED_TRIBUTE ) }
+		public function get hasActionExhaustion():Boolean
+		{ 
+			if ( propsC.swift ) 
+				return actionsAttack * actionsRelocate > 0;
+			return actionsRelocate + actionsAttack > 0;
+		}
 		
 		public function get canBeTribute():Boolean
-		{ return !card.exhausted }
+		///{ return !hasSummonExhaustion && !hasActionExhaustion }
+		{ return !hasSummonExhaustion }
 		
-		public function get hasHaste():Boolean
-		{ return propsC.haste || buffs.getOR( Buff.HASTE ) }
-		
-		public function get hasNoAttack():Boolean
-		{ return propsC.noAttack || buffs.getOR( Buff.NO_ATTACK ) }
-		
-		public function get hasNoRelocation():Boolean
-		{ return propsC.noMove || buffs.getOR( Buff.NO_RELOCATION ) }
-		
-		public function get hasSwift():Boolean
-		{ return propsC.swift || buffs.getOR( Buff.SWIFT ) }
+		public function get needTribute():Boolean
+		{ return propsC.isGrand && !buffs.skipTribute }
 		
 		// PROP VALUES
 		
@@ -123,7 +151,7 @@ package duel.cards.status {
 		{ return propsC.basePower }
 		
 		public function get currentPowerValue():int
-		{ return propsC.basePower + buffs.getSUM( Buff.POWER_OFFSET ) }
+		{ return propsC.basePower + buffs.powerOffset }
 		
 		// IN-HAND LOGIC
 		
@@ -183,24 +211,13 @@ package duel.cards.status {
 		public function removeBuff( b:Buff ):void
 		{ buffs.removeBuff( b ) }
 		
+		public function buffToString():String 
+		{ return buffs.isEmpty as String }
+		
 		//
 		public function toString():String 
 		{
-			var a:Array = [];
-			if ( needTribute )			a.push( "needs tribute" );
-			if ( isFlippable )			a.push( "flippable" );
-			if ( hasHaste )				a.push( "haste" );
-			if ( hasNoAttack )			a.push( "no attack" );
-			if ( hasNoRelocation )		a.push( "no move" );
-			if ( hasSwift )				a.push( "swift" );
-			if ( _lifeLinked )			a.push( "links:"+_lifeLinks.length );
-			//if ( hasHandSpecial )		a.push( "inhand ef" );
-			//if ( hasGraveSpecial )		a.push( "ingrave ef" );
-			//if ( hasCombatFlipEffect )	a.push( "combat-flip" );
-			//if ( hasSafeFlipEffect )	a.push( "safe-flip" );
-			//if ( hasInPlaySpecialEffect )	a.push( "special" );
-			//if ( hasInPlayOngoingEffect )	a.push( "ongoing" );
-			return a.join( "\n" );
+			return "N/A";
 		}
 	}
 

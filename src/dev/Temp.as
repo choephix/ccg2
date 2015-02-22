@@ -16,14 +16,10 @@ package dev
 			"___kami___", 
 			
 			// TEST
-			"hired_mage",
-			"drawban3",
-			"drawban2",
-			"drawban",
+			"man_of_honor",
+			
 			"grandnecro",
 			"blocker",
-			"jack",
-			"jill",
 			"tripplemana",
 			"doublemana",
 			"nona",
@@ -35,12 +31,13 @@ package dev
 			"badclown",
 			"freefred",
 			
-			"forsaken1",
-			"forsaken2",
-			"forsaken3",
-			"forsaken4",
-			
 			// DONE
+			"drawban3",
+			"drawban2",
+			"drawban",
+			"jack",
+			"jill",
+			"hired_mage",
 			"darkassasin3",
 			"darkassasin2",
 			"darkassasin1",
@@ -70,15 +67,26 @@ package dev
 			"drawttack",
 			"traitor",
 			"fateup", 
-			"marco", "polo",
-			"zig", "zag",
-			"banana_a", "banana_b",
+			"marco",
+			"polo",
+			"zig",
+			"zag",
+			"banana_a",
+			"banana_b",
+			"forsaken1",
+			"forsaken2",
+			"forsaken3",
+			"forsaken4",
 			"8ball_1", 
 		    "8ball_2", 
 		    "8ball_3", 
 		    "8ball_4", 
-			"joe1", "joe2", "joe3",
-			"doe1", "doe2", "doe3",
+			"joe1",
+			"joe2",
+			"joe3",
+			"doe1",
+			"doe2",
+			"doe3",
 			
 			// TO DO
 			
@@ -100,9 +108,9 @@ package dev
 			{
 				if ( card.propsC.isToken ) 
 					return ColorScheme.getColorForCreatureToken( true );
-				if ( card.propsC.needTribute ) 
+				if ( card.propsC.isGrand ) 
 					return ColorScheme.getColorForCreatureNeedsTribute( true );
-				if ( card.propsC.flippable ) 
+				if ( card.propsC.isFlippable ) 
 					return ColorScheme.getColorForCreatureFlippable( true );
 				return ColorScheme.getColorForCreature( true );
 			}

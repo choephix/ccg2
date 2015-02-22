@@ -46,10 +46,10 @@ package duel.controllers
 			{
 				if ( field.isEmpty )
 					return _( "You need to replace another creature to summon a Grand creature." )
-				if ( field.topCard.exhausted )
-					return _( "Exhausted creatures cannot serve as tributes." )
+				if ( field.topCard.statusC.hasSummonExhaustion )
+					return _( field.topCard + " cannot serve as a tribute the turn they were summoned." )
 				if ( !field.topCard.statusC.canBeTribute )
-					return _( "You cannot sacrifice that creature right now." )
+					return _( field.topCard + " cannot be sacrificed right now." )
 			}
 			else
 			{
@@ -113,13 +113,16 @@ package duel.controllers
 			if ( field.isLocked )
 				return _( "You cannot move creatures to a locked field." );
 			
-			if ( isManual && c.exhausted )
-				return _( c.name + " is exhausted." )
+			if ( isManual && c.statusC.hasSummonExhaustion )
+				return _( c.name + " cannot move the same turn it was summoned." )
+			
+			if ( isManual && c.statusC.hasActionExhaustion )
+				return _( c.name + " already performed an action this turn." )
 			
 			if ( isManual && c.faceDown )
 				return _( c.name + " must be flipped up before it can move." )
 			
-			if ( isManual && !c.canRelocate )
+			if ( isManual && !c.statusC.canRelocate )
 				return _( c.name + " cannot move right now." )
 			
 			if ( !field.isEmpty )
@@ -136,13 +139,16 @@ package duel.controllers
 			if ( c.indexedField.isLocked )
 				return _( "You cannot use creatures ontop a locked field." );
 			
-			if ( isManual && c.exhausted )
-				return _( c.name + " is exhausted." )
+			if ( isManual && c.statusC.hasSummonExhaustion )
+				return _( c.name + " cannot attack the same turn it was summoned." )
+			
+			if ( isManual && c.statusC.hasActionExhaustion )
+				return _( c.name + " already performed an action this turn." )
 			
 			if ( isManual && c.faceDown )
 				return _( c.name + " must be flipped up before it can attack." )
 			
-			if ( isManual && !c.canAttack )
+			if ( isManual && !c.statusC.canAttack )
 				return _( c.name + " cannot attack right now." )
 			
 			return null;
@@ -156,14 +162,14 @@ package duel.controllers
 			if ( !c.faceDown )
 				return _( "Creature is not face-down." );
 			
-			if ( !c.statusC.isFlippable )
+			if ( !c.propsC.isFlippable )
 				return _( "You cannot safeflip this card." );
 			
 			if ( c.indexedField.isLocked )
 				return _( "You cannot use creatures ontop a locked field." );
 			
-			if ( isManual && c.exhausted )
-				return _( c.name + " is exhausted." )
+			if ( isManual && c.statusC.hasSummonExhaustion )
+				return _( c.name + " cannot be flipped during the same turn it was summoned." )
 			
 			return null;
 		}

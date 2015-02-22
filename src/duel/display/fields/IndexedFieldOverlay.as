@@ -74,7 +74,10 @@ package duel.display.fields
 			}
 			
 			// CREATURE EXHAUSTED
-			_isCardExhausted = !field.isEmpty && field.topCard.isCreature && field.topCard.exhausted;
+			_isCardExhausted = !field.isEmpty 
+				&& field.topCard.isCreature 
+				&& !field.topCard.statusC.canAttack 
+				&& !field.topCard.statusC.canRelocate;
 			exhaustClock.alpha = lerp( exhaustClock.alpha, 
 				( _isCardExhausted ? 1.0 : 0.0 ), .1 );
 			

@@ -230,7 +230,7 @@ package duel.display.cardlots
 				_tipSprite.text = "Set Me?";
 			else
 			if ( c.isCreature )
-				if ( c.propsC.flippable )
+				if ( c.propsC.isFlippable )
 					_tipSprite.text = "Summon Me Face-Down?";
 				else
 				if ( c.statusC.needTribute )

@@ -1,50 +1,45 @@
 package duel.cards.buffs 
 {
+	import duel.cards.Card;
 	/**
 	 * ...
 	 * @author choephix
 	 */
 	public class Buff 
 	{
-		internal var next:Buff;
-		internal var prev:Buff;
+		public var active:Boolean;
+		public var hidden:Boolean;
 		
-		public var expiryCondition:Function;
+		// : : : VALUES : : : 
+		public var powerOffset:*;
+		public var cannotAttack:*;
+		public var cannotRelocate:*;
+		public var skipTribute:*;
 		
-		public var description:String;
-		internal var name:String;
-		internal var value:*;
+		//
+		private var _description:String;
+		private var _name:String;
+		private var _isWeak:Boolean;
 		
-		internal var sticky:Boolean;
-		
-		public function Buff( name:String, value:*, description:String = "" ) 
+		public function Buff( name:String, description:String = "", destroyOutOfPlay:Boolean = false ) 
 		{
-			this.value = value;
-			this.name = name;
-			this.description = description;
+			_name = name;
+			_description = description;
+			_isWeak = destroyOutOfPlay;
+			active = true;
 		}
 		
-		public function reset():void
-		{
-			
-		}
+		public function getIsWeak():Boolean
+		{ return _isWeak }
 		
-		// LIST
+		public function getName():String 
+		{ return _name }
 		
-		static public const POWER_OFFSET:String = "powerOffset";
+		public function getDescription():String 
+		{ return _name }
 		
-		static public const FLIPPABLE:String = "flippable";
-		static public const NEED_TRIBUTE:String = "needTribute";
-		
-		static public const HASTE:String = "haste";
-		static public const NO_ATTACK:String = "noAttack";
-		static public const NO_RELOCATION:String = "noRelocation";
-		static public const SWIFT:String = "swift";
-		
-		//SPECIAL_EFFECT
-		
-		// S T A T I C
-		static public function generateFlagBuff( name:String ):Buff
-		{ return new Buff( name, true ); }
+		// REUSABLE FUNCTIONS
+		public static function CANNOT_ATTACK_DIRECTLY( c:Card ):Boolean
+		{ return c.isInPlay && c.indexedField.opposingCreatureField.isEmpty }
 	}
 }

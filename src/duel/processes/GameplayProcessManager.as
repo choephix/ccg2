@@ -185,11 +185,11 @@ package duel.processes
 			}
 			
 			/// ENTER_PLAY
-			pro = chain( pro, process_EnterPlay( c, field, c.propsC.flippable ) );
+			pro = chain( pro, process_EnterPlay( c, field, c.propsC.isFlippable ) );
 			
 			/// SUMMON_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.SUMMON_COMPLETE, c, field ) );
-			pro.delay = isManual ? .150 : NaN;
+			pro.delay = isManual ? .250 : NaN;
 			pro.abortable = true; //was false by default, cuz' "complete"
 			pro.abortCheck =
 			function completeAbortCheck( c:Card, field:CreatureField ):Boolean
@@ -200,9 +200,9 @@ package duel.processes
 			function complete( c:Card, field:CreatureField ):void
 			{
 				if ( !c.isInPlay ) return;
-				c.summonedThisTurn = true;
+				c.statusC.hasSummonExhaustion = true;
 				c.sprite.animSummon();
-				game.jugglerGui.addFakeTime( isManual ? .150 : 0.017 );
+				game.jugglerGui.addFakeTime( isManual ? .250 : 0.017 );
 			}
 			
 		}
@@ -217,7 +217,6 @@ package duel.processes
 			pro.onEnd = 
 			function onEnd( c:Card ):void 
 			{
-				c.resetState();
 				prepend_Death( c );
 			}
 			
@@ -307,7 +306,7 @@ package duel.processes
 					c.sprite.animRelocationCompleteOrAbort();
 					
 					if ( !free )
-						c.actionsRelocate++;
+						c.statusC.actionsRelocate++;
 				}
 			}
 			
@@ -427,7 +426,7 @@ package duel.processes
 			
 			/// ACTIVATE_SPECIAL
 			pro = chain( pro, gen( GameplayProcess.ACTIVATE_SPECIAL, c ) );
-			pro.delay = .250;
+			pro.delay = .500;
 			pro.abortable = true;
 			pro.abortCheck = abortCheck;
 			pro.onStart = onStart;
@@ -514,7 +513,7 @@ package duel.processes
 			function completeOrAbort( c:Card ):void
 			{
 				if ( !free )
-					c.actionsAttack++;
+					c.statusC.actionsAttack++;
 			}
 			
 			if ( c.faceDown )
@@ -753,7 +752,6 @@ package duel.processes
 			function onEnd( c:Card ):void
 			{
 				c.faceDown = false;
-				c.resetState();
 				c.owner.grave.addCard( c );
 			}
 			pro.abortCheck = 
@@ -780,7 +778,6 @@ package duel.processes
 			pro.onEnd =
 			function onEnd( c:Card, p:Player ):void 
 			{
-				c.resetState();
 				p.hand.addCard( c );
 				c.faceDown = !p.controllable;
 			}
@@ -810,7 +807,6 @@ package duel.processes
 			pro.onEnd =
 			function onEnd( c:Card, p:Player ):void 
 			{
-				c.resetState();
 				p.deck.addCard( c );
 				c.faceDown = faceDown;
 			}
@@ -876,7 +872,7 @@ package duel.processes
 			
 			function complete( c:Card ):void 
 			{
-				c.resetState();
+				c.statusC.onLeavePlay();
 			}
 			
 			/// returns LEAVE_PLAY (the chain head)
@@ -914,7 +910,6 @@ package duel.processes
 			pro.onEnd = leave;
 			function leave( c:Card, field:IndexedField ):void 
 			{
-				c.resetState();
 				if ( !field.containsCard( c ) ) 
 				{
 					CONFIG::development 

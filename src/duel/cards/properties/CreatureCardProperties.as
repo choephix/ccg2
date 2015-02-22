@@ -11,22 +11,12 @@ package duel.cards.properties {
 	 */
 	public class CreatureCardProperties extends CardProperties 
 	{
-		cardprops var isToken:Boolean = false;
-		
+		public var isToken:Boolean = false;
+		public var isGrand:Boolean = false;
+		public var isFlippable:Boolean = false;
 		cardprops var basePower:int = 0;
-		cardprops var needTribute:Boolean = false;
-		public var flippable:Boolean = false;
 		
-		cardprops var haste:Boolean 	= false; 	// CAN ATTACK OR MOVE FIRST TURN
 		cardprops var swift:Boolean 	= false; 	// CAN ATTACK AND MOVE SAME TURN
-		cardprops var noAttack:Boolean 	= false; 	// CANNOT ATTACK
-		cardprops var noMove:Boolean	= false; 	// CANNOT MOVE
-		
-		public function get isGrand():Boolean 
-		{ return needTribute }
-		
-		public function get isFlippable():Boolean 
-		{ return flippable }
 		
 		// SUMMONING CONDITION
 		cardprops var summonCondition:Function;

@@ -43,11 +43,7 @@ package duel.cards
 		public var owner:Player;
 		private var _lot:CardListBase;
 		
-		public var actionsRelocate:int = 0;
-		public var actionsAttack:int = 0;
-		public var summonedThisTurn:Boolean = false;
-		
-		private var _faceDown:Boolean = true;
+		public var faceDown:Boolean = true;
 		
 		//
 		public var sprite:CardSprite;
@@ -81,20 +77,12 @@ package duel.cards
 			CONFIG::development
 			{ if ( p.isInterrupted ) throw new Error( "HANDLE PROCESS INTERRUPTIONS!" ) }
 			
-			if ( isInPlay )
+			if ( isInPlay && isCreature )
 				if ( p.name == GameplayProcess.TURN_START )
 					if ( game.currentPlayer == controller )
-						resetState();
+						statusC.onTurnEnd();
 			
 			status.onGameProcess( p );
-		}
-		
-		/// This must be called on turn start as well as when the card leaves play
-		public function resetState():void
-		{
-			actionsRelocate = 0;
-			actionsAttack = 0;
-			summonedThisTurn = false;
 		}
 		
 		// 
@@ -186,43 +174,6 @@ package duel.cards
 		{ return field != null && field.type.isDeck }
 		
 		// GETTERS & SETTERS - 3
-		public function get faceDown():Boolean{return _faceDown}
-		public function set faceDown( value:Boolean ):void
-		{
-			if ( _faceDown == value )
-				return;
-			_faceDown = value;
-		}
-		
-		public function get exhausted():Boolean {
-			if ( firstTurnExhaustion ) return true;
-			if ( statusC.hasSwift ) return actionsAttack * actionsRelocate > 0;
-			return actionsRelocate + actionsAttack > 0;
-		}
-		
-		private function get firstTurnExhaustion():Boolean {
-			CONFIG::development
-			{ if ( Game.GODMODE ) return false }
-			if ( statusC.hasHaste ) return false;
-			return summonedThisTurn;
-		}
-		
-		// GETTERS & SETTERS - 3
-		public function get canAttack():Boolean { 
-			if ( !isCreature ) return false;
-			if ( !isInPlay ) return false;
-			if ( exhausted ) return false;
-			if ( statusC.hasNoAttack ) return false;
-			return actionsAttack == 0;
-		}
-		public function get canRelocate():Boolean { 
-			if ( !isCreature ) return false;
-			if ( !isInPlay ) return false;
-			if ( exhausted ) return false;
-			if ( statusC.hasNoRelocation ) return false;
-			return actionsRelocate == 0;
-		}
-		
 		public function get id():int 
 		{ return primalData.id }
 		
@@ -233,7 +184,7 @@ package duel.cards
 		{ return primalData.name }
 		
 		public function get description():String 
-		{ return primalData.description }
+		{ return primalData.prettyDescription }
 		
 		//
 		public function toString():String 

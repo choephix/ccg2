@@ -7,69 +7,101 @@ package duel.cards.buffs
 	 */
 	public class BuffManager 
 	{
-		public var buffsHead:Buff;
-		public var buffsTail:Buff;
+		public var _buffs:Vector.<Buff> = new Vector.<Buff>();
+		public var _numBuffs:int = 0;
+		public var _card:Card;
 		
-		public var card:Card;
+		public function BuffManager( card:Card ) { _card = card }
 		
-		public function getSUM( buffName:String ):Number
+		//{ get values
+		
+		public function get powerOffset():int
 		{
-			var r:Number = .0;
-			for ( var o:Buff = buffsHead; o != null; o = o.next ) 
-				if ( o.name == buffName )
-					r += Number( o.value is Function ? o.value( card ) : o.value );
+			var r:int = 0;
+			var o:*;
+			for ( var i:int = 0; i < _numBuffs; i++ )
+			{
+				o = _buffs[ i ].powerOffset;
+				if ( o == null ) continue;
+				r += o is Function ? o( _card ) : int( o );
+			}
 			return r;
 		}
 		
-		public function getAND( buffName:String ):Boolean
-		{
-			var r:Boolean = true;
-			for ( var o:Buff = buffsHead; o != null; o = o.next ) 
-				if ( o.name == buffName )
-					r &&= Boolean( o.value is Function ? o.value( card ) : o.value );
-			return r;
-		}
-		
-		public function getOR( buffName:String ):Boolean
+		public function get cannotAttack():Boolean
 		{
 			var r:Boolean = false;
-			for ( var o:Buff = buffsHead; o != null; o = o.next ) 
-				if ( o.name == buffName )
-					r ||= Boolean( o.value is Function ? o.value( card ) : o.value );
+			var o:*;
+			for ( var i:int = 0; i < _numBuffs; i++ )
+			{
+				o = _buffs[ i ].cannotAttack;
+				if ( o == null ) continue;
+				r ||= o is Function ? o( _card ) : Boolean( o );
+			}
 			return r;
 		}
 		
-		public function purgeNonSticky():void
+		public function get cannotRelocate():Boolean
 		{
-			for ( var o:Buff = buffsHead; o != null; o = o.next )
-				if ( !o.sticky ) 
-					removeBuff( o );
+			var r:Boolean = false;
+			var o:*;
+			for ( var i:int = 0; i < _numBuffs; i++ )
+			{
+				o = _buffs[ i ].cannotRelocate;
+				if ( o == null ) continue;
+				r ||= o is Function ? o( _card ) : Boolean( o );
+			}
+			return r;
 		}
 		
-		//{ OBJECTS MANAGEMENT
+		public function get skipTribute():Boolean
+		{
+			var r:Boolean = false;
+			var o:*;
+			for ( var i:int = 0; i < _numBuffs; i++ )
+			{
+				o = _buffs[ i ].skipTribute;
+				if ( o == null ) continue;
+				r = o is Function ? o( _card ) : Boolean( o );
+			}
+			return r;
+		}
+		
+		//}
+		
+		//{ MANAGEMENT
 		
 		public function addBuff( o:Buff ):void 
 		{
-			if ( buffsHead == null )
-				buffsHead = o;
-			else
-				buffsTail.next = o;
-			o.prev = buffsTail;
-			buffsTail = o;
-			//o.onAdded();
+			_numBuffs = _buffs.push( o );
 		}
 		
 		public function removeBuff( o:Buff ):void
 		{
-			if ( buffsHead == o )
-				buffsHead = o.next;
-			if ( buffsTail == o )
-				buffsTail = o.prev;
-			if ( o.prev )
-				o.prev.next = o.next;
-			if ( o.next )
-				o.next.prev = o.prev;
-			//o.onRemoved();
+			_buffs.splice( _buffs.indexOf( o ), 1 );
+			_numBuffs --;
+		}
+		
+		public function removeAllWeak():void
+		{
+			var i:int = 0;
+			while ( i < _numBuffs )
+			{
+				if ( _buffs[ i ].getIsWeak() )
+					removeBuff( _buffs[ i ] )
+				else
+					i++;
+			}
+		}
+		
+		public function hasBuff ( o:Buff ):Boolean
+		{
+			return _buffs.indexOf( o ) < 0;
+		}
+		
+		public function get isEmpty():Boolean 
+		{
+			return _numBuffs == 0;
 		}
 		
 		//}

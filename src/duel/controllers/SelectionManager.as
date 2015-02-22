@@ -1,6 +1,7 @@
 package duel.controllers
 {
 	import duel.cards.Card;
+	import duel.cards.temp_database.TempDatabaseUtils;
 	import duel.display.fields.FieldSpriteGuiState;
 	import duel.GameEntity;
 	import duel.gameplay.CardEvents;
@@ -245,7 +246,8 @@ package duel.controllers
 				return false;
 			
 			if ( c.isCreature )
-				return !c.exhausted;
+				return !c.statusC.hasSummonExhaustion && !c.statusC.hasActionExhaustion;
+			
 			return false;
 		}
 		
@@ -353,8 +355,13 @@ package duel.controllers
 				ctrl.performActionSummon( selectedCard, o as CreatureField );
 			else
 				game.gui.pMsg( problem );
+				
+			CONFIG::sandbox
+			{
+				if ( player.grave == o )
+					TempDatabaseUtils.doDiscard( player, selectedCard );
+			}
 		}
-		
 		
 		private function scfHandTrapIsSelectable( o:* ):Boolean
 		{
@@ -368,8 +375,13 @@ package duel.controllers
 				ctrl.performActionTrapSet( selectedCard, o as TrapField );
 			else
 				game.gui.pMsg( problem );
+				
+			CONFIG::sandbox
+			{
+				if ( player.grave == o )
+					TempDatabaseUtils.doDiscard( player, selectedCard );
+			}
 		}
-		
 		
 		private function scfFieldCreatureIsSelectable( o:* ):Boolean
 		{
@@ -390,7 +402,7 @@ package duel.controllers
 			///SAFE FLIP
 			if ( f  == selectedCard.lot )
 			{
-				if ( selectedCard.faceDown && selectedCard.statusC.isFlippable )
+				if ( selectedCard.faceDown && selectedCard.propsC.isFlippable )
 				{
 					problem = faq.canCreatureSafeFlip( selectedCard, true );
 					if ( problem == null )
@@ -445,7 +457,9 @@ package duel.controllers
 		{
 			if ( card.controller != player )
 				return false;
-			if ( card.exhausted )
+			if ( card.statusC.hasActionExhaustion )
+				return false;
+			if ( card.statusC.hasSummonExhaustion )
 				return false;
 			if ( !card.isInPlay )
 				return false;
@@ -495,8 +509,11 @@ package duel.controllers
 				//game.gui.pMsg( "There is no creature here" );
 				selectCard( null );
 			else
-			if ( card.exhausted )
-				game.gui.pMsg( "This card is exhausted" );
+			if ( card.statusC.hasActionExhaustion )
+				game.gui.pMsg( "This card already performed an action this turn." );
+			else
+			if ( card.statusC.hasSummonExhaustion )
+				game.gui.pMsg( "This card cannot perform actions during the turn it was summoned." );
 			else
 			if ( card.controller != player )
 				game.gui.pMsg( "You don't control this card." );
