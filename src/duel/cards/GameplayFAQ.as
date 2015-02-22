@@ -95,7 +95,7 @@ package duel.cards
 		//
 		
 		public static function canPerformAttack( c:Card ):Boolean
-		{ return c.statusC.canAttack }
+		{ return c.isInPlay && c.statusC.canAttack }
 		public static function cannotPerformAttack( c:Card ):Boolean
 		{ return !canPerformAttack( c ) }
 		

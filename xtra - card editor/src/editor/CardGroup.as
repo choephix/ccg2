@@ -207,7 +207,7 @@ package editor
 			b2.visible = tformCurrent != tformContracted;
 			b3.visible = tformCurrent == tformExpanded;
 			b4.visible = tformCurrent != tformContracted;
-			b5.visible = tformCurrent != tformContracted;
+			b5.visible = false;
 			
 			x = lerp( x, tformCurrent.x, G.DAMP3 );
 			y = lerp( y, tformCurrent.y + view.y, G.DAMP2 );

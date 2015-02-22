@@ -118,32 +118,37 @@ package duel.cards.status {
 		
 		// PROP FLAGS
 		
+		public function get hasActionExhaustion():Boolean
+		{ 
+			if ( propsC.hasSwift ) 
+				return actionsAttack * actionsRelocate > 0;
+			return actionsRelocate + actionsAttack > 0;
+		}
+		
 		public function get canAttack():Boolean { 
 			if ( hasSummonExhaustion ) return false;
 			if ( hasActionExhaustion ) return false;
 			if ( buffs.cannotAttack ) return false;
+			if ( game.globalBuffs.getCannotAttack( card ) ) return false;
 			return true;
 		}
 		public function get canRelocate():Boolean { 
 			if ( hasSummonExhaustion ) return false;
 			if ( hasActionExhaustion ) return false;
 			if ( buffs.cannotRelocate ) return false;
+			if ( game.globalBuffs.getCannotRelocate( card ) ) return false;
 			return true;
 		}
 		
-		public function get hasActionExhaustion():Boolean
-		{ 
-			if ( propsC.swift ) 
-				return actionsAttack * actionsRelocate > 0;
-			return actionsRelocate + actionsAttack > 0;
+		public function get needTribute():Boolean { 
+			if ( buffs.skipTribute ) return false;
+			if ( game.globalBuffs.getSkipTribute( card ) ) return false;
+			return propsC.isGrand;
 		}
 		
 		public function get canBeTribute():Boolean
 		///{ return !hasSummonExhaustion && !hasActionExhaustion }
 		{ return !hasSummonExhaustion }
-		
-		public function get needTribute():Boolean
-		{ return propsC.isGrand && !buffs.skipTribute }
 		
 		// PROP VALUES
 		
@@ -151,7 +156,7 @@ package duel.cards.status {
 		{ return propsC.basePower }
 		
 		public function get currentPowerValue():int
-		{ return propsC.basePower + buffs.powerOffset }
+		{ return propsC.basePower + buffs.powerOffset + game.globalBuffs.getPowerOffset( card ) }
 		
 		// IN-HAND LOGIC
 		

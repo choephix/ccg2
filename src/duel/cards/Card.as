@@ -38,6 +38,7 @@ package duel.cards
 		private var _status:CardStatus;
 		private var _props:CardProperties;
 		private var _history:CardHistory;
+		private var _faq:CardFAQ;
 		
 		// BATTLE
 		public var owner:Player;
@@ -51,6 +52,12 @@ package duel.cards
 		CONFIG::development
 		public var unimplemented:Boolean;
 		
+		public function Card() 
+		{
+			_history = new CardHistory();
+			_faq = new CardFAQ( this );
+		}
+		
 		//
 		public function initialize():void
 		{
@@ -61,7 +68,6 @@ package duel.cards
 				if ( _status == null )
 					throw VerifyError( "You left " + this + "'s status = NULL, you asscunt." );
 			}
-			_history = new CardHistory();
 			sprite = new CardSprite();
 			sprite.initialize( this );
 		}
@@ -115,10 +121,13 @@ package duel.cards
 		public function get statusT():TrapCardStatus
 		{ return _status as TrapCardStatus }
 		
-		// GETTERS & SETTERS - HISTORY
+		// GETTERS & SETTERS - HISTORY & FAQ
 		
 		public function get history():CardHistory 
 		{ return _history }
+		
+		public function get faq():CardFAQ 
+		{ return _faq }
 		
 		// GETTERS & SETTERS - TYPE
 		
@@ -174,6 +183,7 @@ package duel.cards
 		{ return field != null && field.type.isDeck }
 		
 		// GETTERS & SETTERS - 3
+		
 		public function get id():int 
 		{ return primalData.id }
 		

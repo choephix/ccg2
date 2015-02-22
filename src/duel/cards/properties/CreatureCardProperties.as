@@ -1,4 +1,5 @@
 package duel.cards.properties {
+	import duel.cards.buffs.GlobalBuff;
 	import duel.Damage;
 	import duel.DamageType;
 	import duel.otherlogic.OngoingEffect;
@@ -16,7 +17,7 @@ package duel.cards.properties {
 		public var isFlippable:Boolean = false;
 		cardprops var basePower:int = 0;
 		
-		cardprops var swift:Boolean 	= false; 	// CAN ATTACK AND MOVE SAME TURN
+		cardprops var hasSwift:Boolean 	= false; 	// CAN ATTACK AND MOVE SAME TURN
 		
 		// SUMMONING CONDITION
 		cardprops var summonCondition:Function;
@@ -56,6 +57,9 @@ package duel.cards.properties {
 		
 		// SAFE FLIP
 		public var onSafeFlipFunc:Function;
+		
+		// GLOBAL BUFF
+		public var globalBuff:GlobalBuff;
 		
 	}
 }

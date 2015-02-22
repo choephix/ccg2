@@ -421,6 +421,25 @@ package duel.display {
 			
 			destroyAnimAttackSprite();
 		}
+		animation function animDie2():void 
+		{
+			setAsTopChild();
+			
+			animBlink( false, 0xB00000 ).blendMode = BlendMode.NORMAL;
+			
+			__bloodSprite = assets.generateImage( "card-damage" );
+			__bloodSprite.alignPivot();
+			__bloodSprite.blendMode = BlendMode.MULTIPLY;
+			addChild( __bloodSprite );
+			juggler.xtween( __bloodSprite, 12.0,
+				{ 
+					delay: 4.0,
+					alpha: .0, 
+					onComplete : __bloodSprite.removeFromParent,
+					onCompleteArgs : [true]
+				} );
+			destroyAnimAttackSprite();
+		}
 		
 		public function animFadeToNothing( dispose:Boolean ):void 
 		{

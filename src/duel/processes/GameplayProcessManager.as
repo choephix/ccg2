@@ -601,7 +601,7 @@ package duel.processes
 				if ( fromCombat )
 					c.sprite.animDie();
 				else
-					c.sprite.animFadeToNothing( false );
+					c.sprite.animDie2();
 			}
 			pro.abortCheck = GameplayFAQ.cannotDie;
 			
@@ -610,7 +610,7 @@ package duel.processes
 			pro.onStart =
 			function complete( c:Card, fromCombat:Boolean=false ):void 
 			{
-				if ( c.owner )
+				if ( c.owner != null )
 					prepend_AddToGrave( c );
 				else
 				{
@@ -872,7 +872,8 @@ package duel.processes
 			
 			function complete( c:Card ):void 
 			{
-				c.statusC.onLeavePlay();
+				if ( c.isCreature )
+					c.statusC.onLeavePlay();
 			}
 			
 			/// returns LEAVE_PLAY (the chain head)

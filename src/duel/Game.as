@@ -6,6 +6,7 @@ package duel
 	import com.reyco1.multiuser.data.UserObject;
 	import dev.ProcessManagementInspector;
 	import dev.Temp;
+	import duel.cards.buffs.GlobalBuffManager;
 	import duel.cards.Card;
 	import duel.cards.CardFactory;
 	import duel.controllers.PlayerAction;
@@ -21,6 +22,7 @@ package duel
 	import duel.network.RemoteConnectionController;
 	import duel.network.RemotePlayerActionReceiver;
 	import duel.network.RemotePlayerActionSender;
+	import duel.cards.buffs.GlobalBuff;
 	import duel.players.Player;
 	import duel.players.PlayerEvent;
 	import duel.processes.GameplayProcess;
@@ -82,6 +84,8 @@ package duel
 		public var cardsCount:int = 0;
 		private var logicComponents:Vector.<GameUpdatable>;
 		
+		public var globalBuffs:GlobalBuffManager;
+		
 		//
 		public function Game() { current = this }
 		
@@ -98,6 +102,7 @@ package duel
 			processes.addEventListener( ProcessEvent.CURRENT_PROCESS, onProcessAdvance );
 			processes.addEventListener( ProcessEvent.PROCESS_COMPLETE, onProcessComplete );
 			
+			globalBuffs = new GlobalBuffManager();
 			logicComponents = new Vector.<GameUpdatable>();
 			cards = new Vector.<Card>();
 			indexedFields = new Vector.<IndexedField>();
@@ -291,6 +296,9 @@ package duel
 				remote = null;
 			}
 			
+			globalBuffs.destroy();
+			globalBuffs = null;
+			
 			jugglerStrict.purge();
 			jugglerStrict = null;
 			jugglerGui.purge();
@@ -371,6 +379,10 @@ package duel
 			c = CardFactory.produceCard( data );
 			cardsCount = cards.push( c );
 			c.uid = cardsCount;
+			
+			if ( c.isCreature && c.propsC.globalBuff != null )
+				globalBuffs.registerBuff( c.propsC.globalBuff );
+			
 			return c;
 		}
 		

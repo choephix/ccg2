@@ -15,23 +15,28 @@ package dev
 		public static const DECK1:Array = [
 			"___kami___", 
 			
-			// TEST
-			"man_of_honor",
-			
-			"grandnecro",
-			"blocker",
+			// HELPER-COPIES
 			"tripplemana",
-			"doublemana",
-			"nona",
 			"emptyshell",
+			
+			// TEST
+			"motivator",
+			"confusor",
+			"sneakshot",
+			"grandnecro",
 			"rebirth",
 			"stunner",
-			"kamikaze2",
-			"kamikaze",
-			"badclown",
-			"freefred",
 			
 			// DONE
+			"badclown",
+			"kamikaze2",
+			"kamikaze",
+			"nona",
+			"freefred",
+			"emptyshell",
+			"tripplemana",
+			"doublemana",
+			"blocker",
 			"drawban3",
 			"drawban2",
 			"drawban",
