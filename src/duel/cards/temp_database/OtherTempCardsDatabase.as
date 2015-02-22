@@ -20,6 +20,137 @@ package duel.cards.temp_database
 	
 	public class OtherTempCardsDatabase 
 	{
+			
+		// // // // // // // // // // // // // // // // // // // 
+		
+		private static function initialize():void
+		{
+			"CREATURE" = 
+			function CREATURE( c:Card ):void
+			{
+				// // // SAFE FLIP EFFECTS
+				c.propsC.onSafeFlipFunc =
+				function():void {
+				}
+				
+				// // C// OMBAT FLIP EFFECTS
+				c.propsC.onCombatFlipFunc =
+				function():void {
+				}
+				
+				// // // ONGOING EFFECTS
+				
+				// // // TRIGGERED EFFECTS
+				
+				// When I am summoned
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+				}
+				
+				// When I leave play
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.LEAVE_PLAY_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+				}
+				
+				// When I die
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.DIE_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+				}
+				
+				// When opposing enemy creature is summoned
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.indexedField.opposingCreature == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+				}
+				
+				// While I am in play - GLOBAL BUFF
+				var gb:GlobalBuff = new GlobalBuff( c );
+				gb.setEffect( c.primalData.getVarInt( 0 ), null, null, null );
+				gb.appliesTo = c.faq.isFriendly;
+				
+				var special:SpecialEffect;
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.registerGlobalBuff( gb );
+				}
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.LEAVE_PLAY_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.removeGlobalBuff( gb );
+				}
+				
+			}
+			
+			// // // // // // // // // // // // // // // // // // // 
+			
+			"TRAP" =
+			function( c:Card ):void
+			{
+				c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
+				c.propsT.effect.funcActivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.opposingCreature != p.getAttacker() ) return false;
+					if ( c.indexedField.samesideCreature != null ) return false;
+					return true;
+				}
+				c.propsT.effect.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doDealDirectDamage( c.controller.opponent, c.primalData.getVarInt( 0 ), c );
+				}
+			}
+			
+		}
+		
+		
+		
+		
+		
 		static public const F:Array = [
 			/* * * /
 			

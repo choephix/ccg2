@@ -14,8 +14,7 @@ package duel.gui
 	{
 		public static const DEFAULT_MARKER:String = "%%VALUE%%";
 		
-		public var durationPerOne:Number;
-		public var duration:Number = .350;
+		public var duration:Number = NaN;
 		public var markerString:String = DEFAULT_MARKER;
 		private var rawText:String = markerString;
 		private var _currentValue:Number = 0.0;
@@ -71,8 +70,7 @@ package duel.gui
 			
 			_targetValue = value;
 			
-			if ( !isNaN( durationPerOne ) )
-				duration = Math.abs( _currentValue - _targetValue ) * durationPerOne;
+			duration = .67 + Math.abs( _currentValue - _targetValue ) * .033;
 			
 			_valueTween.reset( this, duration, Transitions.LINEAR );
 			_valueTween.animate( "currentValue", value );

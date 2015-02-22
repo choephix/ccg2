@@ -544,17 +544,17 @@ package duel.processes
 				if ( !c.isInPlay ) 
 					return;
 				
-				if ( c.statusC.currentPowerValue <= dmg.amount )
+				if ( c.statusC.realPowerValue <= dmg.amount )
 				{
 					prepend_Death( c, true );
 					game.showFloatyText( c.sprite.localToGlobal( new Point() ), 
-						c.statusC.currentPowerValue + "-" + dmg.amount + "=DEATH!", 0xFF0000 );
+						c.statusC.realPowerValue + "-" + dmg.amount + "=DEATH!", 0xFF0000 );
 				}
 				else
 				{
 					c.sprite.animDamageOnly();
 					game.showFloatyText( c.sprite.localToGlobal( new Point() ), 
-						c.statusC.currentPowerValue + "-" + dmg.amount + "=" + (c.statusC.currentPowerValue - dmg.amount), 0x00FFFF );
+						c.statusC.realPowerValue + "-" + dmg.amount + "=" + (c.statusC.realPowerValue - dmg.amount), 0x00FFFF );
 				}
 			}
 			pro.onAbort =

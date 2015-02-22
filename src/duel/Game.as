@@ -379,10 +379,6 @@ package duel
 			c = CardFactory.produceCard( data );
 			cardsCount = cards.push( c );
 			c.uid = cardsCount;
-			
-			if ( c.isCreature && c.propsC.globalBuff != null )
-				globalBuffs.registerBuff( c.propsC.globalBuff );
-			
 			return c;
 		}
 		

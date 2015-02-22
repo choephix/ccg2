@@ -134,7 +134,7 @@ package duel.gui
 			cardTip.visible = true;
 			cardTip.text = _focusedCard.name + "\n\n" + _focusedCard.description;
 			if ( _focusedCard.isCreature )
-				cardTip.text += "\n\n" + _focusedCard.statusC.buffToString();
+				cardTip.text += "\n\n" + _focusedCard.statusC.buffsToString();
 			cardTip.x = .5 * App.W;
 			cardTip.y = _focusedCard.sprite.y > .0 ? .33 * App.H : .67 * App.H;
 		}

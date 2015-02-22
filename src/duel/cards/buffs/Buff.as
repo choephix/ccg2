@@ -7,8 +7,7 @@ package duel.cards.buffs
 	 */
 	public class Buff 
 	{
-		public var active:Boolean;
-		public var hidden:Boolean;
+		public var isActive:*;
 		
 		// : : : VALUES : : : 
 		public var powerOffset:*;
@@ -21,13 +20,16 @@ package duel.cards.buffs
 		private var _name:String;
 		private var _isWeak:Boolean;
 		
-		public function Buff( name:String, description:String = "", destroyOutOfPlay:Boolean = false ) 
+		public function Buff( destroyOutOfPlay:Boolean = false ) 
 		{
-			_name = name;
-			_description = description;
+			_name = "";
+			_description = "";
 			_isWeak = destroyOutOfPlay;
-			active = true;
+			isActive = true;
 		}
+		
+		public function getIsActive():Boolean
+		{ return isActive is Function ? isActive() : Boolean( isActive ) }
 		
 		public function getIsWeak():Boolean
 		{ return _isWeak }

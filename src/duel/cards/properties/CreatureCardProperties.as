@@ -57,9 +57,5 @@ package duel.cards.properties {
 		
 		// SAFE FLIP
 		public var onSafeFlipFunc:Function;
-		
-		// GLOBAL BUFF
-		public var globalBuff:GlobalBuff;
-		
 	}
 }

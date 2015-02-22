@@ -1,5 +1,6 @@
 package duel.cards
 {
+	import duel.cards.buffs.GlobalBuff;
 	import duel.cards.CardListBase;
 	import duel.cards.history.CardHistory;
 	import duel.cards.properties.CardProperties;
@@ -92,6 +93,22 @@ package duel.cards
 		}
 		
 		// 
+		
+		public function registerGlobalBuff( gb:GlobalBuff ):void
+		{
+			if ( game.globalBuffs.hasBuff( gb ) )
+				return;
+			
+			game.globalBuffs.registerBuff( gb );
+		}
+		
+		public function removeGlobalBuff( gb:GlobalBuff ):void
+		{
+			if ( !game.globalBuffs.hasBuff( gb ) )
+				return;
+			
+			game.globalBuffs.removeBuff( gb );
+		}
 		
 		// -.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'-.-'
 		

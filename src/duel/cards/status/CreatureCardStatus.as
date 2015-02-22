@@ -24,6 +24,12 @@ package duel.cards.status {
 		public var actionsAttack:int = 0;
 		public var hasSummonExhaustion:Boolean = false;
 		
+		private var _basePowerValue:int = 0;
+		private var _realPowerValue:int = 0;
+		private var _cannotAttack:Boolean;
+		private var _cannotRelocate:Boolean;
+		private var _skipTribute:Boolean;
+		
 		public function get propsC():CreatureCardProperties
 		{ return props as CreatureCardProperties }
 		
@@ -35,6 +41,8 @@ package duel.cards.status {
 		
 		override public function onGameProcess( p:GameplayProcess ):void
 		{
+			updateStatus();
+			
 			var i:int;
 			
 			// ONGOING SPECIALS
@@ -97,6 +105,15 @@ package duel.cards.status {
 			
 		}
 		
+		private function updateStatus():void 
+		{
+			_basePowerValue = propsC.basePower;
+			_realPowerValue = _basePowerValue + buffs.powerOffset + game.globalBuffs.getPowerOffset( card );
+			_cannotAttack = buffs.cannotAttack || game.globalBuffs.getCannotAttack( card );
+			_cannotRelocate = buffs.cannotRelocate || game.globalBuffs.getCannotRelocate( card );
+			_skipTribute = buffs.skipTribute || game.globalBuffs.getSkipTribute( card );
+		}
+		
 		public function onLeavePlay():void
 		{
 			reset();
@@ -128,21 +145,19 @@ package duel.cards.status {
 		public function get canAttack():Boolean { 
 			if ( hasSummonExhaustion ) return false;
 			if ( hasActionExhaustion ) return false;
-			if ( buffs.cannotAttack ) return false;
-			if ( game.globalBuffs.getCannotAttack( card ) ) return false;
+			if ( _cannotAttack ) return false;
 			return true;
 		}
+		
 		public function get canRelocate():Boolean { 
 			if ( hasSummonExhaustion ) return false;
 			if ( hasActionExhaustion ) return false;
-			if ( buffs.cannotRelocate ) return false;
-			if ( game.globalBuffs.getCannotRelocate( card ) ) return false;
+			if ( _cannotRelocate ) return false;
 			return true;
 		}
 		
 		public function get needTribute():Boolean { 
-			if ( buffs.skipTribute ) return false;
-			if ( game.globalBuffs.getSkipTribute( card ) ) return false;
+			if ( _skipTribute ) return false;
 			return propsC.isGrand;
 		}
 		
@@ -153,10 +168,10 @@ package duel.cards.status {
 		// PROP VALUES
 		
 		public function get basePowerValue():int
-		{ return propsC.basePower }
+		{ return _basePowerValue }
 		
-		public function get currentPowerValue():int
-		{ return propsC.basePower + buffs.powerOffset + game.globalBuffs.getPowerOffset( card ) }
+		public function get realPowerValue():int
+		{ return _realPowerValue }
 		
 		// IN-HAND LOGIC
 		
@@ -166,7 +181,7 @@ package duel.cards.status {
 		// COMBAT LOGIC
 		
 		public function generateAttackDamage():Damage
-		{ return new Damage( currentPowerValue, DamageType.COMBAT, card ) }
+		{ return new Damage( realPowerValue, DamageType.COMBAT, card ) }
 		
 		/* * */
 		
@@ -210,13 +225,20 @@ package duel.cards.status {
 		
 		protected var buffs:BuffManager;
 		
+		public function addNewBuff( weak:Boolean = false ):Buff
+		{ 
+			var b:Buff = new Buff( weak );
+			buffs.addBuff( b );
+			return b;
+		}
+		
 		public function addBuff( b:Buff ):void
 		{ buffs.addBuff( b ) }
 		
 		public function removeBuff( b:Buff ):void
 		{ buffs.removeBuff( b ) }
 		
-		public function buffToString():String 
+		public function buffsToString():String 
 		{ return buffs.isEmpty as String }
 		
 		//

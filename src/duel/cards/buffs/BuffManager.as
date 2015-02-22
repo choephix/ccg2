@@ -21,7 +21,7 @@ package duel.cards.buffs
 			var o:*;
 			for ( var i:int = 0; i < _numBuffs; i++ )
 			{
-				if ( !_buffs[ i ].active ) continue;
+				if ( !_buffs[ i ].getIsActive() ) continue;
 				o = _buffs[ i ].powerOffset;
 				if ( o == null ) continue;
 				r += o is Function ? o( _card ) : int( o );
@@ -35,7 +35,7 @@ package duel.cards.buffs
 			var o:*;
 			for ( var i:int = 0; i < _numBuffs; i++ )
 			{
-				if ( !_buffs[ i ].active ) continue;
+				if ( !_buffs[ i ].getIsActive() ) continue;
 				o = _buffs[ i ].cannotAttack;
 				if ( o == null ) continue;
 				r ||= o is Function ? o( _card ) : Boolean( o );
@@ -49,7 +49,7 @@ package duel.cards.buffs
 			var o:*;
 			for ( var i:int = 0; i < _numBuffs; i++ )
 			{
-				if ( !_buffs[ i ].active ) continue;
+				if ( !_buffs[ i ].getIsActive() ) continue;
 				o = _buffs[ i ].cannotRelocate;
 				if ( o == null ) continue;
 				r ||= o is Function ? o( _card ) : Boolean( o );
@@ -63,7 +63,7 @@ package duel.cards.buffs
 			var o:*;
 			for ( var i:int = 0; i < _numBuffs; i++ )
 			{
-				if ( !_buffs[ i ].active ) continue;
+				if ( !_buffs[ i ].getIsActive() ) continue;
 				o = _buffs[ i ].skipTribute;
 				if ( o == null ) continue;
 				r ||= o is Function ? o( _card ) : Boolean( o );

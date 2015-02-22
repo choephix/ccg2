@@ -66,6 +66,11 @@ package duel.cards.buffs
 			_numBuffs --;
 		}
 		
+		public function hasBuff( gb:GlobalBuff ):Boolean 
+		{
+			return _buffs.indexOf( gb ) > -1;
+		}
+		
 		//}
 		
 	}

@@ -149,8 +149,7 @@ package duel.display {
 					tfAttak.touchable = false;
 					tfAttak.hAlign = "center";
 					tfAttak.vAlign = "center";
-					tfAttak.durationPerOne = .099;
-					tfAttak.currentValue = card.statusC.currentPowerValue;
+					tfAttak.currentValue = card.statusC.realPowerValue;
 					front.addChild( tfAttak );
 					tfAttak.x = .21 * G.CARD_W;
 					tfAttak.y = .75* G.CARD_H;
@@ -281,7 +280,7 @@ package duel.display {
 			if ( card.isCreature )
 			{
 				if ( !card.faceDown ) {
-					tfAttak.targetValue = card.statusC.currentPowerValue;
+					tfAttak.targetValue = card.statusC.realPowerValue;
 					//tfDescr.text = card.statusC.toString();
 				}
 			}

@@ -13,21 +13,24 @@ package dev
 	public class Temp 
 	{
 		public static const DECK1:Array = [
-			"___kami___", 
 			
-			// HELPER-COPIES
-			"tripplemana",
-			"emptyshell",
+			/**  HELPERS  **/
+			//"___kami___", 
+			//"___test___", 
+			"compromiser1",
 			
-			// TEST
-			"motivator",
-			"confusor",
+			/**  TEST  **/
 			"sneakshot",
 			"grandnecro",
 			"rebirth",
 			"stunner",
 			
-			// DONE
+			/**  DONE  **/
+			"compromiser1",
+			"compromiser2",
+			"compromiser3",
+			"motivator",
+			"confusor",
 			"badclown",
 			"kamikaze2",
 			"kamikaze",
@@ -93,9 +96,9 @@ package dev
 			"doe2",
 			"doe3",
 			
-			// TO DO
+			/**  TO DO  **/
 			
-			// FROZEN
+			/**  FROZEN  **/
 			"grand_powerhealer", 
 		];
 		

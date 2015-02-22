@@ -30,6 +30,39 @@ package duel.cards
 		//
 		private static function initialize():void
 		{
+			F[ "___test___" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.propsC.basePower += 5;
+					if ( c.indexedField.opposingCreature )
+						TempDatabaseUtils.doPutInHand( 
+							c.indexedField.opposingCreature, 
+							c.indexedField.opposingCreature.controller );
+				}
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c != p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.propsC.basePower -= 2;
+				}
+			}
+			
 			/// /// /// TEST SPACE /// /// ///
 			
 			F[ "sneakshot" ] = 
@@ -118,22 +151,107 @@ package duel.cards
 			
 			/// /// /// TEST SPACE /// /// ///
 			
+			F[ "compromiser1" ] = 
+			function( c:Card ):void
+			{
+				var buff:Buff = c.statusC.addNewBuff( false );
+				buff.skipTribute = true;
+				buff.isActive =
+				function():Boolean {
+					return c.controller.creatureCount == 0;
+				}
+			}
+			
+			F[ "compromiser2" ] = 
+			function( c:Card ):void
+			{
+				var buff:Buff = c.statusC.addNewBuff( false );
+				buff.skipTribute = true;
+				buff.isActive =
+				function():Boolean {
+					return c.controller.hand.cardsCount == 1;
+				}
+			}
+			
+			F[ "compromiser3" ] = 
+			function( c:Card ):void
+			{
+				var buff:Buff = c.statusC.addNewBuff( false );
+				buff.skipTribute = true;
+				buff.isActive =
+				function():Boolean {
+					if ( c.controller.trapCount > 0 ) return false;
+					if ( c.controller.opponent.fieldsC.countOccupied < c.controller.opponent.fieldsC.count ) return false;
+					return true;
+				}
+			}
+			
 			F[ "motivator" ] = 
 			function( c:Card ):void
 			{
 				var gb:GlobalBuff = new GlobalBuff( c );
-				gb.setEffect( 1 );
+				gb.setEffect( c.primalData.getVarInt( 0 ), null, null, null );
 				gb.appliesTo = c.faq.isFriendly;
-				c.propsC.globalBuff = gb;
+				
+				var special:SpecialEffect;
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.registerGlobalBuff( gb );
+				}
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.LEAVE_PLAY_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.removeGlobalBuff( gb );
+				}
 			}
 			
 			F[ "confusor" ] = 
 			function( c:Card ):void
 			{
 				var gb:GlobalBuff = new GlobalBuff( c );
-				gb.setEffect( -1 );
+				gb.setEffect( -c.primalData.getVarInt( 0 ), null, null, null );
 				gb.appliesTo = c.faq.isEnemy;
-				c.propsC.globalBuff = gb;
+				
+				var special:SpecialEffect;
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.registerGlobalBuff( gb );
+				}
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.LEAVE_PLAY_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.removeGlobalBuff( gb );
+				}
 			}
 			
 			F[ "badclown" ] = 
@@ -163,7 +281,7 @@ package duel.cards
 				function():void {
 					if ( c.indexedField.opposingCreature == null )
 						return;
-					const DMG:int = c.indexedField.opposingCreature.statusC.currentPowerValue;
+					const DMG:int = c.indexedField.opposingCreature.statusC.realPowerValue;
 					TempDatabaseUtils.doKill( c );
 					TempDatabaseUtils.doKill( c.indexedField.opposingCreature );
 					TempDatabaseUtils.doDealDirectDamage( c.controller, DMG, c );
@@ -184,7 +302,7 @@ package duel.cards
 				}
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
-					const DMG:int = c.indexedField.opposingCreature.statusC.currentPowerValue;
+					const DMG:int = c.indexedField.opposingCreature.statusC.realPowerValue;
 					TempDatabaseUtils.doKill( c );
 					TempDatabaseUtils.doKill( c.indexedField.opposingCreature );
 					TempDatabaseUtils.doDealDirectDamage( c.controller, DMG, c );
@@ -196,7 +314,7 @@ package duel.cards
 			{
 				c.propsC.onSafeFlipFunc =
 				function():void {
-					var b:Buff = new Buff( "", "", true );
+					var b:Buff = new Buff( true );
 					b.powerOffset = c.primalData.getVarInt( 0 );
 					c.statusC.addBuff( b );
 				}
@@ -467,9 +585,12 @@ package duel.cards
 			F[ "man_of_honor" ] = 
 			function( c:Card ):void
 			{
-				var buff:Buff = new Buff( "", "cannot attack directly" );
-				buff.cannotAttack = Buff.CANNOT_ATTACK_DIRECTLY;
-				c.statusC.addBuff( buff );
+				var buff:Buff = c.statusC.addNewBuff( false )
+				buff.cannotAttack = true;
+				buff.isActive = 
+				function( p:GameplayProcess ):Boolean {
+					return c.indexedField.opposingCreature == null;
+				}
 			}
 			
 			F[ "unbreakable" ] = 
@@ -520,15 +641,11 @@ package duel.cards
 			F[ "finalrage" ] = 
 			function( c:Card ):void
 			{
-				var buff:Buff = new Buff( "", "" );
+				var buff:Buff = c.statusC.addNewBuff( false )
 				buff.powerOffset = c.primalData.getVarInt( 0 );
-				c.statusC.addBuff( buff );
-				
-				var ongoing:OngoingEffect;
-				ongoing = c.propsC.addOngoing();
-				ongoing.funcUpdate =
-				function( p:GameplayProcess ):void {
-					buff.active = c.controller.lifePoints <= c.primalData.getVarInt( 1 );
+				buff.isActive = 
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.lifePoints <= c.primalData.getVarInt( 1 );
 				}
 			}
 			
@@ -598,15 +715,15 @@ package duel.cards
 				special.funcCondition =
 				function( p:GameplayProcess ):Boolean {
 					if ( !TempDatabaseUtils.isInBattle( c, p ) ) return false;
-					if ( c.indexedField.opposingCreature.statusC.currentPowerValue
-						 <= c.statusC.currentPowerValue ) return false;
+					if ( c.indexedField.opposingCreature.statusC.realPowerValue
+						 <= c.statusC.realPowerValue ) return false;
 					return true;
 				}
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
 					TempDatabaseUtils.doHeal( c.controller,
-						c.indexedField.opposingCreature.statusC.currentPowerValue
-						- c.statusC.currentPowerValue );
+						c.indexedField.opposingCreature.statusC.realPowerValue
+						- c.statusC.realPowerValue );
 				}
 			}
 			
@@ -641,7 +758,7 @@ package duel.cards
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
 					TempDatabaseUtils.doHeal( c.controller, 
-						c.indexedField.opposingCreature.statusC.currentPowerValue );
+						c.indexedField.opposingCreature.statusC.realPowerValue );
 				}
 			}
 			
@@ -775,8 +892,8 @@ package duel.cards
 				special.funcCondition =
 				function( p:GameplayProcess ):Boolean {
 					if ( c.indexedField.opposingCreature == null ) return false;
-					if ( c.indexedField.opposingCreature.statusC.currentPowerValue
-						>= c.statusC.currentPowerValue ) return false;
+					if ( c.indexedField.opposingCreature.statusC.realPowerValue
+						>= c.statusC.realPowerValue ) return false;
 					
 					if ( c == p.getAttacker() ) return true;
 					if ( c.indexedField.opposingCreature == p.getAttacker() ) return true;
@@ -785,8 +902,8 @@ package duel.cards
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
 					TempDatabaseUtils.doDealDirectDamage( c.controller,
-						c.statusC.currentPowerValue - 
-						c.indexedField.opposingCreature.statusC.currentPowerValue,
+						c.statusC.realPowerValue - 
+						c.indexedField.opposingCreature.statusC.realPowerValue,
 						c );
 				}
 			}
@@ -933,15 +1050,11 @@ package duel.cards
 			F[ "forsaken4" ] = 
 			function( c:Card ):void
 			{
-				var buff:Buff = new Buff( "", "" );
+				var buff:Buff = c.statusC.addNewBuff( false );
 				buff.powerOffset = c.primalData.getVarInt( 2 );
-				c.statusC.addBuff( buff );
-				
-				var ongoing:OngoingEffect;
-				ongoing = c.propsC.addOngoing();
-				ongoing.funcUpdate =
-				function( p:GameplayProcess ):void {
-					buff.active = c.controller.fieldsC.countCreaturesThat( checkBro ) >= 4;
+				buff.isActive = 
+				function():Boolean {
+					return c.controller.fieldsC.countCreaturesThat( checkBro ) >= 4;
 				}
 				function checkBro( c:Card ):Boolean {
 					return c.slug.indexOf( c.primalData.getVarString( 0 ) ) > -1;
@@ -989,7 +1102,7 @@ package duel.cards
 				}
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doHeal( c.controller, c.history.tribute.statusC.currentPowerValue );
+					TempDatabaseUtils.doHeal( c.controller, c.history.tribute.statusC.realPowerValue );
 				}
 			}
 			
