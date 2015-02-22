@@ -20,6 +20,7 @@ package duel.processes
 		public var abortCheck:Function = null;
 		public var args:Array = null;
 		
+		/// time before this process starts
 		internal var delay:Number = CONFIG::slowmode ? .500 : NaN;
 		internal var next:Process = null;
 		

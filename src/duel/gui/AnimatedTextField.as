@@ -14,6 +14,7 @@ package duel.gui
 	{
 		public static const DEFAULT_MARKER:String = "%%VALUE%%";
 		
+		public var durationPerOne:Number;
 		public var duration:Number = .350;
 		public var markerString:String = DEFAULT_MARKER;
 		private var rawText:String = markerString;
@@ -27,7 +28,7 @@ package duel.gui
 			rawText = text;
 			update();
 			
-			_valueTween = new Tween( this, 0.350, Transitions.LINEAR );
+			_valueTween = new Tween( this, duration, Transitions.LINEAR );
 		}
 		
 		public function advanceTime( time:Number ):void
@@ -69,6 +70,9 @@ package duel.gui
 				return;
 			
 			_targetValue = value;
+			
+			if ( !isNaN( durationPerOne ) )
+				duration = Math.abs( _currentValue - _targetValue ) * durationPerOne;
 			
 			_valueTween.reset( this, duration, Transitions.LINEAR );
 			_valueTween.animate( "currentValue", value );

@@ -426,7 +426,7 @@ package duel.processes
 			
 			/// ACTIVATE_SPECIAL
 			pro = chain( pro, gen( GameplayProcess.ACTIVATE_SPECIAL, c ) );
-			pro.delay = .500;
+			pro.delay = .200;
 			pro.abortable = true;
 			pro.abortCheck = abortCheck;
 			pro.onStart = onStart;
@@ -438,6 +438,8 @@ package duel.processes
 				special.startActivation();
 				c.lot.moveCardToTop( c );
 				c.sprite.animSpecialEffect();
+				
+				game.jugglerStrict.addFakeTime( .400 );
 				
 				if ( c.faceDown )
 					/// SILENT_FLIP
@@ -457,7 +459,7 @@ package duel.processes
 			
 			/// ACTIVATE_SPECIAL_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.ACTIVATE_SPECIAL_COMPLETE, c ) );
-			pro.delay = .500;
+			pro.delay = .400;
 			pro.abortable = false;
 			pro.onEnd = special.finishActivation;
 		}

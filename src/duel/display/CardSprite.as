@@ -149,7 +149,7 @@ package duel.display {
 					tfAttak.touchable = false;
 					tfAttak.hAlign = "center";
 					tfAttak.vAlign = "center";
-					tfAttak.duration = .450;
+					tfAttak.durationPerOne = .099;
 					tfAttak.currentValue = card.statusC.currentPowerValue;
 					front.addChild( tfAttak );
 					tfAttak.x = .21 * G.CARD_W;
