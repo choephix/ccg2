@@ -9,12 +9,16 @@ package duel.gui {
 	public class GuiJuggler extends Juggler
 	{
 		public var speed:Number = 1.0;
+		public var maxFrameTime:Number = 1/60;
 		
 		private var _fakeTime:Number = .0;
 		
 		override public function advanceTime( time:Number ):void 
 		{
 			time *= speed;
+			
+			if ( time > maxFrameTime )
+				time = maxFrameTime;
 			
 			_fakeTime -= time;
 			if ( _fakeTime < .0 )

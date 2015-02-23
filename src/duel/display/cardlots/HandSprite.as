@@ -48,8 +48,7 @@ package duel.display.cardlots
 				
 				o.x = lerp( o.x, o.targetProps.x, .15 );
 				o.y = lerp( o.y, o.targetProps.y, .30 );
-				o.scaleX = lerp( o.scaleX, o.targetProps.scale, .20 );
-				o.scaleY = lerp( o.scaleY, o.targetProps.scale, .20 );
+				o.z = lerp( o.scaleY, o.targetProps.scale, .20 );
 				o.rotation = lerp( o.rotation, o.targetProps.rotation, .25 );
 			}
 		}

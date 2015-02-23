@@ -53,6 +53,8 @@ package duel.display {
 		public var isSelectable:Boolean = false;
 		public var isSelected:Boolean = false;
 		
+		private var _z:Number = 1.0;
+		
 		//
 		private var card:Card;
 		private static var helperRect:Rectangle = new Rectangle();
@@ -361,18 +363,22 @@ package duel.display {
 		}
 		animation function animRelocation():void 
 		{
-			jugglerStrict.tween( this, .600,
+			jugglerStrict.xtween( this, .120,
 				{ 
-					scaleX: 1.2,
-					scaleY: 1.2,
-					transition : Transitions.EASE_OUT_ELASTIC
+					scaleX: z * 1.1,
+					scaleY: z * 1.1,
+					transition : Transitions.EASE_OUT_BACK
 				} );
 		}
 		animation function animRelocationCompleteOrAbort():void 
 		{
-			this.scaleX = 1.0;
-			this.scaleY = 1.0;
-			this.alpha = 1.0;
+			//jugglerStrict.xtween( this, .330,
+				//{ 
+					//scaleX: 1.0,
+					//scaleY: 1.0,
+					//alpha: 1.0,
+					//transition : Transitions.EASE_OUT
+				//} );
 		}
 		animation function animFlipEffect():void
 		{
@@ -508,6 +514,12 @@ package duel.display {
 		{
 			return _isPressed;
 		}
+		
+		public function get z():Number 
+		{ return _z }
+		
+		public function set z( value:Number ):void 
+		{ _z = scaleX = scaleY = value }
 		
 		private function setIsPressed( value:Boolean ):void 
 		{

@@ -25,8 +25,7 @@ package duel.display.cardlots
 					alpha : 1.0,
 					x : x,
 					y : TARGET_Y,
-					scaleX : z,
-					scaleY : z,
+					z : z,
 					rotation : .0,
 					transition : Transitions.EASE_OUT
 				} );
