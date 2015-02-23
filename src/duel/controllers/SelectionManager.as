@@ -202,7 +202,7 @@ package duel.controllers
 				if ( selectedCard.isCreature )
 				{
 					if ( f is CreatureField )
-						if ( faq.canSummonCreatureOn( selectedCard, f, true ) == null )
+						if ( faq.canManuallySummonCreatureOn( selectedCard, f ) == null )
 							return selectedCard.statusC.needTribute ? 
 								FieldSpriteGuiState.TRIBUTE_SUMMON : 
 								FieldSpriteGuiState.NORMAL_SUMMON;
@@ -211,7 +211,7 @@ package duel.controllers
 				if ( selectedCard.isTrap )
 				{
 					if ( f is TrapField )
-						if ( faq.canSetTrapOn( selectedCard, f, true ) == null )
+						if ( faq.canManuallySetTrapOn( selectedCard, f ) == null )
 							return f.isEmpty ?
 								FieldSpriteGuiState.SET_TRAP : 
 								FieldSpriteGuiState.REPLACE_TRAP;
@@ -265,9 +265,9 @@ package duel.controllers
 				return player.fieldsT.hasAnyFieldThat( canSetTrapTo );
 			
 			function canSummonTo( f:CreatureField ):Boolean
-			{ return faq.canSummonCreatureOn( c, f, true ) == null }
+			{ return faq.canManuallySummonCreatureOn( c, f ) == null }
 			function canSetTrapTo( f:TrapField ):Boolean
-			{ return faq.canSetTrapOn( c, f, true ) == null }
+			{ return faq.canManuallySetTrapOn( c, f ) == null }
 			
 			return false;
 		}
@@ -349,7 +349,7 @@ package duel.controllers
 		}
 		private function scfHandCreatureOnSelected( o:* ):void
 		{
-			var problem:String = faq.canSummonCreatureOn( selectedCard, o as IndexedField, true );
+			var problem:String = faq.canManuallySummonCreatureOn( selectedCard, o as IndexedField );
 			
 			if ( problem == null )
 				ctrl.performActionSummon( selectedCard, o as CreatureField );
@@ -369,7 +369,7 @@ package duel.controllers
 		}
 		private function scfHandTrapOnSelected( o:* ):void
 		{
-			var problem:String = faq.canSetTrapOn( selectedCard, o as IndexedField, true );
+			var problem:String = faq.canManuallySetTrapOn( selectedCard, o as IndexedField );
 			
 			if ( problem == null )
 				ctrl.performActionTrapSet( selectedCard, o as TrapField );

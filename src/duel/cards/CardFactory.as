@@ -70,6 +70,9 @@ package duel.cards
 			F[ "paul1" ] = 
 			function( c:Card ):void
 			{
+				var buff:Buff = c.statusC.addNewBuff( false );
+				buff.cannotBeTribute = true;
+				
 				var special:SpecialEffect;
 				special = c.propsC.addTriggered();
 				special.allowIn( CardLotType.CREATURE_FIELD );

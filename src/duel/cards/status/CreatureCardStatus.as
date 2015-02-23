@@ -28,6 +28,7 @@ package duel.cards.status {
 		private var _realPowerValue:int = 0;
 		private var _cannotAttack:Boolean;
 		private var _cannotRelocate:Boolean;
+		private var _canBeTribute:Boolean;
 		private var _skipTribute:Boolean;
 		
 		public function get propsC():CreatureCardProperties
@@ -112,6 +113,7 @@ package duel.cards.status {
 			_realPowerValue = _basePowerValue + buffs.powerOffset + game.globalBuffs.getPowerOffset( card );
 			_cannotAttack = buffs.cannotAttack || game.globalBuffs.getCannotAttack( card );
 			_cannotRelocate = buffs.cannotRelocate || game.globalBuffs.getCannotRelocate( card );
+			_canBeTribute = !hasSummonExhaustion && !buffs.cannotBeTribute; /// && !hasActionExhaustion
 			_skipTribute = buffs.skipTribute || game.globalBuffs.getSkipTribute( card );
 		}
 		
@@ -164,8 +166,7 @@ package duel.cards.status {
 		}
 		
 		public function get canBeTribute():Boolean
-		///{ return !hasSummonExhaustion && !hasActionExhaustion }
-		{ return !hasSummonExhaustion }
+		{ return _canBeTribute }
 		
 		// PROP VALUES
 		

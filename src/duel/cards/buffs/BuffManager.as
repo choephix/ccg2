@@ -58,6 +58,20 @@ package duel.cards.buffs
 			return r;
 		}
 		
+		public function get cannotBeTribute():Boolean
+		{
+			var r:Boolean = false;
+			var o:*;
+			for ( var i:int = 0; i < _numBuffs; i++ )
+			{
+				if ( !_buffs[ i ].getIsActive() ) continue;
+				o = _buffs[ i ].cannotBeTribute;
+				if ( o == null ) continue;
+				r ||= o is Function ? o( _card ) : Boolean( o );
+			}
+			return r;
+		}
+		
 		public function get skipTribute():Boolean
 		{
 			var r:Boolean = false;

@@ -25,12 +25,12 @@ package duel.controllers
 		
 		// QUESTIONS :: PLAYER MANA ACTIONS
 		
-		public function canSummonCreatureOn( c:Card, field:IndexedField, isManual:Boolean ):String
+		public function canManuallySummonCreatureOn( c:Card, field:IndexedField ):String
 		{ 
 			if ( c == null || field == null || c.isInPlay )
 				return err;
 			
-			if ( isManual && c.controller.mana.current < c.cost )
+			if ( c.controller.mana.current < c.cost )
 				return _( "You don't have enough mana to summon " + c.name )
 			
 			if ( c.controller != field.owner )
@@ -49,7 +49,7 @@ package duel.controllers
 				if ( field.topCard.statusC.hasSummonExhaustion )
 					return _( field.topCard + " cannot serve as a tribute the turn they were summoned." )
 				if ( !field.topCard.statusC.canBeTribute )
-					return _( field.topCard + " cannot be sacrificed right now." )
+					return _( field.topCard + " cannot be sacrificed." )
 			}
 			else
 			{
@@ -57,18 +57,18 @@ package duel.controllers
 					return _( "You cannot summon this creature ontop of another." )
 			}
 			
-			if ( !c.statusC.canBeSummonedOn( field, isManual ) )
+			if ( !c.statusC.canBeSummonedOn( field, true ) )
 				return _( "You may not summon " + c.name + " here at this time." )
 			
 			return null;
 		}
 		
-		public function canSetTrapOn( c:Card, field:IndexedField, isManual:Boolean ):String
+		public function canManuallySetTrapOn( c:Card, field:IndexedField ):String
 		{
 			if ( c == null || field == null || c.isInPlay )
 				return err;
 			
-			if ( isManual && c.controller.mana.current < c.cost )
+			if ( c.controller.mana.current < c.cost )
 				return _( "You don't have enough mana to set " + c.name )
 			
 			if ( c.controller != field.owner )

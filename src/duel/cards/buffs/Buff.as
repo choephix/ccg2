@@ -15,6 +15,7 @@ package duel.cards.buffs
 		public var powerOffset:*;
 		public var cannotAttack:*;
 		public var cannotRelocate:*;
+		public var cannotBeTribute:*;
 		public var skipTribute:*;
 		
 		//

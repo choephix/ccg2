@@ -22,7 +22,7 @@ package dev
 			//"motivator",
 			
 			/**  TEST  **/
-			//"paul1",
+			"paul1",
 			//"all_out_joe",
 			//"general2",
 			//"crippler",
