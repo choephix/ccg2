@@ -584,17 +584,19 @@ package duel.processes
 		gameprocessing function prepend_DirectDamage( p:Player, dmg:Damage ):void
 		{
 			var pro:GameplayProcess;
-
+			
 			/// DIRECT_DAMAGE
 			pro = chain( pro, gen( GameplayProcess.DIRECT_DAMAGE, p, dmg ) );
 			pro.onEnd =
 			function onEnd( p:Player, dmg:Damage ):void
 			{
 				p.takeDirectDamage( dmg.amount );
-				
-				const A1:Number = game.p1 == p ? .35 : .00;
-				const A2:Number = game.p2 == p ? .35 : .00;
-				game.blink( 0x990000, A2, A1 );
+				if ( dmg.amount > 0 )
+				{
+					const A1:Number = game.p1 == p ? .35 : .00;
+					const A2:Number = game.p2 == p ? .35 : .00;
+					game.blink( 0x990000, A2, A1 );
+				}
 			}
 			
 			/// DIRECT_DAMAGE_COMPLETE
