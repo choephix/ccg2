@@ -111,6 +111,7 @@ package duel.cards.status {
 		{
 			_basePowerValue = propsC.basePower;
 			_realPowerValue = _basePowerValue + buffs.powerOffset + game.globalBuffs.getPowerOffset( card );
+			_realPowerValue = _realPowerValue >= 0 ? _realPowerValue : 0;
 			_cannotAttack = buffs.cannotAttack || game.globalBuffs.getCannotAttack( card );
 			_cannotRelocate = buffs.cannotRelocate || game.globalBuffs.getCannotRelocate( card );
 			_canBeTribute = !hasSummonExhaustion && !buffs.cannotBeTribute; /// && !hasActionExhaustion
