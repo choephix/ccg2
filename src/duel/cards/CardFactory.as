@@ -228,10 +228,23 @@ package duel.cards
 			F[ "devouerer" ] = 
 			function( c:Card ):void
 			{
+				var delta:int;
 				var buff:Buff = c.statusC.addNewBuff( false );
 				buff.powerOffset = 0;
 				
 				var special:SpecialEffect;
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.DIE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getDeathCauser();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					delta = p.getSourceCard().statusC.realPowerValue;
+				}
 				
 				special = c.propsC.addTriggered();
 				special.allowIn( CardLotType.CREATURE_FIELD );
@@ -242,7 +255,7 @@ package duel.cards
 				}
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
-					buff.powerOffset += p.getSourceCard();
+					buff.powerOffset += delta;
 				}
 				
 				special = c.propsC.addTriggered();
