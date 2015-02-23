@@ -21,24 +21,59 @@ package duel.cards.temp_database
 	public class OtherTempCardsDatabase 
 	{
 			
-		// // // // // // // // // // // // // // // // // // // 
-		
 		private static function initialize():void
 		{
+			// // // // // // // // // // // // // // // // // // // 
+		
 			"CREATURE" = 
 			function CREATURE( c:Card ):void
 			{
+				// // // THINGS THINGS THINGS
+				
+				// SUMMON CONDITION
+				c.propsC.summonConditionManual = 
+				c.propsC.summonConditionAutomatic = 
+				function( f:CreatureField ):Boolean {
+					return c.controller.creatureCount == 0;
+				}
+				
+				
+				
+				
+				
+				
 				// // // SAFE FLIP EFFECTS
 				c.propsC.onSafeFlipFunc =
 				function():void {
 				}
 				
-				// // C// OMBAT FLIP EFFECTS
+				// // // OMBAT FLIP EFFECTS
 				c.propsC.onCombatFlipFunc =
 				function():void {
 				}
 				
 				// // // ONGOING EFFECTS
+				var ongoing:OngoingEffect;
+				ongoing = c.propsC.addOngoing();
+				ongoing.funcUpdate =
+				function( p:GameplayProcess ):void {
+				}
+				
+				// // // STICKY BUFF
+				var buff:Buff = c.statusC.addNewBuff( false )
+				buff.powerOffset = c.primalData.getVarInt( 0 );
+				buff.isActive = 
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.lifePoints <= c.primalData.getVarInt( 1 );
+				}
+				
+				// // // BUFF
+				var buff:Buff = c.statusC.addNewBuff( false )
+				buff.powerOffset = c.primalData.getVarInt( 0 );
+				buff.isActive = 
+				function():Boolean {
+					return c.controller.lifePoints <= c.primalData.getVarInt( 1 );
+				}
 				
 				// // // TRIGGERED EFFECTS
 				
@@ -94,6 +129,22 @@ package duel.cards.temp_database
 				function( p:GameplayProcess ):void {
 				}
 				
+				// 
+				var b:Buff = new Buff( true );
+				b.cannotAttack = true;
+				b.cannotRelocate = true;
+				b.expiryCondition =
+				function( p:GameplayProcess ):Boolean {
+					return p.name == GameplayProcess.TURN_END;
+				}
+				
+				c.propsC.onCombatFlipFunc =
+				function():void {
+					if ( c.indexedField.opposingCreature == null )
+						return;
+					c.indexedField.opposingCreature.statusC.addBuff( b );
+				}
+				
 				// While I am in play - GLOBAL BUFF
 				var gb:GlobalBuff = new GlobalBuff( c );
 				gb.setEffect( c.primalData.getVarInt( 0 ), null, null, null );
@@ -145,6 +196,7 @@ package duel.cards.temp_database
 				}
 			}
 			
+			// // // // // // // // // // // // // // // // // // // 
 		}
 		
 		

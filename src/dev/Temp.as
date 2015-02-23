@@ -15,17 +15,41 @@ package dev
 		public static const DECK1:Array = [
 			
 			/**  HELPERS  **/
-			//"___kami___", 
-			//"___test___", 
-			"compromiser1",
+			"___kami___", 
+			"___test___", 
+			//"compromiser1",
+			//"sneakshot",
+			//"motivator",
 			
 			/**  TEST  **/
-			"sneakshot",
-			"grandnecro",
-			"rebirth",
-			"stunner",
+			//"paul1",
+			//"all_out_joe",
+			//"general2",
+			//"crippler",
+			//"specialhaste",
+			//"paulgrand",
+			//"vendeto",
+			//"vendeto_grand",
+			"spike",
+			"devouerer",
+			"force_field",
+			"emma",
 			
-			/**  DONE  **/
+			"sneakshot",
+			"blinding_rage",
+			"final_heal",
+			
+			/**  DONE (CREATURES)  **/
+			"tranquility",
+			"glassspike",
+			"managiver",
+			"actiontaker",
+			"up5",
+			"stunner",
+			"grand_powerhealer", 
+			"resurrecter2",
+			"resurrecter4",
+			"resurrecter66",
 			"compromiser1",
 			"compromiser2",
 			"compromiser3",
@@ -95,11 +119,44 @@ package dev
 			"doe1",
 			"doe2",
 			"doe3",
+			/**  DONE (TRAPS)  **/
+			"sneakshot",
 			
 			/**  TO DO  **/
+			"necropy0",
+			"badpiercer",
+			"shield8",
+			"antigrando",
+			"autoattacker",
+			"gcontract_haste",
+			"resurrecter3",
+			"grandtraitor",
+			"trapsaver",
+			"ferocious_sara",
+			"trapowered_3",
+			"grandegrand",
+			"drawrage",
+			"lonely_golem",
+			"black_hood",
+			"piercing_george",
+			"devouerer2",
+			"dark_one",
+			"cowardly_giant",
+			"yin",
+			"yang",
+			"ed",
+			"edd",
+			"eddy",
+			"cheerleader1",
+			"cheerleader2",
+			"cheerleader3",
+			"cheerleader4",
+			"flappy_rooster",
+			"empower_0",
+			"grandlock",
+			"phase_through",
 			
 			/**  FROZEN  **/
-			"grand_powerhealer", 
 		];
 		
 		public static const DECK2:Array = DECK1;

@@ -13,7 +13,6 @@ package duel.cards.temp_database
 	import duel.processes.GameplayProcess;
 	import duel.processes.gameprocessing;
 	import duel.table.CreatureField;
-	import duel.table.IndexedField;
 	
 	use namespace gameprocessing;
 	
@@ -47,55 +46,61 @@ package duel.cards.temp_database
 		
 		// PROCESSES
 		
-		public static function doKill( c:Card ):void
+		public static function doKill( c:Card, cause:Card ):void
 		{
 			if ( c == null ) return;
-			Game.current.processes.prepend_Death( c );
+			game.processes.prepend_Death( c, false, cause );
 		}
 		
 		public static function doDestroyTrap( c:Card ):void
 		{
-			Game.current.processes.prepend_Death( c );
+			game.processes.prepend_DestroyTrap( c );
 		}
 		
 		static public function doDraw( p:Player, count:int ):void 
 		{
-			Game.current.processes.prepend_Draw( p, count );
+			game.processes.prepend_Draw( p, count );
 		}
 		
 		static public function doDiscard( p:Player, c:Card ):void 
 		{
-			Game.current.processes.prepend_Discard( p, c );
+			game.processes.prepend_Discard( p, c );
+		}
+		
+		static public function doDiscardHand( p:Player ):void 
+		{
+			for ( var i:int = 0; i < p.hand.cardsCount; i++ )
+				game.processes.prepend_Discard( p, p.hand.getCardAt( i ) );
 		}
 		
 		static public function doPutToGrave( c:Card ):void
 		{
-			Game.current.processes.prepend_AddToGrave( c );
+			game.processes.prepend_AddToGrave( c );
 		}
 		
 		static public function doPutInHand( c:Card, p:Player ):void
 		{
-			Game.current.processes.prepend_AddToHand( c, p );
+			game.processes.prepend_AddToHand( c, p );
 		}
 		
 		static public function doPutInDeck( c:Card, p:Player, faceDown:Boolean, shuffle:Boolean ):void
 		{
-			Game.current.processes.prepend_AddToDeck( c, p, faceDown, shuffle );
+			game.processes.prepend_AddToDeck( c, p, faceDown, shuffle );
 		}
 		
 		static public function doForceAttack( c:Card, free:Boolean ):void
 		{
-			Game.current.processes.append_Attack( c, free );
+			game.processes.append_Attack( c, free );
 		}
 		
 		static public function doForceRelocate( c:Card, field:CreatureField, free:Boolean ):void 
 		{
-			Game.current.processes.append_Relocation( c, field, free );
+			game.processes.append_Relocation( c, field, free );
 		}
 		
 		static public function doDealDirectDamage( p:Player, amount:int, source:* ):void
 		{
-			Game.current.processes.prepend_DirectDamage( p, 
+			game.processes.prepend_DirectDamage( p, 
 					new Damage( amount, DamageType.SPECIAL, source ) );
 		}
 		
@@ -119,13 +124,13 @@ package duel.cards.temp_database
 			}
 		}
 		
-		static public function doKillCreaturesRow( p:Player ):void
+		static public function doKillCreaturesRow( p:Player, cause:Card ):void
 		{
 			for ( var i:int = 0; i < G.FIELD_COLUMNS; i++ ) 
 			{
 				if ( p.fieldsC.getAt( i ).isEmpty )
 					continue;
-				doKill( p.fieldsC.getAt( i ).topCard );
+				doKill( p.fieldsC.getAt( i ).topCard, cause );
 			}
 		}
 		
@@ -147,24 +152,25 @@ package duel.cards.temp_database
 		static public function doSpawnTokenCreatureIfEmpty( field:CreatureField ):void
 		{
 			if ( !field.isEmpty ) return;
-			Game.current.processes.append_SummonHere( Game.current.produceCard( "token1" ), field, false );
+			game.processes.append_SummonHere( game.produceCard( "token1" ), field, false );
 		}
 		
 		static public function doSummonFromDeck( c:Card, field:CreatureField ):void 
 		{
-			Game.current.processes.append_SummonHere( c, field, false );
+			game.processes.append_SummonHere( c, field, false );
 		}
 		
 		static public function doResurrectCreature( c:Card, field:CreatureField ):void
 		{
-			Game.current.processes.prepend_ResurrectHere( c, field );
+			game.processes.prepend_ResurrectHere( c, field );
 		}
 		
 		static public function doEndCurrrentTurn():void
 		{
-			Game.current.processes.append_TurnEnd( Game.current.currentPlayer );
+			game.processes.append_TurnEnd( game.currentPlayer );
 		}
 		
+		//
+		static public function get game():Game { return Game.current }
 	}
-
 }

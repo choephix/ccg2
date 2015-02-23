@@ -1,6 +1,7 @@
 package duel.cards.buffs 
 {
 	import duel.cards.Card;
+	import duel.processes.GameplayProcess;
 	/**
 	 * ...
 	 * @author choephix
@@ -8,6 +9,7 @@ package duel.cards.buffs
 	public class Buff 
 	{
 		public var isActive:*;
+		public var expiryCondition:Function;
 		
 		// : : : VALUES : : : 
 		public var powerOffset:*;
@@ -27,6 +29,9 @@ package duel.cards.buffs
 			_isWeak = destroyOutOfPlay;
 			isActive = true;
 		}
+		
+		public function getMustExpire( p:GameplayProcess ):Boolean
+		{ return expiryCondition == null ? false : expiryCondition( p ) }
 		
 		public function getIsActive():Boolean
 		{ return isActive is Function ? isActive() : Boolean( isActive ) }

@@ -13,10 +13,13 @@ package duel.players
 		private var _cap:int		= CONFIG::sandbox?4:1; //TODO return to 1
 		private var _current:int	= _cap;
 		
+		public function increase( amount:int ):void
+		{ _current = Number.min( _cap, _current + amount ) }
+		
 		public function refill():void
 		{ _current = _cap }
 		
-		public function useMana( amount:int=1 ):void
+		public function decrease( amount:int = 1 ):void
 		{ _current -= amount }
 		
 		public function raiseCap():void

@@ -4,6 +4,7 @@ package duel.cards.properties {
 	import duel.DamageType;
 	import duel.otherlogic.OngoingEffect;
 	import duel.otherlogic.SpecialEffect;
+	import duel.cards.properties.cardprops;
 	
 	use namespace cardprops;
 	/**
@@ -20,7 +21,8 @@ package duel.cards.properties {
 		cardprops var hasSwift:Boolean 	= false; 	// CAN ATTACK AND MOVE SAME TURN
 		
 		// SUMMONING CONDITION
-		cardprops var summonCondition:Function;
+		cardprops var summonConditionManual:Function;
+		cardprops var summonConditionAutomatic:Function;
 		
 		// SPECIAL
 		cardprops var specialsTriggered:Vector.<SpecialEffect> = new Vector.<SpecialEffect>();

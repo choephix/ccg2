@@ -2,6 +2,8 @@ package editor
 
 {
 	import chimichanga.common.display.Sprite;
+	import flash.desktop.Clipboard;
+	import flash.desktop.ClipboardFormats;
 	import flash.ui.Keyboard;
 	import other.EditorEvents;
 	import other.InputEvents;
@@ -11,6 +13,7 @@ package editor
 	import starling.events.KeyboardEvent;
 	import starling.text.TextField;
 	import ui.StringInput;
+	import ui.StringOutput;
 	
 	/**
 	 * ...
@@ -211,9 +214,21 @@ package editor
 		{
 			if ( e.ctrlKey || e.altKey )
 			{
+				var i:int;
 				var v:SpaceView = context.currentView;
 				var g:CardGroup = context.focusedGroup;
 				
+				// OUTPUT LIST
+				if ( e.keyCode == Keyboard.P )
+				{
+					if ( g == null ) return;
+					var s:String = "";
+					for ( i = g.countCards - 1; i >= 0; i-- )
+						s += "\"" + g.getCardAt( i ).data.slug + "\",\n";
+					StringOutput.generate( stage, s );
+					Clipboard.generalClipboard.setData( ClipboardFormats.TEXT_FORMAT, s );
+				}
+				else
 				// SORTING
 				if ( e.shiftKey && e.keyCode >= Keyboard.NUMBER_0 && e.keyCode <= Keyboard.NUMBER_9 )
 					switch ( e.keyCode - Keyboard.NUMBER_0 )

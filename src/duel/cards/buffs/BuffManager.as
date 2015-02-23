@@ -1,6 +1,7 @@
 package duel.cards.buffs 
 {
 	import duel.cards.Card;
+	import duel.processes.GameplayProcess;
 	/**
 	 * ...
 	 * @author choephix
@@ -74,6 +75,18 @@ package duel.cards.buffs
 		//}
 		
 		//{ MANAGEMENT
+		
+		public function onGameProcess( p:GameplayProcess ):void 
+		{
+			var i:int = 0;
+			while ( i < _numBuffs )
+			{
+				if ( _buffs[ i ].getMustExpire( p ) )
+					removeBuff( _buffs[ i ] )
+				else
+					i++;
+			}
+		}
 		
 		public function addBuff( o:Buff ):void 
 		{

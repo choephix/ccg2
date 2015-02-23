@@ -403,8 +403,16 @@ package duel
 		
 		private function onProcessComplete( e:ProcessEvent ):void
 		{
+			var p:GameplayProcess = e.process as GameplayProcess;
+			
+			if ( p == null )
+				return;
+			
 			for ( var i:int = 0, iMax:int = logicComponents.length; i < iMax; i++ ) 
 				logicComponents[ i ].onProcessUpdateOrComplete( e.process as GameplayProcess );
+			
+			playerInspectProcess( currentPlayer.opponent, p );
+			playerInspectProcess( currentPlayer, p );
 			
 			if ( !meta.isMultiplayer && e.process.name )
 				gui.log( e.process.name + " " + e.process.args );

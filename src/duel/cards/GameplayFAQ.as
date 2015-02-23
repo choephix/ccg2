@@ -34,7 +34,7 @@ package duel.cards
 		
 		//
 		
-		public static function canSummonHere( c:Card, field:CreatureField ):Boolean
+		public static function canSummonHere( c:Card, field:CreatureField, isManual:Boolean ):Boolean
 		{ 
 			if ( c.isInPlay ) return false;
 			
@@ -44,14 +44,15 @@ package duel.cards
 				if ( c.controller != field.owner ) return false;
 				if ( field.isEmpty ) return false; //TODO remove this for riders and combinatrons
 				if ( field.isLocked ) return false;
-				return c.statusC.maySummonOn( field );
+				return c.statusC.canBeSummonedOn( field, isManual );
 			}
-			return canPlaceCreatureHere( c, field )
-					&&
-					c.statusC.maySummonOn( field );
+			
+			if ( !canPlaceCreatureHere( c, field ) ) return false;
+			if ( !c.statusC.canBeSummonedOn( field, isManual ) ) return false;
+			return true;
 		}
-		public static function cannotSummonHere( c:Card, field:CreatureField ):Boolean
-		{ return !canSummonHere( c, field ) }
+		public static function cannotSummonHere( c:Card, field:CreatureField, isManual:Boolean ):Boolean
+		{ return !canSummonHere( c, field, isManual ) }
 		
 		public static function canRelocateHere( c:Card, field:CreatureField ):Boolean
 		{ 
@@ -104,9 +105,9 @@ package duel.cards
 		public static function cannotTakeDamage( c:Card, dmg:Damage ):Boolean
 		{ return !canTakeDamage( c, dmg ) }
 		
-		public static function canDie( c:Card, fromCombat:Boolean=false ):Boolean
+		public static function canDie( c:Card, fromCombat:Boolean=false, causer:Card=null ):Boolean
 		{ return c.isInPlay }
-		public static function cannotDie( c:Card, fromCombat:Boolean=false ):Boolean
+		public static function cannotDie( c:Card, fromCombat:Boolean=false, causer:Card=null ):Boolean
 		{ return !canDie( c ) }
 		
 		public static function canFlipInPlay( c:Card ):Boolean

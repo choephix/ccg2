@@ -73,7 +73,7 @@ package duel.processes
 			pro.onEnd = 
 			function onEnd( p:Player ):void
 			{
-				p.mana.useMana( amount );
+				p.mana.decrease( amount );
 			}
 			
 			/// TURN_START_COMPLETE
@@ -153,15 +153,15 @@ package duel.processes
 			var pro:GameplayProcess;
 			
 			/// SUMMON
-			pro = chain( pro, gen( GameplayProcess.SUMMON, c, field ) );
+			pro = chain( pro, gen( GameplayProcess.SUMMON, c, field, isManual ) );
 			pro.onStart = 
-			function onStart( c:Card, field:CreatureField ):void
+			function onStart( c:Card, field:CreatureField, isManual:Boolean ):void
 			{
 				if ( isManual )
 					prepend_SpendMana( c.controller, c.cost );
 			}
 			pro.onEnd = 
-			function onEnd( c:Card, field:CreatureField ):void
+			function onEnd( c:Card, field:CreatureField, isManual:Boolean ):void
 			{
 				/// TRIBUTE_CREATURE
 				if ( isManual && c.statusC.needTribute )
@@ -172,11 +172,11 @@ package duel.processes
 						{ error( "Where's my tribute?" ) }
 						return;
 					}
-					prepend_TributeCreature( field.topCard );
+					prepend_TributeCreature( field.topCard, c );
 				}
 			}
 			pro.abortCheck = 
-			function abortCheck( c:Card, field:CreatureField ):Boolean
+			function abortCheck( c:Card, field:CreatureField, isManual:Boolean ):Boolean
 			{
 				if ( c.isInPlay ) return true;
 				if ( field.isLocked ) return true;
@@ -188,16 +188,16 @@ package duel.processes
 			pro = chain( pro, process_EnterPlay( c, field, c.propsC.isFlippable ) );
 			
 			/// SUMMON_COMPLETE
-			pro = chain( pro, gen( GameplayProcess.SUMMON_COMPLETE, c, field ) );
+			pro = chain( pro, gen( GameplayProcess.SUMMON_COMPLETE, c, field, isManual ) );
 			pro.delay = isManual ? .250 : NaN;
 			pro.abortable = true; //was false by default, cuz' "complete"
 			pro.abortCheck =
-			function completeAbortCheck( c:Card, field:CreatureField ):Boolean
+			function completeAbortCheck( c:Card, field:CreatureField, isManual:Boolean ):Boolean
 			{
 				return !c.isInPlay;
 			}
 			pro.onStart = 
-			function complete( c:Card, field:CreatureField ):void
+			function complete( c:Card, field:CreatureField, isManual:Boolean ):void
 			{
 				if ( !c.isInPlay ) return;
 				c.statusC.hasSummonExhaustion = true;
@@ -207,7 +207,7 @@ package duel.processes
 			
 		}
 		
-		private function prepend_TributeCreature( c:Card ):GameplayProcess 
+		private function prepend_TributeCreature( c:Card, grand:Card ):GameplayProcess 
 		{
 			var pro:GameplayProcess;
 			
@@ -217,11 +217,17 @@ package duel.processes
 			pro.onEnd = 
 			function onEnd( c:Card ):void 
 			{
-				prepend_Death( c );
+				prepend_Death( c, false, grand );
 			}
 			
 			/// TRIBUTE_CREATURE_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.TRIBUTE_CREATURE_COMPLETE, c ) );
+			pro.onEnd =
+			function onEnd( c:Card ):void 
+			{
+				if ( grand ) 
+					grand.history.tribute = c;
+			}
 			
 			/// returns TRIBUTE_CREATURE (the chain head)
 			return pro;
@@ -234,6 +240,12 @@ package duel.processes
 			
 			/// RESURRECT
 			pro = chain( pro, gen( GameplayProcess.RESURRECT, c, field ) );
+			pro.onStart =
+			function onStart( c:Card, field:CreatureField ):void
+			{
+				if ( field.topCard != null )
+					prepend_Death( field.topCard, false, null );
+			}
 			pro.onEnd = 
 			function onEnd( c:Card, field:CreatureField ):void
 			{
@@ -546,7 +558,7 @@ package duel.processes
 				
 				if ( c.statusC.realPowerValue <= dmg.amount )
 				{
-					prepend_Death( c, true );
+					prepend_Death( c, true, dmg.source as Card );
 					game.showFloatyText( c.sprite.localToGlobal( new Point() ), 
 						c.statusC.realPowerValue + "-" + dmg.amount + "=DEATH!", 0xFF0000 );
 				}
@@ -585,20 +597,20 @@ package duel.processes
 			pro = chain( pro, gen( GameplayProcess.DIRECT_DAMAGE_COMPLETE, p, dmg ) );
 		}
 		
-		gameprocessing function prepend_Death( c:Card, fromCombat:Boolean=false ):void 
+		gameprocessing function prepend_Death( c:Card, fromCombat:Boolean, cause:Card ):void 
 		{
 			var pro:GameplayProcess;
 
 			/// DIE
-			pro = chain( pro, gen( GameplayProcess.DIE, c, fromCombat ) );
+			pro = chain( pro, gen( GameplayProcess.DIE, c, fromCombat, cause ) );
 			pro.onStart =
-			function onStart( c:Card, fromCombat:Boolean=false ):void
+			function onStart( c:Card, fromCombat:Boolean, cause:Card ):void
 			{
 				if ( c.faceDown )
 					prepend_SilentFlip( c, !fromCombat );
 			}
 			pro.onEnd =
-			function onEnd( c:Card, fromCombat:Boolean=false ):void
+			function onEnd( c:Card, fromCombat:Boolean, cause:Card ):void
 			{
 				if ( fromCombat )
 					c.sprite.animDie();
@@ -608,9 +620,9 @@ package duel.processes
 			pro.abortCheck = GameplayFAQ.cannotDie;
 			
 			/// DIE_COMPLETE
-			pro = chain( pro, gen( GameplayProcess.DIE_COMPLETE, c, fromCombat ) );
+			pro = chain( pro, gen( GameplayProcess.DIE_COMPLETE, c, fromCombat, cause ) );
 			pro.onStart =
-			function complete( c:Card, fromCombat:Boolean=false ):void 
+			function complete( c:Card, fromCombat:Boolean, cause:Card ):void 
 			{
 				if ( c.owner != null )
 					prepend_AddToGrave( c );

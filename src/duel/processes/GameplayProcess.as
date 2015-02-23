@@ -234,6 +234,16 @@ package duel.processes
 			return null;
 		}
 		
+		public function isSummonManual():Boolean 
+		{
+			if ( args[ 2 ] is Boolean ) 
+				return Boolean( args[ 2 ] );
+			
+			CONFIG::development
+			{ throw new ArgumentError( "What to do... isSummonManual..." ); }
+			return false;
+		}
+		
 		public function getSummonedField():CreatureField
 		{
 			if ( args.length > 1 && args[ 1 ] is CreatureField ) 
@@ -261,6 +271,16 @@ package duel.processes
 			
 			CONFIG::development
 			{ throw new ArgumentError( "What to do... getDeathIsFromCombat..." ); }
+			return false;
+		}
+		
+		public function getDeathCauser():Card
+		{
+			if ( args.length > 2 && args[ 2 ] is Card )
+				return args[ 2 ] as Card;
+			
+			CONFIG::development
+			{ throw new ArgumentError( "What to do... getDeathCauser..." ); }
 			return false;
 		}
 		

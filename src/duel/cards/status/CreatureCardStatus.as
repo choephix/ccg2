@@ -42,6 +42,7 @@ package duel.cards.status {
 		override public function onGameProcess( p:GameplayProcess ):void
 		{
 			updateStatus();
+			buffs.onGameProcess( p );
 			
 			var i:int;
 			
@@ -98,7 +99,7 @@ package duel.cards.status {
 					if ( i == 0 )
 					{
 						clearLifeLinks();
-						processes.prepend_Death( card );
+						processes.prepend_Death( card, false, null );
 					}
 				}
 			}
@@ -118,6 +119,7 @@ package duel.cards.status {
 		{
 			reset();
 			buffs.removeAllWeak();
+			card.history.tribute = null;
 		}
 		
 		public function onTurnEnd():void
@@ -173,10 +175,15 @@ package duel.cards.status {
 		public function get realPowerValue():int
 		{ return _realPowerValue }
 		
-		// IN-HAND LOGIC
+		//
 		
-		public function maySummonOn( f:Field ):Boolean
-		{ return propsC.summonCondition == null ? true : propsC.summonCondition( f ) }
+		public function canBeSummonedOn( f:Field, manually:Boolean ):Boolean
+		{ 
+			if ( manually )
+				return propsC.summonConditionManual == null ? true : propsC.summonConditionManual( f );
+			else
+				return propsC.summonConditionAutomatic == null ? true : propsC.summonConditionAutomatic( f );
+		}
 		
 		// COMBAT LOGIC
 		

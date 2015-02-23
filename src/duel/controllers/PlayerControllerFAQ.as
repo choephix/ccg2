@@ -57,7 +57,7 @@ package duel.controllers
 					return _( "You cannot summon this creature ontop of another." )
 			}
 			
-			if ( !c.statusC.maySummonOn( field ) )
+			if ( !c.statusC.canBeSummonedOn( field, isManual ) )
 				return _( "You may not summon " + c.name + " here at this time." )
 			
 			return null;
