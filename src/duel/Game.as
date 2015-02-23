@@ -136,7 +136,7 @@ package duel
 			addChild( bg );
 			
 			table = new TableSprite();
-			table.x = App.W * 0.50;
+			table.x = App.W * 0.42;
 			table.y = App.H * 0.50;
 			addChild( table );
 			

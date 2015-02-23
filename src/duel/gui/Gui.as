@@ -5,6 +5,7 @@ package duel.gui
 	import duel.controllers.PlayerAction;
 	import duel.controllers.PlayerActionType;
 	import duel.controllers.UserPlayerController;
+	import duel.G;
 	import duel.GameSprite;
 	import duel.players.ManaPool;
 	import duel.players.Player;
@@ -58,11 +59,15 @@ package duel.gui
 			t2.vAlign = "top";
 			t2.touchable = false;
 			
-			tcenter = new TextField( App.W, App.H, "", "Calibri", 20, 0x2277EE, true );
+			tcenter = new TextField( 960, 50, "", "Calibri", 36, 0x2277EE, true );
 			addChild( tcenter );
 			tcenter.hAlign = "center";
 			tcenter.vAlign = "center";
+			tcenter.autoScale = true;
 			tcenter.touchable = false;
+			tcenter.alignPivot();
+			tcenter.x = game.table.x;
+			tcenter.y = .5 * App.H;
 			
 			CONFIG::development
 			{
@@ -74,7 +79,9 @@ package duel.gui
 			logBox.height = 380;
 			}
 			
-			cardTip = new TipBox();
+			cardTip = new TipBox( 360, 540 );
+			cardTip.x = .89 * App.W;
+			cardTip.y = .50 * App.H;
 			addChild( cardTip );
 			cardTip.visible = false;
 			
@@ -135,8 +142,6 @@ package duel.gui
 			cardTip.text = _focusedCard.name + "\n\n" + _focusedCard.description;
 			if ( _focusedCard.isCreature )
 				cardTip.text += "\n\n" + _focusedCard.statusC.buffsToString();
-			cardTip.x = .5 * App.W;
-			cardTip.y = _focusedCard.sprite.y > .0 ? .33 * App.H : .67 * App.H;
 		}
 		
 		private function onCardUnfocus(e:Event):void 
@@ -164,23 +169,6 @@ package duel.gui
 			buttonsContainer.alpha = game.interactable ? 1.0 : 0.6;
 			updateTf( t1, game.p1 );
 			updateTf( t2, game.p2 );
-		}
-		
-		private function canDoAttack( ctrl:UserPlayerController ):Boolean
-		{
-			return ctrl != null &&
-				ctrl.selection.selectedCard != null && 
-				ctrl.selection.selectedCard.isCreature && 
-				ctrl.selection.selectedCard.canAttack;
-		}
-		
-		private function canDoSafeFlip( ctrl:UserPlayerController ):Boolean
-		{
-			return ctrl != null &&
-				ctrl.selection.selectedCard != null && 
-				ctrl.selection.selectedCard.isCreature && 
-				ctrl.selection.selectedCard.faceDown &&
-				ctrl.selection.selectedCard.exhausted == false;
 		}
 		
 		private function updateTf( t:AnimatedTextField, p:Player ):void

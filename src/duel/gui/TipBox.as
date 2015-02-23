@@ -16,16 +16,14 @@ package duel.gui
 		
 		private var _visible:Boolean;
 		
-		public function TipBox()
+		public function TipBox( width:Number, height:Number )
 		{
-			super();
-			
-			q = new Quad( 640, 240, 0x88CCFF );
+			q = new Quad( width, height, 0x88CCFF );
 			q.alignPivot();
 			q.alpha = .70;
 			addChild( q );
 			
-			t = new TextField( 640, 240, "?", "Calibri", 32, 0x0, true );
+			t = new TextField( q.width, q.height, "?", "Calibri", 32, 0x0, true );
 			t.alignPivot();
 			t.autoScale = true;
 			addChild( t );
