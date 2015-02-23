@@ -139,7 +139,8 @@ package duel
 			
 			table = new TableSprite();
 			table.x = App.W * 0.42;
-			table.y = App.H * 0.50;
+			table.x = App.W * 0.48;
+			table.y = App.H * 0.47;
 			addChild( table );
 			
 			p1.tableSide = new TableSide( p1, table, false );
@@ -153,14 +154,14 @@ package duel
 			p1.handSprite = new HandSprite( p1.hand );
 			p1.handSprite.maxWidth = 1000;
 			p1.handSprite.x = - p1.handSprite.maxWidth * 0.5;
-			p1.handSprite.y =  .5 * App.H;
+			p1.handSprite.y = App.H - table.y;
 			p1.handSprite.cardsParent = table.cardsParentTop;
 			p1.handSprite.x += 500;
 			
 			p2.handSprite = new HandSprite( p2.hand );
 			p2.handSprite.maxWidth = 950;
 			p2.handSprite.x = - p2.handSprite.maxWidth * 0.5;
-			p2.handSprite.y = -.5 * App.H;
+			p2.handSprite.y = -table.y;
 			p2.handSprite.cardsParent = table.cardsParentTop;
 			p2.handSprite.topSide = true;
 			p2.handSprite.x += 500;

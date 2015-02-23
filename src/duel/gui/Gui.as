@@ -67,7 +67,7 @@ package duel.gui
 			tcenter.touchable = false;
 			tcenter.alignPivot();
 			tcenter.x = game.table.x;
-			tcenter.y = .5 * App.H;
+			tcenter.y = game.table.y;
 			
 			CONFIG::development
 			{
@@ -81,8 +81,9 @@ package duel.gui
 			
 			cardTip = new TipBox( 360, 540 );
 			cardTip.x = .89 * App.W;
-			cardTip.y = .50 * App.H;
+			cardTip.y = .42 * App.H;
 			addChild( cardTip );
+			cardTip.touchable = false;
 			cardTip.visible = false;
 			
 			// BUTTONS

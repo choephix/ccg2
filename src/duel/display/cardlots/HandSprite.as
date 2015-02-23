@@ -120,12 +120,14 @@ package duel.display.cardlots
 				if ( _active )
 					if ( selectedCard == null )
 						if ( o.isFocused )
-							y = sideDir * G.CARD_H * -.5;
+							//y = sideDir * G.CARD_H * -.5;
+							y = sideDir * G.CARD_H * -.3;
 						else
 						if ( o.isSelectable )
-							y = sideDir * G.CARD_H * -.03;
+							//y = sideDir * G.CARD_H * -.03;
+							y = sideDir * G.CARD_H * .2;
 						else
-							y = G.CARD_H * .0;
+							y = sideDir * G.CARD_H * .3;
 					else
 						if ( o == selectedCard.sprite )
 							y = sideDir * G.CARD_H * -.88;
