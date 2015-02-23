@@ -35,7 +35,9 @@ package duel
 	import flash.geom.Point;
 	import global.CardPrimalData;
 	import starling.animation.IAnimatable;
+	import starling.animation.Transitions;
 	import starling.core.Starling;
+	import starling.display.BlendMode;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Quad;
@@ -153,6 +155,7 @@ package duel
 			p1.handSprite.x = - p1.handSprite.maxWidth * 0.5;
 			p1.handSprite.y =  .5 * App.H;
 			p1.handSprite.cardsParent = table.cardsParentTop;
+			p1.handSprite.x += 500;
 			
 			p2.handSprite = new HandSprite( p2.hand );
 			p2.handSprite.maxWidth = 950;
@@ -160,6 +163,7 @@ package duel
 			p2.handSprite.y = -.5 * App.H;
 			p2.handSprite.cardsParent = table.cardsParentTop;
 			p2.handSprite.topSide = true;
+			p2.handSprite.x += 500;
 			//}
 			
 			if ( !meta.isMultiplayer )
@@ -554,6 +558,7 @@ package duel
 		public function showFloatyText( p:Point, text:String, color:uint ):void
 		{
 			var o:Sprite = new Sprite();
+			o.touchable = false;
 			addChild( o );
 			
 			var t:TextField = new TextField( 500, 100, text, "Impact", 36, color, false );
@@ -574,6 +579,23 @@ package duel
 					onComplete : o.removeFromParent,
 					onCompleteArgs : [true]
 				} );
+		}
+		
+		public function blink( color:uint, alphaTop:Number = 1.0, alphaBottom:Number = 1.0 ):void
+		{
+			var q:Quad = new Quad( App.W, App.H, color );
+			q.setVertexAlpha( 0, alphaTop );
+			q.setVertexAlpha( 1, alphaTop );
+			q.setVertexAlpha( 2, alphaBottom );
+			q.setVertexAlpha( 3, alphaBottom );
+			q.blendMode = BlendMode.ADD;
+			jugglerGui.tween( q, .250,
+				{ 
+					alpha : .0, 
+					transition : Transitions.EASE_OUT,
+					onComplete : q.removeFromParent, onCompleteArgs : [ true ]
+				} );
+			addChild( q );
 		}
 		
 		//

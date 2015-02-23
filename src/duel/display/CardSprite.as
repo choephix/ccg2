@@ -382,15 +382,15 @@ package duel.display {
 		}
 		animation function animFlipEffect():void
 		{
-			animBlink( true, 0xFF8030, 4 );
+			animBlink( true, 0xFF8030, 3 );
 		}
 		animation function animTrapEffect():void
 		{
-			animBlink( true, 0x60B0FF, 4 );
+			animBlink( true, 0x60B0FF, 3 );
 		}
 		animation function animSpecialEffect():void
 		{
-			animBlink( true, 0xFFD060, 4 );
+			animBlink( true, 0xFFD060, 3 );
 		}
 		animation function animDamageAbort():void
 		{

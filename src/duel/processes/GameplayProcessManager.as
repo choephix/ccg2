@@ -591,6 +591,10 @@ package duel.processes
 			function onEnd( p:Player, dmg:Damage ):void
 			{
 				p.takeDirectDamage( dmg.amount );
+				
+				const A1:Number = game.p1 == p ? .35 : .00;
+				const A2:Number = game.p2 == p ? .35 : .00;
+				game.blink( 0x990000, A2, A1 );
 			}
 			
 			/// DIRECT_DAMAGE_COMPLETE
