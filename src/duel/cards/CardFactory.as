@@ -67,79 +67,6 @@ package duel.cards
 			/// /// /// TEST SPACE /// /// ///
 			/// /// ///            /// /// ///
 			
-			F[ "paul1" ] = 
-			function( c:Card ):void
-			{
-				c.propsC.summonConditionManual = 
-				c.propsC.summonConditionAutomatic = 
-				function( f:CreatureField ):Boolean {
-					return c.controller.creatureCount == 0;
-				}
-				
-				var buff:Buff = c.statusC.addNewBuff( false );
-				buff.cannotBeTribute = true;
-				
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.SUMMON_COMPLETE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c == p.getSourceCard();
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					c.statusC.hasSummonExhaustion = false;
-				}
-			}
-			
-			F[ "all_out_joe" ] = 
-			function( c:Card ):void
-			{
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.TURN_END );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c.controller == p.getPlayer();
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doDiscardHand( c.controller );
-				}
-			}
-			
-			F[ "general2" ] = 
-			function( c:Card ):void
-			{
-				var buff:Buff = c.statusC.addNewBuff( false )
-				buff.powerOffset = c.primalData.getVarInt( 0 );
-				buff.isActive = 
-				function():Boolean {
-					return c.controller.fieldsC.countOccupied >= c.controller.fieldsC.count;
-				}
-			}
-			
-			F[ "crippler" ] = 
-			function( c:Card ):void
-			{
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.SUMMON_COMPLETE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c.controller.opponent == p.getSourceCard().controller;
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					var b:Buff = new Buff( true );
-					b.powerOffset = -c.primalData.getVarInt( 0 );
-					p.getSourceCard().statusC.addBuff( b );
-				}
-			}
-			
 			F[ "specialhaste" ] = 
 			function( c:Card ):void
 			{
@@ -333,6 +260,95 @@ package duel.cards
 			
 			///
 			
+			F[ "crippler" ] = 
+			function( c:Card ):void
+			{
+				var b:Buff;
+				b = new Buff( true );
+				b.powerOffset = -c.primalData.getVarInt( 0 );
+				
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( p.getSourceCard().faceDown ) return false;
+					return c.controller.opponent == p.getSourceCard().controller;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					p.getSourceCard().statusC.addBuff( b );
+				}
+			}
+			
+			F[ "general2" ] = 
+			function( c:Card ):void
+			{
+				var buff:Buff = c.statusC.addNewBuff( false )
+				buff.powerOffset = c.primalData.getVarInt( 0 );
+				buff.isActive = 
+				function():Boolean {
+					return c.controller.fieldsC.countOccupied >= c.controller.fieldsC.count;
+				}
+			}
+			
+			F[ "all_out_joe" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.TURN_END );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller == p.getPlayer();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doDiscardHand( c.controller );
+				}
+			}
+			
+			F[ "paul1" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.summonConditionManual = 
+				c.propsC.summonConditionAutomatic = 
+				function( f:CreatureField ):Boolean {
+					return c.controller.creatureCount == 0;
+				}
+				
+				var buff:Buff = c.statusC.addNewBuff( false );
+				buff.cannotBeTribute = true;
+				
+				var special:SpecialEffect;
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.statusC.hasSummonExhaustion = false;
+				}
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.TURN_END );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller == p.getPlayer();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doKill( c, c );
+				}
+			}
+			
 			F[ "tranquility" ] = 
 			function( c:Card ):void
 			{
@@ -417,7 +433,7 @@ package duel.cards
 				}
 			}
 			
-			F[ "up5" ] = 
+			F[ "upgrade" ] = 
 			function( c:Card ):void
 			{
 				var b:Buff = new Buff( true );
