@@ -31,6 +31,7 @@ package duel.cards.temp_database
 				// // // THINGS THINGS THINGS
 				
 				// SUMMON CONDITION
+				// While you have no creatures
 				c.propsC.summonConditionManual = 
 				c.propsC.summonConditionAutomatic = 
 				function( f:CreatureField ):Boolean {

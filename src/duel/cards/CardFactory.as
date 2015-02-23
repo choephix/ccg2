@@ -70,6 +70,12 @@ package duel.cards
 			F[ "paul1" ] = 
 			function( c:Card ):void
 			{
+				c.propsC.summonConditionManual = 
+				c.propsC.summonConditionAutomatic = 
+				function( f:CreatureField ):Boolean {
+					return c.controller.creatureCount == 0;
+				}
+				
 				var buff:Buff = c.statusC.addNewBuff( false );
 				buff.cannotBeTribute = true;
 				
@@ -271,6 +277,35 @@ package duel.cards
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
 					buff.powerOffset = 0;
+				}
+			}
+			
+			F[ "force_field2" ] = 
+			function( c:Card ):void
+			{
+				var buff:Buff = c.statusC.addNewBuff( false )
+				buff.cannotAttack = true;
+				
+				var gb:GlobalBuff = new GlobalBuff( c );
+				gb.setEffect( null, true, null, null );
+				gb.appliesTo = c.faq.isNotOpposingCreature;
+				gb.isActive =
+				function():Boolean {
+					return c.isInPlay
+						&& c.indexedField.opposingCreature 
+						&& c.indexedField.opposingCreature.statusC.canAttack;
+				}
+				registerGlobalBuffWhileInPlay( c, gb );
+			}
+			
+			F[ "emma" ] = 
+			function( c:Card ):void
+			{
+				var ongoing:OngoingEffect;
+				ongoing = c.propsC.addOngoing();
+				ongoing.funcUpdate =
+				function( p:GameplayProcess ):void {
+					c.cost = c.controller.mana.current <= 0 ? 0 : 1;
 				}
 			}
 			

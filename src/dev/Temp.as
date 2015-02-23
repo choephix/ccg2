@@ -59,7 +59,7 @@ package dev
 			"kamikaze2",
 			"kamikaze",
 			"nona",
-			"freefred",
+		"freefred",
 			"emptyshell",
 			"tripplemana",
 			"doublemana",
@@ -119,6 +119,7 @@ package dev
 			"doe1",
 			"doe2",
 			"doe3",
+			
 			/**  DONE (TRAPS)  **/
 			"sneakshot",
 			
