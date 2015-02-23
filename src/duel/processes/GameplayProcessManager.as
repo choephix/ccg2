@@ -647,7 +647,7 @@ package duel.processes
 			function onEnd( c:Card ):void
 			{
 				c.faceDown = false;
-				game.jugglerStrict.addFakeTime( .5 );
+				game.jugglerStrict.addFakeTime( .330 );
 			}
 			pro.abortCheck = GameplayFAQ.cannotFlipInPlay;
 			
@@ -664,6 +664,7 @@ package duel.processes
 			function effectStart( c:Card ):void
 			{
 				c.sprite.animFlipEffect();
+				game.jugglerStrict.addFakeTime( .660 );
 			}
 			pro.onEnd =
 			function effectEnd( c:Card ):void
@@ -677,7 +678,8 @@ package duel.processes
 			}
 			
 			/// COMBAT_FLIP_EFFECT_COMPLETE
-			pro = chain( pro, gen( GameplayProcess.COMBAT_FLIP_EFFECT_COMPLETE, c ) );
+			pro = chain( pro, gen( GameplayProcess.COMBAT_FLIP_EFFECT_COMPLETE, c ) )
+			pro.delay = .500;
 		}
 		
 		gameprocessing function prepend_SafeFlip( c:Card ):void
@@ -690,7 +692,7 @@ package duel.processes
 			function onEnd( c:Card ):void
 			{
 				c.faceDown = false;
-				game.jugglerStrict.addFakeTime( .5 );
+				game.jugglerStrict.addFakeTime( .330 );
 			}
 			pro.abortCheck = GameplayFAQ.cannotFlipInPlay;
 			
@@ -707,6 +709,7 @@ package duel.processes
 			function effectStart( c:Card ):void
 			{
 				c.sprite.animFlipEffect();
+				game.jugglerStrict.addFakeTime( .660 );
 			}
 			pro.onEnd =
 			function effectEnd( c:Card ):void
@@ -721,6 +724,7 @@ package duel.processes
 			
 			/// SAFE_FLIP_EFFECT_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.SAFE_FLIP_EFFECT_COMPLETE, c ) );
+			pro.delay = .500;
 		}
 		
 		gameprocessing function prepend_SilentFlip( c:Card, quick:Boolean = false ):void

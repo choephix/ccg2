@@ -404,7 +404,7 @@ package duel.display {
 		{
 			setAsTopChild();
 			
-			animBlink( false, 0xB00000 ).blendMode = BlendMode.NORMAL;
+			animBlink( false, 0xBB0000, 1 );
 			
 			__bloodSprite = assets.generateImage( "card-damage" );
 			__bloodSprite.alignPivot();
@@ -430,7 +430,8 @@ package duel.display {
 		{
 			setAsTopChild();
 			
-			animBlink( false, 0xB00000 ).blendMode = BlendMode.NORMAL;
+			animBlink( false, 0xBB0000, 1 );
+			//animBlink( false, 0xB00000, 1 ).blendMode = BlendMode.NORMAL;
 			
 			__bloodSprite = assets.generateImage( "card-damage" );
 			__bloodSprite.alignPivot();
@@ -469,17 +470,19 @@ package duel.display {
 			this.scaleY = 1.0;
 			this.alpha = 1.0;
 		}
-		private function animBlink( strict:Boolean, color:uint = 0xFFFFFF ):Quad
+		private function animBlink( strict:Boolean, color:uint = 0xFFFFFF, count:int = 4 ):Quad
 		{
+			const DURATION:Number = .500 / count;
 			var q:Quad = assets.generateImage( "card-blink-glow" );
 			addChild( q );
 			q.alignPivot();
 			q.blendMode = BlendMode.ADD;
 			q.color = color;
 			q.alpha = .999;
-			( strict ? jugglerStrict : juggler ).tween( q, .500,
+			( strict ? jugglerStrict : juggler ).tween( q, DURATION,
 				{ 
-					alpha: .0, 
+					alpha : .0, 
+					repeatCount : 3,
 					onComplete : q.removeFromParent,
 					onCompleteArgs : [true]
 				} );
