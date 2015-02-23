@@ -340,6 +340,20 @@ package duel.cards
 				gb.setEffect( null, true, null, null );
 				gb.appliesTo = c.faq.isOpposingCreature;
 				registerGlobalBuffWhileInPlay( c, gb );
+				
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.TURN_START );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller == p.getPlayer() 
+						&& c.indexedField.opposingCreature == null;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doKill( c, c );
+				}
 			}
 			
 			F[ "glassspike" ] = 

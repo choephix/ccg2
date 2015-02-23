@@ -382,15 +382,15 @@ package duel.display {
 		}
 		animation function animFlipEffect():void
 		{
-			animBlink( true, 0xFF8030 );
+			animBlink( true, 0xFF8030, 4 );
 		}
 		animation function animTrapEffect():void
 		{
-			animBlink( true, 0x60B0FF );
+			animBlink( true, 0x60B0FF, 4 );
 		}
 		animation function animSpecialEffect():void
 		{
-			animBlink( true, 0xFFD060 );
+			animBlink( true, 0xFFD060, 4 );
 		}
 		animation function animDamageAbort():void
 		{
@@ -402,9 +402,9 @@ package duel.display {
 		}
 		animation function animDie():void 
 		{
-			setAsTopChild();
+			destroyAnimAttackSprite();
 			
-			animBlink( false, 0xBB0000, 1 );
+			setAsTopChild();
 			
 			__bloodSprite = assets.generateImage( "card-damage" );
 			__bloodSprite.alignPivot();
@@ -424,27 +424,16 @@ package duel.display {
 					transition : Transitions.EASE_OUT
 				} );
 			
-			destroyAnimAttackSprite();
+			animBlink( false, 0xBB0000, 1 );
 		}
 		animation function animDie2():void 
 		{
+			destroyAnimAttackSprite();
+			
 			setAsTopChild();
 			
-			animBlink( false, 0xBB0000, 1 );
+			animBlink( false, 0xFF3333, 1 );
 			//animBlink( false, 0xB00000, 1 ).blendMode = BlendMode.NORMAL;
-			
-			__bloodSprite = assets.generateImage( "card-damage" );
-			__bloodSprite.alignPivot();
-			__bloodSprite.blendMode = BlendMode.MULTIPLY;
-			addChild( __bloodSprite );
-			juggler.xtween( __bloodSprite, 12.0,
-				{ 
-					delay: 4.0,
-					alpha: .0, 
-					onComplete : __bloodSprite.removeFromParent,
-					onCompleteArgs : [true]
-				} );
-			destroyAnimAttackSprite();
 		}
 		
 		public function animFadeToNothing( dispose:Boolean ):void 
@@ -470,7 +459,7 @@ package duel.display {
 			this.scaleY = 1.0;
 			this.alpha = 1.0;
 		}
-		private function animBlink( strict:Boolean, color:uint = 0xFFFFFF, count:int = 4 ):Quad
+		private function animBlink( strict:Boolean, color:uint = 0xFFFFFF, count:int = 1 ):Quad
 		{
 			const DURATION:Number = .500 / count;
 			var q:Quad = assets.generateImage( "card-blink-glow" );
@@ -482,7 +471,7 @@ package duel.display {
 			( strict ? jugglerStrict : juggler ).tween( q, DURATION,
 				{ 
 					alpha : .0, 
-					repeatCount : 3,
+					repeatCount : count,
 					onComplete : q.removeFromParent,
 					onCompleteArgs : [true]
 				} );
