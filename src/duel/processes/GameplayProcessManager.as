@@ -185,7 +185,7 @@ package duel.processes
 			}
 			
 			/// ENTER_PLAY
-			pro = chain( pro, process_EnterPlay( c, field, c.propsC.isFlippable ) );
+			pro = chain( pro, process_EnterPlay( c, field, isManual && c.propsC.isFlippable ) );
 			
 			/// SUMMON_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.SUMMON_COMPLETE, c, field, isManual ) );
@@ -234,7 +234,7 @@ package duel.processes
 		}
 		
 		
-		gameprocessing function prepend_ResurrectHere( c:Card, field:CreatureField ):void
+		gameprocessing function prepend_ResurrectHere( c:Card, field:CreatureField, cause:Card ):void
 		{
 			var pro:GameplayProcess;
 			
@@ -244,7 +244,7 @@ package duel.processes
 			function onStart( c:Card, field:CreatureField ):void
 			{
 				if ( field.topCard != null )
-					prepend_Death( field.topCard, false, null );
+					prepend_Death( field.topCard, false, cause );
 			}
 			pro.onEnd = 
 			function onEnd( c:Card, field:CreatureField ):void

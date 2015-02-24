@@ -67,98 +67,168 @@ package duel.cards
 			/// /// /// TEST SPACE /// /// ///
 			/// /// ///            /// /// ///
 			
-			F[ "specialhaste" ] = 
-			function( c:Card ):void
-			{
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.SUMMON_COMPLETE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c == p.getSourceCard() && !p.isSummonManual();
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					c.statusC.hasSummonExhaustion = false;
-				}
-			}
+			/// /// ///            /// /// ///
+			/// /// /// TEST SPACE /// /// ///
+			/// /// /// /// // /// /// /// ///
 			
-			F[ "paulgrand" ] = 
-			function( c:Card ):void
-			{
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.SUMMON_COMPLETE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c == p.getSourceCard() && c.indexedField.opposingCreature != null;
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					c.statusC.hasSummonExhaustion = false;
-				}
-			}
+			///
 			
-			F[ "vendeto" ] = 
+			F[ "paul2" ] = 
 			function( c:Card ):void
 			{
-				const GRAND:String = c.primalData.getVarSlug( 0 );
+				var buff:Buff = c.statusC.addNewBuff( false );
+				buff.cannotBeTribute = true;
+				
+				c.propsC.summonConditionManual = 
+				function( field:CreatureField ):Boolean {
+					return field.opposingCreature != null;
+				}
 				
 				var special:SpecialEffect;
 				special = c.propsC.addTriggered();
 				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.DIE_COMPLETE );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
 				special.funcCondition =
 				function( p:GameplayProcess ):Boolean {
-					if ( c != p.getSourceCard() ) return false;
-					var target:Card;
-					target = c.controller.hand.findBySlug( GRAND );
-					if ( target == null )
-						target = c.controller.deck.findBySlug( GRAND );
-					if ( target == null )
-						return false;
-					return true;
+					return c == p.getSourceCard();
 				}
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
-					var target:Card;
-					target = c.controller.hand.findBySlug( GRAND );
-					if ( target == null )
-						target = c.controller.deck.findBySlug( GRAND );
-					if ( target == null )
-						return;
-					TempDatabaseUtils.doResurrectCreature( target, c.fieldC );
+					c.statusC.hasSummonExhaustion = false;
 				}
 			}
 			
-			F[ "vendeto_grand" ] = 
+			F[ "paul3" ] = 
+			function( c:Card ):void
+			{
+				var buff:Buff = c.statusC.addNewBuff( false );
+				buff.cannotBeTribute = true;
+				buff.cannotAttack =
+				function( cc:Card ):Boolean {
+					return c.isInPlay && c.indexedField.opposingCreature == null;
+				}
+				
+				var special:SpecialEffect;
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.statusC.hasSummonExhaustion = false;
+				}
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.ATTACK_COMPLETE, GameplayProcess.ATTACK_ABORT );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getAttacker();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doKill( c, c );
+				}
+			}
+			
+			F[ "tempower2" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.ATTACK_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getAttacker();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.statusC.addNewBuff( true ).powerOffset = -c.primalData.getVarInt( 0 );
+				}
+			}
+			
+			F[ "tempower" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.onSafeFlipFunc =
+				function():void {
+					c.statusC.addNewBuff( true ).powerOffset = c.primalData.getVarInt( 0 );
+				}
+				
+				const STEP:int = c.primalData.getVarInt( 1 );
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.TURN_END );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller == p.getPlayer() && c.statusC.realPowerValue >= STEP;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.statusC.addNewBuff( true ).powerOffset = -STEP;
+				}
+			}
+			
+			F[ "force_field" ] = 
+			function( c:Card ):void
+			{
+				const STEP:int = c.primalData.getVarInt( 1 );
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.DIRECT_DAMAGE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller == p.getPlayer();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					p.getDamage().amount = 0;
+				}
+			}
+			
+			F[ "johnny1" ] = 
 			function( c:Card ):void
 			{
 				c.propsC.summonConditionManual = 
-				function( f:CreatureField ):Boolean { return false }
-				
-				const GRAND:String = c.primalData.getVarSlug( 0 );
-				
+				function( field:CreatureField ):Boolean {
+					return field.opposingCreature == null;
+				}
+			}
+			
+			F[ "emma" ] = 
+			function( c:Card ):void
+			{
 				var ongoing:OngoingEffect;
 				ongoing = c.propsC.addOngoing();
 				ongoing.funcUpdate =
 				function( p:GameplayProcess ):void {
-					if ( !c.isInPlay ) return;
-					if ( c.controller.grave.findBySlug( GRAND ) == null )
-						TempDatabaseUtils.doKill( c, c );
+					c.cost = c.controller.mana.current <= 0 ? 0 : 1;
 				}
 			}
 			
-			F[ "spike" ] = 
+			F[ "force_field2" ] = 
 			function( c:Card ):void
 			{
-				c.propsC.onCombatFlipFunc =
-				function():void {
-					TempDatabaseUtils.doDealDirectDamage( 
-						c.controller.opponent, c.primalData.getVarInt( 0 ), c );
+				var buff:Buff = c.statusC.addNewBuff( false )
+				buff.cannotAttack = true;
+				
+				var gb:GlobalBuff = new GlobalBuff( c );
+				gb.setEffect( null, true, null, null );
+				gb.appliesTo = c.faq.isNotOpposingCreature;
+				gb.isActive =
+				function():Boolean {
+					return c.isInPlay
+						&& c.indexedField.opposingCreature 
+						&& c.indexedField.opposingCreature.statusC.canAttack;
 				}
+				registerGlobalBuffWhileInPlay( c, gb );
 			}
 			
 			F[ "devouerer" ] = 
@@ -207,58 +277,121 @@ package duel.cards
 				}
 			}
 			
-			F[ "force_field2" ] = 
+			F[ "vendeto" ] = 
 			function( c:Card ):void
 			{
-				var buff:Buff = c.statusC.addNewBuff( false )
-				buff.cannotAttack = true;
+				const GRAND:String = c.primalData.getVarSlug( 0 );
 				
-				var gb:GlobalBuff = new GlobalBuff( c );
-				gb.setEffect( null, true, null, null );
-				gb.appliesTo = c.faq.isNotOpposingCreature;
-				gb.isActive =
-				function():Boolean {
-					return c.isInPlay
-						&& c.indexedField.opposingCreature 
-						&& c.indexedField.opposingCreature.statusC.canAttack;
-				}
-				registerGlobalBuffWhileInPlay( c, gb );
-			}
-			
-			F[ "emma" ] = 
-			function( c:Card ):void
-			{
-				var ongoing:OngoingEffect;
-				ongoing = c.propsC.addOngoing();
-				ongoing.funcUpdate =
-				function( p:GameplayProcess ):void {
-					c.cost = c.controller.mana.current <= 0 ? 0 : 1;
-				}
-			}
-			
-			/// /// ///            /// /// ///
-			/// /// /// TEST SPACE /// /// ///
-			/// /// /// /// // /// /// /// ///
-			
-			///
-			
-			F[ "sneakshot" ] = 
-			function( c:Card ):void
-			{
-				c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
-				c.propsT.effect.funcActivateCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( c.indexedField.opposingCreature != p.getAttacker() ) return false;
-					if ( c.indexedField.samesideCreature != null ) return false;
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.GRAVEYARD );
+				special.watch( GameplayProcess.DIE_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean
+				{
+					if ( c != p.getSourceCard() ) return false;
+					if ( !p.getDeathIsFromCombat() ) return false;
+					var target:Card;
+					target = c.controller.hand.findBySlug( GRAND );
+					if ( target == null )
+						target = c.controller.deck.findBySlug( GRAND );
+					if ( target == null )
+						return false;
 					return true;
 				}
-				c.propsT.effect.funcActivate =
-				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doDealDirectDamage( c.controller.opponent, c.primalData.getVarInt( 0 ), c );
+				special.funcActivate =
+				function( p:GameplayProcess ):void
+				{
+					var target:Card;
+					target = c.controller.hand.findBySlug( GRAND );
+					if ( target == null )
+						target = c.controller.deck.findBySlug( GRAND );
+					if ( target == null )
+						return;
+					var field:CreatureField = c.history.lastIndexedField as CreatureField ;
+					if ( !target.statusC.canBeSummonedOn( field, false ) )
+						return;
+					TempDatabaseUtils.doSummonFromDeckOrHand( target, field );
 				}
 			}
 			
-			///
+			F[ "vendeto_grand" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.summonConditionManual = 
+				function( f:CreatureField ):Boolean { return false }
+				
+				const GRAND:String = c.primalData.getVarSlug( 0 );
+				var doCheck:Boolean;
+				
+				var ongoing:OngoingEffect;
+				ongoing = c.propsC.addOngoing();
+				ongoing.funcCondition =
+				function( p:GameplayProcess ):Boolean
+				{
+					return doCheck;
+				}
+				ongoing.funcUpdate =
+				function( p:GameplayProcess ):void
+				{
+					if ( !doCheck )
+					{
+						if ( p.name == GameplayProcess.SUMMON_COMPLETE && p.getSourceCard() == c )
+							doCheck = true;
+						else
+							return;
+					}
+					if ( c.controller.grave.findBySlug( GRAND ) == null )
+					{
+						doCheck = false;
+						TempDatabaseUtils.doKill( c, c );
+					}
+				}
+			}
+			
+			F[ "spike" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.onCombatFlipFunc =
+				function():void {
+					TempDatabaseUtils.doDealDirectDamage( 
+						c.controller.opponent, c.primalData.getVarInt( 0 ), c );
+				}
+			}
+			
+			F[ "paulgrand" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard() && c.indexedField.opposingCreature != null;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.statusC.hasSummonExhaustion = false;
+				}
+			}
+			
+			F[ "specialhaste" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard() && !p.isSummonManual();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.statusC.hasSummonExhaustion = false;
+				}
+			}
 			
 			F[ "crippler" ] = 
 			function( c:Card ):void
@@ -497,7 +630,7 @@ package duel.cards
 					if ( TARGET == null ) return;
 					if ( !TARGET.isCreature ) return;
 					if ( !TARGET.statusC.canBeSummonedOn( c.fieldC, false ) ) return;
-					TempDatabaseUtils.doResurrectCreature( TARGET, c.fieldC );
+					TempDatabaseUtils.doResurrectCreature( TARGET, c.fieldC, c );
 				}
 			}
 			
@@ -510,7 +643,7 @@ package duel.cards
 					if ( TARGET == null ) return;
 					if ( !TARGET.isCreature ) return;
 					if ( !TARGET.statusC.canBeSummonedOn( c.fieldC, false ) ) return;
-					TempDatabaseUtils.doResurrectCreature( TARGET, c.fieldC );
+					TempDatabaseUtils.doResurrectCreature( TARGET, c.fieldC, c );
 				}
 			}
 			
@@ -530,7 +663,7 @@ package duel.cards
 				function( p:GameplayProcess ):void {
 					const TARGET:Card = c.controller.grave.findFirstCard( isViableTarget );
 					if ( TARGET == null ) return;
-					TempDatabaseUtils.doResurrectCreature( TARGET, c.fieldC );
+					TempDatabaseUtils.doResurrectCreature( TARGET, c.fieldC, c );
 					TempDatabaseUtils.doDealDirectDamage( c.controller, TARGET.propsC.basePower, c );
 				}
 				function isViableTarget( cc:Card ):Boolean {
@@ -846,7 +979,7 @@ package duel.cards
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
 					const FIELD:CreatureField = c.slug == "jack" ? c.fieldC.adjacentRight : c.fieldC.adjacentLeft;
-					TempDatabaseUtils.doResurrectCreature( c.controller.grave.findBySlug( BROTHER ), FIELD );
+					TempDatabaseUtils.doResurrectCreature( c.controller.grave.findBySlug( BROTHER ), FIELD, c );
 				}
 			}
 			
@@ -1474,8 +1607,26 @@ package duel.cards
 				function( p:GameplayProcess ):void {
 					var cc:Card = c.controller.deck.findBySlug( GROUP, false );
 					if ( cc != null )
-						TempDatabaseUtils.doSummonFromDeck( 
+						TempDatabaseUtils.doSummonFromDeckOrHand( 
 							cc, c.history.lastIndexedField as CreatureField );
+				}
+			}
+			
+			///
+			
+			F[ "sneakshot" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
+				c.propsT.effect.funcActivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.opposingCreature != p.getAttacker() ) return false;
+					if ( c.indexedField.samesideCreature != null ) return false;
+					return true;
+				}
+				c.propsT.effect.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doDealDirectDamage( c.controller.opponent, c.primalData.getVarInt( 0 ), c );
 				}
 			}
 			

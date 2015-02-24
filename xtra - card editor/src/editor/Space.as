@@ -7,6 +7,7 @@ package editor
 	import flash.ui.Keyboard;
 	import other.EditorEvents;
 	import other.InputEvents;
+	import other.Temp;
 	import starling.animation.DelayedCall;
 	import starling.core.Starling;
 	import starling.events.Event;
@@ -215,9 +216,33 @@ package editor
 			if ( e.ctrlKey || e.altKey )
 			{
 				var i:int;
+				var c:Card;
 				var v:SpaceView = context.currentView;
 				var g:CardGroup = context.focusedGroup;
 				
+				// COPY & PASTE
+				if ( e.keyCode == Keyboard.C && e.shiftKey )
+				{
+					if ( g == null ) return;
+					Temp.clipboard = g.registeredCards;
+				}
+				else
+				if ( e.keyCode == Keyboard.V && e.shiftKey )
+				{
+					if ( g == null ) return;
+					if ( Temp.clipboard as Array == null ) return;
+					g.purgeCards();
+					var a:Array = Temp.clipboard as Array;
+					for ( i = 0; i < cards.length; i++ )
+					{
+						c = cards[ i ];
+						if ( a.indexOf( c.data.id ) < 0 )
+							continue;
+						g.addCard( c );
+					}
+					g.updateRegisteredCards();
+				}
+				else
 				// OUTPUT LIST
 				if ( e.keyCode == Keyboard.P )
 				{
@@ -246,7 +271,7 @@ package editor
 				// MARK CARD
 				if ( e.keyCode == Keyboard.M )
 				{
-					var c:Card = context.focusedCard;
+					c = context.focusedCard;
 					if ( c == null ) return;
 					switch ( c.data.mark )
 					{

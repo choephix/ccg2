@@ -18,14 +18,25 @@ package dev
 			"___kami___", 
 			"___test___", 
 			//"resurrecter66",
-			"resurrecter2",
-			"resurrecter4",
+			//"resurrecter2",
+			//"resurrecter4",
 			//"compromiser1",
 			//"sneakshot",
 			//"motivator",
 			
 			/**  TEST  **/
-			"specialhaste",
+			"paul2",
+			"paul3",
+			"force_field",
+			"johnny1",
+			"tempower2",
+			"tempower",
+			
+			"sneakshot",
+			"blinding_rage",
+			"final_heal",
+			
+			/**  DONE (CREATURES)  **/
 			"paulgrand",
 			"vendeto",
 			"vendeto_grand",
@@ -33,15 +44,7 @@ package dev
 			"devouerer",
 			"force_field2",
 			"emma",
-			"force_field",
-			"johnny1",
-			"paul2",
-			
-			"sneakshot",
-			"blinding_rage",
-			"final_heal",
-			
-			/**  DONE (CREATURES)  **/
+			"specialhaste",
 			"crippler",
 			"general2",
 			"all_out_joe",

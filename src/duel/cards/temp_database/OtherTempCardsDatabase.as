@@ -117,6 +117,19 @@ package duel.cards.temp_database
 				function( p:GameplayProcess ):void {
 				}
 				
+				// When I attack
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.ATTACK );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getAttacker();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+				}
+				
 				// When opposing enemy creature is summoned
 				var special:SpecialEffect;
 				special = c.propsC.addTriggered();

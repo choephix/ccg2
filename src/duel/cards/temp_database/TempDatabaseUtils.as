@@ -155,14 +155,14 @@ package duel.cards.temp_database
 			game.processes.append_SummonHere( game.produceCard( "token1" ), field, false );
 		}
 		
-		static public function doSummonFromDeck( c:Card, field:CreatureField ):void 
+		static public function doSummonFromDeckOrHand( c:Card, field:CreatureField ):void 
 		{
 			game.processes.append_SummonHere( c, field, false );
 		}
 		
-		static public function doResurrectCreature( c:Card, field:CreatureField ):void
+		static public function doResurrectCreature( c:Card, field:CreatureField, cause:Card ):void
 		{
-			game.processes.prepend_ResurrectHere( c, field );
+			game.processes.prepend_ResurrectHere( c, field, cause );
 		}
 		
 		static public function doEndCurrrentTurn():void

@@ -432,8 +432,7 @@ package duel.display {
 			
 			setAsTopChild();
 			
-			animBlink( false, 0xFF3333, 1 );
-			//animBlink( false, 0xB00000, 1 ).blendMode = BlendMode.NORMAL;
+			animBlink( true, 0xFF3333, 1 );
 		}
 		
 		public function animFadeToNothing( dispose:Boolean ):void 

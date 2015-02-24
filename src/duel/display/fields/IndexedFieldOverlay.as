@@ -5,6 +5,7 @@ package duel.display.fields
 	import duel.display.FieldSpriteOverTip;
 	import duel.G;
 	import duel.GameSprite;
+	import duel.table.CreatureField;
 	import duel.table.IndexedField;
 	import starling.animation.IAnimatable;
 	import starling.animation.Transitions;
@@ -20,14 +21,18 @@ package duel.display.fields
 		private var _z:Number = 1.0;
 		
 		private var _isLocked:Boolean = false;
-		private var _isCardExhausted:Boolean = false;
+		private var _summonDaze:Boolean = false;
 		private var _showAura:Boolean;
 		private var _showTip:Boolean;
+		private var _canAttackAlpha:Number = .0;
+		private var _canRelocateAlpha:Number = .0;
 		
 		private var aura:CardAura;
 		private var overTip:FieldSpriteOverTip;
-		private var lockIcon:Image;
-		private var exhaustClock:Image;
+		private var iconLocked:Image;
+		private var iconSummonDaze:Image;
+		private var iconCanAttack:Image;
+		private var iconCanRelocate:Image;
 		
 		public function initialize( field:IndexedField ):void
 		{
@@ -43,16 +48,28 @@ package duel.display.fields
 			aura.scale = _z;
 			addChild( aura );
 			
-			exhaustClock = assets.generateImage( "exhaustClock", false, false );
-			exhaustClock.pivotX = -G.CARD_W * 0.100;
-			exhaustClock.pivotY = exhaustClock.height * 0.50;
-			exhaustClock.alpha = 0.0;
-			exhaustClock.touchable = false;
-			addChild( exhaustClock );
+			iconSummonDaze = assets.generateImage( "exhaustClock", false, true );
+			iconSummonDaze.x = .25 * G.CARD_W;
+			iconSummonDaze.y = -.1 * G.CARD_H;
+			iconSummonDaze.alpha = 0.0;
+			iconSummonDaze.touchable = false;
+			addChild( iconSummonDaze );
 			
-			lockIcon = assets.generateImage( "iconLock", false, true );
-			lockIcon.alpha = .0;
-			addChild( lockIcon );
+			iconLocked = assets.generateImage( "iconLock", false, true );
+			iconLocked.alpha = .0;
+			addChild( iconLocked );
+			
+			iconCanAttack = assets.generateImage( "iconCanAttack", false, true );
+			iconCanAttack.x = -80;
+			iconCanAttack.y = -80;
+			iconCanAttack.alpha = .0;
+			addChild( iconCanAttack );
+			
+			iconCanRelocate = assets.generateImage( "iconCanRelocate", false, true );
+			iconCanRelocate.x =  80;
+			iconCanRelocate.y = -80;
+			iconCanRelocate.alpha = .0;
+			addChild( iconCanRelocate );
 			
 			overTip = new FieldSpriteOverTip();
 			overTip.touchable = false;
@@ -73,13 +90,24 @@ package duel.display.fields
 				setLockIconVisibility( _isLocked );
 			}
 			
-			// CREATURE EXHAUSTED
-			_isCardExhausted = !field.isEmpty 
-				&& field.topCard.isCreature 
-				&& !field.topCard.statusC.canAttack 
-				&& !field.topCard.statusC.canRelocate;
-			exhaustClock.alpha = lerp( exhaustClock.alpha, 
-				( _isCardExhausted ? 1.0 : 0.0 ), .1 );
+			// CREATURE
+			if ( field is CreatureField )
+			{
+				_canAttackAlpha = 0.0;
+				if ( !field.isEmpty && !field.topCard.faceDown )
+					_canAttackAlpha = field.topCard.statusC.canAttack ? 1.0 : 0.1;
+				iconCanAttack.alpha = lerp( iconCanAttack.alpha, _canAttackAlpha, .1 );
+				
+				_canRelocateAlpha = 0.0;
+				if ( !field.isEmpty && !field.topCard.faceDown )
+					_canRelocateAlpha = field.topCard.statusC.canRelocate ? 1.0 : 0.1;
+				iconCanRelocate.alpha = lerp( iconCanRelocate.alpha, _canRelocateAlpha, .1 );
+				
+				_summonDaze = !field.isEmpty && field.topCard.statusC.hasSummonExhaustion;
+				iconSummonDaze.alpha = lerp( iconSummonDaze.alpha, _summonDaze ? 1.0 : 0.0, .1 );
+				iconSummonDaze.scaleX = iconSummonDaze.alpha + .5;
+				iconSummonDaze.scaleY = iconSummonDaze.alpha + .5;
+			}
 			
 			aura.alpha = lerp ( aura.alpha, game.interactable && _showAura ? 1.0 : 0.0, .1 );
 			if ( game.interactable && _showTip && overTip.alpha < .1 )
@@ -112,10 +140,10 @@ package duel.display.fields
 		{
 			if ( value )
 			{
-				lockIcon.alpha = .0;
-				lockIcon.scaleX = .20;
-				lockIcon.scaleY = .20;
-				juggler.xtween( lockIcon, .330,
+				iconLocked.alpha = .0;
+				iconLocked.scaleX = .20;
+				iconLocked.scaleY = .20;
+				juggler.xtween( iconLocked, .330,
 					{
 						alpha : 1.0,
 						scaleX : 1.0,
@@ -125,8 +153,8 @@ package duel.display.fields
 			}
 			else
 			{
-				lockIcon.alpha = 1.0;
-				juggler.xtween( lockIcon, .220,
+				iconLocked.alpha = 1.0;
+				juggler.xtween( iconLocked, .220,
 					{
 						alpha : .0,
 						scaleX : 1.50,
