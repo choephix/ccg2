@@ -25,18 +25,18 @@ package dev
 			//"motivator",
 			
 			/**  TEST  **/
-			"paul2",
-			"paul3",
-			"force_field",
-			"johnny1",
-			"tempower2",
-			"tempower",
 			
 			"sneakshot",
 			"blinding_rage",
 			"final_heal",
 			
 			/**  DONE (CREATURES)  **/
+			"paul2",
+			"paul3",
+			"force_field",
+			"johnny1",
+			"tempower2",
+			"tempower",
 			"paulgrand",
 			"vendeto",
 			"vendeto_grand",
