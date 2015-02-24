@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:2985f4653d907ffe40bc9bb3d8a76d8f:23d514a272aecfbe40e9d0333b5fd600:ede49753e7988572dcf8de3f96e7155d$ -->
+<!-- $TexturePacker:SmartUpdate:c2e5a4078f17b4e06e3fc4fa63ba2894:e04c0627684d7139ea06e499705f436b:ede49753e7988572dcf8de3f96e7155d$ -->
 <TextureAtlas imagePath="main.atf">
     <SubTexture name="btn" x="937" y="714" rotated="true" width="58" height="118" frameX="-1" frameY="-1" frameWidth="120" frameHeight="60"/>
     <SubTexture name="card-aura-field" x="604" y="2" rotated="true" width="400" height="300"/>

@@ -15,12 +15,12 @@ package duel.display.utils
 		// CARDS
 		
 		public static function getColorForTrap( rand:Boolean= true ):uint
-		{ return ra( 0x7E64B7, .10, .0, .15, rand ) }
+		{ return ra( 0x7493DA, .10, .0, .15, rand ) }
 		//{ return ra( 0x7DD1DB, .20, .0, .10, rand ) }
 		
 		public static function getColorForTrapPersistent( rand:Boolean= true ):uint
 		//{ return ra( 0x7657B7, .10, .0, .15, rand ) }
-		{ return ra( 0x93A4EA, .10, .0, .20, rand ) }
+		{ return ra( 0x8779C6, .10, .0, .20, rand ) }
 		
 		public static function getColorForCreature( rand:Boolean= true ):uint
 		{ return ra( 0xEDBA6D, .10, .10, .0, rand ) }

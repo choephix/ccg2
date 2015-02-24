@@ -60,13 +60,13 @@ package duel.display.fields
 			addChild( iconLocked );
 			
 			iconCanAttack = assets.generateImage( "iconCanAttack", false, true );
-			iconCanAttack.x = -80;
+			iconCanAttack.x = -40;
 			iconCanAttack.y = -80;
 			iconCanAttack.alpha = .0;
 			addChild( iconCanAttack );
 			
 			iconCanRelocate = assets.generateImage( "iconCanRelocate", false, true );
-			iconCanRelocate.x =  80;
+			iconCanRelocate.x =  40;
 			iconCanRelocate.y = -80;
 			iconCanRelocate.alpha = .0;
 			addChild( iconCanRelocate );
