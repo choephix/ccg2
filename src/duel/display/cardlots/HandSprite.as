@@ -19,8 +19,7 @@ package duel.display.cardlots
 		public var maxWidth:Number = 800;
 		public var topSide:Boolean = false;
 		
-		public var selectedCard:Card = null;
-		
+		private var _selectedCard:Card = null;
 		private var _tipSprite:TipBox;
 		private var _active:Boolean = false;
 		private var hand:Hand;
@@ -39,7 +38,6 @@ package duel.display.cardlots
 		
 		override public function advanceTime( time:Number ):void
 		{
-			arrange();
 		}
 		
 		override protected function arrangeAll():void
@@ -208,6 +206,8 @@ package duel.display.cardlots
 		
 		private function onCardFocus(e:Event):void 
 		{
+			arrange();
+			
 			var c:Card = e.data as Card;
 			
 			if ( !c.sprite.isSelectable && !c.sprite.isSelected )
@@ -238,6 +238,8 @@ package duel.display.cardlots
 		
 		private function onCardUnfocus(e:Event):void 
 		{
+			arrange();
+			
 			if ( Card( e.data ).sprite.contains( _tipSprite ) )
 				_tipSprite.removeFromParent( false );
 		}
@@ -245,39 +247,35 @@ package duel.display.cardlots
 		override protected function onCardAdded( e:Event ):void
 		{
 			super.onCardAdded( e );
+			arrange();
 		}
 		
 		override protected function onCardRemoved( e:Event ):void
 		{
 			super.onCardRemoved( e );
+			arrange();
 			
 			var c:Card = e.data as Card;
 			jugglerGui.removeTweens( c.sprite );
 			
 			if ( selectedCard == c )
 				selectedCard = null;
-			
+		}
+		
+		//
+		
+		public function get selectedCard():Card 
+		{
+			return _selectedCard;
+		}
+		
+		public function set selectedCard(value:Card):void 
+		{
+			if ( _selectedCard == value ) return;
+			_selectedCard = value;
 			arrange();
 		}
 		
-		//private function onCardSelected( e:Event ):void
-		//{
-			//var c:Card = e.data as Card;
-			//if ( c == null )
-				//return;
-			//if ( hand.containsCard( c ) )
-				//show( c );
-		//}
-		//private function onCardDeselected( e:Event ):void
-		//{
-			//var c:Card = e.data as Card;
-			//if ( c == null )
-				//return;
-			//if ( hand.containsCard( c ) )
-				//unshow( c );
-		//}
-		
-		//
 		public function get active():Boolean
 		{
 			return _active;
@@ -285,6 +283,7 @@ package duel.display.cardlots
 		
 		public function set active( value:Boolean ):void
 		{
+			if ( _active == value ) return;
 			_active = value;
 			arrange();
 		}
