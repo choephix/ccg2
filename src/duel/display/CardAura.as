@@ -1,7 +1,9 @@
 package duel.display
 {
 	import duel.Game;
+	import starling.animation.IAnimatable;
 	import starling.animation.Transitions;
+	import starling.animation.Tween;
 	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.events.Event;
@@ -10,9 +12,10 @@ package duel.display
 	 * ...
 	 * @author choephix
 	 */
-	public class CardAura extends Image
+	public class CardAura extends Image implements IAnimatable
 	{
 		public var scale:Number = 1.0;
+		private var _tween:Tween;
 		
 		public function CardAura( assetName:String )
 		{
@@ -30,13 +33,21 @@ package duel.display
 			
 			scaleX = scale;
 			scaleY = scale;
-			Game.current.juggler.tween( this, 0.5, {
-					scaleX:scale+.03,
-					scaleY:scale+.02,
-					repeatCount:0,
-					reverse:true,
-					transition:Transitions.EASE_IN
-				} );
+			
+			_tween = new Tween( this, .500, Transitions.EASE_IN );
+			_tween.repeatCount = 0;
+			_tween.reverse = true;
+			_tween.animate( "scaleX", scale + .03 );
+			_tween.animate( "scaleY", scale + .02 );
+			
+			Game.current.juggler.add( this );
+		}
+		
+		public function advanceTime( time:Number ):void 
+		{
+			visible = alpha > .03;
+			if ( !visible ) return;
+			_tween.advanceTime( time );
 		}
 	}
 }
