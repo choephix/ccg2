@@ -1,4 +1,4 @@
-package duel.display.cardlots 
+package duel.display.cardlots
 {
 	import duel.cards.CardListBase;
 	import duel.display.CardSprite;
@@ -8,31 +8,15 @@ package duel.display.cardlots
 	 * ...
 	 * @author choephix
 	 */
-	public class DeckStackSprite extends StackSprite 
+	public class DeckStackSprite extends StackSprite
 	{
-		
-		public function DeckStackSprite(list:CardListBase) 
-		{
-			super(list);
-		}
+		public function DeckStackSprite( list:CardListBase ) { super( list ) }
 		
 		override protected function tweenToPlace( o:CardSprite ):void
 		{
 			const TARGET_Y:Number = y - cardSpacing * ( cardsCount - 1 );
-			
-			juggler.xtween( o, .150,
-				{
-					alpha : 1.0,
-					x : x,
-					y : TARGET_Y,
-					z : z,
-					rotation : .0,
-					transition : Transitions.EASE_OUT
-				} );
-				
+			o.tween.to( x, TARGET_Y, .0, z );
 			cardsParent.addChild( o );
 		}
-		
 	}
-
 }

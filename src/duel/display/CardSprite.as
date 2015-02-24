@@ -2,6 +2,7 @@ package duel.display {
 	import chimichanga.common.display.Sprite;
 	import dev.Temp;
 	import duel.cards.Card;
+	import duel.display.cards.CardTween;
 	import duel.G;
 	import duel.GameSprite;
 	import duel.gui.AnimatedTextField;
@@ -30,7 +31,7 @@ package duel.display {
 		private var selectableAura:Image;
 		private var selectedAura:Image;
 		
-		public var targetProps:TargetProps;
+		public var tween:CardTween;
 		
 		private var quad:Quad;
 		private var front:Sprite;
@@ -52,8 +53,6 @@ package duel.display {
 		public var _isPressed:Boolean = false;
 		public var isSelectable:Boolean = false;
 		public var isSelected:Boolean = false;
-		
-		private var _z:Number = 1.0;
 		
 		//
 		private var card:Card;
@@ -179,7 +178,8 @@ package duel.display {
 			{ quad.alpha = card.unimplemented ? .3 : .0 }
 			// ..
 			
-			targetProps = new TargetProps();
+			tween = new CardTween();
+			tween.subject = this;
 			
 			// ..
 			alpha = .0;
@@ -193,7 +193,7 @@ package duel.display {
 			touchable = true;
 		}
 		
-		private function onTouch(e:TouchEvent):void 
+		private function onTouch( e:TouchEvent ):void 
 		{
 			// UPDATE FOCUS
 			
@@ -238,11 +238,13 @@ package duel.display {
 			
 		}
 		
-		public function advanceTime(time:Number):void 
+		public function advanceTime( time:Number ):void 
 		{
 			if ( time > .033 )
 				time = .033;
 			
+			tween.advanceTime( time );
+				
 			_peekThrough = card.faceDown && isFocused && game.p1.knowsCard( card );
 			_backTranslucency = lerp( _backTranslucency, _peekThrough ? .75 : .0, .15 );
 			
@@ -363,12 +365,8 @@ package duel.display {
 		}
 		animation function animRelocation():void 
 		{
-			jugglerStrict.xtween( this, .120,
-				{ 
-					scaleX: z * 1.1,
-					scaleY: z * 1.1,
-					transition : Transitions.EASE_OUT_BACK
-				} );
+			tween.scale = 1.1;
+			jugglerStrict.addFakeTime( .160 );
 		}
 		animation function animRelocationCompleteOrAbort():void 
 		{
@@ -418,11 +416,7 @@ package duel.display {
 					onCompleteArgs : [true]
 				} );
 			
-			jugglerStrict.xtween( this, .240, { 
-					y : y - 50 * ( isTopSide ? 1.0 : -1.0 ),
-					rotation : Math.random() - .5,
-					transition : Transitions.EASE_OUT
-				} );
+			tween.to( x, y - 50 * ( isTopSide ? 1.0 : -1.0 ), Math.random() - .5 );
 			
 			animBlink( false, 0xBB0000, 1 );
 		}
@@ -437,6 +431,7 @@ package duel.display {
 		
 		public function animFadeToNothing( dispose:Boolean ):void 
 		{
+			tween.active = false;
 			juggler.xtween( this, .150, { 
 					y : y - 50,
 					alpha : .0,
@@ -449,14 +444,6 @@ package duel.display {
 					return;
 				removeFromParent( true );
 			}
-		}
-		animation function resetAnimState():void
-		{
-			destroyAnimAttackSprite();
-			jugglerStrict.removeTweens( this );
-			this.scaleX = 1.0;
-			this.scaleY = 1.0;
-			this.alpha = 1.0;
 		}
 		private function animBlink( strict:Boolean, color:uint = 0xFFFFFF, count:int = 1 ):Quad
 		{
@@ -506,12 +493,6 @@ package duel.display {
 			return _isPressed;
 		}
 		
-		public function get z():Number 
-		{ return _z }
-		
-		public function set z( value:Number ):void 
-		{ _z = scaleX = scaleY = value }
-		
 		private function setIsPressed( value:Boolean ):void 
 		{
 			_isPressed = value;
@@ -520,12 +501,4 @@ package duel.display {
 		
 		//
 	}
-}
-
-class TargetProps
-{
-	public var x:Number;
-	public var y:Number;
-	public var scale:Number;
-	public var rotation:Number;
 }

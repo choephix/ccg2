@@ -1,5 +1,6 @@
 package duel.display.cardlots
 {
+	import adobe.utils.CustomActions;
 	import duel.cards.Card;
 	import duel.display.CardSprite;
 	import duel.G;
@@ -39,18 +40,6 @@ package duel.display.cardlots
 		override public function advanceTime( time:Number ):void
 		{
 			arrange();
-			
-			var o:CardSprite;
-			var i:int = list.cardsCount;
-			while ( --i >= 0 )
-			{
-				o = list.getCardAt( i ).sprite;
-				
-				o.x = lerp( o.x, o.targetProps.x, .15 );
-				o.y = lerp( o.y, o.targetProps.y, .30 );
-				o.z = lerp( o.scaleY, o.targetProps.scale, .20 );
-				o.rotation = lerp( o.rotation, o.targetProps.rotation, .25 );
-			}
 		}
 		
 		override protected function arrangeAll():void
@@ -99,6 +88,8 @@ package duel.display.cardlots
 				YY = 1.0;
 			/**/
 			
+			var targetProps:TargetProps = new TargetProps();
+			
 			const W:Number = maxWidth - G.CARD_W;
 			
 			var x:Number = G.CARD_W * .5;
@@ -114,7 +105,7 @@ package duel.display.cardlots
 				
 				/// X
 				x = x + theD( W );
-				o.targetProps.x = this.x + x;
+				targetProps.x = this.x + x;
 				
 				/// Y
 				if ( _active )
@@ -136,19 +127,19 @@ package duel.display.cardlots
 				else
 					y = sideDir * G.CARD_H * .4;
 					
-				o.targetProps.y = this.y + y;
+				targetProps.y = this.y + y;
 				
 				if ( o.isSelected )
 				{
-					o.targetProps.x = .0;
-					o.targetProps.y = -.2 * App.H;
+					targetProps.x = .0;
+					targetProps.y = -.2 * App.H;
 				}
 				
 				/// Z
-				o.targetProps.scale = z;
+				targetProps.scale = z;
 				
 				/// ROTATION
-				o.targetProps.rotation = topSide ? Math.PI : .0;
+				targetProps.rotation = topSide ? Math.PI : .0;
 				
 				/// Index
 				if ( topSide )
@@ -157,6 +148,9 @@ package duel.display.cardlots
 					o.parent.setChildIndex( o, o.parent.numChildren - 1 );
 				
 				cardsParent.addChild( o );
+				
+				///
+				o.tween.to( targetProps.x, targetProps.y, targetProps.rotation, targetProps.scale );
 				
 				jj++;
 			}
@@ -369,4 +363,12 @@ class TipBox extends GameSprite
 	{
 		t.text = value;
 	}
+}
+
+class TargetProps
+{
+	public var x:Number = 0;
+	public var y:Number = 0;
+	public var rotation:Number = 0;
+	public var scale:Number = 1;
 }

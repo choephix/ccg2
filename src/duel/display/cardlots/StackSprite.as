@@ -37,31 +37,17 @@ package duel.display.cardlots
 		
 		protected function quickPlaceAt( o:CardSprite, bottomUpIndex:int ):void
 		{
-			o.alpha = 1.0;
-			o.x = x;
-			o.y = y - cardSpacing * bottomUpIndex;
-			o.z = z;
+			const TARGET_Y:Number = y - cardSpacing * bottomUpIndex;
+			o.tween.alpha = 1.0;
+			o.tween.to( x, TARGET_Y, o.rotation, z ); 
 			cardsParent.addChild( o );
 		}
 		
 		override protected function tweenToPlace( o:CardSprite ):void
 		{
 			const TARGET_Y:Number = y - cardSpacing * ( cardsCount - 1 );
-			
-			juggler.xtween( o, .250,
-				{
-					delay : 0.1,
-					alpha : 1.0,
-					x : x,
-					y : TARGET_Y,
-					z : z,
-					rotation : MathF.randSign * MathF.random( .025 ),
-					transition : Transitions.EASE_OUT
-				} );
-				
+			o.tween.to( x, TARGET_Y, MathF.randSign * MathF.random( .025 ), z ); 
 			cardsParent.addChild( o );
 		}
-		
 	}
-	
 }

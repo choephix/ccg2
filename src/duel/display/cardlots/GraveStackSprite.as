@@ -11,11 +11,7 @@ package duel.display.cardlots
 	 */
 	public class GraveStackSprite extends StackSprite
 	{
-		
-		public function GraveStackSprite( list:CardListBase )
-		{
-			super( list );
-		}
+		public function GraveStackSprite( list:CardListBase ) { super( list ) }
 		
 		override protected function tweenToPlace( o:CardSprite ):void
 		{
@@ -39,7 +35,5 @@ package duel.display.cardlots
 			
 			super.tweenToPlace( o );
 		}
-		
 	}
-
 }
