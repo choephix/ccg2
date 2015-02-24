@@ -101,11 +101,6 @@ package editor
 			addChild( tExtra );
 			tExtra.validate();
 			
-			tTitle.nextTabFocus = tDescr;
-			tDescr.nextTabFocus = tExtra;
-			tExtra.nextTabFocus = tTitle;
-			tSlug.nextTabFocus = tTitle;
-			
 			iFaction = new OButton( "", onButtonChangeFaction );
 			iFaction.x = G.CARD_W - PADDING;
 			iFaction.y = 10;
@@ -148,6 +143,14 @@ package editor
 			bX.scaleX = .33;
 			bX.scaleY = .33;
 			addChild( bX );
+			
+			//
+			
+			tSlug.nextTabFocus = tTitle;
+			tTitle.nextTabFocus = tDescr;
+			tDescr.nextTabFocus = tExtra;
+			tExtra.nextTabFocus = tTags;
+			tTags.nextTabFocus = tTitle;
 		}
 		
 		public function animateIn():void
