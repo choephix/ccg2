@@ -8,6 +8,7 @@ package duel.cards
 	import duel.cards.temp_database.TempDatabaseUtils;
 	import duel.otherlogic.OngoingEffect;
 	import duel.otherlogic.SpecialEffect;
+	import duel.players.Player;
 	import duel.processes.GameplayProcess;
 	import duel.processes.gameprocessgetter;
 	import duel.table.CardLotType;
@@ -34,6 +35,8 @@ package duel.cards
 			function( c:Card ):void
 			{
 				var special:SpecialEffect;
+				
+				/// SPECIAL 1
 				special = c.propsC.addTriggered();
 				special.allowIn( CardLotType.CREATURE_FIELD );
 				special.watch( GameplayProcess.SUMMON_COMPLETE );
@@ -44,22 +47,36 @@ package duel.cards
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
 					c.propsC.basePower += 5;
-					if ( c.indexedField.opposingCreature )
-						TempDatabaseUtils.doPutInHand( 
-							c.indexedField.opposingCreature, 
-							c.indexedField.opposingCreature.controller );
+					//if ( c.indexedField.opposingCreature )
+						//TempDatabaseUtils.doPutInHand( 
+							//c.indexedField.opposingCreature, 
+							//c.indexedField.opposingCreature.controller );
 				}
 				
+				/// SPECIAL 2
 				special = c.propsC.addTriggered();
 				special.allowIn( CardLotType.CREATURE_FIELD );
 				special.watch( GameplayProcess.SUMMON_COMPLETE );
 				special.funcCondition =
 				function( p:GameplayProcess ):Boolean {
-					return c != p.getSourceCard();
+					return c.controller.opponent == p.getSourceCard().controller;
 				}
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
-					c.propsC.basePower -= 2;
+					c.propsC.basePower -= 1;
+				}
+				
+				/// SPECIAL 3
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.controller.fieldsC.forEachField( TempDatabaseUtils.doSpawnTokenCreatureIfEmpty );
 				}
 			}
 			
@@ -67,38 +84,238 @@ package duel.cards
 			/// /// /// TEST SPACE /// /// ///
 			/// /// ///            /// /// ///
 			
-			//F[ "grandlock" ] = 
-			//function( c:Card ):void
-			//{
-				//c.propsT.persistent = true;
-				//
-				//c.propsT.effect.watchForActivation( GameplayProcess.TRIBUTE_CREATURE_COMPLETE );
-				//c.propsT.effect.funcActivateCondition =
-				//function( p:GameplayProcess ):Boolean {
-					//if ( !p.isTributeForGrand() ) return false;
-					//return c.indexedField.index == p.getSourceCard().history.lastIndexedField.index;
-				//}
-				//c.propsT.effect.funcActivate =
-				//function( p:GameplayProcess ):void {
-					//p.getSourceCard().history.lastIndexedField.addLock();
-				//}
-				//
-				//c.propsT.effect.watchForDeactivation( GameplayProcess.TURN_END );
-				//c.propsT.effect.funcDeactivateCondition =
-				//function( p:GameplayProcess ):Boolean {
-					//return true;
-				//}
-				//c.propsT.effect.funcDeactivate =
-				//function( p:GameplayProcess ):void {
-					//p.getSourceCard().history.lastIndexedField.removeLock();
-				//}
-			//}
+			F[ "grandlock" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.persistent = true;
+				
+				c.propsT.effect.watchForActivation( GameplayProcess.TRIBUTE_CREATURE_COMPLETE );
+				c.propsT.effect.funcActivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( !p.isTributeForGrand() ) return false;
+					return c.indexedField.index == p.getSourceCard().history.lastIndexedField.index;
+				}
+				c.propsT.effect.funcActivate =
+				function( p:GameplayProcess ):void {
+					p.getSourceCard().history.lastIndexedField.addLock();
+				}
+				
+				c.propsT.effect.watchForDeactivation( GameplayProcess.TURN_END );
+				c.propsT.effect.funcDeactivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					return true;
+				}
+				c.propsT.effect.funcDeactivate =
+				function( p:GameplayProcess ):void {
+					p.getSourceCard().history.lastIndexedField.removeLock();
+				}
+			}
 			
 			/// /// ///            /// /// ///
 			/// /// /// TEST SPACE /// /// ///
 			/// /// /// /// // /// /// /// ///
 			
 			///
+			
+			F[ "mr_mirakul" ] = 
+			function( c:Card ):void
+			{
+				/* * * /
+				c.propsC.summonConditionManual = 
+				function( field:CreatureField ):Boolean {
+					return c.history.tribute != null || field.topCard.propsC.isGrand;
+				}
+				/* * */
+				
+				const PWR:int = c.primalData.getVarInt( 0 );
+				
+				var buff:Buff = c.statusC.addNewBuff( false )
+				buff.powerOffset = 0;
+				buff.isActive = true;
+				
+				var ongoing:OngoingEffect;
+				ongoing = c.propsC.addOngoing();
+				ongoing.funcUpdate =
+				function( p:GameplayProcess ):void {
+					buff.powerOffset = c.controller.opponent.fieldsC.countOccupied * PWR;
+				}
+			}
+			
+			F[ "black_hood" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					burnLine( c.controller );
+					burnLine( c.controller.opponent );
+				}
+				function burnLine( p:Player ):void {
+					var i:int;
+					var cc:Card;
+					for ( i = 0; i < p.fieldsC.count; i++ ) 
+					{
+						cc = p.fieldsC.getAt( i ).topCard;
+						if ( cc == null ) continue;
+						if ( cc == c ) continue;
+						if ( cc.faceDown ) continue;
+						if ( cc.statusC.realPowerValue >= c.statusC.realPowerValue ) return;
+						TempDatabaseUtils.doKill( p.fieldsC.getAt( i ).topCard, c );
+					}
+				}
+			}
+			
+			F[ "black_hood2" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.TURN_END );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller == p.getPlayer();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					burnLine( c.controller );
+					burnLine( c.controller.opponent );
+				}
+				function burnLine( p:Player ):void {
+					var i:int;
+					var cc:Card;
+					for ( i = 0; i < p.fieldsC.count; i++ ) 
+					{
+						cc = p.fieldsC.getAt( i ).topCard;
+						if ( cc == null ) continue;
+						if ( cc == c ) continue;
+						if ( cc.faceDown ) continue;
+						if ( cc.statusC.realPowerValue >= c.statusC.realPowerValue ) return;
+						TempDatabaseUtils.doKill( p.fieldsC.getAt( i ).topCard, c );
+					}
+				}
+			}
+			
+			F[ "dark_one" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.summonConditionManual = 
+				function( field:CreatureField ):Boolean {
+					return c.history.tribute != null || c.controller.creatureCount >= c.primalData.getVarInt( 0 );
+				}
+				
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					var i:int;
+					var cc:Card;
+					for ( i = 0; i < c.controller.fieldsC.count; i++ ) 
+					{
+						cc = c.controller.fieldsC.getAt( i ).topCard;
+						if ( cc == null ) continue;
+						if ( cc == c ) continue;
+						TempDatabaseUtils.doKill( c.controller.fieldsC.getAt( i ).topCard, c );
+					}
+				}
+			}
+			
+			F[ "shmester" ] = 
+			function( c:Card ):void
+			{
+				var buff:Buff = c.statusC.addNewBuff( false )
+				buff.powerOffset = 0;
+				buff.isActive = true;
+				
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.ENTER_PLAY_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c != p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					buff.powerOffset -= c.primalData.getVarInt( 0 );
+				}
+			}
+			
+			F[ "drawhater" ] = 
+			function( c:Card ):void
+			{
+				var buff:Buff = c.statusC.addNewBuff( false )
+				buff.powerOffset = 0;
+				buff.isActive = true;
+				
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.DRAW_CARD_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getPlayer();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					buff.powerOffset -= c.primalData.getVarInt( 0 );
+				}
+			}
+			
+			F[ "drawrager2" ] = 
+			function( c:Card ):void
+			{
+				var buff:Buff = c.statusC.addNewBuff( false )
+				buff.powerOffset = 0;
+				buff.isActive = true;
+				
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.DRAW_CARD_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller == p.getPlayer();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					buff.powerOffset += c.primalData.getVarInt( 0 );
+				}
+			}
+			
+			F[ "drawrager" ] = 
+			function( c:Card ):void
+			{
+				var buff:Buff = c.statusC.addNewBuff( false )
+				buff.powerOffset = 0;
+				buff.isActive = true;
+				
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.DRAW_CARD_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getPlayer();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					buff.powerOffset += c.primalData.getVarInt( 0 );
+				}
+			}
 			
 			F[ "grandegrand" ] = 
 			function( c:Card ):void
@@ -1903,7 +2120,7 @@ package duel.cards
 				error( "WTF is this data?" );
 			
 			if ( cpd == null )
-				throw new Error( "No such CPD" );
+				throw new Error( "No CPD for " + data );
 			
 			// PRIMAL
 			c.primalData = cpd;

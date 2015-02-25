@@ -40,9 +40,6 @@ package duel.cards.temp_database
 				
 				
 				
-				
-				
-				
 				// // // SAFE FLIP EFFECTS
 				c.propsC.onSafeFlipFunc =
 				function():void {

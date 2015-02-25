@@ -17,8 +17,11 @@ package dev
 			/**  HELPERS  **/
 			"___kami___", 
 			"___test___", 
-			"tempower2",
-			"paulgrand",
+			//"emptyshell",
+			//"emptyshell",
+			//"emptyshell",
+			//"tempower2",
+			//"paulgrand",
 			//"resurrecter66",
 			//"resurrecter2",
 			//"resurrecter4",
@@ -28,10 +31,6 @@ package dev
 			//"sneakshot",
 			
 			/**  TEST  **/
-			//"mr_mirakul",
-			//"drawrage",
-			//"black_hood",
-			//"dark_one",
 			//"blinding_rage",
 			//"final_heal",
 			//"necropy0",
@@ -42,6 +41,14 @@ package dev
 			//"grandlock",
 			
 			/**  DONE (CREATURES)  **/
+			"mr_mirakul",
+			"black_hood2",
+			"black_hood",
+			"dark_one",
+			"shmester",
+			"drawhater",
+			"drawrager",
+			"drawrager2",
 			"grandegrand",
 			"harrasser1",
 			"harrasser2",
