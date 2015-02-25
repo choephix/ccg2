@@ -244,6 +244,16 @@ package duel.processes
 			return false;
 		}
 		
+		public function isTributeForGrand():Boolean 
+		{
+			if ( args[ 1 ] is Boolean ) 
+				return Boolean( args[ 1 ] );
+			
+			CONFIG::development
+			{ throw new ArgumentError( "What to do... isTributeForGrand..." ); }
+			return false;
+		}
+		
 		public function getSummonedField():CreatureField
 		{
 			if ( args.length > 1 && args[ 1 ] is CreatureField ) 

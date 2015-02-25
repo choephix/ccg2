@@ -10,6 +10,7 @@ package duel.processes
 	{
 		static public const CURRENT_PROCESS:String = "process";
 		static public const PROCESS_COMPLETE:String = "processComplete";
+		static public const PROCESS_ABORTED:String = "processAborted";
 		
 		public var process:Process;
 		

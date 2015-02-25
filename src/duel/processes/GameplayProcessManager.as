@@ -152,7 +152,7 @@ package duel.processes
 		{
 			var pro:GameplayProcess;
 			
-			/// SUMMON
+			/// SUMMON - step 1
 			pro = chain( pro, gen( GameplayProcess.SUMMON, c, field, isManual ) );
 			pro.onStart = 
 			function onStart( c:Card, field:CreatureField, isManual:Boolean ):void
@@ -160,8 +160,19 @@ package duel.processes
 				if ( isManual )
 					prepend_SpendMana( c.controller, c.cost );
 			}
-			pro.onEnd = 
-			function onEnd( c:Card, field:CreatureField, isManual:Boolean ):void
+			pro.abortCheck = 
+			function abortCheck( c:Card, field:CreatureField, isManual:Boolean ):Boolean
+			{
+				if ( c.isInPlay ) return true;
+				if ( field.isLocked ) return true;
+				if ( isManual && c.statusC.needTribute && field.topCard == null ) return true;
+				return false;
+			}
+			
+			/// SUMMON - step 2
+			pro = chain( pro, gen( GameplayProcess.SUMMON, c, field, isManual ) );
+			pro.onStart = 
+			function onStart( c:Card, field:CreatureField, isManual:Boolean ):void
 			{
 				/// TRIBUTE_CREATURE
 				if ( isManual && c.statusC.needTribute )
@@ -172,7 +183,7 @@ package duel.processes
 						{ error( "Where's my tribute?" ) }
 						return;
 					}
-					prepend_TributeCreature( field.topCard, c );
+					prepend_TributeCreature( field.topCard, true, c );
 				}
 			}
 			pro.abortCheck = 
@@ -180,7 +191,6 @@ package duel.processes
 			{
 				if ( c.isInPlay ) return true;
 				if ( field.isLocked ) return true;
-				if ( isManual && c.statusC.needTribute && field.topCard == null ) return true;
 				return false;
 			}
 			
@@ -207,26 +217,30 @@ package duel.processes
 			
 		}
 		
-		private function prepend_TributeCreature( c:Card, grand:Card ):GameplayProcess 
+		private function prepend_TributeCreature( c:Card, isForGrand:Boolean, cause:Card ):GameplayProcess 
 		{
 			var pro:GameplayProcess;
 			
 			/// TRIBUTE_CREATURE
-			pro = chain( pro, gen( GameplayProcess.TRIBUTE_CREATURE, c ) );
-			pro.abortCheck = GameplayFAQ.isNotInPlay;
-			pro.onEnd = 
-			function onEnd( c:Card ):void 
+			pro = chain( pro, gen( GameplayProcess.TRIBUTE_CREATURE, c, isForGrand, cause ) );
+			pro.abortCheck =
+			function completeAbortCheck( c:Card, isForGrand:Boolean, cause:Card ):Boolean
 			{
-				prepend_Death( c, false, grand );
+				return !c.isInPlay;
+			}
+			pro.onEnd = 
+			function onEnd( c:Card, isForGrand:Boolean, cause:Card ):void 
+			{
+				prepend_Death( c, false, cause );
 			}
 			
 			/// TRIBUTE_CREATURE_COMPLETE
-			pro = chain( pro, gen( GameplayProcess.TRIBUTE_CREATURE_COMPLETE, c ) );
+			pro = chain( pro, gen( GameplayProcess.TRIBUTE_CREATURE_COMPLETE, c, isForGrand, cause ) );
 			pro.onEnd =
-			function onEnd( c:Card ):void 
+			function onEnd( c:Card, isForGrand:Boolean, cause:Card ):void 
 			{
-				if ( grand ) 
-					grand.history.tribute = c;
+				if ( isForGrand ) 
+					cause.history.tribute = c;
 			}
 			
 			/// returns TRIBUTE_CREATURE (the chain head)

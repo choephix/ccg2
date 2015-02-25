@@ -10,7 +10,7 @@ package duel.controllers
 	import duel.table.Field;
 	import duel.table.IndexedField;
 	import duel.table.TrapField;
-	import flash.events.Event;
+	import starling.events.Event;
 	
 	/**
 	 * ...
@@ -83,6 +83,12 @@ package duel.controllers
 			contextOnField = scfNilSelected;
 			
 			game.cardEvents.addEventListener( CardEvents.LEAVE_LOT, onCardLeaveLot );
+			game.processes.addEventListener( Event.COMPLETE, onAllProcessesComplete );
+		}
+		
+		private function onAllProcessesComplete( e:Event ):void 
+		{
+			selectCard( null );
 		}
 		
 		public function advanceTime(time:Number):void 
@@ -494,6 +500,8 @@ package duel.controllers
 			}
 			else
 			{
+				player.handSprite.selectedCard = null;
+				
 				var i:int;
 				for ( i = 0; i < game.indexedFields.length; i++ ) 
 					game.indexedFields[ i ].sprite.setGuiState( FieldSpriteGuiState.NONE );

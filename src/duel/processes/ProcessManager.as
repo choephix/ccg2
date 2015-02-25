@@ -8,6 +8,8 @@ package duel.processes
 	[Event( name = "complete", type = "starling.events.Event" )]
 	/// When a process has completed
 	[Event( name = "processComplete", type = "duel.processes.ProcessEvent" )]
+	/// When a process has been aborted
+	[Event( name = "processAborted", type = "duel.processes.ProcessEvent" )]
 	/// When a process has progressed
 	[Event( name="process",type="duel.processes.ProcessEvent" )]
 	/**
@@ -20,6 +22,7 @@ package duel.processes
 		
 		private var currentProcessEvent:ProcessEvent;
 		private var processCompleteEvent:ProcessEvent;
+		private var processAbortedEvent:ProcessEvent;
 		
 		private var running:Boolean;
 		
@@ -28,6 +31,7 @@ package duel.processes
 			queue = new Vector.<Process>();
 			currentProcessEvent = new ProcessEvent( ProcessEvent.CURRENT_PROCESS );
 			processCompleteEvent = new ProcessEvent( ProcessEvent.PROCESS_COMPLETE );
+			processAbortedEvent = new ProcessEvent( ProcessEvent.PROCESS_ABORTED );
 		}
 		
 		public function advanceTime( time:Number ):void 
@@ -62,6 +66,8 @@ package duel.processes
 			
 			if ( p.isAborted )
 			{
+				processAbortedEvent.process = p;
+				dispatchEvent( processAbortedEvent );
 				removeProcess( p );
 			}
 			else
