@@ -17,7 +17,6 @@ package duel.cards.properties {
 		public var isGrand:Boolean = false;
 		public var isFlippable:Boolean = false;
 		cardprops var basePower:int = 0;
-		
 		cardprops var hasSwift:Boolean 	= false; 	// CAN ATTACK AND MOVE SAME TURN
 		
 		// SUMMONING CONDITION

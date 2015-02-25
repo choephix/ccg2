@@ -23,14 +23,28 @@ package dev
 			//"compromiser1",
 			//"sneakshot",
 			//"motivator",
+			//"sneakshot",
 			
 			/**  TEST  **/
-			
-			"sneakshot",
-			"blinding_rage",
-			"final_heal",
+			//"mr_mirakul",
+			//"drawrage",
+			//"black_hood",
+			//"dark_one",
+			//"blinding_rage",
+			//"final_heal",
+			//"necropy0",
+			//"badpiercer",
+			//"shield8",
+			//"antigrando",
+			//"autoattacker",
+			//"grandlock",
 			
 			/**  DONE (CREATURES)  **/
+			"grandegrand",
+			"harrasser1",
+			"harrasser2",
+			"grandgrandpaul",
+			"general",
 			"paul2",
 			"paul3",
 			"force_field",
@@ -131,26 +145,18 @@ package dev
 			
 			/**  DONE (TRAPS)  **/
 			"sneakshot",
+			"summon2atk",
 			
 			/**  TO DO  **/
-			"necropy0",
-			"badpiercer",
-			"shield8",
-			"antigrando",
-			"autoattacker",
 			"gcontract_haste",
 			"resurrecter3",
 			"grandtraitor",
 			"trapsaver",
 			"ferocious_sara",
 			"trapowered_3",
-			"grandegrand",
-			"drawrage",
 			"lonely_golem",
-			"black_hood",
 			"piercing_george",
 			"devouerer2",
-			"dark_one",
 			"cowardly_giant",
 			"yin",
 			"yang",
@@ -163,8 +169,8 @@ package dev
 			"cheerleader4",
 			"flappy_rooster",
 			"empower_0",
-			"grandlock",
 			"phase_through",
+
 			
 			/**  FROZEN  **/
 		];

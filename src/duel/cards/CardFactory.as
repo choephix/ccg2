@@ -67,11 +67,153 @@ package duel.cards
 			/// /// /// TEST SPACE /// /// ///
 			/// /// ///            /// /// ///
 			
+			//F[ "grandlock" ] = 
+			//function( c:Card ):void
+			//{
+				//c.propsT.persistent = true;
+				//
+				//c.propsT.effect.watchForActivation( GameplayProcess.TRIBUTE_CREATURE_COMPLETE );
+				//c.propsT.effect.funcActivateCondition =
+				//function( p:GameplayProcess ):Boolean {
+					//if ( !p.isTributeForGrand() ) return false;
+					//return c.indexedField.index == p.getSourceCard().history.lastIndexedField.index;
+				//}
+				//c.propsT.effect.funcActivate =
+				//function( p:GameplayProcess ):void {
+					//p.getSourceCard().history.lastIndexedField.addLock();
+				//}
+				//
+				//c.propsT.effect.watchForDeactivation( GameplayProcess.TURN_END );
+				//c.propsT.effect.funcDeactivateCondition =
+				//function( p:GameplayProcess ):Boolean {
+					//return true;
+				//}
+				//c.propsT.effect.funcDeactivate =
+				//function( p:GameplayProcess ):void {
+					//p.getSourceCard().history.lastIndexedField.removeLock();
+				//}
+			//}
+			
 			/// /// ///            /// /// ///
 			/// /// /// TEST SPACE /// /// ///
 			/// /// /// /// // /// /// /// ///
 			
 			///
+			
+			F[ "grandegrand" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.summonConditionManual = 
+				function( field:CreatureField ):Boolean {
+					return c.history.tribute != null || field.topCard.propsC.isGrand;
+				}
+			}
+			
+			F[ "harrasser1" ] = 
+			function( c:Card ):void
+			{
+				var buff:Buff = c.statusC.addNewBuff( false );
+				buff.cannotBeTribute = true;
+				
+				c.cost = c.primalData.getVarInt( 0 );
+				
+				var special:SpecialEffect;
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.statusC.hasSummonExhaustion = false;
+				}
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.TURN_END );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller == p.getPlayer();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doPutInHand( c, c.controller );
+				}
+			}
+			
+			F[ "harrasser2" ] = 
+			function( c:Card ):void
+			{
+				var buff:Buff = c.statusC.addNewBuff( false );
+				buff.cannotBeTribute = true;
+				
+				c.propsC.summonConditionManual = 
+				c.propsC.summonConditionAutomatic = 
+				function( field:CreatureField ):Boolean {
+					return c.controller.creatureCount == 0;
+				}
+				
+				var special:SpecialEffect;
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.statusC.hasSummonExhaustion = false;
+				}
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.TURN_END );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller == p.getPlayer();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doPutInHand( c, c.controller );
+				}
+			}
+			
+			F[ "grandgrandpaul" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.summonConditionManual = 
+				function( field:CreatureField ):Boolean {
+					return c.history.tribute != null || field.topCard.propsC.isGrand;
+				}
+				
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.statusC.hasSummonExhaustion = false;
+				}
+			}
+			
+			F[ "general" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.summonConditionManual = 
+				function( f:CreatureField ):Boolean {
+					return c.history.tribute != null ||
+						c.controller.fieldsC.count == c.controller.fieldsC.countOccupied;
+				}
+			}
 			
 			F[ "paul2" ] = 
 			function( c:Card ):void
@@ -1614,6 +1756,23 @@ package duel.cards
 			
 			///
 			
+			F[ "summon2atk" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watchForActivation( GameplayProcess.SUMMON_COMPLETE );
+				c.propsT.effect.funcActivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.indexedField.opposingCreature == p.getSourceCard();
+				}
+				c.propsT.effect.funcActivate =
+				function( p:GameplayProcess ):void {
+					var TARGET:Card = p.getSourceCard();
+					TARGET.statusC.hasSummonExhaustion = false;
+					if ( TARGET.statusC.canAttack )
+						TempDatabaseUtils.doForceAttack( TARGET, false );
+				}
+			}
+			
 			F[ "sneakshot" ] = 
 			function( c:Card ):void
 			{
@@ -1629,6 +1788,8 @@ package duel.cards
 					TempDatabaseUtils.doDealDirectDamage( c.controller.opponent, c.primalData.getVarInt( 0 ), c );
 				}
 			}
+			
+			///
 			
 			// NOT WORKING, MUST FIX
 			F[ "reflipper" ] = 
