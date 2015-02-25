@@ -2,6 +2,7 @@ package duel.processes
 {
 	import duel.cards.Card;
 	import duel.Damage;
+	import duel.gameplay.DeathType;
 	import duel.players.Player;
 	import duel.table.CreatureField;
 	import duel.table.IndexedField;
@@ -276,8 +277,8 @@ package duel.processes
 		
 		public function getDeathIsFromCombat():Boolean
 		{
-			if ( args.length > 1 && args[ 1 ] is Boolean )
-				return args[ 1 ] as Boolean;
+			if ( args.length > 1 && args[ 1 ] is DeathType )
+				return args[ 1 ] as DeathType == DeathType.COMBAT;
 			
 			CONFIG::development
 			{ throw new ArgumentError( "What to do... getDeathIsFromCombat..." ); }

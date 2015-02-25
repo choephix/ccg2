@@ -6,6 +6,7 @@ package duel.cards.status {
 	import duel.cards.properties.CreatureCardProperties;
 	import duel.Damage;
 	import duel.DamageType;
+	import duel.gameplay.DeathType;
 	import duel.otherlogic.OngoingEffect;
 	import duel.otherlogic.SpecialEffect;
 	import duel.processes.GameplayProcess;
@@ -100,7 +101,7 @@ package duel.cards.status {
 					if ( i == 0 )
 					{
 						clearLifeLinks();
-						processes.prepend_Death( card, false, null );
+						processes.prepend_Death( card, DeathType.SPECIAL, null );
 					}
 				}
 			}

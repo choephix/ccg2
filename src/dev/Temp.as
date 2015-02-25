@@ -17,6 +17,8 @@ package dev
 			/**  HELPERS  **/
 			"___kami___", 
 			"___test___", 
+			"tempower2",
+			"paulgrand",
 			//"resurrecter66",
 			//"resurrecter2",
 			//"resurrecter4",

@@ -7,6 +7,7 @@ package duel.processes
 	import duel.DamageType;
 	import duel.display.animation;
 	import duel.Game;
+	import duel.gameplay.DeathType;
 	import duel.otherlogic.SpecialEffect;
 	import duel.players.Player;
 	import duel.table.CreatureField;
@@ -231,7 +232,7 @@ package duel.processes
 			pro.onEnd = 
 			function onEnd( c:Card, isForGrand:Boolean, cause:Card ):void 
 			{
-				prepend_Death( c, false, cause );
+				prepend_Death( c, DeathType.TRIBUTE, cause );
 			}
 			
 			/// TRIBUTE_CREATURE_COMPLETE
@@ -258,7 +259,7 @@ package duel.processes
 			function onStart( c:Card, field:CreatureField ):void
 			{
 				if ( field.topCard != null )
-					prepend_Death( field.topCard, false, cause );
+					prepend_Death( field.topCard, DeathType.SPECIAL, cause );
 			}
 			pro.onEnd = 
 			function onEnd( c:Card, field:CreatureField ):void
@@ -572,7 +573,9 @@ package duel.processes
 				
 				if ( c.statusC.realPowerValue <= dmg.amount )
 				{
-					prepend_Death( c, true, dmg.source as Card );
+					prepend_Death( c,
+						dmg.type == DamageType.COMBAT ? DeathType.COMBAT : DeathType.SPECIAL,
+						dmg.source as Card );
 					game.showFloatyText( c.sprite.localToGlobal( new Point() ), 
 						c.statusC.realPowerValue + "-" + dmg.amount + "=DEATH!", 0xFF0000 );
 				}
@@ -617,32 +620,35 @@ package duel.processes
 			pro = chain( pro, gen( GameplayProcess.DIRECT_DAMAGE_COMPLETE, p, dmg ) );
 		}
 		
-		gameprocessing function prepend_Death( c:Card, fromCombat:Boolean, cause:Card ):void 
+		gameprocessing function prepend_Death( c:Card, deathType:DeathType, cause:Card ):void 
 		{
 			var pro:GameplayProcess;
 
 			/// DIE
-			pro = chain( pro, gen( GameplayProcess.DIE, c, fromCombat, cause ) );
+			pro = chain( pro, gen( GameplayProcess.DIE, c, deathType, cause ) );
 			pro.onStart =
-			function onStart( c:Card, fromCombat:Boolean, cause:Card ):void
+			function onStart( c:Card, deathType:DeathType, cause:Card ):void
 			{
 				if ( c.faceDown )
-					prepend_SilentFlip( c, !fromCombat );
+					prepend_SilentFlip( c, deathType == DeathType.SPECIAL );
 			}
 			pro.onEnd =
-			function onEnd( c:Card, fromCombat:Boolean, cause:Card ):void
+			function onEnd( c:Card, deathType:DeathType, cause:Card ):void
 			{
-				if ( fromCombat )
+				if ( deathType == DeathType.COMBAT )
 					c.sprite.animDie();
+				else
+				if ( deathType == DeathType.TRIBUTE )
+					c.sprite.animFadeToNothing( false );
 				else
 					c.sprite.animDie2();
 			}
 			pro.abortCheck = GameplayFAQ.cannotDie;
 			
 			/// DIE_COMPLETE
-			pro = chain( pro, gen( GameplayProcess.DIE_COMPLETE, c, fromCombat, cause ) );
+			pro = chain( pro, gen( GameplayProcess.DIE_COMPLETE, c, deathType, cause ) );
 			pro.onStart =
-			function complete( c:Card, fromCombat:Boolean, cause:Card ):void 
+			function complete( c:Card, deathType:DeathType, cause:Card ):void 
 			{
 				if ( c.owner != null )
 					prepend_AddToGrave( c );

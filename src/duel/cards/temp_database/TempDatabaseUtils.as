@@ -9,6 +9,7 @@ package duel.cards.temp_database
 	import duel.DamageType;
 	import duel.G;
 	import duel.Game;
+	import duel.gameplay.DeathType;
 	import duel.players.Player;
 	import duel.processes.GameplayProcess;
 	import duel.processes.gameprocessing;
@@ -49,7 +50,7 @@ package duel.cards.temp_database
 		public static function doKill( c:Card, cause:Card ):void
 		{
 			if ( c == null ) return;
-			game.processes.prepend_Death( c, false, cause );
+			game.processes.prepend_Death( c, DeathType.SPECIAL, cause );
 		}
 		
 		public static function doDestroyTrap( c:Card ):void
