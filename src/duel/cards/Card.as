@@ -9,7 +9,7 @@ package duel.cards
 	import duel.cards.status.CardStatus;
 	import duel.cards.status.CreatureCardStatus;
 	import duel.cards.status.TrapCardStatus;
-	import duel.display.CardSprite;
+	import duel.display.cards.CardSprite;
 	import duel.Game;
 	import duel.GameEntity;
 	import duel.gameplay.CardEvents;

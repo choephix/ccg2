@@ -2124,7 +2124,7 @@ package duel.cards
 			
 			// PRIMAL
 			c.primalData = cpd;
-			if ( cpd.type == CardPrimalData.TYPE_TRAP )
+			if ( cpd.type == CardPrimalData.TYPE_TRAP_NORMAL || cpd.type == CardPrimalData.TYPE_TRAP_PERSISTENT )
 				TempDatabaseUtils.setToTrap( c );
 			else
 			{

@@ -1,6 +1,6 @@
 package duel.display.cards 
 {
-	import duel.display.CardSprite;
+	import duel.display.cards.CardSprite;
 	import starling.animation.IAnimatable;
 	/**
 	 * ...

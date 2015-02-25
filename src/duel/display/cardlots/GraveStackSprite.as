@@ -2,7 +2,7 @@ package duel.display.cardlots
 {
 	import chimichanga.global.utils.MathF;
 	import duel.cards.CardListBase;
-	import duel.display.CardSprite;
+	import duel.display.cards.CardSprite;
 	import starling.animation.Transitions;
 	
 	/**

@@ -16,7 +16,8 @@ package global
 		public static const TYPE_CREATURE_NORMAL:int = 1;
 		public static const TYPE_CREATURE_FLIPPABLE:int = 2;
 		public static const TYPE_CREATURE_GRAND:int = 3;
-		public static const TYPE_TRAP:int = 4;
+		public static const TYPE_TRAP_NORMAL:int = 4;
+		public static const TYPE_TRAP_PERSISTENT:int = 5;
 		
 		public var id:int;
 		public var slug:String;

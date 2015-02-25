@@ -1,7 +1,7 @@
 package duel.display.fields 
 {
 	import chimichanga.debug.logging.error;
-	import duel.display.CardAura;
+	import duel.display.cards.CardAura;
 	import duel.display.FieldSpriteOverTip;
 	import duel.G;
 	import duel.GameSprite;

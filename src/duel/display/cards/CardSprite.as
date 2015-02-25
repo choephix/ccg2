@@ -1,7 +1,8 @@
-package duel.display {
+package duel.display.cards {
 	import chimichanga.common.display.Sprite;
 	import dev.Temp;
 	import duel.cards.Card;
+	import duel.display.animation;
 	import duel.display.cards.CardTween;
 	import duel.G;
 	import duel.GameSprite;

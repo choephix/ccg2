@@ -1,4 +1,4 @@
-package duel.display
+package duel.display.cards
 {
 	import duel.Game;
 	import starling.animation.IAnimatable;

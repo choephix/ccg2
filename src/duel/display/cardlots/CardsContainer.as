@@ -1,7 +1,7 @@
 package duel.display.cardlots
 {
 	import duel.cards.CardListBase;
-	import duel.display.CardSprite;
+	import duel.display.cards.CardSprite;
 	import duel.GameEntity;
 	import starling.animation.IAnimatable;
 	import starling.display.DisplayObject;

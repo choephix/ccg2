@@ -2,7 +2,7 @@ package duel.display.cardlots
 {
 	import adobe.utils.CustomActions;
 	import duel.cards.Card;
-	import duel.display.CardSprite;
+	import duel.display.cards.CardSprite;
 	import duel.G;
 	import duel.gui.GuiEvents;
 	import duel.table.Hand;
