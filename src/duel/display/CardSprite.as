@@ -431,7 +431,7 @@ package duel.display {
 		
 		public function animFadeToNothing( dispose:Boolean ):void 
 		{
-			tween.active = false;
+			tween.enabled = false;
 			juggler.xtween( this, .150, { 
 					y : y - 50,
 					alpha : .0,

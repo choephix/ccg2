@@ -14,14 +14,28 @@ package duel.display.cards
 		public var rotation:Number = 0.0;
 		public var scale:Number = 1.0;
 		
-		public var progress:Number = 0.0;
+		public var dirtyness:Number = 1.0;
 		public var subject:CardSprite = null;
-		public var active:Boolean = true;
+		public var enabled:Boolean = true;
 		
 		public function advanceTime( time:Number ):void 
 		{
-			if ( active == false ) return;
+			if ( !enabled ) return;
+			if ( dirtyness < Number.MIN_VALUE ) return;
 			
+			if ( dirtyness < .02 )
+			{
+				subject.alpha = alpha;
+				subject.x = x;
+				subject.y = y;
+				subject.rotation = rotation;
+				subject.scaleX = scale;
+				subject.scaleY = scale;
+				dirtyness = 0.0;
+				return;
+			}
+			
+			dirtyness *= .90; 
 			subject.alpha = lerp( subject.alpha, alpha, .17 );
 			subject.x = lerp( subject.x, x, .15 );
 			subject.y = lerp( subject.y, y, .30 );
@@ -41,8 +55,8 @@ package duel.display.cards
 			if ( !isNaN( scale ) )
 				this.scale = scale;
 			
-			this.progress = 0.0;
-			this.active = true;
+			this.dirtyness = 1.0;
+			this.enabled = true;
 		}
 		
 		/** Returns interlpolated value between two other. **/

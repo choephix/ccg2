@@ -15,20 +15,16 @@ package duel.display.cardlots
 		
 		override protected function tweenToPlace( o:CardSprite ):void
 		{
-			/* * * /
+			/* * */
 			const TARGET_Y:Number = y - cardSpacing * ( cardsCount - 1 );
-			if ( o.alpha < .5 )
+			if ( o.alpha < .25 )
 			{
-				quickPlaceAt( o, cardsCount - 1 );
-				o.alpha = .0;
-				o.y += cardSpacing;
-				juggler.xtween( o, .550,
-					{
-						delay : 0.550,
-						alpha : 1.0,
-						y : TARGET_Y,
-						transition : Transitions.EASE_OUT
-					} );
+				o.x = x;
+				o.y = y - 100;
+				o.alpha = 0.0;
+				o.scaleX = z;
+				o.scaleY = z;
+				o.tween.to( x, TARGET_Y );
 				return;
 			}
 			/* * */
