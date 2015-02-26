@@ -161,45 +161,67 @@ package duel.cards
 			F[ "trapsteal2" ] = 
 			function( c:Card ):void
 			{
-				c.propsT.effect.watchForActivation( GameplayProcess.ATTACK_COMPLETE );
+				c.propsT.effect.watchForActivation( GameplayProcess.ACTIVATE_TRAP );
 				c.propsT.effect.funcActivateCondition =
 				function( p:GameplayProcess ):Boolean {
-					//
-					return true;
+					if ( c.indexedField.samesideCreature == null ) return false;
+					return c.indexedField.opposingTrap == p.getSourceCard();
 				}
 				c.propsT.effect.funcActivate =
 				function( p:GameplayProcess ):void {
-					//
+					if ( c.indexedField.samesideCreature == null ) return;
+					p.abort();
+					TempDatabaseUtils.doPutInHand( p.getSourceCard(), c.controller );
+					TempDatabaseUtils.doKill( c.indexedField.samesideCreature, c );
 				}
 			}
 			
 			F[ "traptrap" ] = 
 			function( c:Card ):void
 			{
-				c.propsT.effect.watchForActivation( GameplayProcess.ATTACK_COMPLETE );
+				c.propsT.effect.watchForActivation( GameplayProcess.ACTIVATE_TRAP );
 				c.propsT.effect.funcActivateCondition =
 				function( p:GameplayProcess ):Boolean {
-					//
-					return true;
+					return c.indexedField.opposingTrap == p.getSourceCard();
 				}
 				c.propsT.effect.funcActivate =
 				function( p:GameplayProcess ):void {
-					//
+					p.abort();
+				}
+			}
+			
+			F[ "traptrap2" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watchForActivation( GameplayProcess.ACTIVATE_TRAP );
+				c.propsT.effect.funcActivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.samesideCreature == null ) return false;
+					return c.controller.opponent == p.getSourceCard().controller;
+				}
+				c.propsT.effect.funcActivate =
+				function( p:GameplayProcess ):void {
+					p.abort();
+					TempDatabaseUtils.doKill( c.indexedField.samesideCreature, c );
 				}
 			}
 			
 			F[ "move2ctrl" ] = 
 			function( c:Card ):void
 			{
-				c.propsT.effect.watchForActivation( GameplayProcess.ATTACK_COMPLETE );
+				c.propsT.effect.watchForActivation( GameplayProcess.RELOCATE );
 				c.propsT.effect.funcActivateCondition =
 				function( p:GameplayProcess ):Boolean {
-					//
-					return true;
+					if ( !c.controller.opponent.isMyTurn ) return false;
+					if ( c.indexedField.samesideCreature == null ) return false;
+					return c.indexedField.opposingCreature == p.getSourceCard();
 				}
 				c.propsT.effect.funcActivate =
 				function( p:GameplayProcess ):void {
-					//
+					p.abort();
+					if ( c.indexedField.samesideCreature == null ) return;
+					TempDatabaseUtils.doKill( c.indexedField.samesideCreature, c );
+					TempDatabaseUtils.doForceRelocate( p.getSourceCard(), c.indexedField.samesideCreatureField, true );
 				}
 			}
 			
@@ -1812,7 +1834,7 @@ package duel.cards
 				special.funcCondition =
 				function( p:GameplayProcess ):Boolean {
 					if ( c != p.getSourceCard() ) return false;
-					const FIELD:CreatureField = c.controller.samesideCreatureAtIndex( c.indexedField.index + FDELTA );
+					const FIELD:CreatureField = findTargetField();
 					if ( FIELD == null ) return false;
 					if ( !FIELD.isEmpty ) return false;
 					const CARD:Card = c.controller.grave.findBySlug( BROTHER );
@@ -1821,12 +1843,15 @@ package duel.cards
 				}
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
-					const FIELD:CreatureField = c.controller.samesideCreatureAtIndex( c.indexedField.index + FDELTA );
-					if ( FIELD == null ) return false;
+					const FIELD:CreatureField = findTargetField();
+					if ( FIELD == null ) return;
 					if ( !FIELD.isEmpty ) return;
 					const CARD:Card = c.controller.grave.findBySlug( BROTHER );
 					if ( CARD == null ) return;
 					TempDatabaseUtils.doResurrectCreature( CARD, FIELD, c );
+				}
+				function findTargetField():CreatureField {
+					return c.controller.samesideCreatureFieldAtIndex( c.indexedField.index + FDELTA );
 				}
 			}
 			

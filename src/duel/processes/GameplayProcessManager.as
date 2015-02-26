@@ -300,10 +300,10 @@ package duel.processes
 			var oldField:CreatureField = c.indexedField as CreatureField;
 			
 			/// RELOCATE
-			pro = chain( pro, gen( GameplayProcess.RELOCATE, c, field ) );
+			pro = chain( pro, gen( GameplayProcess.RELOCATE, c, field, free ) );
 			pro.abortCheck = GameplayFAQ.cannotRelocateHere;
 			pro.onStart = 
-			function onStart( c:Card, field:CreatureField ):void
+			function onStart( c:Card, field:CreatureField, free:Boolean ):void
 			{
 				c.sprite.animRelocation();
 			}
@@ -316,11 +316,11 @@ package duel.processes
 			pro = chain( pro, process_EnterIndexedField( c, field, false ) );
 			
 			/// RELOCATE_COMPLETE
-			pro = chain( pro, gen( GameplayProcess.RELOCATE_COMPLETE, c, field ) );
+			pro = chain( pro, gen( GameplayProcess.RELOCATE_COMPLETE, c, field, free ) );
 			pro.onEnd = completeOrAbort;
 			
 			/// /// ///
-			function completeOrAbort( c:Card, field:CreatureField ):void {
+			function completeOrAbort( c:Card, field:CreatureField, free:Boolean ):void {
 				if ( c.isInPlay )
 				{
 					if ( c.lot == null )

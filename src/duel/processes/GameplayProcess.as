@@ -265,6 +265,16 @@ package duel.processes
 			return null;
 		}
 		
+		public function isRelocationFree():Boolean 
+		{
+			if ( args[ 2 ] is Boolean ) 
+				return Boolean( args[ 2 ] );
+			
+			CONFIG::development
+			{ throw new ArgumentError( "What to do... isRelocationFree..." ); }
+			return false;
+		}
+		
 		public function getRelocationDestination():CreatureField 
 		{
 			if ( args.length > 1 && args[ 1 ] is CreatureField ) 
