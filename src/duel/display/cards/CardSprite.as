@@ -82,8 +82,6 @@ package duel.display.cards {
 			
 			selectableAura = new CardAura( "card-aura" );
 			selectableAura.color = 0x669BEA;
-			//selectableAura.color = 0xFFE064;
-			//selectableAura.color = Temp.getColorForCard( card );
 			selectableAura.blendMode = "add";
 			selectableAura.touchable = false;
 			selectableAura.alpha = .0;
@@ -104,19 +102,20 @@ package duel.display.cards {
 			front.addChild( pad );
 			
 			var title:String = CONFIG::sandbox ? card.slug : card.name;
-			tfTitle = new TextField( 500, G.CARD_H, title, "Arial Black", 24, 0x53001B );
+			tfTitle = new TextField( 500, G.CARD_H, title, App.FONT1, 36, 0xFFFFFF );
+			tfTitle.batchable = true;
 			tfTitle.touchable = false;
 			tfTitle.hAlign = "center";
 			tfTitle.vAlign = "top";
 			tfTitle.bold = true;
-			tfTitle.color = 0x330011;
 			tfTitle.pivotX = tfTitle.width * .5;
 			tfTitle.x = G.CARD_W * .5;
 			tfTitle.scaleX = Math.min( 1.0, G.CARD_W / tfTitle.textBounds.width - .05 );
 			front.addChild( tfTitle );
 			
 			CONFIG::sandbox {
-			tfDebug = new TextField( 480, 40, ""+card.uid+".", "Lucida Console", 12, 0x0054A8 );
+			tfDebug = new TextField( 480, 40, ""+card.uid+".", App.FONT1, 36, 0x0054A8 );
+			tfDebug.batchable = true;
 			tfDebug.touchable = false;
 			tfDebug.alignPivot();
 			tfDebug.hAlign = "center";
@@ -127,47 +126,46 @@ package duel.display.cards {
 			//front.addChild( tfDebug );
 			}
 			
-			tfDescr = new TextField( G.CARD_W, G.CARD_H, "", "Verdana", 10, 0x330011 );
+			tfDescr = new TextField( G.CARD_W, G.CARD_H, "", App.FONT2, 20, 0xFFFFFF );
+			tfDescr.batchable = true;
 			tfDescr.touchable = false;
 			tfDescr.autoScale = true;
 			front.addChild( tfDescr );
 			
 			if ( card.isCreature )
 			{
-					tfDescr.bold = false;
-					tfDescr.hAlign = "center";
-					tfDescr.vAlign = "center";
-					tfDescr.fontSize = 15;
-					tfDescr.text = card.description == null ? "" : card.description;
-					tfDescr.x = xx( .37 );
-					tfDescr.y = yy( .50 );
-					tfDescr.width  = xx( .63 );
-					tfDescr.height = yy( .50 );
+				tfDescr.hAlign = "center";
+				tfDescr.vAlign = "center";
+				tfDescr.text = card.description == null ? "" : card.description;
+				tfDescr.x = xx( .37 );
+				tfDescr.y = yy( .50 );
+				tfDescr.width  = xx( .63 );
+				tfDescr.height = yy( .50 );
 			
-					tfAttak = new AnimatedTextField( 
-									G.CARD_W, G.CARD_H,
-									AnimatedTextField.DEFAULT_MARKER,
-									"Impact", 90, 0x330011 );
-					tfAttak.touchable = false;
-					tfAttak.hAlign = "center";
-					tfAttak.vAlign = "center";
-					tfAttak.currentValue = card.statusC.realPowerValue;
-					front.addChild( tfAttak );
-					tfAttak.x = .21 * G.CARD_W;
-					tfAttak.y = .75* G.CARD_H;
-					tfAttak.alignPivot();
+				tfAttak = new AnimatedTextField( 
+								G.CARD_W, G.CARD_H,
+								AnimatedTextField.DEFAULT_MARKER,
+								App.FONT3, 90, 0xFFFFFF );
+				tfAttak.batchable = true;
+				tfAttak.touchable = false;
+				tfAttak.hAlign = "center";
+				tfAttak.vAlign = "center";
+				tfAttak.currentValue = card.statusC.realPowerValue;
+				front.addChild( tfAttak );
+				tfAttak.x = .21 * G.CARD_W;
+				tfAttak.y = .75* G.CARD_H;
+				tfAttak.alignPivot();
 			}
 			else
 			if ( card.isTrap )
 			{
-					tfDescr.text = card.description == null ? "?" : card.description;
-					tfDescr.fontSize = 18;
-					tfDescr.x = 0;
-					tfDescr.y = 30;
-					tfDescr.x = xx( .00 );
-					tfDescr.y = yy( .50 );
-					tfDescr.width  = xx( 1.0 );
-					tfDescr.height = yy( .50 );
+				tfDescr.text = card.description == null ? "?" : card.description;
+				tfDescr.x =  0;
+				tfDescr.y = 30;
+				tfDescr.x = xx( .00 );
+				tfDescr.y = yy( .50 );
+				tfDescr.width  = xx( 1.0 );
+				tfDescr.height = yy( .50 );
 			}
 			
 			quad = new Quad( G.CARD_W, G.CARD_H, 0x0 );
@@ -371,7 +369,7 @@ package duel.display.cards {
 		}
 		animation function animRelocationCompleteOrAbort():void 
 		{
-			//jugglerStrict.xtween( this, .330,
+			//jugglerStrict.xtween( this, .330, 
 				//{ 
 					//scaleX: 1.0,
 					//scaleY: 1.0,

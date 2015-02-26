@@ -16,6 +16,10 @@ package {
 	 */
 	public class App {
 		
+		public static const FONT1:String = "font1_0";
+		public static const FONT2:String = "font2_0";
+		public static const FONT3:String = "font3_0";
+		
 		/// NATIVE SHIT
 		
 		public static var nativeStage:flash.display.Stage;
@@ -31,7 +35,7 @@ package {
 			}
 			public static function toggleFullScreen():void
 			{ 
-				trace( nativeStage.displayState == isFullscreen ? "NORMAL":"FULL_SCREEN_INTERACTIVE" );
+				trace( nativeStage.displayState == isFullscreen ? "NORMAL" : "FULL_SCREEN_INTERACTIVE" );
 				nativeStage.displayState = isFullscreen ? 
 					StageDisplayState.NORMAL : 
 					StageDisplayState.FULL_SCREEN_INTERACTIVE;

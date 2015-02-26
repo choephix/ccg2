@@ -6,7 +6,6 @@ package {
 	import duel.Game;
 	import duel.GameEvents;
 	import duel.GameMeta;
-	import flash.geom.Point;
 	import flash.system.Capabilities;
 	import flash.ui.Keyboard;
 	import screens.lobby.Lobby;
@@ -19,7 +18,6 @@ package {
 	import starling.events.ResizeEvent;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
 	import starling.text.TextField;
 	
 	CONFIG::air
@@ -67,16 +65,16 @@ package {
 			
 			CONFIG::air
 			{ 
-				App.assets.enqueue( "../bin/assets/" ); 
+				App.assets.enqueue( "assets/" ); 
 				return; 
 			}
 			
-			//App.assets.enqueue( "assets/bg.jpg" )
-			//App.assets.enqueue( "assets/mainbg.jpg" )
-			//App.assets.enqueue( "assets/main-rgb.atf" )
-			//App.assets.enqueue( "assets/main-rgb.xml" )
-			//App.assets.enqueue( "assets/main-rgba.atf" )
-			//App.assets.enqueue( "assets/main-rgba.xml" )
+			App.assets.enqueue( "assets/bg.jpg" )
+			App.assets.enqueue( "assets/mainbg.jpg" )
+			App.assets.enqueue( "assets/main-rgb.atf" )
+			App.assets.enqueue( "assets/main-rgb.xml" )
+			App.assets.enqueue( "assets/main-rgba.atf" )
+			App.assets.enqueue( "assets/main-rgba.xml" )
 		}
 		
 		private function startLoadingAssets():void {
@@ -106,12 +104,10 @@ package {
 			const UID:String = new Date().time.toString( 36 );
 			
 			gameMeta = new GameMeta();
-			
+			gameMeta.myUserColor = Math.random() * 0xFFFFFF;
 			gameMeta.myUserName = "User_" + UID;
 			CONFIG::air { gameMeta.myUserName = File.userDirectory.name }
 			CONFIG::mobile { gameMeta.myUserName = Capabilities.cpuArchitecture+"_"+UID }
-			
-			gameMeta.myUserColor = Math.random() * 0xFFFFFF;
 			
 			/// MENU
 			//CONFIG::desktop
