@@ -67,30 +67,16 @@ package {
 			
 			CONFIG::air
 			{ 
-				//App.assets.enqueue( "assets/" ); 
 				App.assets.enqueue( "../bin/assets/" ); 
 				return; 
 			}
 			
 			//App.assets.enqueue( "assets/bg.jpg" )
-			//App.assets.enqueue( "assets/btn.png" )
-			//App.assets.enqueue( "assets/card.png" )
-			//App.assets.enqueue( "assets/card-aura.jpg" )
-			//App.assets.enqueue( "assets/card-aura-field.jpg" )
-			//App.assets.enqueue( "assets/card-aura-selected.jpg" )
-			//App.assets.enqueue( "assets/card-back.png" )
-			//App.assets.enqueue( "assets/card-blood.jpg" )
-			//App.assets.enqueue( "assets/card-damage.jpg" )
-			//App.assets.enqueue( "assets/card-front-bg.png" )
-			//App.assets.enqueue( "assets/card-front-creature.png" )
-			//App.assets.enqueue( "assets/card-glow.png" )
-			//App.assets.enqueue( "assets/field.jpg" )
-			//App.assets.enqueue( "assets/exhaustClock.png" )
-			//App.assets.enqueue( "assets/hadouken.png" )
-			//App.assets.enqueue( "assets/iconLock.png" )
-			//App.assets.enqueue( "assets/ring.png" )
-			//App.assets.enqueue( "assets/tipspace.jpg" )
 			//App.assets.enqueue( "assets/mainbg.jpg" )
+			//App.assets.enqueue( "assets/main-rgb.atf" )
+			//App.assets.enqueue( "assets/main-rgb.xml" )
+			//App.assets.enqueue( "assets/main-rgba.atf" )
+			//App.assets.enqueue( "assets/main-rgba.xml" )
 		}
 		
 		private function startLoadingAssets():void {

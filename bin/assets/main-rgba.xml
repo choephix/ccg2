@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:d4e1f160c07c558923e1e2ce18d39196:76d9cdab8f344e7e134844c0ccdf9548:c1e6c3a0187042579ef5b5ac72224b95$ -->
+<TextureAtlas imagePath="main-rgba.atf">
+    <SubTexture name="btn" x="366" y="358" width="118" height="58" frameX="-1" frameY="-1" frameWidth="120" frameHeight="60"/>
+    <SubTexture name="card-back" x="2" y="2" rotated="true" width="362" height="265" frameX="-2" frameY="-2" frameWidth="269" frameHeight="366"/>
+    <SubTexture name="card-front-bg" x="2" y="269" rotated="true" width="362" height="265" frameX="-2" frameY="-2" frameWidth="269" frameHeight="366"/>
+    <SubTexture name="card-front-creature" x="366" y="2" rotated="true" width="129" height="245" frameX="-12" frameY="-201" frameWidth="269" frameHeight="366"/>
+    <SubTexture name="exhaustClock" x="161" y="536" width="150" height="150"/>
+    <SubTexture name="hadouken" x="2" y="536" rotated="true" width="157" height="150" frameX="-26" frameY="-26" frameWidth="200" frameHeight="200"/>
+    <SubTexture name="iconCanAttack" x="366" y="418" rotated="true" width="106" height="78" frameX="-21" frameY="-6" frameWidth="120" frameHeight="120"/>
+    <SubTexture name="iconCanRelocate" x="313" y="600" width="90" height="87" frameX="-17" frameY="-12" frameWidth="120" frameHeight="120"/>
+    <SubTexture name="iconLock" x="366" y="249" rotated="true" width="127" height="107" frameX="-25" frameY="-14" frameWidth="150" frameHeight="150"/>
+    <SubTexture name="ring" x="366" y="498" width="100" height="100"/>
+</TextureAtlas>
