@@ -96,6 +96,8 @@ package duel.cards.temp_database
 		
 		static public function doForceRelocate( c:Card, field:CreatureField, free:Boolean ):void 
 		{
+			if ( c == null ) return;
+			if ( field == null ) return;
 			game.processes.append_Relocation( c, field, free );
 		}
 		
@@ -169,6 +171,11 @@ package duel.cards.temp_database
 		static public function doEndCurrrentTurn():void
 		{
 			game.processes.append_TurnEnd( game.currentPlayer );
+		}
+		
+		static public function doSilentFlip( c:Card ):void 
+		{
+			game.processes.prepend_SilentFlip( c );
 		}
 		
 		//

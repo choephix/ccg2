@@ -17,6 +17,7 @@ package dev
 			/**  HELPERS  **/
 			"___kami___", 
 			"___test___", 
+			
 			//"emptyshell",
 			//"emptyshell",
 			//"emptyshell",
@@ -28,17 +29,44 @@ package dev
 			//"compromiser1",
 			//"sneakshot",
 			//"motivator",
+			
 			//"sneakshot",
+			//"grandlock",
+			
+			/**  RE-TEST  **/
+			"jack",
+			"jill",
 			
 			/**  TEST  **/
-			//"blinding_rage",
-			//"final_heal",
+			//"move_trap_hole",
+			//"pow2lp",
+			//"defmove_right",
+			//"defmove_left",
+			//"trapsteal",
+			//"trapsteal2",
+			//"traptrap",
+			//"move2ctrl",
+			//"fury",
+			//"turnend",
+			//"grandtraphole",
+			//"flipmike",
+			
+			"column_cleanup",
+			"deadly_nonsacrifice",
+			"deadly_sacrifice",
+			"deadly_sacrifice2",
+			"dmgup",
+			"cripple",
+			"anti_flip1",
+			"them_damn_tokens",
+			"empower_0",
+			"phase_through",
+			
 			//"necropy0",
 			//"badpiercer",
 			//"shield8",
 			//"antigrando",
 			//"autoattacker",
-			//"grandlock",
 			
 			/**  DONE (CREATURES)  **/
 			"mr_mirakul",
@@ -153,8 +181,13 @@ package dev
 			"doe3",
 			
 			/**  DONE (TRAPS)  **/
-			"sneakshot",
+			"atk2move1",
+			"atk2move2",
+			"grandtraphole2",
+			"final_heal",
+			"grandlock",
 			"summon2atk",
+			"sneakshot",
 			
 			/**  TO DO  **/
 			"gcontract_haste",
@@ -182,6 +215,7 @@ package dev
 
 			
 			/**  FROZEN  **/
+			//"blinding_rage",
 		];
 		
 		public static const DECK2:Array = DECK1;

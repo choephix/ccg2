@@ -1,4 +1,5 @@
 package duel.table {
+	import duel.cards.Card;
 	import duel.table.CardLotType;
 	/**
 	 * ...
@@ -7,9 +8,7 @@ package duel.table {
 	public class TrapField extends IndexedField 
 	{
 		public function TrapField( index:int )
-		{
-			super( CardLotType.TRAP_FIELD, index );
-		}
+		{ super( CardLotType.TRAP_FIELD, index ) }
 	}
 
 }

@@ -607,9 +607,13 @@ package duel.processes
 			pro.onEnd =
 			function onEnd( p:Player, dmg:Damage ):void
 			{
-				p.takeDirectDamage( dmg.amount );
+				if ( dmg.type == DamageType.HEALING )
+					p.heal( dmg.amount );
+				else
+					p.takeDirectDamage( dmg.amount );
 				if ( dmg.amount > 0 )
 				{
+					const CLR:uint = dmg.type == DamageType.HEALING ? 0x009999 : 0x990000;
 					const A1:Number = game.p1 == p ? .35 : .00;
 					const A2:Number = game.p2 == p ? .35 : .00;
 					game.blink( 0x990000, A2, A1 );

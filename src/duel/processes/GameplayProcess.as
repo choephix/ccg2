@@ -265,6 +265,16 @@ package duel.processes
 			return null;
 		}
 		
+		public function getRelocationDestination():CreatureField 
+		{
+			if ( args.length > 1 && args[ 1 ] is CreatureField ) 
+				return CreatureField( args[ 1 ] );
+			
+			CONFIG::development
+			{ throw new ArgumentError( "What to do... getRelocationDestination..." ); }
+			return null;
+		}
+		
 		public function getDamage():Damage
 		{
 			if ( args[ 1 ] is Damage ) 

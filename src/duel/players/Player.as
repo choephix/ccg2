@@ -6,10 +6,12 @@ package duel.players {
 	import duel.G;
 	import duel.players.ManaPool;
 	import duel.table.CardLotType;
+	import duel.table.CreatureField;
 	import duel.table.Field;
 	import duel.table.fieldlists.CreatureFieldsRow;
 	import duel.table.fieldlists.TrapFieldsRow;
 	import duel.table.Hand;
+	import duel.table.TrapField;
 	import starling.events.EventDispatcher;
 	/**
 	 * ...
@@ -117,6 +119,34 @@ package duel.players {
 		
 		public function die():void 
 		{ trace( this + " is dead" ) }
+		
+		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
+		// TABLE
+		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
+		
+		public function samesideCreatureFieldAtIndex( index:int ):CreatureField
+		{ return fieldsC.getAt( index ) }
+		
+		public function samesideCreatureAtIndex( index:int ):Card
+		{ return samesideCreatureFieldAtIndex( index ) == null ? null : samesideCreatureFieldAtIndex( index ).topCard }
+		
+		public function samesideTrapFieldAtIndex( index:int ):TrapField
+		{ return fieldsT.getAt( index ) }
+		
+		public function samesideTrapAtIndex( index:int ):Card
+		{ return samesideTrapFieldAtIndex( index ) == null ? null : samesideTrapFieldAtIndex( index ).topCard }
+		
+		public function opposingCreatureFieldAtIndex( index:int ):CreatureField
+		{ return opponent.fieldsC.getAt( index ) }
+		
+		public function opposingCreatureAtIndex( index:int ):Card
+		{ return opposingCreatureFieldAtIndex( index ) == null ? null : opposingCreatureFieldAtIndex( index ).topCard }
+		
+		public function opposingTrapFieldAtIndex( index:int ):TrapField
+		{ return opponent.fieldsT.getAt( index ) }
+		
+		public function opposingTrapAtIndex( index:int ):Card
+		{ return opposingTrapFieldAtIndex( index ) == null ? null : opposingTrapFieldAtIndex( index ).topCard }
 		
 		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
 		// QUESTIONS
