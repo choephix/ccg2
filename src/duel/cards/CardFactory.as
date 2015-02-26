@@ -87,6 +87,8 @@ package duel.cards
 			F[ "grandlock" ] = 
 			function( c:Card ):void
 			{
+				var _lockedField:CreatureField;
+				
 				c.propsT.persistent = true;
 				
 				c.propsT.effect.watchForActivation( GameplayProcess.TRIBUTE_CREATURE_COMPLETE );
@@ -97,17 +99,15 @@ package duel.cards
 				}
 				c.propsT.effect.funcActivate =
 				function( p:GameplayProcess ):void {
-					p.getSourceCard().history.lastIndexedField.addLock();
+					_lockedField = p.getSourceCard().history.lastIndexedField as CreatureField;
+					_lockedField.addLock();
 				}
 				
 				c.propsT.effect.watchForDeactivation( GameplayProcess.TURN_END );
-				c.propsT.effect.funcDeactivateCondition =
-				function( p:GameplayProcess ):Boolean {
-					return true;
-				}
 				c.propsT.effect.funcDeactivate =
 				function( p:GameplayProcess ):void {
-					p.getSourceCard().history.lastIndexedField.removeLock();
+					_lockedField.removeLock();
+					_lockedField = null;
 				}
 			}
 			

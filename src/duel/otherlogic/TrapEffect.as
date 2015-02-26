@@ -10,7 +10,7 @@ package duel.otherlogic
 		/// must accept one arg of type Process and return Boolean
 		public var funcActivateCondition:Function = TRUTH;
 		/// must accept one arg of type Process and return Boolean
-		public var funcDeactivateCondition:Function = FALSEHOOD;
+		public var funcDeactivateCondition:Function = TRUTH;
 		
 		/// must accept one arg of type Process
 		public var funcActivate:Function	= NOTHING;
@@ -35,17 +35,27 @@ package duel.otherlogic
 		
 		protected function isWatchedA( p:GameplayProcess ):Boolean
 		{
+			if ( _pncountA <= 0 )
+				return false;
+				
 			var i:int = _pncountA;
 			while ( --i >= 0 ) 
-				if ( _pnlistA[i] == p.name ) return true;
+				if ( _pnlistA[i] == p.name )
+					return true;
+			
 			return false;
 		}
 		
 		protected function isWatchedD( p:GameplayProcess ):Boolean
 		{
+			if ( _pncountD <= 0 )
+				return false;
+				
 			var i:int = _pncountD;
 			while ( --i >= 0 ) 
-				if ( _pnlistD[i] == p.name ) return true;
+				if ( _pnlistD[i] == p.name )
+					return true;
+			
 			return false;
 		}
 		
@@ -76,9 +86,6 @@ package duel.otherlogic
 		
 		public function update( p:GameplayProcess ):void
 		{
-			if ( _lastP == p )
-				return;
-			_lastP = p;
 			funcUpdate( p );
 		}
 		
