@@ -69,13 +69,15 @@ package editor
 			padTitle.y = 22
 			addChild( padTitle );
 			
-			stars = new Bars( 3, 8, 5, 0x882200 );
+			stars = new Bars( 3, 8, 5, 0x0 );
 			stars.y = padTitle.y + 2;
+			stars.alpha = .50;
 			addChild( stars );
 			
-			priority = new Bars( 3, 8, 5, 0x880033 );
+			priority = new Bars( 3, 8, 5, 0x0 );
 			priority.x = G.CARD_W - 3;
 			priority.y = padTitle.y + 2;
+			priority.alpha = .50;
 			addChild( priority );
 			
 			tTitle = new TextField( 1, 1, "", FORMAT_TITLE.font,
@@ -122,7 +124,7 @@ package editor
 			addChild( tSlug );
 			//CONFIG::sandbox { tSlug.removeFromParent() }
 			
-			iFaction = new Quad( 5, tTitle.height, 0x0, true );
+			iFaction = new Quad( 3, tTitle.height, 0x0, true );
 			iFaction.x = G.CARD_W - iFaction.width;
 			iFaction.y = 0;
 			addChild( iFaction );

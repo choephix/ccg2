@@ -92,6 +92,7 @@ package dev
 			/* * */
 			
 			/**  DONE (TRAPS)  **/
+			"trappeek",
 			"them_damn_tokens",
 			"empower1",
 			"phase_through",

@@ -185,6 +185,13 @@ package duel.cards.temp_database
 			game.processes.prepend_SilentFlip( c );
 		}
 		
+		static public function doPeekAt( c:Card ):void 
+		{
+			if ( c == null ) return;
+			if ( !c.faceDown ) return;
+			game.processes.prepend_PeekAt( c );
+		}
+		
 		static public function delay( time:Number ):void 
 		{
 			game.processes.prepend_Delay( time );

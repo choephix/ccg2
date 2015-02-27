@@ -157,8 +157,6 @@ package duel.cards
 			
 			//{ IN TESTING
 			
-			
-			
 			//}
 			
 			/// /// ///            /// /// ///
@@ -166,6 +164,20 @@ package duel.cards
 			/// /// /// /// // /// /// /// ///
 			
 			//{ TRAP
+			
+			F[ "trappeek" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watchForActivation( GameplayProcess.SET_TRAP_COMPLETE );
+				c.propsT.effect.funcActivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getSourceCard().controller;
+				}
+				c.propsT.effect.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doPeekAt( p.getSourceCard() );
+				}
+			}
 			
 			F[ "them_damn_tokens" ] = 
 			function( c:Card ):void

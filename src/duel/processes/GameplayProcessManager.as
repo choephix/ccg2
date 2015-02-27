@@ -1013,6 +1013,28 @@ package duel.processes
 		
 		//}
 		
+		gameprocessing function prepend_PeekAt( c:Card ):void 
+		{
+			var pro:GameplayProcess;
+			
+			/// FLIP UP
+			pro = chain( pro, gen( GameplayProcess.DELAY, c ) );
+			pro.onEnd =
+			function onEnd( c:Card ):void
+			{
+				c.faceDown = false;
+			}
+			
+			/// FLIP BACK DOWN
+			pro = chain( pro, gen( GameplayProcess.DELAY, c ) );
+			pro.delay = 1.730;
+			pro.onEnd =
+			function onEnd( c:Card ):void
+			{
+				c.faceDown = true;
+			}
+		}
+		
 		gameprocessing function prepend_Delay( time:Number ):void 
 		{
 			var pro:GameplayProcess;
