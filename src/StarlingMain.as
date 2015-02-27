@@ -146,6 +146,25 @@ package {
 			b2.alpha = .0;
 			Starling.juggler.tween( b2, .330, { delay : .200, alpha : 2.0 } );
 			
+			//
+			
+			var oo:Sprite = new Sprite();
+			oo.scaleX = 1.5;
+			addChild( oo );
+			var o:Image;
+			o = App.assets.generateImage( "ring1", false, true );
+			o.blendMode = BlendMode.ADD;
+			Starling.juggler.tween( o, 14, { rotation : 2.0 * Math.PI, repeatCount : 0 } );
+			oo.addChild( o );
+			o = App.assets.generateImage( "ring2", false, true );
+			o.blendMode = BlendMode.ADD;
+			Starling.juggler.tween( o, 17, { rotation :-2.0 * Math.PI, repeatCount : 0 } );
+			oo.addChild( o );
+			//oo.alpha = .0; oo.scaleX = .5; oo.scaleY = .5;
+			//Starling.juggler.tween( oo, .300, { alpha : 1.0, scaleX : 1.0 , scaleY : 1.0 } );
+			
+			//
+			
 			stage.addEventListener( ResizeEvent.RESIZE, onResize );
 			function onResize( e:ResizeEvent ):void 
 			{
@@ -155,6 +174,8 @@ package {
 				b2.y = .50 * stage.stageHeight;
 				bg.width = stage.stageWidth;
 				bg.height = stage.stageHeight;
+				oo.x = .50 * stage.stageWidth;
+				oo.y = .13 * stage.stageHeight;
 			}
 			onResize( null );
 			
