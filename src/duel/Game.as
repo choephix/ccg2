@@ -78,6 +78,7 @@ package duel
 		public var p1:Player;
 		public var p2:Player;
 		public var currentPlayer:Player;
+		public var userPlayer:Player;
 		
 		public var bg:Background;
 		
@@ -376,6 +377,8 @@ package duel
 			
 			if ( currentPlayer )
 				currentPlayer.isMyTurn = true;
+			
+			userPlayer = CONFIG::sandbox ? currentPlayer : p1;
 		}
 		
 		public function produceCard( data:* ):Card

@@ -169,32 +169,6 @@ package duel.cards
 				}
 			}
 			
-			F[ "fury" ] = 
-			function( c:Card ):void
-			{
-				c.propsT.effect.watchForActivation( GameplayProcess.DIRECT_DAMAGE_COMPLETE );
-				c.propsT.effect.funcActivateCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( p.getDamage().source as Card == null ) return false;
-					if ( c.indexedField.opposingCreature == null ) return false;
-					return c.indexedField.opposingCreature == p.getDamage().source as Card;
-				}
-				c.propsT.effect.funcActivate =
-				function( p:GameplayProcess ):void {
-					var dmg:int = p.getDamage().amount;
-					var cc:Card;
-					for ( var i:int = 0; i < c.controller.opponent.fieldsC.count; i++ ) 
-					{
-						cc = c.controller.opponent.fieldsC.getAt( i ).topCard;
-						if ( cc == null ) continue;
-						if ( cc == c ) continue;
-						if ( cc.faceDown ) continue;
-						if ( cc.statusC.realPowerValue >= dmg ) continue;
-						TempDatabaseUtils.doKill( cc, c );
-					}
-				}
-			}
-			
 			//
 			
 			F[ "column_cleanup" ] = 
@@ -391,6 +365,32 @@ package duel.cards
 			/// /// /// /// // /// /// /// ///
 			
 			//{ TRAP
+			
+			F[ "fury" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watchForActivation( GameplayProcess.DIRECT_DAMAGE_COMPLETE );
+				c.propsT.effect.funcActivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( p.getDamage().source as Card == null ) return false;
+					if ( c.indexedField.opposingCreature == null ) return false;
+					return c.indexedField.opposingCreature == p.getDamage().source as Card;
+				}
+				c.propsT.effect.funcActivate =
+				function( p:GameplayProcess ):void {
+					var dmg:int = p.getDamage().amount;
+					var cc:Card;
+					for ( var i:int = 0; i < c.controller.opponent.fieldsC.count; i++ ) 
+					{
+						cc = c.controller.opponent.fieldsC.getAt( i ).topCard;
+						if ( cc == null ) continue;
+						if ( cc == c ) continue;
+						if ( cc.faceDown ) continue;
+						if ( cc.statusC.realPowerValue >= dmg ) continue;
+						TempDatabaseUtils.doKill( cc, c );
+					}
+				}
+			}
 			
 			F[ "move2ctrl" ] = 
 			function( c:Card ):void

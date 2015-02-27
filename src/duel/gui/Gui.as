@@ -136,7 +136,7 @@ package duel.gui
 		{
 			_focusedCard = e.data as Card;
 			
-			if ( !game.p1.knowsCard( _focusedCard ) )
+			if ( !game.userPlayer.knowsCard( _focusedCard ) )
 				return;
 			
 			cardTip.visible = true;

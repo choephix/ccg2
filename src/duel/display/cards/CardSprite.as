@@ -244,7 +244,7 @@ package duel.display.cards {
 			
 			tween.advanceTime( time );
 				
-			_peekThrough = card.faceDown && isFocused && game.p1.knowsCard( card );
+			_peekThrough = card.faceDown && isFocused && game.userPlayer.knowsCard( card );
 			_backTranslucency = lerp( _backTranslucency, _peekThrough ? .75 : .0, .15 );
 			
 			_flippedness = lerp( _flippedness, card.faceDown ? -1.0 : 1.0, card.faceDown ? .18 : .27 );
