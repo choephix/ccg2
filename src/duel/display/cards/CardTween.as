@@ -18,6 +18,9 @@ package duel.display.cards
 		public var subject:CardSprite = null;
 		public var enabled:Boolean = true;
 		
+		private var _zJumpMax:Number = 0.0;
+		private var _zJump:Number;
+		
 		public function advanceTime( time:Number ):void 
 		{
 			if ( !enabled ) return;
@@ -35,16 +38,18 @@ package duel.display.cards
 				return;
 			}
 			
+			_zJump = isNaN( _zJumpMax ) ? 0.0 : _zJumpMax * Math.sin( dirtyness * dirtyness * dirtyness * Math.PI );
+			
 			dirtyness *= .90; 
 			subject.alpha = lerp( subject.alpha, alpha, .17 );
 			subject.x = lerp( subject.x, x, .15 );
-			subject.y = lerp( subject.y, y, .30 );
+			subject.y = lerp( subject.y, y, .30 ) - _zJump * 180;
 			subject.rotation = lerp( subject.rotation, rotation, .25 );
-			subject.scaleX = lerp( subject.scaleX, scale, .16 );
-			subject.scaleY = lerp( subject.scaleY, scale, .22 );
+			subject.scaleX = lerp( subject.scaleX, scale, .16 ) + _zJump;
+			subject.scaleY = lerp( subject.scaleY, scale, .22 ) + _zJump;
 		}
 		
-		public function to( x:Number, y:Number, rotation:Number = NaN, scale:Number = NaN ):void
+		public function to( x:Number, y:Number, rotation:Number = NaN, scale:Number = NaN, zJump:Number = NaN ):void
 		{
 			this.x = x;
 			this.y = y;
@@ -57,6 +62,8 @@ package duel.display.cards
 			
 			this.dirtyness = 1.0;
 			this.enabled = true;
+			
+			_zJumpMax = zJump * .1;
 		}
 		
 		/** Returns interlpolated value between two other. **/

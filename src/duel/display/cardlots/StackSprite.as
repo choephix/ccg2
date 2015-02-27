@@ -46,7 +46,7 @@ package duel.display.cardlots
 		override protected function tweenToPlace( o:CardSprite ):void
 		{
 			const TARGET_Y:Number = y - cardSpacing * ( cardsCount - 1 );
-			o.tween.to( x, TARGET_Y, MathF.randSign * MathF.random( .025 ), z ); 
+			o.tween.to( x, TARGET_Y, MathF.randSign * MathF.random( .025 ), z, 1.0 ); 
 			cardsParent.addChild( o );
 		}
 	}
