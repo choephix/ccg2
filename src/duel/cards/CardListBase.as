@@ -124,6 +124,16 @@ package duel.cards {
 			}
 		}
 		
+		/// f must accept 1 arg of type Card and return Boolean
+		public function countCardsThat( f:Function ):int
+		{
+			var r:int = 0;
+			for ( var i:int = 0; i < _count; i++ )
+				if ( f( _list[ i ] ) )
+					r++;
+			return r;
+		}
+		
 		////
 		
 		public function reverseCards():void

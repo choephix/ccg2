@@ -144,7 +144,10 @@ package duel.processes
 		///  c:Card
 		static public const TRIBUTE_CREATURE:String = "tributeCreature";
 		///  c:Card
-		static public const TRIBUTE_CREATURE_COMPLETE:String = "tributeCreatureComplete";;;
+		static public const TRIBUTE_CREATURE_COMPLETE:String = "tributeCreatureComplete";
+		
+		/// time:Number
+		static public const DELAY:String = "delay";
 		
 		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //
 		  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //

@@ -16,5 +16,10 @@ package duel.cards
 		
 		public function amInPlay():Boolean { return me.isInPlay }
 		public function amGraveTopCard():Boolean { return me.controller.grave.topCard == me }
+		
+		//
+		
+		public static function isTrap( c:Card ):Boolean { return c.isTrap }
+		public static function isCreature( c:Card ):Boolean { return c.isCreature }
 	}
 }

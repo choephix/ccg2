@@ -30,6 +30,8 @@ package duel.cards.temp_database
 			{
 				// // // THINGS THINGS THINGS
 				
+				c.primalData.getVarInt( 0 )
+				
 				// SUMMON CONDITION
 				// While you have no creatures
 				c.propsC.summonConditionManual = 
@@ -59,18 +61,18 @@ package duel.cards.temp_database
 				
 				// // // STICKY BUFF
 				var buff:Buff = c.statusC.addNewBuff( false )
-				buff.powerOffset = c.primalData.getVarInt( 0 );
 				buff.isActive = 
 				function( p:GameplayProcess ):Boolean {
-					return c.controller.lifePoints <= c.primalData.getVarInt( 1 );
+				}
+				buff.powerOffset =
+				function( c:Card ):int {
 				}
 				
 				// // // BUFF
-				var buff:Buff = c.statusC.addNewBuff( false )
+				var buff:Buff = c.statusC.addNewBuff( true )
 				buff.powerOffset = c.primalData.getVarInt( 0 );
 				buff.isActive = 
 				function():Boolean {
-					return c.controller.lifePoints <= c.primalData.getVarInt( 1 );
 				}
 				
 				// // // TRIGGERED EFFECTS
@@ -220,7 +222,17 @@ package duel.cards.temp_database
 				}
 			}
 			
-			// // // // // // // // // // // // // // // // // // // 
+			// // // // // // // // // // // // // // // // // // //
+			
+			F[ "____" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.onCombatFlipFunc =
+				c.propsC.onSafeFlipFunc =
+				function():void {
+				}
+			}
+			 
 		}
 		
 		

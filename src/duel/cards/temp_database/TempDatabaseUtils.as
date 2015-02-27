@@ -74,6 +74,13 @@ package duel.cards.temp_database
 				game.processes.prepend_Discard( p, p.hand.getCardAt( i ) );
 		}
 		
+		static public function doDiscardFromDeck( p:Player, count:int ):void 
+		{
+			for ( var i:int = 0; i < count; i++ )
+				if ( i < p.deck.cardsCount )
+					game.processes.prepend_AddToGrave( p.deck.getCardAt( i ) );
+		}
+		
 		static public function doPutToGrave( c:Card ):void
 		{
 			game.processes.prepend_AddToGrave( c );
@@ -176,6 +183,11 @@ package duel.cards.temp_database
 		static public function doSilentFlip( c:Card ):void 
 		{
 			game.processes.prepend_SilentFlip( c );
+		}
+		
+		static public function delay( time:Number ):void 
+		{
+			game.processes.prepend_Delay( time );
 		}
 		
 		//

@@ -153,7 +153,10 @@ package duel.players {
 		// = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = 
 		
 		public function knowsCard( c:Card ):Boolean
-		{ return ( c.controller == this && !c.lot.type.isDeck ) || !c.faceDown }
+		{ 
+			if ( CONFIG::sandbox ) return true;
+			return ( c.controller == this && !c.lot.type.isDeck ) || !c.faceDown
+		}
 		
 		public function get creatureCount():int
 		{ return fieldsC.countOccupied }

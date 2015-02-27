@@ -1013,6 +1013,14 @@ package duel.processes
 		
 		//}
 		
+		gameprocessing function prepend_Delay( time:Number ):void 
+		{
+			var pro:GameplayProcess;
+			pro = gen( GameplayProcess.DELAY, time );
+			pro.delay = time;
+			prependProcess( pro );
+		}
+		
 		//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\  \\
 		////\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\  \\
 		//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\  \\
