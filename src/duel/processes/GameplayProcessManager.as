@@ -529,7 +529,7 @@ package duel.processes
 			function abort():void
 			{
 				c.sprite.animAttackAbort();
-				completeOrAbort( c );
+				completeOrAbort( c, free );
 				prependProcess( gen( GameplayProcess.ATTACK_ABORT, c, free ) );
 			}
 			pro.abortCheck = GameplayFAQ.cannotPerformAttack;
