@@ -107,6 +107,11 @@ package duel.cards.temp_database
 					new Damage( amount, DamageType.SPECIAL, source ) );
 		}
 		
+		static public function doHeal( p:Player, amount:int ):void
+		{
+			game.processes.prepend_Heal( p, amount );
+		}
+		
 		static public function doPutInHandTrapsRow( p:Player ):void
 		{
 			for ( var i:int = 0; i < G.FIELD_COLUMNS; i++ ) 
@@ -145,11 +150,6 @@ package duel.cards.temp_database
 					continue;
 				doDestroyTrap( p.fieldsT.getAt( i ).topCard );
 			}
-		}
-		
-		static public function doHeal( p:Player, amount:int ):void
-		{
-			p.heal( amount );
 		}
 		
 		static public function doSpawnTokenCreatureIfEmpty( field:CreatureField ):void

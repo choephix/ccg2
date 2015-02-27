@@ -582,13 +582,13 @@ package duel
 				} );
 		}
 		
-		public function blink( color:uint, alphaTop:Number = 1.0, alphaBottom:Number = 1.0 ):void
+		public function blink( color1:uint, color2:uint ):void
 		{
-			var q:Quad = new Quad( App.W, App.H, color );
-			q.setVertexAlpha( 0, alphaTop );
-			q.setVertexAlpha( 1, alphaTop );
-			q.setVertexAlpha( 2, alphaBottom );
-			q.setVertexAlpha( 3, alphaBottom );
+			var q:Quad = new Quad( App.W, App.H );
+			q.setVertexColor( 0, color1 );
+			q.setVertexColor( 1, color1 );
+			q.setVertexColor( 2, color2 );
+			q.setVertexColor( 3, color2 );
 			q.blendMode = BlendMode.ADD;
 			jugglerGui.tween( q, .250,
 				{ 

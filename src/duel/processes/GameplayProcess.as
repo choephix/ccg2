@@ -57,6 +57,10 @@ package duel.processes
 		static public const DIRECT_DAMAGE:String = "directDamage";
 		/// p:Player, dmg:Damage
 		static public const DIRECT_DAMAGE_COMPLETE:String = "directDamageComplete";
+		/// p:Player, amount:int
+		static public const HEAL_LP:String = "healLp";
+		/// p:Player, amount:int
+		static public const HEAL_LP_COMPLETE:String = "healLpComplete"
 		/// c:Card, fromCombat:Boolean
 		static public const DIE:String = "die";
 		/// c:Card, fromCombat:Boolean
@@ -140,7 +144,7 @@ package duel.processes
 		///  c:Card
 		static public const TRIBUTE_CREATURE:String = "tributeCreature";
 		///  c:Card
-		static public const TRIBUTE_CREATURE_COMPLETE:String = "tributeCreatureComplete";;
+		static public const TRIBUTE_CREATURE_COMPLETE:String = "tributeCreatureComplete";;;
 		
 		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //
 		  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //

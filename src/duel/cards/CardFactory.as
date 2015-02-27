@@ -38,7 +38,7 @@ package duel.cards
 			{
 				var special:SpecialEffect;
 				
-				/// SPECIAL 1
+				/** SPECIAL 1 * BUFF UP + DMG* * /
 				special = c.propsC.addTriggered();
 				special.allowIn( CardLotType.CREATURE_FIELD );
 				special.watch( GameplayProcess.SUMMON_COMPLETE );
@@ -54,8 +54,9 @@ package duel.cards
 							//c.indexedField.opposingCreature, 
 							//c.indexedField.opposingCreature.controller );
 				}
+				/**/
 				
-				/// SPECIAL 2
+				/** SPECIAL 2 * BUFF DOWN * * /
 				special = c.propsC.addTriggered();
 				special.allowIn( CardLotType.CREATURE_FIELD );
 				special.watch( GameplayProcess.SUMMON_COMPLETE );
@@ -68,8 +69,9 @@ package duel.cards
 					c.propsC.basePower -= 1;
 					TempDatabaseUtils.doDealDirectDamage( c.controller.opponent, 1, c );
 				}
+				/**/
 				
-				/// SPECIAL 3
+				/** SPECIAL 3 * POOP TOKENS * */
 				special = c.propsC.addTriggered();
 				special.allowIn( CardLotType.CREATURE_FIELD );
 				special.watch( GameplayProcess.SUMMON_COMPLETE );
@@ -81,6 +83,21 @@ package duel.cards
 				function( p:GameplayProcess ):void {
 					c.controller.fieldsC.forEachField( TempDatabaseUtils.doSpawnTokenCreatureIfEmpty );
 				}
+				/**/
+				
+				/** SPECIAL 4 * UNDIE * */
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.GRAVEYARD );
+				special.watch( GameplayProcess.DIE_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doPutInHand( c, c.controller );
+				}
+				/**/
 			}
 			
 			/// /// /// /// // /// /// /// ///
@@ -88,21 +105,6 @@ package duel.cards
 			/// /// ///            /// /// ///
 			
 			//{ IN TESTING
-			F[ "move_trap_hole" ] = 
-			function( c:Card ):void
-			{
-				c.propsT.effect.watchForActivation( GameplayProcess.RELOCATE_COMPLETE );
-				c.propsT.effect.funcActivateCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( c.controller.opponent != p.getSourceCard().controller ) return false;
-					if ( c.indexedField.opposingCreatureField != p.getRelocationDestination() ) return false;
-					return true;
-				}
-				c.propsT.effect.funcActivate =
-				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doKill( p.getSourceCard(), c );
-				}
-			}
 			
 			F[ "pow2lp" ] = 
 			function( c:Card ):void
@@ -218,8 +220,8 @@ package duel.cards
 				function( p:GameplayProcess ):void {
 					p.abort();
 					if ( c.indexedField.samesideCreature == null ) return;
-					TempDatabaseUtils.doKill( c.indexedField.samesideCreature, c );
 					TempDatabaseUtils.doForceRelocate( p.getSourceCard(), c.indexedField.samesideCreatureField, true );
+					TempDatabaseUtils.doKill( c.indexedField.samesideCreature, c );
 				}
 			}
 			
@@ -262,25 +264,6 @@ package duel.cards
 				c.propsT.effect.funcActivate =
 				function( p:GameplayProcess ):void {
 					TempDatabaseUtils.doEndCurrrentTurn();
-				}
-			}
-			
-			F[ "grandtraphole" ] = 
-			function( c:Card ):void
-			{
-				c.propsT.effect.watchForActivation( GameplayProcess.SUMMON_COMPLETE );
-				c.propsT.effect.funcActivateCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( c.indexedField.opposingCreature != p.getSourceCard() ) return false;
-					if ( c.indexedField.samesideCreatureField.isEmpty ) return false;
-					return true;
-				}
-				c.propsT.effect.funcActivate =
-				function( p:GameplayProcess ):void {
-					if ( c.indexedField.opposingCreature.propsC.isGrand )
-						TempDatabaseUtils.doKill( c.indexedField.opposingCreature, c );
-					else
-						TempDatabaseUtils.doDealDirectDamage( c.controller, c.primalData.getVarInt( 0 ), c );
 				}
 			}
 			
@@ -490,6 +473,59 @@ package duel.cards
 			
 			//{ TRAP
 			
+			F[ "move_trap_hole" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watchForActivation( GameplayProcess.RELOCATE_COMPLETE );
+				c.propsT.effect.funcActivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c.controller.opponent != p.getSourceCard().controller ) return false;
+					if ( c.indexedField.opposingCreatureField != p.getRelocationDestination() ) return false;
+					return true;
+				}
+				c.propsT.effect.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doKill( p.getSourceCard(), c );
+				}
+			}
+			
+			F[ "grandtraphole" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watchForActivation( GameplayProcess.SUMMON_COMPLETE );
+				c.propsT.effect.funcActivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.opposingCreature != p.getSourceCard() ) return false;
+					return true;
+				}
+				c.propsT.effect.funcActivate =
+				function( p:GameplayProcess ):void {
+					if ( c.indexedField.opposingCreature.propsC.isGrand )
+						TempDatabaseUtils.doKill( c.indexedField.opposingCreature, c );
+					else
+						TempDatabaseUtils.doDealDirectDamage( c.controller, c.primalData.getVarInt( 0 ), c );
+				}
+			}
+			
+			F[ "grandtraphole2" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watchForActivation( GameplayProcess.SUMMON_COMPLETE );
+				c.propsT.effect.funcActivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.opposingCreature != p.getSourceCard() ) return false;
+					if ( c.indexedField.samesideCreatureField.isEmpty ) return false;
+					return true;
+				}
+				c.propsT.effect.funcActivate =
+				function( p:GameplayProcess ):void {
+					if ( c.indexedField.opposingCreature.propsC.isGrand )
+						TempDatabaseUtils.doKill( c.indexedField.opposingCreature, c );
+					else
+						TempDatabaseUtils.doKill( c.indexedField.samesideCreature, c );
+				}
+			}
+			
 			F[ "atk2move1" ] = 
 			function( c:Card ):void
 			{
@@ -523,25 +559,6 @@ package duel.cards
 					p.getAttacker().statusC.actionsAttack--;
 					TempDatabaseUtils.doForceAttack( p.getAttacker(), false );
 					TempDatabaseUtils.doForceRelocate( p.getAttacker(), c.indexedField.opposingCreatureField, true );
-				}
-			}
-			
-			F[ "grandtraphole2" ] = 
-			function( c:Card ):void
-			{
-				c.propsT.effect.watchForActivation( GameplayProcess.SUMMON_COMPLETE );
-				c.propsT.effect.funcActivateCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( c.indexedField.opposingCreature != p.getSourceCard() ) return false;
-					if ( c.indexedField.samesideCreatureField.isEmpty ) return false;
-					return true;
-				}
-				c.propsT.effect.funcActivate =
-				function( p:GameplayProcess ):void {
-					if ( c.indexedField.opposingCreature.propsC.isGrand )
-						TempDatabaseUtils.doKill( c.indexedField.opposingCreature, c );
-					else
-						TempDatabaseUtils.doKill( c.indexedField.samesideCreature, c );
 				}
 			}
 			

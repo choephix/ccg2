@@ -607,21 +607,52 @@ package duel.processes
 			pro.onEnd =
 			function onEnd( p:Player, dmg:Damage ):void
 			{
-				if ( dmg.type == DamageType.HEALING )
-					p.heal( dmg.amount );
-				else
-					p.takeDirectDamage( dmg.amount );
+				p.takeDirectDamage( dmg.amount );
 				if ( dmg.amount > 0 )
 				{
-					const CLR:uint = dmg.type == DamageType.HEALING ? 0x009999 : 0x990000;
-					const A1:Number = game.p1 == p ? .35 : .00;
-					const A2:Number = game.p2 == p ? .35 : .00;
-					game.blink( 0x990000, A2, A1 );
+					const CLR1:uint = 0xAA0011;
+					const CLR2:uint = 0x220011;
+					const REV:Boolean = game.p2 == p;
+					game.blink( REV ? CLR1 : CLR2, REV ? CLR2 : CLR1 );
 				}
+			}
+			pro.abortCheck = 
+			function abortCheck( p:Player, dmg:Damage ):Boolean
+			{ 
+				return dmg.type == DamageType.HEALING;
+			}
+			pro.onAbort = 
+			function onAbort( p:Player, dmg:Damage ):void
+			{
+				if ( dmg.type == DamageType.HEALING )
+					prepend_Heal( p, dmg.amount );
 			}
 			
 			/// DIRECT_DAMAGE_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.DIRECT_DAMAGE_COMPLETE, p, dmg ) );
+		}
+		
+		gameprocessing function prepend_Heal( p:Player, amount:int ):void
+		{
+			var pro:GameplayProcess;
+			
+			/// DIRECT_DAMAGE
+			pro = chain( pro, gen( GameplayProcess.HEAL_LP, p, amount ) );
+			pro.onEnd =
+			function onEnd( p:Player, amount:int ):void
+			{
+				p.heal( amount );
+				if ( amount > 0 )
+				{
+					const CLR1:uint = 0x004422; // 0x66FFFF 
+					const CLR2:uint = 0x000011; // 0x003322 
+					const REV:Boolean = game.p2 == p;
+					game.blink( REV ? CLR1 : CLR2, REV ? CLR2 : CLR1 );
+				}
+			}
+			
+			/// DIRECT_DAMAGE_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.HEAL_LP_COMPLETE, p, amount ) );
 		}
 		
 		gameprocessing function prepend_Death( c:Card, deathType:DeathType, cause:Card ):void 
