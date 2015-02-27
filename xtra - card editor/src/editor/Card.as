@@ -69,11 +69,11 @@ package editor
 			padTitle.y = 22
 			addChild( padTitle );
 			
-			stars = new Bars( 3, 8, 3, 0x882200 );
+			stars = new Bars( 3, 8, 5, 0x882200 );
 			stars.y = padTitle.y + 2;
 			addChild( stars );
 			
-			priority = new Bars( 3, 8, 3, 0x880033 );
+			priority = new Bars( 3, 8, 5, 0x880033 );
 			priority.x = G.CARD_W - 3;
 			priority.y = padTitle.y + 2;
 			addChild( priority );

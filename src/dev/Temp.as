@@ -37,11 +37,6 @@ package dev
 			/**  RE-TEST  **/
 			
 			/**  TEST  **/
-			"deckstructor",
-			"mana_dispenser_2",
-			"mana_drainer",
-			"bloodmerc",
-			"thieving_monkey",
 			/* * * /
 			"token1",
 			"vouerer",
@@ -128,6 +123,11 @@ package dev
 			"sneakshot",
 			
 			/**  DONE (CREATURES)  **/
+			"bloodmerc",
+			"thieving_monkey",
+			"mana_dispenser_2",
+			"mana_drainer",
+			"deckstructor",
 			"badfate",
 			"shield2",
 			"jerry",

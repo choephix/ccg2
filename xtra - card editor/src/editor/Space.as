@@ -287,14 +287,14 @@ package editor
 				if ( e.keyCode == Keyboard.UP )
 				{
 					if ( c == null ) return;
-					c.data.priority = ( c.data.priority + 1 ) % 4;
+					c.data.priority = ( c.data.priority + 1 ) % 6;
 					c.onDataChange();
 				}
 				else
 				if ( e.keyCode == Keyboard.DOWN )
 				{
 					if ( c == null ) return;
-					c.data.priority = ( c.data.priority - 1 ) % 4;
+					c.data.priority = ( c.data.priority - 1 );
 					if ( c.data.priority < 0 ) c.data.priority = 0;
 					c.onDataChange();
 				}
@@ -302,7 +302,7 @@ package editor
 				if ( e.keyCode == Keyboard.LEFT )
 				{
 					if ( c == null ) return;
-					c.data.stars = ( c.data.stars - 1 ) % 4;
+					c.data.stars = ( c.data.stars - 1 );
 					if ( c.data.stars < 0 ) c.data.stars = 0;
 					c.onDataChange();
 				}
@@ -310,7 +310,7 @@ package editor
 				if ( e.keyCode == Keyboard.RIGHT )
 				{
 					if ( c == null ) return;
-					c.data.stars = ( c.data.stars + 1 ) % 4;
+					c.data.stars = ( c.data.stars + 1 ) % 6;
 					c.onDataChange();
 				}
 				else
