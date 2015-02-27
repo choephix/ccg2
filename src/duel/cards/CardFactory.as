@@ -125,7 +125,7 @@ package duel.cards
 			{
 				const FDELTA:int = c.primalData.getVarInt( 0 );
 				
-				c.propsT.effect.watchForActivation( GameplayProcess.ATTACK_COMPLETE );
+				c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
 				c.propsT.effect.funcActivateCondition =
 				function( p:GameplayProcess ):Boolean {
 					if ( !c.indexedField.samesideCreatureField.isEmpty ) return false;
@@ -134,9 +134,7 @@ package duel.cards
 				}
 				c.propsT.effect.funcActivate =
 				function( p:GameplayProcess ):void {
-					const SAVER:Card = findTarget();
-					if ( SAVER == null ) return;
-					TempDatabaseUtils.doForceRelocate( SAVER, c.indexedField.samesideCreatureField, true );
+					TempDatabaseUtils.doForceRelocate( findTarget(), c.indexedField.samesideCreatureField, true );
 				}
 				function findTarget():Card {
 					return c.controller.samesideCreatureAtIndex( c.indexedField.index + FDELTA );
@@ -237,17 +235,17 @@ package duel.cards
 				c.propsT.effect.funcActivate =
 				function( p:GameplayProcess ):void {
 					var dmg:int = p.getDamage().amount;
-					var player:Player = c.controller.opponent;
-					var i:int;
 					var cc:Card;
-					for ( i = 0; i < player.fieldsC.count; i++ ) 
+					for ( var i:int = 0; i < c.controller.opponent.fieldsC.count; i++ ) 
 					{
-						cc = player.fieldsC.getAt( i ).topCard;
+						cc = c.controller.opponent.fieldsC.getAt( i ).topCard;
+						trace( "Should Fury kill " + cc + "?" );
 						if ( cc == null ) continue;
 						if ( cc == c ) continue;
 						if ( cc.faceDown ) continue;
-						if ( cc.statusC.realPowerValue >= c.statusC.realPowerValue ) return;
+						if ( cc.statusC.realPowerValue >= dmg ) continue;
 						TempDatabaseUtils.doKill( cc, c );
+						trace( "Fury shall kill " + cc );
 					}
 				}
 			}
@@ -286,6 +284,8 @@ package duel.cards
 				}
 			}
 			
+			//
+			
 			F[ "flipmike" ] = 
 			function( c:Card ):void
 			{
@@ -294,8 +294,6 @@ package duel.cards
 					TempDatabaseUtils.doDraw( c.controller, c.primalData.getVarInt( 0 ) );
 				}
 			}
-			
-			//
 			
 			F[ "column_cleanup" ] = 
 			function( c:Card ):void
@@ -477,6 +475,14 @@ package duel.cards
 			}
 			
 			//}
+			
+			F[ "forsaken1" ] = 
+			F[ "forsaken2" ] = 
+			F[ "forsaken3" ] = 
+			F[ "forsaken4" ] = 
+			function( c:Card ):void
+			{
+			}
 			
 			/// /// ///            /// /// ///
 			/// /// /// TEST SPACE /// /// ///
@@ -2439,10 +2445,10 @@ package duel.cards
 				}
 			}
 			
-			F[ "forsaken1" ] = 
-			F[ "forsaken2" ] = 
-			F[ "forsaken3" ] = 
-			F[ "forsaken4" ] = 
+			F[ "forbidden1" ] = 
+			F[ "forbidden2" ] = 
+			F[ "forbidden3" ] = 
+			F[ "forbidden4" ] = 
 			function( c:Card ):void
 			{
 				var buff:Buff = c.statusC.addNewBuff( false );
@@ -2524,6 +2530,18 @@ package duel.cards
 				function( p:GameplayProcess ):void {
 					if ( c.controller.grave.cardsCount > 0 )
 						TempDatabaseUtils.doPutInHand( c.controller.grave.topCard, c.controller );
+				}
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.GRAVEYARD );
+				special.watch( GameplayProcess.TURN_START_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller == p.getPlayer();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doPutInHand( c, c.controller );
 				}
 				
 				var ongoing:OngoingEffect;

@@ -499,9 +499,9 @@ package duel.processes
 			var pro:GameplayProcess;
 			
 			/// ATTACK
-			pro = chain( pro, gen( GameplayProcess.ATTACK, c ) );
+			pro = chain( pro, gen( GameplayProcess.ATTACK, c, free ) );
 			pro.onStart =
-			function onStart( c:Card ):void
+			function onStart( c:Card, free:Boolean ):void
 			{
 				c.sprite.animAttackPrepare();
 				
@@ -510,7 +510,7 @@ package duel.processes
 						prepend_CombatFlip( c.indexedField.opposingCreature );
 			}
 			pro.onEnd =
-			function onEnd( c:Card ):void
+			function onEnd( c:Card, free:Boolean ):void
 			{
 				c.sprite.animAttackPerform();
 				
@@ -530,16 +530,16 @@ package duel.processes
 			{
 				c.sprite.animAttackAbort();
 				completeOrAbort( c );
-				prependProcess( gen( GameplayProcess.ATTACK_ABORT, c ) );
+				prependProcess( gen( GameplayProcess.ATTACK_ABORT, c, free ) );
 			}
 			pro.abortCheck = GameplayFAQ.cannotPerformAttack;
 			
 			/// ATTACK_COMPLETE
-			pro = chain( pro, gen( GameplayProcess.ATTACK_COMPLETE, c ) );
+			pro = chain( pro, gen( GameplayProcess.ATTACK_COMPLETE, c, free ) );
 			pro.onStart = completeOrAbort;
 			
 			/// /// ///
-			function completeOrAbort( c:Card ):void
+			function completeOrAbort( c:Card, free:Boolean ):void
 			{
 				if ( !free )
 					c.statusC.actionsAttack++;

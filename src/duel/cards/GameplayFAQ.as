@@ -59,15 +59,15 @@ package duel.cards
 		
 		/**/
 		
-		public static function canRelocateHere( c:Card, field:CreatureField ):Boolean
+		public static function canRelocateHere( c:Card, field:CreatureField, free:Boolean ):Boolean
 		{ 
 			if ( !c.isInPlay ) return false;
-			if ( !c.statusC.canRelocate ) return false;
+			if ( !free && !c.statusC.canRelocate ) return false;
 			if ( c.field == field ) return false;
 			return canPlaceCreatureHere( c, field );
 		}
-		public static function cannotRelocateHere( c:Card, field:CreatureField ):Boolean
-		{ return !canRelocateHere( c, field ) }
+		public static function cannotRelocateHere( c:Card, field:CreatureField, free:Boolean ):Boolean
+		{ return !canRelocateHere( c, field, free ) }
 		
 		public static function canPlaceCreatureHere( c:Card, field:CreatureField ):Boolean
 		{
@@ -100,10 +100,10 @@ package duel.cards
 		
 		//
 		
-		public static function canPerformAttack( c:Card ):Boolean
-		{ return c.isInPlay && c.statusC.canAttack }
-		public static function cannotPerformAttack( c:Card ):Boolean
-		{ return !canPerformAttack( c ) }
+		public static function canPerformAttack( c:Card, free:Boolean ):Boolean
+		{ return c.isInPlay && ( free || c.statusC.canAttack ) }
+		public static function cannotPerformAttack( c:Card, free:Boolean ):Boolean
+		{ return !canPerformAttack( c, free ) }
 		
 		public static function canTakeDamage( c:Card, dmg:Damage ):Boolean
 		{ return c.isInPlay }

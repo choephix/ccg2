@@ -33,8 +33,6 @@ package dev
 			//"grandlock",
 			
 			/**  RE-TEST  **/
-			"jack",
-			"jill",
 			
 			/**  TEST  **/
 			//"move_trap_hole",
@@ -42,13 +40,14 @@ package dev
 			//"defmove_right",
 			//"defmove_left",
 			//"trapsteal",
-			//"trapsteal2",
+			"trapsteal2",
 			//"traptrap",
-			//"move2ctrl",
-			//"fury",
-			//"turnend",
-			//"grandtraphole",
-			//"flipmike",
+			"traptrap2",
+			"move2ctrl",
+			"fury",
+			"turnend",
+			"grandtraphole",
+			"flipmike",
 			
 			"column_cleanup",
 			"deadly_nonsacrifice",
