@@ -18,11 +18,12 @@ package dev
 			"___kami___", 
 			"___test___", 
 			
-			"emptyshell",
+			"grand_powerhealer", 
+			//"emptyshell",
 			//"emptyshell",
 			//"emptyshell",
 			"tempower2",
-			"paulgrand",
+			//"paulgrand",
 			//"resurrecter66",
 			//"resurrecter2",
 			//"resurrecter4",
@@ -35,19 +36,10 @@ package dev
 			/**  RE-TEST  **/
 			
 			/**  TEST  **/
-			//"move_trap_hole",
-			//"pow2lp",
-			//"defmove_right",
-			//"defmove_left",
-			//"trapsteal",
+			"trapsteal",
 			"trapsteal2",
-			//"traptrap",
+			"traptrap",
 			"traptrap2",
-			"move2ctrl",
-			"fury",
-			"turnend",
-			"grandtraphole",
-			"flipmike",
 			
 			"column_cleanup",
 			"deadly_nonsacrifice",
@@ -66,7 +58,25 @@ package dev
 			//"antigrando",
 			//"autoattacker",
 			
+			/**  DONE (TRAPS)  **/
+			"fury",
+			"move2ctrl",
+			"turnend",
+			"pow2lp",
+			"defmove_right",
+			"defmove_left",
+			"move_trap_hole",
+			"grandtraphole",
+			"grandtraphole2",
+			"atk2move1",
+			"atk2move2",
+			"final_heal",
+			"grandlock",
+			"summon2atk",
+			"sneakshot",
+			
 			/**  DONE (CREATURES)  **/
+			"flipmike",
 			"mr_mirakul",
 			"black_hood2",
 			"black_hood",
@@ -177,15 +187,6 @@ package dev
 			"doe1",
 			"doe2",
 			"doe3",
-			
-			/**  DONE (TRAPS)  **/
-			"atk2move1",
-			"atk2move2",
-			"grandtraphole2",
-			"final_heal",
-			"grandlock",
-			"summon2atk",
-			"sneakshot",
 			
 			/**  TO DO  **/
 			"gcontract_haste",

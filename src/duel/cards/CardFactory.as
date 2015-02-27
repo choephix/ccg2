@@ -106,43 +106,6 @@ package duel.cards
 			
 			//{ IN TESTING
 			
-			F[ "pow2lp" ] = 
-			function( c:Card ):void
-			{
-				c.propsT.effect.watchForActivation( GameplayProcess.DIE );
-				c.propsT.effect.funcActivateCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( !p.getDeathIsFromCombat() ) return false;
-					return c.indexedField.samesideCreature == p.getSourceCard();
-				}
-				c.propsT.effect.funcActivate =
-				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doHeal( c.controller, p.getSourceCard().statusC.realPowerValue );
-				}
-			}
-			
-			F[ "defmove_left" ] = 
-			F[ "defmove_right" ] = 
-			function( c:Card ):void
-			{
-				const FDELTA:int = c.primalData.getVarInt( 0 );
-				
-				c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
-				c.propsT.effect.funcActivateCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( !c.indexedField.samesideCreatureField.isEmpty ) return false;
-					if ( findTarget() == null ) return false;
-					return true;
-				}
-				c.propsT.effect.funcActivate =
-				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doForceRelocate( findTarget(), c.indexedField.samesideCreatureField, true );
-				}
-				function findTarget():Card {
-					return c.controller.samesideCreatureAtIndex( c.indexedField.index + FDELTA );
-				}
-			}
-			
 			F[ "trapsteal" ] = 
 			function( c:Card ):void
 			{
@@ -206,25 +169,6 @@ package duel.cards
 				}
 			}
 			
-			F[ "move2ctrl" ] = 
-			function( c:Card ):void
-			{
-				c.propsT.effect.watchForActivation( GameplayProcess.RELOCATE );
-				c.propsT.effect.funcActivateCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( !c.controller.opponent.isMyTurn ) return false;
-					if ( c.indexedField.samesideCreature == null ) return false;
-					return c.indexedField.opposingCreature == p.getSourceCard();
-				}
-				c.propsT.effect.funcActivate =
-				function( p:GameplayProcess ):void {
-					p.abort();
-					if ( c.indexedField.samesideCreature == null ) return;
-					TempDatabaseUtils.doForceRelocate( p.getSourceCard(), c.indexedField.samesideCreatureField, true );
-					TempDatabaseUtils.doKill( c.indexedField.samesideCreature, c );
-				}
-			}
-			
 			F[ "fury" ] = 
 			function( c:Card ):void
 			{
@@ -232,7 +176,8 @@ package duel.cards
 				c.propsT.effect.funcActivateCondition =
 				function( p:GameplayProcess ):Boolean {
 					if ( p.getDamage().source as Card == null ) return false;
-					return Card( p.getDamage().source ).controller == c.controller.opponent;
+					if ( c.indexedField.opposingCreature == null ) return false;
+					return c.indexedField.opposingCreature == p.getDamage().source as Card;
 				}
 				c.propsT.effect.funcActivate =
 				function( p:GameplayProcess ):void {
@@ -241,42 +186,16 @@ package duel.cards
 					for ( var i:int = 0; i < c.controller.opponent.fieldsC.count; i++ ) 
 					{
 						cc = c.controller.opponent.fieldsC.getAt( i ).topCard;
-						trace( "Should Fury kill " + cc + "?" );
 						if ( cc == null ) continue;
 						if ( cc == c ) continue;
 						if ( cc.faceDown ) continue;
 						if ( cc.statusC.realPowerValue >= dmg ) continue;
 						TempDatabaseUtils.doKill( cc, c );
-						trace( "Fury shall kill " + cc );
 					}
 				}
 			}
 			
-			F[ "turnend" ] = 
-			function( c:Card ):void
-			{
-				c.propsT.effect.watchForActivation( GameplayProcess.ATTACK_COMPLETE );
-				c.propsT.effect.funcActivateCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( !c.controller.opponent.isMyTurn ) return false;
-					return c.indexedField.opposingCreature == p.getAttacker();
-				}
-				c.propsT.effect.funcActivate =
-				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doEndCurrrentTurn();
-				}
-			}
-			
 			//
-			
-			F[ "flipmike" ] = 
-			function( c:Card ):void
-			{
-				c.propsC.onSafeFlipFunc =
-				function():void {
-					TempDatabaseUtils.doDraw( c.controller, c.primalData.getVarInt( 0 ) );
-				}
-			}
 			
 			F[ "column_cleanup" ] = 
 			function( c:Card ):void
@@ -473,6 +392,77 @@ package duel.cards
 			
 			//{ TRAP
 			
+			F[ "move2ctrl" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watchForActivation( GameplayProcess.RELOCATE );
+				c.propsT.effect.funcActivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( !c.controller.opponent.isMyTurn ) return false;
+					if ( c.indexedField.samesideCreature == null ) return false;
+					return c.indexedField.opposingCreature == p.getSourceCard();
+				}
+				c.propsT.effect.funcActivate =
+				function( p:GameplayProcess ):void {
+					p.abort();
+					if ( c.indexedField.samesideCreature == null ) return;
+					TempDatabaseUtils.doForceRelocate( p.getSourceCard(), c.indexedField.samesideCreatureField, true );
+					TempDatabaseUtils.doKill( c.indexedField.samesideCreature, c );
+				}
+			}
+			
+			F[ "turnend" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watchForActivation( GameplayProcess.ATTACK_COMPLETE );
+				c.propsT.effect.funcActivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( !c.controller.opponent.isMyTurn ) return false;
+					return c.indexedField.opposingCreature == p.getAttacker();
+				}
+				c.propsT.effect.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doEndCurrrentTurn();
+				}
+			}
+			
+			F[ "pow2lp" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watchForActivation( GameplayProcess.DIE );
+				c.propsT.effect.funcActivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( !p.getDeathIsFromCombat() ) return false;
+					return c.indexedField.samesideCreature == p.getSourceCard();
+				}
+				c.propsT.effect.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doHeal( c.controller, p.getSourceCard().statusC.realPowerValue );
+				}
+			}
+			
+			F[ "defmove_left" ] = 
+			F[ "defmove_right" ] = 
+			function( c:Card ):void
+			{
+				const FDELTA:int = c.primalData.getVarInt( 0 );
+				
+				c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
+				c.propsT.effect.funcActivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( !c.indexedField.samesideCreatureField.isEmpty ) return false;
+					if ( findTarget() == null ) return false;
+					return true;
+				}
+				c.propsT.effect.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doForceRelocate( findTarget(), c.indexedField.samesideCreatureField, true );
+				}
+				function findTarget():Card {
+					return c.controller.samesideCreatureAtIndex( c.indexedField.index + FDELTA );
+				}
+			}
+			
 			F[ "move_trap_hole" ] = 
 			function( c:Card ):void
 			{
@@ -646,6 +636,15 @@ package duel.cards
 			//}
 			
 			//{ CREATURES
+			
+			F[ "flipmike" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.onSafeFlipFunc =
+				function():void {
+					TempDatabaseUtils.doDraw( c.controller, c.primalData.getVarInt( 0 ) );
+				}
+			}
 			
 			F[ "mr_mirakul" ] = 
 			function( c:Card ):void
