@@ -11,10 +11,12 @@ package editor
 		private var _slug:String = "";
 		private var _description:String = "";
 		private var _vars:Array = [];
+		private var _tags:Array = [];
 		public var power:int = 0;
 		public var type:int = 0;
 		public var faction:Faction = null;
-		private var _tags:Array = [];
+		public var stars:int = 0;
+		public var priority:int = 0;
 		
 		public var mark:uint;
 		private var _prettyDescription:String = "";

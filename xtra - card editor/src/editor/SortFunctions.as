@@ -32,6 +32,16 @@ package editor
 			return a.data.power - b.data.power;
 		}
 		
+		public static function byStars( a:Card, b:Card ):int
+		{
+			return a.data.stars - b.data.stars;
+		}
+		
+		public static function byPriority( a:Card, b:Card ):int
+		{
+			return a.data.priority - b.data.priority;
+		}
+		
 		public static function bySlug( a:Card, b:Card ):int
 		{
 			var sorter:Collator = new Collator( "fr-FR", CollatorMode.SORTING );

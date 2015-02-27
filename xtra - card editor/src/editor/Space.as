@@ -13,6 +13,7 @@ package editor
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	import starling.text.TextField;
+	import ui.MenuInput;
 	import ui.StringInput;
 	import ui.StringOutput;
 	
@@ -216,7 +217,7 @@ package editor
 			if ( e.ctrlKey || e.altKey )
 			{
 				var i:int;
-				var c:Card;
+				var c:Card = context.focusedCard;
 				var v:SpaceView = context.currentView;
 				var g:CardGroup = context.focusedGroup;
 				
@@ -255,23 +256,58 @@ package editor
 				}
 				else
 				// SORTING
-				if ( e.shiftKey && e.keyCode >= Keyboard.NUMBER_0 && e.keyCode <= Keyboard.NUMBER_9 )
-					switch ( e.keyCode - Keyboard.NUMBER_0 )
+				if ( e.keyCode == Keyboard.Q )
+				{
+					if ( g == null ) return;
+					var o:Object =
 					{
-						case 1: g.sortCards( SortFunctions.bySlug ); break;
-						case 2: g.sortCards( SortFunctions.byName ); break;
-						case 3: g.sortCards( SortFunctions.byType ); break;
-						case 4: g.sortCards( SortFunctions.byFaction); break;
-						case 5: g.sortCards( SortFunctions.byPower ); break;
-						case 8: g.sortCards( SortFunctions.byID ); break;
-						case 9: g.sortCards( SortFunctions.byRandom ); break;
-						default: return;
+						byID 		: SortFunctions.byID 		,
+						bySlug 		: SortFunctions.bySlug 		,
+						byName		: SortFunctions.byName		,
+						byType 		: SortFunctions.byType 		,
+						byFaction	: SortFunctions.byFaction	,
+						byPower 	: SortFunctions.byPower 	,
+						byStars 	: SortFunctions.byStars 	,
+						byPriority 	: SortFunctions.byPriority 	,
+						random 		: SortFunctions.byRandom 	
 					}
+					MenuInput.generate( stage, o, g.sortCards );
+				}
+				else
+				// STARS & PRIORITY
+				if ( e.keyCode == Keyboard.UP )
+				{
+					if ( c == null ) return;
+					c.data.priority = ( c.data.priority + 1 ) % 4;
+					c.onDataChange();
+				}
+				else
+				if ( e.keyCode == Keyboard.DOWN )
+				{
+					if ( c == null ) return;
+					c.data.priority = ( c.data.priority - 1 ) % 4;
+					if ( c.data.priority < 0 ) c.data.priority = 0;
+					c.onDataChange();
+				}
+				else
+				if ( e.keyCode == Keyboard.LEFT )
+				{
+					if ( c == null ) return;
+					c.data.stars = ( c.data.stars - 1 ) % 4;
+					if ( c.data.stars < 0 ) c.data.stars = 0;
+					c.onDataChange();
+				}
+				else
+				if ( e.keyCode == Keyboard.RIGHT )
+				{
+					if ( c == null ) return;
+					c.data.stars = ( c.data.stars + 1 ) % 4;
+					c.onDataChange();
+				}
 				else
 				// MARK CARD
 				if ( e.keyCode == Keyboard.M )
 				{
-					c = context.focusedCard;
 					if ( c == null ) return;
 					switch ( c.data.mark )
 					{
@@ -397,6 +433,8 @@ package editor
 				cd.tags			= o.tags;
 				cd.vars			= o.vars;
 				cd.mark			= o.mark;
+				cd.stars		= o.stars;
+				cd.priority		= o.priority;
 				c = generateNewCard( cd );
 			}
 			
@@ -465,6 +503,8 @@ package editor
 				o.tags = c.data.tags;
 				o.vars = c.data.vars;
 				o.mark = c.data.mark;
+				o.stars = c.data.stars;
+				o.priority = c.data.priority;
 				r.cards.push( o );
 			}
 			

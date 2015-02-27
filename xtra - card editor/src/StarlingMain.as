@@ -78,7 +78,8 @@ package
 		private function enqueueAssets():void
 		{
 			App.assets.enqueue( "assets/bg.jpg" );
-			App.assets.enqueue( "assets/b.png" );
+			App.assets.enqueue( "assets/bo.png" );
+			App.assets.enqueue( "assets/btn.png" );
 		}
 		
 		private function startLoadingAssets():void

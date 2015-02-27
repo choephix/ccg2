@@ -11,6 +11,7 @@ package editor
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.text.TextField;
+	import ui.Bars;
 	
 	/**
 	 * ...
@@ -27,7 +28,6 @@ package editor
 		public var targetY:Number;
 		public var currentGroup:CardGroup;
 		
-		private var thingParent:Sprite;
 		private var border:Quad;
 		private var pad:Quad;
 		private var padTitle:Quad;
@@ -36,6 +36,8 @@ package editor
 		private var tExtra:TextField;
 		private var tSlug:TextField;
 		private var iFaction:Quad;
+		private var stars:Bars;
+		private var priority:Bars;
 		private var marker:Quad;
 		
 		public var data:CardData;
@@ -51,11 +53,6 @@ package editor
 		{
 			this.data = data == null ? new CardData() : data;
 			
-			thingParent = new Sprite();
-			thingParent.x = .5 * G.CARD_W;
-			thingParent.y = .5 * G.CARD_H;
-			addChild( thingParent );
-			
 			border = new Quad( G.CARD_W + 2, G.CARD_H + 2, 0x0, true );
 			border.x = -1;
 			border.y = -1;
@@ -67,11 +64,19 @@ package editor
 			pad.alpha = .99;
 			addChild( pad );
 			
-			//padTitle = new Quad( G.CARD_W, 22, 0xFfFfFf, true );
 			padTitle = new Quad( G.CARD_W, G.CARD_H-22, 0xFfFfFf, true );
 			padTitle.alpha = .09;
 			padTitle.y = 22
 			addChild( padTitle );
+			
+			stars = new Bars( 3, 8, 3, 0x882200 );
+			stars.y = padTitle.y + 2;
+			addChild( stars );
+			
+			priority = new Bars( 3, 8, 3, 0x880033 );
+			priority.x = G.CARD_W - 3;
+			priority.y = padTitle.y + 2;
+			addChild( priority );
 			
 			tTitle = new TextField( 1, 1, "", FORMAT_TITLE.font, FORMAT_TITLE.size as Number, FORMAT_TITLE.color as uint, FORMAT_TITLE.bold  );
 			//tTitle.border = true;
@@ -162,6 +167,9 @@ package editor
 			tDescr.visible = _isOnTop && tDescr.text != "";
 			tExtra.visible = _isOnTop && tExtra.text != "";
 			tSlug.visible = _isOnTop && tSlug.text != "";
+			
+			stars.setValue( data.stars );
+			priority.setValue( data.priority );
 			
 			marker.visible = data.mark > 0;
 			if ( marker.visible )

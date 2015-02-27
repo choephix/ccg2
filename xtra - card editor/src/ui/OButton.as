@@ -12,7 +12,7 @@ package ui
 	{
 		public function OButton( text:String = "", callback:Function = null )
 		{
-			super( App.assets.getTexture( "b" ), text, null );
+			super( App.assets.getTexture( "bo" ), text, null );
 			alignPivot();
 			if ( callback != null )
 				addEventListener( Event.TRIGGERED, callback );
