@@ -78,7 +78,8 @@ package editor
 			priority.y = padTitle.y + 2;
 			addChild( priority );
 			
-			tTitle = new TextField( 1, 1, "", FORMAT_TITLE.font, FORMAT_TITLE.size as Number, FORMAT_TITLE.color as uint, FORMAT_TITLE.bold  );
+			tTitle = new TextField( 1, 1, "", FORMAT_TITLE.font,
+				FORMAT_TITLE.size as Number, FORMAT_TITLE.color as uint, FORMAT_TITLE.bold  );
 			//tTitle.border = true;
 			tTitle.x = 0;
 			tTitle.y = 0;
@@ -86,7 +87,8 @@ package editor
 			tTitle.touchable = false;
 			addChild( tTitle );
 			
-			tDescr = new TextField( 1, 1, "", FORMAT_DESCR.font, FORMAT_DESCR.size as Number, FORMAT_DESCR.color as uint, FORMAT_DESCR.bold  );
+			tDescr = new TextField( 1, 1, "", FORMAT_DESCR.font,
+				FORMAT_DESCR.size as Number, FORMAT_DESCR.color as uint, FORMAT_DESCR.bold  );
 			tDescr.vAlign = "top";
 			//tDescr.border = true;
 			tDescr.x = PADDING;
@@ -97,7 +99,8 @@ package editor
 			tDescr.touchable = false;
 			addChild( tDescr );
 			
-			tExtra = new TextField( 1, 1, "", FORMAT_EXTRA.font, FORMAT_EXTRA.size as Number, FORMAT_EXTRA.color as uint, FORMAT_EXTRA.bold  );
+			tExtra = new TextField( 1, 1, "", FORMAT_EXTRA.font, 
+				FORMAT_EXTRA.size as Number, FORMAT_EXTRA.color as uint, FORMAT_EXTRA.bold  );
 			tExtra.hAlign = "left";
 			//tExtra.border = true;
 			tExtra.width  = 100;
@@ -143,7 +146,7 @@ package editor
 		
 		public function onDataChange():void 
 		{
-			tTitle.width = 1000;
+			tTitle.scaleX = 1.0;
 			tTitle.text = CONFIG::sandbox ? data.slug : data.name;
 			tTitle.width = Math.max( tTitle.textBounds.width + PADDING + PADDING, G.CARD_W );
 			tTitle.scaleX = Math.min( 1.0, G.CARD_W / tTitle.width );
