@@ -449,6 +449,13 @@ package editor
 			return cardsParent.getChildAt( index ) as Card;
 		}
 		
+		public function setCardIndex( c:Card, index:int ):void 
+		{
+			cardsParent.setChildIndex( c, index );
+			updateRegisteredCards();
+			arrange();
+		}
+		
 		public function sortCards( f:Function ):void
 		{
 			cardsParent.sortChildren( f );

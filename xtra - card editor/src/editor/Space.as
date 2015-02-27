@@ -46,6 +46,7 @@ package editor
 			
 			stage.addEventListener( KeyboardEvent.KEY_DOWN, onKeyDown );
 			App.input.addEventListener( InputEvents.MIDDLE_CLICK, onMiddleClick );
+			App.input.addEventListener( InputEvents.RIGHT_CLICK, onRightClick );
 			
 			viewLabel = new TextField( 100, 100, "..", "Impact", 80, 0x909090, true );
 			addChild( viewLabel );
@@ -200,6 +201,14 @@ package editor
 		}
 		
 		// INPUT HANDLERS
+		
+		private function onRightClick( e:Event ):void 
+		{
+			if ( context.focusedGroup == null ) return;
+			if ( context.focusedCard == null ) return;
+			if ( context.focusedGroup.isContracted ) return;
+			context.focusedGroup.setCardIndex( context.focusedCard, context.focusedGroup.countCards - 1 );
+		}
 		
 		private function onMiddleClick( e:Event ):void 
 		{
