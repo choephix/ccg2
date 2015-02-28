@@ -92,7 +92,6 @@ package duel.cards
 			CONFIG::development
 			{ if ( Game.GODMODE ) return true }
 			
-			if ( c.controller != field.owner ) return false;
 			return true;
 		}
 		public static function cannotPlaceTrapHere( c:Card, field:TrapField ):Boolean

@@ -14,14 +14,9 @@ package duel.otherlogic
 		
 		private var _lastP:GameplayProcess;
 		
-		public function meetsCondition( p:GameplayProcess ):Boolean
-		{
-			return funcCondition( p );
-		}
-		
 		public function update( p:GameplayProcess ):void
 		{
-			if ( !funcCondition( p ) ) true;
+			if ( !funcCondition( p ) ) return;
 			funcUpdate( p );
 		}
 		

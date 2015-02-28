@@ -32,6 +32,7 @@ package duel.cards.temp_database
 				
 				c.primalData.getVarInt( 0 )
 				
+				
 				// SUMMON CONDITION
 				// While you have no creatures
 				c.propsC.summonConditionManual = 
@@ -65,8 +66,10 @@ package duel.cards.temp_database
 				function( p:GameplayProcess ):Boolean {
 				}
 				buff.powerOffset =
-				function( c:Card ):int {
+				function( cc:Card ):int {
 				}
+				
+				c.statusC.addNewBuff( false ).cannotAttack = true;
 				
 				// // // BUFF
 					var buff:Buff = c.statusC.addNewBuff( true )
@@ -74,12 +77,14 @@ package duel.cards.temp_database
 					function():Boolean {
 					}
 					buff.powerOffset =
-					function( c:Card ):int {
+					function( cc:Card ):int {
 					}
 					buff.expiryCondition = 
 					function( p:GameplayProcess ):Boolean {
 						return p.name == GameplayProcess.TURN_END;
 					}
+					
+					c.statusC.addNewBuff( true ).powerOffset = -1000;
 				
 				// // // TRIGGERED EFFECTS
 				

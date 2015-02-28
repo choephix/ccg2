@@ -14,6 +14,7 @@ package duel.cards.temp_database
 	import duel.processes.GameplayProcess;
 	import duel.processes.gameprocessing;
 	import duel.table.CreatureField;
+	import duel.table.TrapField;
 	
 	use namespace gameprocessing;
 	
@@ -149,6 +150,22 @@ package duel.cards.temp_database
 			}
 		}
 		
+		static public function doBurnCreaturesRow( pwrLowerThan:int, p:Player, cause:Card, ...exceptions ):void
+		{
+			var i:int;
+			var c:Card;
+			for ( i = 0; i < p.fieldsC.count; i++ ) 
+			{
+				c = p.fieldsC.getAt( i ).topCard;
+				if ( c == null ) continue;
+				if ( c == cause ) continue;
+				if ( c.faceDown ) continue;
+				if ( c.statusC.realPowerValue >= pwrLowerThan ) continue;
+				if ( exceptions != null && exceptions.indexOf( c ) > -1 ) continue;
+				TempDatabaseUtils.doKill( c, cause );
+			}
+		}
+		
 		static public function doDestroyTrapsRow( p:Player ):void
 		{
 			for ( var i:int = 0; i < G.FIELD_COLUMNS; i++ ) 
@@ -173,6 +190,11 @@ package duel.cards.temp_database
 		static public function doResurrectCreature( c:Card, field:CreatureField, cause:Card ):void
 		{
 			game.processes.prepend_ResurrectHere( c, field, cause );
+		}
+		
+		static public function doSetTrap( c:Card, field:TrapField ):void 
+		{
+			game.processes.append_TrapSet( c, field, false );
 		}
 		
 		static public function doEndCurrrentTurn():void

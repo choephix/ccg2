@@ -13,6 +13,7 @@ package duel.cards.buffs
 		public var expiryCondition:Function;
 		
 		// : : : VALUES : : : 
+		/// c:Card
 		public var powerOffset:*;
 		public var cannotAttack:*;
 		public var cannotRelocate:*;
