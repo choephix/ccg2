@@ -14,7 +14,7 @@ package duel.players
 		private var _current:int	= _cap;
 		
 		public function increase( amount:int ):void
-		{ _current = Number.min( _cap, _current + amount ) }
+		{ _current = Math.min( _cap, _current + amount ) }
 		
 		public function refill():void
 		{ _current = _cap }

@@ -1,5 +1,6 @@
 package duel.table.fieldlists 
 {
+	import duel.cards.Card;
 	import duel.table.CreatureField;
 	/**
 	 * ...
@@ -61,6 +62,15 @@ package duel.table.fieldlists
 				r ++;
 			}
 			return r;
+		}
+		
+		public function findBySlug( slug:String ):Card
+		{
+			for ( var i:int = 0; i < _count; i++ )
+				if ( _list[ i ].topCard != null )
+					if ( _list[ i ].topCard.slug == slug )
+						return _list[ i ].topCard;
+			return null;
 		}
 		
 		public function get count():int 
