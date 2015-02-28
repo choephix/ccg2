@@ -45,7 +45,7 @@ package duel.display.cards
 			subject.x = lerp( subject.x, x, .15 );
 			subject.y = lerp( subject.y, y, .30 ) - _zJump * 180;
 			subject.rotation = lerp( subject.rotation, rotation, .25 );
-			subject.scaleX = lerp( subject.scaleX, scale, .16 ) + _zJump;
+			subject.scaleX = lerp( subject.scaleX, scale, .19 ) + _zJump;
 			subject.scaleY = lerp( subject.scaleY, scale, .22 ) + _zJump;
 		}
 		

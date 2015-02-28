@@ -135,7 +135,7 @@ package duel
 			//}
 			
 			//{ VISUALS
-			bg = new Background( assets.getTexture( "bg" ) );
+			bg = new Background( assets );
 			addChild( bg );
 			
 			table = new TableSprite();
