@@ -425,6 +425,18 @@ package duel.display.cards {
 			
 			setAsTopChild();
 			
+			__bloodSprite = assets.generateImage( "card-damage" );
+			__bloodSprite.alignPivot();
+			__bloodSprite.blendMode = BlendMode.MULTIPLY;
+			addChild( __bloodSprite );
+			juggler.xtween( __bloodSprite, 12.0,
+				{ 
+					delay: 4.0,
+					alpha: .0, 
+					onComplete : __bloodSprite.removeFromParent,
+					onCompleteArgs : [true]
+				} );
+			
 			animBlink( true, 0xFF3333, 1 );
 		}
 		
