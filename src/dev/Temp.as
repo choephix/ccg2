@@ -40,9 +40,6 @@ package dev
 			//"stunner"
 			
 			/**  TEST  **/
-			"move2atk",
-			"scorch",
-			"trapsaver2",
 			
 			//"taunt",
 			//"mana_decktruction",
@@ -51,6 +48,9 @@ package dev
 			//"depower",
 			
 			/**  DONE (TRAPS)  **/
+			"trapsaver2",
+			"move2atk",
+			"scorch",
 			"weakshield",
 			"one_last_save",
 			"trappeek",
