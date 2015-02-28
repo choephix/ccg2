@@ -41,25 +41,6 @@ package dev
 			
 			/**  TEST  **/
 			
-			"flappy_bird",
-			"flappy_bird2",
-			"gcontract_haste",
-			"piercing_george",
-			"token_summoner2",
-			"balloonbrute",
-			
-			"yin",
-			"yang",
-			"cowardly_giant",
-			"lonely_golem",
-			"grandtraitor",
-			
-			"ed",
-			"edd",
-			"eddy",
-			"grandbro1",
-			"grandbro2",
-			
 			"necropy0",
 			"devouerer2",
 			
@@ -92,7 +73,6 @@ package dev
 			//"trapkiller3",
 			
 			/**  DONE (TRAPS)  **/
-			"trapsaver2",
 			"move2atk",
 			"scorch",
 			"weakshield",
@@ -129,6 +109,24 @@ package dev
 			"sneakshot",
 			
 			/**  DONE (CREATURES)  **/
+			"grandbro1",
+			"grandbro2",
+			"ed",
+			"edd",
+			"eddy",
+			"cowardly_giant",
+			"lonely_golem",
+			"grandtraitor",
+			"yin",
+			"yang",
+			"gcontract_haste",
+			"token_summoner2",
+			"balloonbrute",
+			"piercing_george",
+			"flappy_bird",
+			"flappy_bird2",
+			
+			"trapsaver2",
 			"berserker",
 			"flappy_rooster",
 			"vouerer",

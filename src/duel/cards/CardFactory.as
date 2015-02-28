@@ -173,242 +173,6 @@ package duel.cards
 			//{ IN TESTING
 			
 			//
-				
-			F[ "flappy_bird" ] = 
-			function( c:Card ):void
-			{
-				c.propsC.hasSwift = true;
-			}
-			
-			F[ "flappy_bird2" ] = 
-			function( c:Card ):void
-			{
-				c.propsC.hasSwift = true;
-				
-				var buff:Buff = c.statusC.addNewBuff( false )
-				buff.isActive = 
-				function( p:GameplayProcess ):Boolean {
-					return c.isInPlay && c.indexedField.opposingCreature == null;
-				}
-				buff.cannotAttack = true;
-			}
-			
-			F[ "gcontract_haste" ] = 
-			function( c:Card ):void
-			{
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.GRAVEYARD );
-				special.watch( GameplayProcess.SUMMON_COMPLETE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( c.controller.grave.topCard != this ) return false;
-					return c.controller == p.getSourceCard().controller;
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doDealDirectDamage( c.controller, c.primalData.getVarInt( 0 ), c );
-					c.statusC.hasSummonExhaustion = false;
-				}
-			}
-			
-			F[ "piercing_george" ] = 
-			function( c:Card ):void
-			{
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.ATTACK );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( c.indexedField.opposingCreature == null ) return false;
-					if ( c.indexedField.opposingCreature.statusC.realPowerValue
-						== c.statusC.realPowerValue ) return false;
-					return isInvolvedInBattle( c, p );
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					const DMG:int = Math.abs( c.statusC.realPowerValue - c.indexedField.opposingCreature.statusC.realPowerValue );
-					const PLR:Player = c.statusC.realPowerValue < c.indexedField.opposingCreature.statusC.realPowerValue ?
-									c.controller : c.controller.opponent;
-					TempDatabaseUtils.doDealDirectDamage( PLR, DMG, c );
-				}
-			}
-			
-			F[ "token_summoner2" ] = 
-			function( c:Card ):void
-			{
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.SUMMON_COMPLETE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c == p.getSourceCard();
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doSpawnTokenCreatureIfEmpty( c.indexedField.samesideCreatureFieldToTheLeft );
-					TempDatabaseUtils.doSpawnTokenCreatureIfEmpty( c.indexedField.samesideCreatureFieldToTheRight );
-				}
-			}
-			
-			F[ "balloonbrute" ] = 
-			function( c:Card ):void
-			{
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.ATTACK );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( p.getAttacker().statusC.realPowerValue >= c.statusC.realPowerValue ) return false;
-					return c.indexedField.opposingCreature == p.getAttacker();
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					p.abort();
-					TempDatabaseUtils.doKill( c, c );
-				}
-			}
-			
-			//
-			
-			F[ "yin" ] = 
-			F[ "yang" ] = 
-			function( c:Card ):void
-			{
-				const BROTHER:String = c.primalData.getVarSlug( 1 );
-				var buff:Buff = c.statusC.addNewBuff( false );
-				buff.powerOffset = c.primalData.getVarInt( 0 );
-				buff.isActive = 
-				function( cc:Card ):Boolean {
-					if ( !c.isInPlay ) return false;
-					if ( c.indexedField.samesideCreatureToTheLeft != null )
-						if ( c.indexedField.samesideCreatureToTheLeft.slug == BROTHER )
-							return true;
-					if ( c.indexedField.samesideCreatureToTheRight != null )
-						if ( c.indexedField.samesideCreatureToTheRight.slug == BROTHER )
-							return true;
-					return false;
-				}
-			}
-			
-			F[ "cowardly_giant" ] = 
-			function( c:Card ):void
-			{
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.ATTACK_COMPLETE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( c.indexedField.opposingCreature == p.getAttacker() ) return true;
-					return c.indexedField.opposingCreatureField == p.getAttacker().history.lastIndexedField;
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doPutInHand( c, c.controller );
-				}
-			}
-			
-			F[ "lonely_golem" ] = 
-			function( c:Card ):void
-			{
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.LEAVE_PLAY_COMPLETE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c.controller.creatureCount == 1;
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doKill( c, c );
-				}
-			}
-			
-			F[ "grandtraitor" ] = 
-			function( c:Card ):void
-			{
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.LEAVE_PLAY_COMPLETE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( c.controller.creatureCount > 1 ) return false;
-					if ( !c.indexedField.opposingCreatureField.isEmpty ) return false;
-					return true;
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doForceRelocate( c, c.indexedField.opposingCreatureField, true );
-				}
-			}
-			
-			//
-			
-			F[ "ed" ] = 
-			F[ "edd" ] = 
-			F[ "eddy" ] = 
-			function( c:Card ):void
-			{
-				const BRO1:String = c.primalData.getVarSlug( 0 );
-				const BRO2:String = c.primalData.getVarSlug( 1 );
-				
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.SUMMON_COMPLETE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( c != p.getSourceCard() ) return false;
-					if ( c.controller.fieldsC.findBySlug( BRO1 ) )
-						if ( c.controller.deck.findBySlug( BRO2 ) )
-							return true;
-					if ( c.controller.fieldsC.findBySlug( BRO2 ) )
-						if ( c.controller.deck.findBySlug( BRO1 ) )
-							return true;
-					return false;
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					var target:Card;
-					if ( c.controller.fieldsC.findBySlug( BRO1 ) )
-						target = c.controller.deck.findBySlug( BRO2 );
-					if ( c.controller.fieldsC.findBySlug( BRO2 ) )
-						target = c.controller.deck.findBySlug( BRO1 );
-					if ( target == null )
-						return;
-					TempDatabaseUtils.doPutInHand( target, c.controller );
-				}
-			}
-			
-			F[ "grandbro1" ] = 
-			F[ "grandbro2" ] = 
-			function( c:Card ):void
-			{
-				const BROTHER:String = c.primalData.getVarSlug( 1 );
-				var buff:Buff = c.statusC.addNewBuff( false );
-				buff.powerOffset = c.primalData.getVarInt( 0 );
-				buff.isActive = 
-				function( cc:Card ):Boolean {
-					return c.controller.fieldsC.findBySlug( BROTHER ) != null;
-				}
-			}
-			
-			//
-			
-			F[ "necropy0" ] = 
-			function( c:Card ):void
-			{
-				c.statusC.addNewBuff( true ).powerOffset =
-				function( cc:Card ):int {
-					return getTopCardBasePower( c.controller.opponent.grave );
-				}
-			}
 			
 			F[ "devouerer2" ] = 
 			function( c:Card ):void
@@ -1049,6 +813,240 @@ package duel.cards
 			//}
 			
 			//{ CREATURES
+			
+			F[ "necropy0" ] = 
+			function( c:Card ):void
+			{
+				c.statusC.addNewBuff( true ).powerOffset =
+				function():int {
+					return getTopCardBasePower( c.controller.opponent.grave );
+				}
+			}
+			
+			F[ "grandbro1" ] = 
+			F[ "grandbro2" ] = 
+			function( c:Card ):void
+			{
+				const BROTHER:String = c.primalData.getVarSlug( 1 );
+				var buff:Buff = c.statusC.addNewBuff( false );
+				buff.powerOffset = c.primalData.getVarInt( 0 );
+				buff.isActive = 
+				function():Boolean {
+					return c.controller.fieldsC.findBySlug( BROTHER ) != null;
+				}
+			}
+			
+			F[ "ed" ] = 
+			F[ "edd" ] = 
+			F[ "eddy" ] = 
+			function( c:Card ):void
+			{
+				const BRO1:String = c.primalData.getVarSlug( 0 );
+				const BRO2:String = c.primalData.getVarSlug( 1 );
+				
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c != p.getSourceCard() ) return false;
+					if ( c.controller.fieldsC.findBySlug( BRO1 ) )
+						if ( c.controller.deck.findBySlug( BRO2 ) )
+							return true;
+					if ( c.controller.fieldsC.findBySlug( BRO2 ) )
+						if ( c.controller.deck.findBySlug( BRO1 ) )
+							return true;
+					return false;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					var target:Card;
+					if ( c.controller.fieldsC.findBySlug( BRO1 ) )
+						target = c.controller.deck.findBySlug( BRO2 );
+					if ( c.controller.fieldsC.findBySlug( BRO2 ) )
+						target = c.controller.deck.findBySlug( BRO1 );
+					if ( target == null )
+						return;
+					TempDatabaseUtils.doPutInHand( target, c.controller );
+				}
+			}
+			
+			F[ "cowardly_giant" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.ATTACK_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.opposingCreature == p.getAttacker() ) return true;
+					return c.indexedField.opposingCreatureField == p.getAttacker().history.lastIndexedField;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doPutInHand( c, c.controller );
+				}
+			}
+			
+			F[ "lonely_golem" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.LEAVE_PLAY_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.creatureCount == 1;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doKill( c, c );
+				}
+			}
+			
+			F[ "grandtraitor" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.LEAVE_PLAY_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c.controller.creatureCount > 1 ) return false;
+					if ( !c.indexedField.opposingCreatureField.isEmpty ) return false;
+					return true;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doForceRelocate( c, c.indexedField.opposingCreatureField, true );
+				}
+			}
+			
+			F[ "yin" ] = 
+			F[ "yang" ] = 
+			function( c:Card ):void
+			{
+				const BROTHER:String = c.primalData.getVarSlug( 1 );
+				var buff:Buff = c.statusC.addNewBuff( false );
+				buff.powerOffset = c.primalData.getVarInt( 0 );
+				buff.isActive = 
+				function():Boolean {
+					if ( !c.isInPlay ) return false;
+					if ( c.indexedField.samesideCreatureToTheLeft != null )
+						if ( c.indexedField.samesideCreatureToTheLeft.slug == BROTHER )
+							return true;
+					if ( c.indexedField.samesideCreatureToTheRight != null )
+						if ( c.indexedField.samesideCreatureToTheRight.slug == BROTHER )
+							return true;
+					return false;
+				}
+			}
+			
+			F[ "gcontract_haste" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.GRAVEYARD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c.controller.grave.topCard != c ) return false;
+					if ( c.controller != p.getSourceCard().controller ) return false;
+					return true;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doDealDirectDamage( c.controller, c.primalData.getVarInt( 0 ), c );
+					p.getSourceCard().statusC.hasSummonExhaustion = false;
+				}
+			}
+			
+			F[ "token_summoner2" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c != p.getSourceCard() ) return false;
+					if ( c.indexedField.samesideCreatureFieldToTheLeft != null && c.indexedField.samesideCreatureFieldToTheLeft.isEmpty ) return true;
+					if ( c.indexedField.samesideCreatureFieldToTheRight != null && c.indexedField.samesideCreatureFieldToTheRight.isEmpty ) return true;
+					return false;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doSpawnTokenCreatureIfEmpty( c.indexedField.samesideCreatureFieldToTheLeft );
+					TempDatabaseUtils.doSpawnTokenCreatureIfEmpty( c.indexedField.samesideCreatureFieldToTheRight );
+				}
+			}
+			
+			F[ "balloonbrute" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.ATTACK );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( p.getAttacker().statusC.realPowerValue >= c.statusC.realPowerValue ) return false;
+					return c.indexedField.opposingCreature == p.getAttacker();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					p.abort();
+					TempDatabaseUtils.doKill( c, c );
+				}
+			}
+			
+			F[ "piercing_george" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.ATTACK );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.opposingCreature == null ) return false;
+					if ( c.indexedField.opposingCreature.statusC.realPowerValue
+						== c.statusC.realPowerValue ) return false;
+					return isInvolvedInBattle( c, p );
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					const DMG:int = Math.abs( c.statusC.realPowerValue - c.indexedField.opposingCreature.statusC.realPowerValue );
+					const PLR:Player = c.statusC.realPowerValue < c.indexedField.opposingCreature.statusC.realPowerValue ?
+									c.controller : c.controller.opponent;
+					TempDatabaseUtils.doDealDirectDamage( PLR, DMG, c );
+				}
+			}
+			
+			F[ "flappy_bird" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.hasSwift = true;
+			}
+			
+			F[ "flappy_bird2" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.hasSwift = true;
+				
+				var buff:Buff = c.statusC.addNewBuff( false )
+				buff.isActive = 
+				function():Boolean {
+					return c.isInPlay && c.indexedField.opposingCreature == null;
+				}
+				buff.cannotAttack = true;
+			}
 			
 			F[ "trapsaver2" ] = 
 			function( c:Card ):void
