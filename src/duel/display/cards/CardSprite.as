@@ -403,20 +403,9 @@ package duel.display.cards {
 			
 			setAsTopChild();
 			
-			__bloodSprite = assets.generateImage( "card-damage" );
-			__bloodSprite.alignPivot();
-			__bloodSprite.blendMode = BlendMode.MULTIPLY;
-			addChild( __bloodSprite );
-			juggler.xtween( __bloodSprite, 12.0,
-				{ 
-					delay: 4.0,
-					alpha: .0, 
-					onComplete : __bloodSprite.removeFromParent,
-					onCompleteArgs : [true]
-				} );
-			
 			tween.to( x, y - 50 * ( isTopSide ? 1.0 : -1.0 ), Math.random() - .5 );
 			
+			animDamage();
 			animBlink( false, 0xBB0000, 1 );
 		}
 		animation function animDie2():void 
@@ -425,18 +414,7 @@ package duel.display.cards {
 			
 			setAsTopChild();
 			
-			__bloodSprite = assets.generateImage( "card-damage" );
-			__bloodSprite.alignPivot();
-			__bloodSprite.blendMode = BlendMode.MULTIPLY;
-			addChild( __bloodSprite );
-			juggler.xtween( __bloodSprite, 12.0,
-				{ 
-					delay: 4.0,
-					alpha: .0, 
-					onComplete : __bloodSprite.removeFromParent,
-					onCompleteArgs : [true]
-				} );
-			
+			animDamage();
 			animBlink( true, 0xFF3333, 1 );
 		}
 		
@@ -455,6 +433,19 @@ package duel.display.cards {
 					return;
 				removeFromParent( true );
 			}
+		}
+		private function animDamage():void
+		{
+			__bloodSprite = assets.generateImage( "card-damage" );
+			__bloodSprite.alignPivot();
+			addChild( __bloodSprite );
+			juggler.xtween( __bloodSprite, 12.0,
+				{ 
+					delay: 4.0,
+					alpha: .0, 
+					onComplete : __bloodSprite.removeFromParent,
+					onCompleteArgs : [true]
+				} );
 		}
 		private function animBlink( strict:Boolean, color:uint = 0xFFFFFF, count:int = 1 ):Quad
 		{
