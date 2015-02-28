@@ -63,6 +63,8 @@ package duel.otherlogic
 		{
 			if ( _lastP == p ) return false;
 			
+			if ( p.isComplete ) return false;
+			
 			if ( _isActive )
 			{
 				if ( !isWatchedD( p )  ) return false;

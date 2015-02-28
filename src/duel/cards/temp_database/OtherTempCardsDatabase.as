@@ -69,11 +69,17 @@ package duel.cards.temp_database
 				}
 				
 				// // // BUFF
-				var buff:Buff = c.statusC.addNewBuff( true )
-				buff.powerOffset = c.primalData.getVarInt( 0 );
-				buff.isActive = 
-				function():Boolean {
-				}
+					var buff:Buff = c.statusC.addNewBuff( true )
+					buff.isActive = 
+					function():Boolean {
+					}
+					buff.powerOffset =
+					function( c:Card ):int {
+					}
+					buff.expiryCondition = 
+					function( p:GameplayProcess ):Boolean {
+						return p.name == GameplayProcess.TURN_END;
+					}
 				
 				// // // TRIGGERED EFFECTS
 				
