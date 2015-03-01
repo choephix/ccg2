@@ -143,7 +143,7 @@ package duel.cards.status {
 		
 		public function get hasActionExhaustion():Boolean
 		{ 
-			if ( propsC.hasSwift ) 
+			if ( hasSwift ) 
 				return actionsAttack * actionsRelocate > 0;
 			else
 				return actionsRelocate + actionsAttack > 0;
@@ -172,6 +172,12 @@ package duel.cards.status {
 		
 		public function get canBeTribute():Boolean
 		{ return _canBeTribute }
+		
+		public function get hasSwift():Boolean
+		{ return propsC.hasSwift }
+		
+		public function get hasSwap():Boolean
+		{ return propsC.hasSwap }
 		
 		// PROP VALUES
 		

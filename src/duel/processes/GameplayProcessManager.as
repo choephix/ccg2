@@ -268,7 +268,9 @@ package duel.processes
 			function abortCheck( c:Card, field:CreatureField ):Boolean
 			{
 				if ( !c.isInGrave ) return true;
-				return GameplayFAQ.cannotPlaceCreatureHere( c, field );
+				if ( field.isLocked ) return true;
+				if ( !field.isEmpty ) return true;
+				return false;
 			}
 			pro.onAbort = 
 			function onAbort( c:Card, field:CreatureField ):void
@@ -291,6 +293,13 @@ package duel.processes
 		 */
 		public function append_Relocation( c:Card, field:CreatureField, free:Boolean ):void
 		{
+			/// DO SWAP INSTEAD?
+			if ( c.statusC.hasSwap && field.topCard != null )
+			{
+				append_SwapRelocation( c, field, free );
+				return;
+			}
+			
 			var pro:GameplayProcess;
 			var oldField:CreatureField = c.indexedField as CreatureField;
 			
@@ -327,6 +336,52 @@ package duel.processes
 						
 					c.sprite.animRelocationCompleteOrAbort();
 					
+					if ( !free )
+						c.statusC.actionsRelocate++;
+				}
+			}
+			
+			if ( c.faceDown )
+				/// SAFE_FLIP
+				prepend_SafeFlip( c );
+		}
+		
+		public function append_SwapRelocation( c:Card, field:CreatureField, free:Boolean ):void
+		{
+			var pro:GameplayProcess;
+			var oldField:CreatureField = c.indexedField as CreatureField;
+			var swappee:Card = field.topCard;
+			
+			/// RELOCATE
+			pro = chain( pro, gen( GameplayProcess.RELOCATE, c, field, free ) );
+			pro.abortCheck = GameplayFAQ.cannotSwapHere;
+			pro.onStart = 
+			function onStart( c:Card, field:CreatureField, free:Boolean ):void
+			{
+				c.sprite.animRelocation();
+				swappee.sprite.animRelocation();
+			}
+			pro.onAbort = completeOrAbort;
+			
+			/// LEAVE_INDEXED_FIELD
+			pro = chain( pro, process_LeaveIndexedField( c ) );
+			pro = chain( pro, process_LeaveIndexedField( swappee ) );
+			
+			/// ENTER_INDEXED_FIELD
+			pro = chain( pro, process_EnterIndexedField( c, field, false ) );
+			pro = chain( pro, process_EnterIndexedField( swappee, oldField, false ) );
+			pro.delay = .033;
+			
+			/// RELOCATE_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.RELOCATE_COMPLETE, c, field, free ) );
+			pro.onEnd = completeOrAbort;
+			
+			/// /// ///
+			function completeOrAbort( c:Card, field:CreatureField, free:Boolean ):void {
+				if ( c.isInPlay )
+				{
+					c.sprite.animRelocationCompleteOrAbort();
+					swappee.sprite.animRelocationCompleteOrAbort();
 					if ( !free )
 						c.statusC.actionsRelocate++;
 				}

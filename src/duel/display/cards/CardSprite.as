@@ -8,6 +8,8 @@ package duel.display.cards {
 	import duel.GameSprite;
 	import duel.gui.AnimatedTextField;
 	import duel.gui.GuiEvents;
+	import duel.table.Field;
+	import duel.table.Hand;
 	import flash.geom.Rectangle;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
@@ -41,12 +43,12 @@ package duel.display.cards {
 		private var tfDescr:TextField;
 		private var tfTitle:TextField;
 		private var tfAttak:AnimatedTextField;
-		private var tfDebug:TextField;
 		
 		///
 		private var __attackSprite:Quad;
 		private var __bloodSprite:Quad;
 		
+		private var _isTopCard:Boolean = false;
 		private var _peekThrough:Boolean = false;
 		private var _backTranslucency:Number = .0;
 		private var _flippedness:Number = .0;
@@ -112,19 +114,6 @@ package duel.display.cards {
 			tfTitle.x = G.CARD_W * .5;
 			tfTitle.scaleX = Math.min( 1.0, G.CARD_W / tfTitle.textBounds.width - .05 );
 			front.addChild( tfTitle );
-			
-			CONFIG::sandbox {
-			tfDebug = new TextField( 480, 40, ""+card.uid+".", App.FONT1, 36, 0x0054A8 );
-			tfDebug.batchable = true;
-			tfDebug.touchable = false;
-			tfDebug.alignPivot();
-			tfDebug.hAlign = "center";
-			tfDebug.vAlign = "center";
-			tfDebug.bold = true;
-			tfDebug.x = G.CARD_W * .5;
-			tfDebug.y = - 10;
-			//front.addChild( tfDebug );
-			}
 			
 			tfDescr = new TextField( G.CARD_W, G.CARD_H, "", App.FONT2, 20, 0xFFFFFF );
 			tfDescr.batchable = true;
@@ -251,6 +240,16 @@ package duel.display.cards {
 			
 			front.visible	= _flippedness > .0 || _backTranslucency > .0;
 			back.visible	= _flippedness < .0;
+			
+			/// FRONT DETAILS
+			if ( front.visible )
+			{
+				_isTopCard 		= card.field == null || ( card.lot is Field && card == Field( card.field ).topCard );
+				tfTitle.visible = _isTopCard;
+				tfDescr.visible = _isTopCard;
+				if ( tfAttak != null )
+					tfAttak.visible = _isTopCard;
+			}
 			
 			auraContainer.scaleX = .25 + .75 * Math.abs( _flippedness );
 			

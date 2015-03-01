@@ -97,6 +97,8 @@ package duel.cards.temp_database
 			game.processes.prepend_AddToDeck( c, p, faceDown, shuffle );
 		}
 		
+		//
+		
 		static public function doForceAttack( c:Card, free:Boolean ):void
 		{
 			game.processes.append_Attack( c, free );
@@ -108,6 +110,16 @@ package duel.cards.temp_database
 			if ( field == null ) return;
 			game.processes.append_Relocation( c, field, free );
 		}
+		
+		static public function doForceSwap( c:Card, field:CreatureField, free:Boolean ):void 
+		{
+			if ( c == null ) return;
+			if ( field == null ) return;
+			if ( field.topCard == null ) return;
+			game.processes.append_SwapRelocation( c, field, free );
+		}
+		
+		//
 		
 		static public function doDealDirectDamage( p:Player, amount:int, source:* ):void
 		{

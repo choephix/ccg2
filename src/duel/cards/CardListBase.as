@@ -74,11 +74,36 @@ package duel.cards {
 			return null;
 		}
 		
-		//
+		////
+		public function indexOfCard( searchElement:Card, fromIndex:int = 0 ):int
+		{
+			return _list.indexOf( searchElement, fromIndex );
+		}
+		
+		public function forEachCard( f:Function ):void
+		{
+			for ( var i:int = 0; i < _count; i++ )
+			{
+				f( _list[ i ] );
+			}
+		}
+		
+		/// f must accept 1 arg of type Card and return Boolean
+		public function countCardsThat( f:Function ):int
+		{
+			var r:int = 0;
+			for ( var i:int = 0; i < _count; i++ )
+				if ( f( _list[ i ] ) )
+					r++;
+			return r;
+		}
+		
 		public function containsCard( card:Card ):Boolean
 		{
 			return _list.indexOf( card ) >= 0;
 		}
+		
+		////
 		
 		public function addCard( card:Card, toBottom:Boolean = false ):Card
 		{
@@ -110,31 +135,7 @@ package duel.cards {
 			return card;
 		}
 		
-		////
-		public function indexOfCard( searchElement:Card, fromIndex:int = 0 ):int
-		{
-			return _list.indexOf( searchElement, fromIndex );
-		}
-		
-		public function forEachCard( f:Function ):void
-		{
-			for ( var i:int = 0; i < _count; i++ )
-			{
-				f( _list[ i ] );
-			}
-		}
-		
-		/// f must accept 1 arg of type Card and return Boolean
-		public function countCardsThat( f:Function ):int
-		{
-			var r:int = 0;
-			for ( var i:int = 0; i < _count; i++ )
-				if ( f( _list[ i ] ) )
-					r++;
-			return r;
-		}
-		
-		////
+		//
 		
 		public function reverseCards():void
 		{
@@ -203,7 +204,7 @@ package duel.cards {
 		
 		//// EVENTS
 		protected function onCardAdded( c:Card ):void
-		{ dispatchEventWith( Event.ADDED, false, c ) }
+		{  dispatchEventWith( Event.ADDED, false, c ) }
 		
 		protected function onCardRemoved( c:Card ):void
 		{ dispatchEventWith( Event.REMOVED, false, c ) }

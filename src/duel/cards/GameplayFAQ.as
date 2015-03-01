@@ -59,30 +59,30 @@ package duel.cards
 		
 		/**/
 		
+		public static function canSwapHere( c:Card, field:CreatureField, free:Boolean ):Boolean
+		{ 
+			if ( !c.isInPlay ) return false;
+			if ( !free && !c.statusC.canRelocate ) return false;
+			if ( c.lot == field ) return false;
+			if ( field.isLocked ) return false;
+			if ( field.isEmpty ) return false;
+			if ( !free && !c.statusC.hasSwap ) return false;
+			return true;
+		}
+		public static function cannotSwapHere( c:Card, field:CreatureField, free:Boolean ):Boolean
+		{ return !canSwapHere( c, field, free ) }
+		
 		public static function canRelocateHere( c:Card, field:CreatureField, free:Boolean ):Boolean
 		{ 
 			if ( !c.isInPlay ) return false;
 			if ( !free && !c.statusC.canRelocate ) return false;
-			if ( c.field == field ) return false;
-			return canPlaceCreatureHere( c, field );
+			if ( c.lot == field ) return false;
+			if ( field.isLocked ) return false;
+			if ( !field.isEmpty ) return false; //TODO remove this for riders and combinatrons
+			return true;
 		}
 		public static function cannotRelocateHere( c:Card, field:CreatureField, free:Boolean ):Boolean
 		{ return !canRelocateHere( c, field, free ) }
-		
-		public static function canPlaceCreatureHere( c:Card, field:CreatureField ):Boolean
-		{
-			if ( field.isLocked ) return false;
-			if ( c.lot == field ) return false;
-			if ( !field.isEmpty ) return false; //TODO remove this for riders and combinatrons
-			
-			CONFIG::development
-			{ if ( Game.GODMODE ) return true }
-			
-			//if ( c.controller != field.owner ) return false;
-			return true;
-		}
-		public static function cannotPlaceCreatureHere( c:Card, field:CreatureField ):Boolean
-		{ return !canPlaceCreatureHere( c, field ) }
 		
 		public static function canPlaceTrapHere( c:Card, field:TrapField ):Boolean
 		{

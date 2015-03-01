@@ -144,6 +144,18 @@ package duel.cards.temp_database
 				var special:SpecialEffect;
 				special = c.propsC.addTriggered();
 				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.DIE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+				}
+				
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.GRAVEYARD );
 				special.watch( GameplayProcess.DIE_COMPLETE );
 				special.funcCondition =
 				function( p:GameplayProcess ):Boolean {

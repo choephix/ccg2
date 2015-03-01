@@ -125,7 +125,7 @@ package duel.controllers
 			if ( isManual && !c.statusC.canRelocate )
 				return _( c.name + " cannot move right now." )
 			
-			if ( !field.isEmpty )
+			if ( !c.statusC.hasSwap && !field.isEmpty )
 				return _( c.name + " can only be moved to another empty field." );
 			
 			return null;

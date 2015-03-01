@@ -45,6 +45,7 @@ package duel.cards
 		public var owner:Player;
 		private var _controller:Player;
 		private var _lot:CardListBase;
+		public var lotIndex:int;
 		
 		public var faceDown:Boolean = true;
 		
@@ -157,7 +158,7 @@ package duel.cards
 		
 		// GETTERS & SETTERS - 1
 		
-		public function set lot(value:CardListBase):void 
+		public function set lot( value:CardListBase ):void 
 		{ 
 			if ( _lot == value )
 				return;
