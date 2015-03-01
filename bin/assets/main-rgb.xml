@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:67aaa9ccd30732eb20e9bd6618cdf29a:ea93fee189812ec871bdfe3f76d26a93:0fc7fbe1248b8fc51c6e8b7aa656c57e$ -->
+<!-- $TexturePacker:SmartUpdate:107c480610cd65698b708643cfd77e8c:52f2e48f1223add07f87f3fbcefeea4e:0fc7fbe1248b8fc51c6e8b7aa656c57e$ -->
 <TextureAtlas imagePath="main-rgb.atf">
-    <SubTexture name="card-aura-field" x="604" y="2" width="300" height="400"/>
-    <SubTexture name="card-aura-selected" x="2" y="404" width="300" height="400"/>
-    <SubTexture name="card-aura" x="304" y="404" width="300" height="400"/>
-    <SubTexture name="card-blink-glow-extreme" x="2" y="806" width="150" height="200"/>
-    <SubTexture name="card-blink-glow" x="604" y="2" width="300" height="400"/>
-    <SubTexture name="directDamageOverlay" x="2" y="204" width="192" height="108"/>
-    <SubTexture name="field" x="606" y="404" width="300" height="400"/>
-    <SubTexture name="tipspace" x="2" y="2" width="600" height="200"/>
+    <SubTexture name="card-aura-field" x="2" y="2" width="300" height="400"/>
+    <SubTexture name="card-aura-selected" x="304" y="2" width="300" height="400"/>
+    <SubTexture name="card-aura" x="604" y="404" width="300" height="400"/>
+    <SubTexture name="card-blink-glow-extreme" x="2" y="606" width="300" height="300"/>
+    <SubTexture name="card-blink-glow" x="2" y="2" width="300" height="400"/>
+    <SubTexture name="directDamageOverlay" x="304" y="606" width="192" height="108"/>
+    <SubTexture name="field" x="606" y="2" width="300" height="400"/>
+    <SubTexture name="tipspace" x="2" y="404" width="600" height="200"/>
 </TextureAtlas>
