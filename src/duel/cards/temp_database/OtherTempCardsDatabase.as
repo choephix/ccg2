@@ -23,6 +23,24 @@ package duel.cards.temp_database
 			
 		private static function initialize():void
 		{
+			// // // // // // // // // // // // // // // // // // //
+			
+			"TRAP" =
+			function( c:Card ):void
+			{
+				c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
+				c.propsT.effect.funcActivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.opposingCreature != p.getAttacker() ) return false;
+					if ( c.indexedField.samesideCreature != null ) return false;
+					return true;
+				}
+				c.propsT.effect.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doDealDirectDamage( c.controller.opponent, c.primalData.getVarInt( 0 ), c );
+				}
+			}
+			
 			// // // // // // // // // // // // // // // // // // // 
 		
 			"CREATURE" = 
@@ -31,7 +49,8 @@ package duel.cards.temp_database
 				// // // THINGS THINGS THINGS
 				
 				c.primalData.getVarInt( 0 )
-				
+				c.primalData.getVarSlug( 0 )
+				c.primalData.getVarString( 0 )
 				
 				// SUMMON CONDITION
 				// While you have no creatures
@@ -43,14 +62,11 @@ package duel.cards.temp_database
 				
 				
 				
-				// // // SAFE FLIP EFFECTS
+				// // // FLIP EFFECTS
 				c.propsC.onSafeFlipFunc =
-				function():void {
-				}
-				
-				// // // OMBAT FLIP EFFECTS
 				c.propsC.onCombatFlipFunc =
 				function():void {
+					
 				}
 				
 				// // // ONGOING EFFECTS
@@ -58,28 +74,38 @@ package duel.cards.temp_database
 				ongoing = c.propsC.addOngoing();
 				ongoing.funcUpdate =
 				function( p:GameplayProcess ):void {
+					
+				}
+				
+				propsC.addOngoing().funcUpdate =
+				function( p:GameplayProcess ):void {
+					
 				}
 				
 				// // // STICKY BUFF
 				var buff:Buff = c.statusC.addNewBuff( false )
 				buff.isActive = 
-				function( p:GameplayProcess ):Boolean {
+				function():Boolean {
+					
 				}
 				buff.powerOffset =
 				function( cc:Card ):int {
+					
 				}
 				
 				c.statusC.addNewBuff( false ).cannotAttack = true;
 				
 				// // // BUFF
-					var buff:Buff = c.statusC.addNewBuff( true )
-					buff.isActive = 
+					var b:Buff = c.statusC.addNewBuff( true )
+					b.isActive = 
 					function():Boolean {
+						
 					}
-					buff.powerOffset =
-					function( cc:Card ):int {
+					b.powerOffset =
+					function():int {
+						
 					}
-					buff.expiryCondition = 
+					b.expiryCondition = 
 					function( p:GameplayProcess ):Boolean {
 						return p.name == GameplayProcess.TURN_END;
 					}
@@ -216,24 +242,6 @@ package duel.cards.temp_database
 			}
 			
 			// // // // // // // // // // // // // // // // // // // 
-			
-			"TRAP" =
-			function( c:Card ):void
-			{
-				c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
-				c.propsT.effect.funcActivateCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( c.indexedField.opposingCreature != p.getAttacker() ) return false;
-					if ( c.indexedField.samesideCreature != null ) return false;
-					return true;
-				}
-				c.propsT.effect.funcActivate =
-				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doDealDirectDamage( c.controller.opponent, c.primalData.getVarInt( 0 ), c );
-				}
-			}
-			
-			// // // // // // // // // // // // // // // // // // //
 			
 			F[ "____" ] = 
 			function( c:Card ):void

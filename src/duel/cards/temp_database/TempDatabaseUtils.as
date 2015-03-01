@@ -198,11 +198,6 @@ package duel.cards.temp_database
 			game.processes.append_TrapSet( c, field, false );
 		}
 		
-		static public function doEndCurrrentTurn():void
-		{
-			game.processes.append_TurnEnd( game.currentPlayer );
-		}
-		
 		static public function doSilentFlip( c:Card ):void 
 		{
 			game.processes.prepend_SilentFlip( c );
@@ -213,6 +208,21 @@ package duel.cards.temp_database
 			if ( c == null ) return;
 			if ( !c.faceDown ) return;
 			game.processes.prepend_PeekAt( c );
+		}
+		
+		static public function doOffsetMana( p:Player, amount:int ):void 
+		{
+			if ( amount > 0 )
+				p.mana.increase( amount );
+			if ( amount < 0 )
+				p.mana.decrease( -amount );
+		}
+		
+		static public function doEndTurn( p:Player ):void
+		{
+			if ( p == null ) return;
+			if ( p != game.currentPlayer ) return;
+			game.processes.append_TurnEnd( p );
 		}
 		
 		static public function delay( time:Number ):void 

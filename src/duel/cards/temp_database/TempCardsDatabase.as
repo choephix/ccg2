@@ -581,7 +581,7 @@ package duel.cards.temp_database
 					if ( c.indexedField.opposingCreature != null )
 					{
 						if ( c.controller.isMyTurn ) return;
-						TempDatabaseUtils.doEndCurrrentTurn();
+						TempDatabaseUtils.doEndTurn();
 						return;
 					}
 				}

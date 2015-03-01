@@ -9,7 +9,7 @@ package duel.cards.buffs
 	public class Buff 
 	{
 		public var isActive:*;
-		/// 
+		/// p:GameplayProccess
 		public var expiryCondition:Function;
 		
 		// : : : VALUES : : : 

@@ -43,6 +43,7 @@ package duel.cards
 		
 		// BATTLE
 		public var owner:Player;
+		private var _controller:Player;
 		private var _lot:CardListBase;
 		
 		public var faceDown:Boolean = true;
@@ -164,6 +165,8 @@ package duel.cards
 				history.lastIndexedField = lot as IndexedField;
 			game.cardEvents.dispatchEventWith( CardEvents.LEAVE_LOT, this, _lot );
 			_lot = value;
+			if ( _lot != null )
+				_controller = _lot.owner;
 			game.cardEvents.dispatchEventWith( CardEvents.ENTER_LOT, this, _lot );
 		}
 		
@@ -183,7 +186,7 @@ package duel.cards
 		{ return lot as TrapField }
 		
 		public function get controller():Player
-		{ return lot == null ? null : lot.owner }
+		{ return _controller }
 		
 		// GETTERS & SETTERS - 2
 		
