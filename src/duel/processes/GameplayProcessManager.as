@@ -446,6 +446,7 @@ package duel.processes
 			
 			function onStart( c:Card ):void
 			{
+				c.propsT.effect.isBusy = true;
 				c.faceDown = false;
 				game.jugglerStrict.addFakeTime( .350 );
 				trace ( c + " interrupted process " + interruptedProcess );
@@ -455,9 +456,11 @@ package duel.processes
 				if ( !c.propsT.effect.funcActivateCondition( interruptedProcess ) ) return;
 				c.sprite.animFlipEffect();
 				c.propsT.effect.activate( interruptedProcess );
+				c.propsT.effect.isBusy = false;
 			}
 			function onAbort( c:Card ):void
 			{
+				c.propsT.effect.isBusy = false;
 				if ( c.isInPlay )
 					prepend_AddToGrave( c );
 			}

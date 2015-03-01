@@ -48,6 +48,9 @@ package duel.cards.status
 				propsT.effect.update( p );
 			}
 			
+			if ( propsT.effect.isBusy )
+				return;
+			
 			// ACTIVATION / DEACTIVATION
 			if ( propsT.effect.mustInterrupt( p ) )
 			{

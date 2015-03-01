@@ -25,6 +25,9 @@ package dev
 			//"emptyshell",
 			//"tempower2",
 			//"paulgrand",
+			//"paulgrand",
+			//"paulgrand",
+			//"devouerer2",
 			//"resurrecter66", ///turn-end: Resurrect your first grand,
 			//"resurrecter2", ///CF: Resurrect enemy grave's top card
 			//"resurrecter4", ///SF: Resurrect your grave's top card
@@ -47,8 +50,8 @@ package dev
 			//"trapsaver3",
 			
 			/**  TEST  **/
-			"weird_swap",
-			"eject",
+			"megasweeper",
+			"megatrap",
 			
 			//"taunt",
 			//"empower",
@@ -66,6 +69,10 @@ package dev
 			//"trapreturner",
 			
 			/**  DONE (TRAPS)  **/
+			"redirect_in",
+			"redirect_out",
+			"weird_swap",
+			"eject",
 			"manadrain",
 			"enough",
 			"move2atk",
@@ -104,6 +111,8 @@ package dev
 			"sneakshot",
 			
 			/**  DONE (CREATURES)  **/
+			"fair_manaup",
+			"bomb",
 			"swap_right",
 			"swap_left",
 			"swapper",

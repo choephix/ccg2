@@ -17,6 +17,11 @@ package duel.otherlogic
 		public var funcUpdate:Function		= NOTHING;
 		public var funcDeactivate:Function	= NOTHING;
 		
+		public var watchAllForActivation:Boolean;
+		public var watchAllForDeactivation:Boolean;
+		
+		public var isBusy:Boolean = false;
+		
 		private var _isActive:Boolean = false;
 		
 		private var _pnlistA:Vector.<String> = new <String>[];
@@ -67,12 +72,12 @@ package duel.otherlogic
 			
 			if ( _isActive )
 			{
-				if ( !isWatchedD( p )  ) return false;
+				if ( !watchAllForDeactivation && !isWatchedD( p )  ) return false;
 				if ( !funcDeactivateCondition( p ) ) return false;
 			}
 			else
 			{
-				if ( !isWatchedA( p )  ) return false;
+				if ( !watchAllForActivation && !isWatchedA( p )  ) return false;
 				if ( !funcActivateCondition( p ) ) return false;
 			}
 			
