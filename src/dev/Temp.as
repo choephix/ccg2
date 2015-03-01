@@ -42,14 +42,6 @@ package dev
 			
 			/**  TEST  **/
 			
-			"evo_a_f1",
-			"evo_a_f2",
-			"evo_a_f3",
-			"evo_g_f1",
-			"evo_g_f2",
-			"evo_g_f3",
-			"trapkiller",
-			
 			//"taunt",
 			//"empower",
 			//"mana_decktruction",
@@ -115,6 +107,13 @@ package dev
 			"sneakshot",
 			
 			/**  DONE (CREATURES)  **/
+			"evo_a_f1",
+			"evo_a_f2",
+			"evo_a_f3",
+			"evo_g_f1",
+			"evo_g_f2",
+			"evo_g_f3",
+			"trapkiller",
 			"devouerer2",
 			"devouerer",
 			"necropy",
