@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:a6a421f6841a890aa88f34b3347f4c00:1cb483f92feef1552c55dc74eb90f046:0fc7fbe1248b8fc51c6e8b7aa656c57e$ -->
+<!-- $TexturePacker:SmartUpdate:67aaa9ccd30732eb20e9bd6618cdf29a:ea93fee189812ec871bdfe3f76d26a93:0fc7fbe1248b8fc51c6e8b7aa656c57e$ -->
 <TextureAtlas imagePath="main-rgb.atf">
     <SubTexture name="card-aura-field" x="604" y="2" width="300" height="400"/>
     <SubTexture name="card-aura-selected" x="2" y="404" width="300" height="400"/>
     <SubTexture name="card-aura" x="304" y="404" width="300" height="400"/>
+    <SubTexture name="card-blink-glow-extreme" x="2" y="806" width="150" height="200"/>
     <SubTexture name="card-blink-glow" x="604" y="2" width="300" height="400"/>
     <SubTexture name="directDamageOverlay" x="2" y="204" width="192" height="108"/>
     <SubTexture name="field" x="606" y="404" width="300" height="400"/>

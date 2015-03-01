@@ -94,12 +94,12 @@ package duel.display.fields
 			if ( field is CreatureField )
 			{
 				_canAttackAlpha = 0.0;
-				if ( !field.isEmpty && !field.topCard.faceDown )
+				if ( game.interactable && !field.isEmpty && !field.topCard.faceDown )
 					_canAttackAlpha = field.topCard.statusC.canAttack ? 1.0 : 0.1;
 				iconCanAttack.alpha = lerp( iconCanAttack.alpha, _canAttackAlpha, .1 );
 				
 				_canRelocateAlpha = 0.0;
-				if ( !field.isEmpty && !field.topCard.faceDown )
+				if ( game.interactable && !field.isEmpty && !field.topCard.faceDown )
 					_canRelocateAlpha = field.topCard.statusC.canRelocate ? 1.0 : 0.1;
 				iconCanRelocate.alpha = lerp( iconCanRelocate.alpha, _canRelocateAlpha, .1 );
 				

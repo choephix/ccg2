@@ -727,7 +727,7 @@ package duel.processes
 					c.sprite.animDieCombat();
 				else
 				if ( deathType == DeathType.TRIBUTE )
-					c.sprite.animFadeToNothing( false );
+					c.sprite.animDieTribute();
 				else
 					c.sprite.animDieNonCombat();
 			}

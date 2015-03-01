@@ -416,6 +416,60 @@ package duel.display.cards {
 			animDamage();
 			animBlink( true, 0xFF3333, 1, .120 );
 		}
+		animation function animDieTribute():void 
+		{
+			destroyAnimAttackSprite();
+			
+			setAsTopChild();
+			
+			tween.enabled = false;
+			
+			//
+			
+			//var q:Quad = assets.generateImage( "card-blink-glow-extreme" );
+			//q.alignPivot();
+			//q.blendMode = BlendMode.ADD;
+			//q.alpha =  0.0;
+			//q.scaleX = 2.0*scaleX;
+			//q.scaleY = 2.0*scaleY;
+			//q.x = x;
+			//q.y = y;
+			//q.color = pad.color;
+			//jugglerStrict.tween( q, .240, { alpha : 1.0, onComplete : func } );
+			//parent.addChild( q );
+			//function func():void { this.alpha = 0.0 }
+			//jugglerStrict.tween( q, .240,
+			//{
+				//delay : .280,
+				//alpha : .0,
+				//onUpdate : func,
+				//onComplete : q.removeFromParent,
+				//onCompleteArgs : [true]
+			//} );
+			
+			//
+			
+			var q:Quad = assets.generateImage( "card-blink-glow-extreme" );
+			q.blendMode = BlendMode.ADD;
+			q.alpha = .0;
+			q.scaleX = 2.0;
+			q.scaleY = 2.0;
+			q.color = 0xFFDD99;
+			q.alignPivot();
+			jugglerStrict.tween( q, .120,
+			{
+				alpha : 1.0
+			} );
+			addChild( q );
+			jugglerStrict.xtween( this, .360,
+			{
+				delay : .120,
+				alpha : .0,
+				transition : Transitions.EASE_OUT,
+				onComplete : q.removeFromParent,
+				onCompleteArgs : [true]
+			} );
+		}
 		
 		public function animFadeToNothing( dispose:Boolean ):void 
 		{
@@ -464,6 +518,7 @@ package duel.display.cards {
 				} );
 			return q;
 		}
+		
 		public function setAsTopChild():void
 		{
 			parent.setChildIndex( this, parent.numChildren - 1 );

@@ -24,6 +24,7 @@ package duel.display.cardlots
 				o.alpha = 0.0;
 				o.scaleX = z;
 				o.scaleY = z;
+				o.rotation = 0.0;
 				o.tween.to( x, TARGET_Y );
 				return;
 			}
