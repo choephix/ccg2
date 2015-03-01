@@ -91,7 +91,7 @@ package duel.controllers
 			selectCard( null );
 		}
 		
-		public function advanceTime(time:Number):void 
+		public function advanceTime( time:Number ):void 
 		{
 			update();
 		}
@@ -195,7 +195,7 @@ package duel.controllers
 			if ( !game.interactable ) return FieldSpriteGuiState.NONE;
 			
 			if ( selectedCard == null )
-				if ( ctrl.active && !f.isEmpty && canPlayFieldCard( f.topCard ) )
+				if ( ctrl.active && !f.isEmpty && f.owner.isMyTurn && canPlayFieldCard( f.topCard ) )
 					return FieldSpriteGuiState.SELECTABLE;
 				else
 					return FieldSpriteGuiState.NONE;
@@ -461,6 +461,8 @@ package duel.controllers
 		
 		public function canSelectCreature( card:Card ):Boolean
 		{
+			if ( !card.controller.isMyTurn )
+				return false;
 			if ( card.controller != player )
 				return false;
 			if ( card.statusC.hasActionExhaustion )
