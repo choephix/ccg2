@@ -30,8 +30,8 @@ package dev
 			//"resurrecter4", ///SF: Resurrect your grave's top card
 			//"compromiser1",
 			//"motivator",
-			"deckstructor",
-			"deckstructor",
+			//"deckstructor",
+			//"deckstructor",
 			//"trapowered",
 			//"trapowered2",
 			//"trapowered3",
@@ -47,11 +47,8 @@ package dev
 			//"trapsaver3",
 			
 			/**  TEST  **/
-			
-			"swapper",
-			"swapper2",
-			"swap_right",
-			"swap_left",
+			"weird_swap",
+			"eject",
 			
 			//"taunt",
 			//"empower",
@@ -107,6 +104,11 @@ package dev
 			"sneakshot",
 			
 			/**  DONE (CREATURES)  **/
+			"swap_right",
+			"swap_left",
+			"swapper",
+			"swapper2",
+			"swapper3",
 			"autoattacker",
 			"doomsday",
 			"badpiercer",
@@ -330,7 +332,7 @@ package dev
 		{
 			if ( card.isCreature )
 			{
-				if ( card.propsC.isToken ) 
+				if ( card.props.isToken ) 
 					return ColorScheme.getColorForCreatureToken( true );
 				if ( card.propsC.isGrand ) 
 					return ColorScheme.getColorForCreatureNeedsTribute( true );

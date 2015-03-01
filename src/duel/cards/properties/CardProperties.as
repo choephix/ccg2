@@ -7,5 +7,6 @@ package duel.cards.properties {
 	public class CardProperties 
 	{
 		public var card:Card;
+		public var isToken:Boolean = false;
 	}
 }

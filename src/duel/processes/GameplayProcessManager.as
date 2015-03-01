@@ -724,12 +724,12 @@ package duel.processes
 			function onEnd( c:Card, deathType:DeathType, cause:Card ):void
 			{
 				if ( deathType == DeathType.COMBAT )
-					c.sprite.animDie();
+					c.sprite.animDieCombat();
 				else
 				if ( deathType == DeathType.TRIBUTE )
 					c.sprite.animFadeToNothing( false );
 				else
-					c.sprite.animDie2();
+					c.sprite.animDieNonCombat();
 			}
 			pro.abortCheck = GameplayFAQ.cannotDie;
 			
@@ -741,10 +741,21 @@ package duel.processes
 				if ( c.owner != null )
 					prepend_AddToGrave( c );
 				else
-				{
-					c.lot.removeCard( c );
-					c.sprite.animFadeToNothing( true );
-				}
+					prepend_RelinquishToken( c );
+			}
+		}
+		
+		public function prepend_RelinquishToken( c:Card ):void 
+		{
+			var pro:GameplayProcess;
+
+			/// DIE_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.RELINQUISH_TOKEN, c ) );
+			pro.onStart =
+			function complete( c:Card ):void 
+			{
+				c.lot.removeCard( c );
+				c.sprite.animFadeToNothing( true );
 			}
 		}
 		
@@ -866,6 +877,12 @@ package duel.processes
 		
 		public function prepend_AddToGrave( c:Card ):void 
 		{
+			if ( c.props.isToken )
+			{
+				prepend_RelinquishToken( c );
+				return;
+			}
+			
 			var pro:GameplayProcess;
 			
 			if ( c.isInPlay )
@@ -898,6 +915,12 @@ package duel.processes
 		
 		public function prepend_AddToHand( c:Card, p:Player ):void 
 		{
+			if ( c.props.isToken )
+			{
+				prepend_RelinquishToken( c );
+				return;
+			}
+			
 			var pro:GameplayProcess;
 			
 			if ( c.isInPlay )
@@ -926,6 +949,12 @@ package duel.processes
 		
 		public function prepend_AddToDeck( c:Card, p:Player, faceDown:Boolean, shuffle:Boolean ):void 
 		{
+			if ( c.props.isToken )
+			{
+				prepend_RelinquishToken( c );
+				return;
+			}
+			
 			var pro:GameplayProcess;
 			
 			if ( c.isInPlay )

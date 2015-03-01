@@ -183,27 +183,34 @@ package duel.cards
 			
 			//{ IN TESTING
 			
-			F[ "swapper" ] = 
+			F[ "weird_swap" ] = 
 			function( c:Card ):void
 			{
-				c.propsC.hasSwap = true;
+				c.propsT.effect.watchForActivation( GameplayProcess.SUMMON_COMPLETE );
+				c.propsT.effect.funcActivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.opposingCreature != p.getSourceCard() ) return false;
+					if ( c.indexedField.samesideCreature == null ) return false;
+					if ( c.indexedField.samesideCreature.statusC.realPowerValue < p.getSourceCard().statusC.realPowerValue ) return false;
+					return true;
+				}
+				c.propsT.effect.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doForceSwap( p.getSourceCard(), c.indexedField.samesideCreatureField, true );
+				}
 			}
 			
-			F[ "swapper2" ] = 
+			F[ "eject" ] = 
 			function( c:Card ):void
 			{
-				c.propsC.hasSwap = true;
-			}
-			
-			F[ "swap_right" ] = 
-			F[ "swap_left" ] = 
-			function( c:Card ):void
-			{
-				c.propsC.onCombatFlipFunc =
-				function():void {
-					const FIELD:CreatureField = c.controller.samesideCreatureFieldAtIndex(
-						c.indexedField.index + c.primalData.getVarInt( 0 ) );
-					TempDatabaseUtils.doForceSwap( c, FIELD, true );
+				c.propsT.effect.watchForActivation( GameplayProcess.ENTER_INDEXED_FIELD_COMPLETE );
+				c.propsT.effect.funcActivateCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.indexedField.opposingCreature == p.getSourceCard();
+				}
+				c.propsT.effect.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doPutInHand( p.getSourceCard(), p.getSourceCard().owner );
 				}
 			}
 			
@@ -964,6 +971,26 @@ package duel.cards
 			//}
 			
 			//{ CREATURES
+			
+			F[ "swapper" ] = 
+			F[ "swapper2" ] = 
+			F[ "swapper3" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.hasSwap = true;
+			}
+			
+			F[ "swap_right" ] = 
+			F[ "swap_left" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.onCombatFlipFunc =
+				function():void {
+					const FIELD:CreatureField = c.controller.samesideCreatureFieldAtIndex(
+						c.indexedField.index + c.primalData.getVarInt( 0 ) );
+					TempDatabaseUtils.doForceSwap( c, FIELD, true );
+				}
+			}
 			
 			F[ "autoattacker" ] = 
 			function( c:Card ):void
@@ -3995,6 +4022,8 @@ package duel.cards
 				if ( f == null && cpd.description.length > 0 )
 					c.unimplemented = true;
 			}
+			
+			c.props.isToken = c.slug == "token1";
 			
 			//
 			c.initialize();

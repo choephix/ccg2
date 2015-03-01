@@ -396,7 +396,7 @@ package duel.display.cards {
 		{
 			//animBlink( false, 0xFFAEAE ).blendMode = BlendMode.MULTIPLY;
 		}
-		animation function animDie():void 
+		animation function animDieCombat():void 
 		{
 			destroyAnimAttackSprite();
 			
@@ -405,23 +405,23 @@ package duel.display.cards {
 			tween.to( x, y - 50 * ( isTopSide ? 1.0 : -1.0 ), Math.random() - .5 );
 			
 			animDamage();
-			animBlink( false, 0xBB0000, 1 );
+			animBlink( true, 0xBB0000, 1, .360 );
 		}
-		animation function animDie2():void 
+		animation function animDieNonCombat():void 
 		{
 			destroyAnimAttackSprite();
 			
 			setAsTopChild();
 			
 			animDamage();
-			animBlink( true, 0xFF3333, 1 );
+			animBlink( true, 0xFF3333, 1, .120 );
 		}
 		
 		public function animFadeToNothing( dispose:Boolean ):void 
 		{
 			tween.enabled = false;
 			juggler.xtween( this, .150, { 
-					y : y - 50,
+					y : y - 12,
 					alpha : .0,
 					//transition : Transitions.EASE_IN,
 					onComplete : onComplete
@@ -446,9 +446,9 @@ package duel.display.cards {
 					onCompleteArgs : [true]
 				} );
 		}
-		private function animBlink( strict:Boolean, color:uint = 0xFFFFFF, count:int = 1 ):Quad
+		private function animBlink( strict:Boolean, color:uint = 0xFFFFFF, count:int = 1, duration:Number = .500 ):Quad
 		{
-			const DURATION:Number = .500 / count;
+			const DURATION:Number = duration / count;
 			var q:Quad = assets.generateImage( "card-blink-glow" );
 			addChild( q );
 			q.alignPivot();

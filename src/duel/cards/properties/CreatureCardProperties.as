@@ -13,7 +13,6 @@ package duel.cards.properties {
 	 */
 	public class CreatureCardProperties extends CardProperties 
 	{
-		public var isToken:Boolean = false;
 		public var isGrand:Boolean = false;
 		public var isFlippable:Boolean = false;
 		cardprops var basePower:int = 0;

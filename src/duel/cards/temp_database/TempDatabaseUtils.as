@@ -84,16 +84,21 @@ package duel.cards.temp_database
 		
 		static public function doPutToGrave( c:Card ):void
 		{
+			if ( c == null ) return;
 			game.processes.prepend_AddToGrave( c );
 		}
 		
 		static public function doPutInHand( c:Card, p:Player ):void
 		{
+			if ( c == null ) return;
+			if ( p == null && !c.props.isToken ) return;
 			game.processes.prepend_AddToHand( c, p );
 		}
 		
 		static public function doPutInDeck( c:Card, p:Player, faceDown:Boolean, shuffle:Boolean ):void
 		{
+			if ( c == null ) return;
+			if ( p == null && !c.props.isToken ) return;
 			game.processes.prepend_AddToDeck( c, p, faceDown, shuffle );
 		}
 		

@@ -69,6 +69,8 @@ package duel.processes
 		static public const RESURRECT:String = "resurrect";
 		/// c:Card, field:CreatureField
 		static public const RESURRECT_COMPLETE:String = "resurrectComplete";
+		/// c:Card
+		static public const RELINQUISH_TOKEN:String = "relinquishToken";
 		
 		/// c:Card, field:TrapField
 		static public const SET_TRAP:String = "setTrap";
