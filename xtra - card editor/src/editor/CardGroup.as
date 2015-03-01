@@ -218,6 +218,8 @@ package editor
 			
 			//titleContainer.y = lerp( titleContainer.y, tformCurrent == tformContracted ? height : -TITLE_H, G.DAMP3 );
 			//titleLabel.y = titleContainer.y;
+			
+			titleLabel.text = name + ( isContracted ? "" : " (" + countCards + ")" );
 		}
 		
 		private function onMouseRightClick( e:Event ):void 

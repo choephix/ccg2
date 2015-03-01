@@ -69,15 +69,15 @@ package editor
 			padTitle.y = 22
 			addChild( padTitle );
 			
-			stars = new Bars( 3, 8, 5, 0x0 );
+			stars = new Bars( 3, 8, 5, 0x774444 );
 			stars.y = padTitle.y + 2;
-			stars.alpha = .50;
+			stars.alpha = .80;
 			addChild( stars );
 			
-			priority = new Bars( 3, 8, 5, 0x0 );
+			priority = new Bars( 3, 8, 5, 0x664477 );
 			priority.x = G.CARD_W - 3;
 			priority.y = padTitle.y + 2;
-			priority.alpha = .50;
+			priority.alpha = .80;
 			addChild( priority );
 			
 			tTitle = new TextField( 1, 1, "", FORMAT_TITLE.font,
