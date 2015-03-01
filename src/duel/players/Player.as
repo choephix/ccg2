@@ -155,7 +155,7 @@ package duel.players {
 		public function knowsCard( c:Card ):Boolean
 		{ 
 			if ( CONFIG::sandbox ) return true;
-			return ( c.controller == this && !c.lot.type.isDeck ) || !c.faceDown
+			return c.lot != null && ( c.controller == this && !c.lot.type.isDeck ) || !c.faceDown
 		}
 		
 		public function get creatureCount():int

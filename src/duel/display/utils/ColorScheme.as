@@ -32,7 +32,7 @@ package duel.display.utils
 		{ return ra( 0xC1684A, .15, .10, .0, rand ) }
 		
 		static public function getColorForCreatureToken( rand:Boolean= true ):uint
-		{ return ra( 0x909090, .15, .10, .0, rand ) }
+		{ return ra( 0xD1935A, .05, .05, .0, rand ) }
 		
 		// FIELDS
 		

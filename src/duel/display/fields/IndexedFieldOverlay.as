@@ -105,8 +105,8 @@ package duel.display.fields
 				
 				_summonDaze = !field.isEmpty && field.topCard.statusC.hasSummonExhaustion;
 				iconSummonDaze.alpha = lerp( iconSummonDaze.alpha, _summonDaze ? 1.0 : 0.0, .1 );
-				iconSummonDaze.scaleX = iconSummonDaze.alpha + .5;
-				iconSummonDaze.scaleY = iconSummonDaze.alpha + .5;
+				iconSummonDaze.scaleX = .1 * iconSummonDaze.alpha + 1.2;
+				iconSummonDaze.scaleY = .1 * iconSummonDaze.alpha + 1.2;
 			}
 			
 			aura.alpha = lerp ( aura.alpha, game.interactable && _showAura ? 1.0 : 0.0, .1 );
