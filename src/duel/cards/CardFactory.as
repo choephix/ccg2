@@ -35,6 +35,8 @@ package duel.cards
 		//
 		private static function initialize():void
 		{
+			//{ DEV
+			
 			F[ "___test___" ] = function( c:Card ):void
 			{
 				var special:SpecialEffect;
@@ -166,6 +168,8 @@ package duel.cards
 			}
 			/* * */
 			
+			//}
+			
 			/// /// /// /// // /// /// /// ///
 			/// /// /// TEST SPACE /// /// ///
 			/// /// ///            /// /// ///
@@ -173,12 +177,6 @@ package duel.cards
 			//{ IN TESTING
 			
 			//
-			
-			F[ "devouerer2" ] = 
-			function( c:Card ):void
-			{
-				
-			}
 			
 			//
 			
@@ -814,7 +812,103 @@ package duel.cards
 			
 			//{ CREATURES
 			
-			F[ "necropy0" ] = 
+			F[ "evo_g_f1" ] = 
+			F[ "evo_g_f2" ] = 
+			F[ "evo_g_f3" ] = 
+			function( c:Card ):void
+			{
+				const TRIBUTE:String = c.primalData.getVarSlug( 0 );
+				
+				c.propsC.summonConditionManual = 
+				function( field:CreatureField ):Boolean
+				{ return field.topCard.slug == TRIBUTE }
+				
+				c.propsC.summonConditionAutomatic = 
+				function( field:CreatureField ):Boolean
+				{ return false }
+			}
+			
+			F[ "evo_a_f2" ] = 
+			function( c:Card ):void
+			{
+				c.statusC.addNewBuff( false ).cannotAttack = true;
+			}
+			
+			F[ "trapkiller" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.onSafeFlipFunc =
+				function():void {
+					if ( c.indexedField.opposingTrap != null )
+						TempDatabaseUtils.doDestroyTrap( c.indexedField.opposingTrap );
+				}
+			}
+			
+			F[ "devouerer2" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.DIE_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getDeathCauser() && p.getDeathIsFromCombat();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.statusC.addNewBuff( true ).powerOffset = p.getSourceCard().statusC.basePowerValue;
+				}
+				
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					p.getSourceCard().statusC.hasSummonExhaustion = false;
+				}
+			}
+			
+			F[ "devouerer" ] = //////TODO must work as one effect
+			function( c:Card ):void
+			{
+				var delta:int = 0;
+				var special:SpecialEffect;
+				
+				/// Remember real power value
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.DIE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getDeathCauser() && p.getDeathIsFromCombat();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					delta = p.getSourceCard().statusC.realPowerValue;
+				}
+				
+				/// Apply power delta
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.DIE_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getDeathCauser() && p.getDeathIsFromCombat();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.statusC.addNewBuff( true ).powerOffset = delta;
+					delta = 0;
+				}
+			}
+			
+			F[ "necropy" ] = 
 			function( c:Card ):void
 			{
 				c.statusC.addNewBuff( true ).powerOffset =
@@ -2029,52 +2123,6 @@ package duel.cards
 						&& c.indexedField.opposingCreature.statusC.canAttack;
 				}
 				registerGlobalBuffWhileInPlay( c, gb );
-			}
-			
-			F[ "devouerer" ] = 
-			function( c:Card ):void
-			{
-				var delta:int;
-				var buff:Buff = c.statusC.addNewBuff( false );
-				buff.powerOffset = 0;
-				
-				var special:SpecialEffect;
-				
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.DIE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c == p.getDeathCauser();
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					delta = p.getSourceCard().statusC.realPowerValue;
-				}
-				
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.DIE_COMPLETE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c == p.getDeathCauser();
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					buff.powerOffset += delta;
-				}
-				
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.LEAVE_PLAY_COMPLETE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c == p.getSourceCard();
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					buff.powerOffset = 0;
-				}
 			}
 			
 			F[ "vendeto" ] = 
@@ -3436,10 +3484,6 @@ package duel.cards
 			
 			//}
 			
-			//{ DEV
-			
-			//}
-			
 			/// /// /// // ///
 			initialized = true;
 			
@@ -3450,6 +3494,11 @@ package duel.cards
 		}
 		
 		//
+		
+		static private function addHaste( c:Card ):void 
+		{
+			
+		}
 		
 		static private function registerGlobalBuffWhileInPlay( c:Card, gb:GlobalBuff ):void 
 		{

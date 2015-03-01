@@ -37,7 +37,7 @@ package duel.cards.temp_database
 				// While you have no creatures
 				c.propsC.summonConditionManual = 
 				c.propsC.summonConditionAutomatic = 
-				function( f:CreatureField ):Boolean {
+				function( field:CreatureField ):Boolean {
 					return c.controller.creatureCount == 0;
 				}
 				

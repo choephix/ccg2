@@ -23,7 +23,7 @@ package dev
 			//"emptyshell",
 			//"emptyshell",
 			//"emptyshell",
-			"tempower2",
+			//"tempower2",
 			//"paulgrand",
 			//"resurrecter66",
 			//"resurrecter2",
@@ -37,20 +37,26 @@ package dev
 			//"grandlock",
 			
 			/**  RE-TEST  **/
+			//"devouerer",
 			//"stunner"
 			
 			/**  TEST  **/
 			
-			"necropy0",
-			"devouerer2",
+			"evo_a_f1",
+			"evo_a_f2",
+			"evo_a_f3",
+			"evo_g_f1",
+			"evo_g_f2",
+			"evo_g_f3",
+			"trapkiller",
 			
-			"taunt",
-			"empower",
-			"mana_decktruction",
-			"last_stand",
-			"depower",
-			"trapsaver",
-			//"token1",
+			//"taunt",
+			//"empower",
+			//"mana_decktruction",
+			//"last_stand",
+			//"depower",
+			//"trapsaver",
+			
 			//"cheerleader1",
 			//"cheerleader2",
 			//"cheerleader3",
@@ -109,6 +115,9 @@ package dev
 			"sneakshot",
 			
 			/**  DONE (CREATURES)  **/
+			"devouerer2",
+			"devouerer",
+			"necropy",
 			"grandbro1",
 			"grandbro2",
 			"ed",
@@ -195,7 +204,6 @@ package dev
 			"vendeto",
 			"vendeto_grand",
 			"spike",
-			"devouerer",
 			"force_field2",
 			"emma",
 			"specialhaste",
