@@ -16,6 +16,6 @@ package duel.cards.properties {
 		public function get isPersistent():Boolean
 		{ return persistent }
 		
-		public var effect:TrapEffect = new TrapEffect();
+		public var effect:TrapEffect;
 	}
 }

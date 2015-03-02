@@ -45,28 +45,46 @@ package duel.cards.status
 			if ( propsT.effect.isBusy )
 				return;
 			
-			// UPDATE PERSITENT EFFECT
-			if ( propsT.effect.isActive && propsT.effect.watcherOngoing.doesProcessPassCheck( p ) )
-			{
-				propsT.effect.watcherOngoing.funcEffect( p );
-			}
-			
-			// UPDATE PERSITENT EFFECT
-			if ( propsT.effect.isActive && propsT.effect.watcherTriggered.doesProcessPassCheck( p ) )
-			{
-				p.interrupt();
-				propsT.effect.watcherTriggered.funcEffect( p );
+			if ( p == propsT.effect.lastInterruptedProcess )
 				return;
-			}
 			
-			// ACTIVATION / DEACTIVATION
-			if ( !propsT.effect.isActive && propsT.effect.watcherActivate.doesProcessPassCheck( p ) )
+			if ( propsT.isPersistent && propsT.effect.isActive )
 			{
-				p.interrupt();
-				processes.prepend_TrapActivation( card );
-				return;
+				// ONGOING EFFECT
+				if ( propsT.effect.watcherOngoing.doesProcessPassCheck( p ) )
+				{
+					propsT.effect.watcherOngoing.funcEffect( p );
+				}
+				// TRIGGERED EFFECT
+				if ( propsT.effect.watcherTriggered.doesProcessPassCheck( p ) )
+				{
+					p.interrupt();
+					propsT.effect.lastInterruptedProcess = p;
+					propsT.effect.watcherTriggered.funcEffect( p );
+					card.sprite.animTrapEffect();
+					return;
+				}
+				// DEACTIVATION
+				if ( propsT.effect.watcherDeactivate.doesProcessPassCheck( p ) )
+				{
+					p.interrupt();
+					propsT.effect.lastInterruptedProcess = p;
+					processes.prepend_DestroyTrap( card );
+					return;
+				}
 			}
-			
+			else
+			if ( !propsT.effect.isActive )
+			{
+				// ACTIVATION
+				if ( propsT.effect.watcherActivate.doesProcessPassCheck( p ) )
+				{
+					p.interrupt();
+					propsT.effect.lastInterruptedProcess = p;
+					processes.prepend_TrapActivation( card );
+					return;
+				}
+			}
 		}
 	}
 }

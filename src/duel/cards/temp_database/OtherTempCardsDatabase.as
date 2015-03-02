@@ -28,16 +28,38 @@ package duel.cards.temp_database
 			"TRAP" =
 			function( c:Card ):void
 			{
-				c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
-				c.propsT.effect.funcActivateCondition =
+				// PERSISTENT
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.TURN_START );
+				c.propsT.effect.watcherActivate.funcCondition = 
 				function( p:GameplayProcess ):Boolean {
-					if ( c.indexedField.opposingCreature != p.getAttacker() ) return false;
-					if ( c.indexedField.samesideCreature != null ) return false;
-					return true;
+					return c.controller.opponent == p.getPlayer();
 				}
-				c.propsT.effect.funcActivate =
+				
+				c.propsT.effect.watcherTriggered.watchFor( GameplayProcess.DRAW_CARD_COMPLETE );
+				c.propsT.effect.watcherTriggered.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getPlayer();
+				}
+				c.propsT.effect.watcherTriggered.funcEffect = 
 				function( p:GameplayProcess ):void {
-					TempDatabaseUtils.doDealDirectDamage( c.controller.opponent, c.primalData.getVarInt( 0 ), c );
+					TempDatabaseUtils.doDraw( c.controller, 1 );
+				}
+				
+				c.propsT.effect.watcherDeactivate.watchFor( GameplayProcess.TURN_END );
+				c.propsT.effect.watcherDeactivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getPlayer();
+				}
+				
+				// NON-PERSISTENT
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.SUMMON_COMPLETE );
+				c.propsT.effect.watcherActivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.indexedField.opposingCreature == p.getSourceCard();
+				}
+				c.propsT.effect.watcherActivate.funcEffect = 
+				function( p:GameplayProcess ):void {
+					
 				}
 			}
 			

@@ -10,6 +10,7 @@ package duel.cards.temp_database
 	import duel.G;
 	import duel.Game;
 	import duel.gameplay.DeathType;
+	import duel.otherlogic.TrapEffect;
 	import duel.players.Player;
 	import duel.processes.GameplayProcess;
 	import duel.processes.gameprocessing;

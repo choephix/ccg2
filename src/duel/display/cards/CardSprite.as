@@ -23,7 +23,7 @@ package duel.display.cards {
 	import starling.events.TouchPhase;
 	import starling.text.TextField;
 	
-	use namespace animation;
+	use namespace public;
 	/**
 	 * ...
 	 * @author choephix
@@ -289,7 +289,7 @@ package duel.display.cards {
 			//flatten();
 		}
 		
-		// ANIMATIONS
+		// publicS
 		private function assertAnimAttackSpriteExists():void
 		{
 			if ( __attackSprite != null ) return;
@@ -306,7 +306,7 @@ package duel.display.cards {
 			__attackSprite.removeFromParent( true );
 			__attackSprite = null;
 		}
-		animation function animAttackPrepare():void 
+		public function animAttackPrepare():void 
 		{
 			assertAnimAttackSpriteExists();
 			__attackSprite.scaleX = .25;
@@ -320,7 +320,7 @@ package duel.display.cards {
 					scaleY : 1.0
 				} );
 		}
-		animation function animAttackPerform():void 
+		public function animAttackPerform():void 
 		{
 			assertAnimAttackSpriteExists();
 			jugglerStrict.tween( __attackSprite, .330,
@@ -333,7 +333,7 @@ package duel.display.cards {
 					onComplete : destroyAnimAttackSprite
 				} );
 		}
-		animation function animAttackAbort():void 
+		public function animAttackAbort():void 
 		{
 			if ( __attackSprite == null ) return;
 			jugglerStrict.tween( __attackSprite, .240,
@@ -345,7 +345,7 @@ package duel.display.cards {
 					onComplete : destroyAnimAttackSprite
 				} );
 		}
-		animation function animSummon():void 
+		public function animSummon():void 
 		{
 			var q:Quad = assets.generateImage( "ring", false, true );
 			q.color = 0xCF873F;
@@ -361,12 +361,12 @@ package duel.display.cards {
 					onCompleteArgs : [true]
 				} );
 		}
-		animation function animRelocation():void 
+		public function animRelocation():void 
 		{
 			tween.scale = 1.1;
 			jugglerStrict.addFakeTime( .160 );
 		}
-		animation function animRelocationCompleteOrAbort():void 
+		public function animRelocationCompleteOrAbort():void 
 		{
 			//jugglerStrict.xtween( this, .330, 
 				//{ 
@@ -376,27 +376,27 @@ package duel.display.cards {
 					//transition : Transitions.EASE_OUT
 				//} );
 		}
-		animation function animFlipEffect():void
+		public function animFlipEffect():void
 		{
 			animBlink( true, 0xFF8030, 3 );
 		}
-		animation function animTrapEffect():void
+		public function animTrapEffect():void
 		{
 			animBlink( true, 0x60B0FF, 3 );
 		}
-		animation function animSpecialEffect():void
+		public function animSpecialEffect():void
 		{
 			animBlink( true, 0xFFD060, 3 );
 		}
-		animation function animDamageAbort():void
+		public function animDamageAbort():void
 		{
 			animBlink( true, 0x104050 );
 		}
-		animation function animDamageOnly():void
+		public function animDamageOnly():void
 		{
 			//animBlink( false, 0xFFAEAE ).blendMode = BlendMode.MULTIPLY;
 		}
-		animation function animDieCombat():void 
+		public function animDieCombat():void 
 		{
 			destroyAnimAttackSprite();
 			
@@ -407,7 +407,7 @@ package duel.display.cards {
 			animDamage();
 			animBlink( true, 0xBB0000, 1, .360 );
 		}
-		animation function animDieNonCombat():void 
+		public function animDieNonCombat():void 
 		{
 			destroyAnimAttackSprite();
 			
@@ -416,7 +416,7 @@ package duel.display.cards {
 			animDamage();
 			animBlink( true, 0xFF3333, 1, .120 );
 		}
-		animation function animDieTribute():void 
+		public function animDieTribute():void 
 		{
 			destroyAnimAttackSprite();
 			
@@ -470,6 +470,11 @@ package duel.display.cards {
 				onCompleteArgs : [true]
 			} );
 		}
+		public function animDeactivateTrap():void 
+		{
+			setAsTopChild();
+			animBlink( true, 0xFF3333, 1, .240 );
+		}
 		
 		public function animFadeToNothing( dispose:Boolean ):void 
 		{
@@ -500,7 +505,7 @@ package duel.display.cards {
 					onCompleteArgs : [true]
 				} );
 		}
-		private function animBlink( strict:Boolean, color:uint = 0xFFFFFF, count:int = 1, duration:Number = .500 ):Quad
+		private function animBlink( strict:Boolean, color:uint = 0xFFFFFF, count:int = 1, duration:Number = .333 ):Quad
 		{
 			const DURATION:Number = duration / count;
 			var q:Quad = assets.generateImage( "card-blink-glow" );

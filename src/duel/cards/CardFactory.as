@@ -11,6 +11,7 @@ package duel.cards
 	import duel.G;
 	import duel.otherlogic.OngoingEffect;
 	import duel.otherlogic.SpecialEffect;
+	import duel.otherlogic.TrapEffect;
 	import duel.players.Player;
 	import duel.processes.GameplayProcess;
 	import duel.processes.gameprocessgetter;
@@ -185,38 +186,46 @@ package duel.cards
 			
 			//{ IN TESTING
 			
-			F[ "safebuffer" ] = 
-			function( c:Card ):void
-			{
-				c.propsC.onSafeFlipFunc =
-				function():void {
-					for ( var j:int = 0; j < c.controller.fieldsC.count; j++ )
-						if ( c.controller.fieldsC.getAt( j ).topCard )
-							c.controller.fieldsC.getAt( j ).topCard.statusC.addNewBuff( true ).powerOffset
-								= c.primalData.getVarInt( 0 );
-				}
-			}
-			
-			F[ "stunbot" ] = 
-			function( c:Card ):void
-			{
-				c.propsC.onCombatFlipFunc =
-				function():void {
-					var b:Buff = c.indexedField.opposingCreature.statusC.addNewBuff( true )
-					b.cannotAttack = true;
-					b.expiryCondition = 
-					function( p:GameplayProcess ):Boolean {
-						return p.name == GameplayProcess.TURN_END;
-					}
-				}
-			}
-			
 			//
 			
 			F[ "equality" ] = 
 			function( c:Card ):void
 			{
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.TURN_START );
+				c.propsT.effect.watcherActivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getPlayer();
+				}
 				
+				c.propsT.effect.watcherTriggered.watchFor( GameplayProcess.DRAW_CARD_COMPLETE );
+				c.propsT.effect.watcherTriggered.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getPlayer();
+				}
+				c.propsT.effect.watcherTriggered.funcEffect = 
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doDraw( c.controller, 1 );
+				}
+				
+				c.propsT.effect.watcherDeactivate.watchFor( GameplayProcess.TURN_END );
+				c.propsT.effect.watcherDeactivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getPlayer();
+				}
+			}
+			
+			F[ "waste" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.SUMMON_COMPLETE );
+				c.propsT.effect.watcherActivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.indexedField.opposingCreature == p.getSourceCard();
+				}
+				c.propsT.effect.watcherActivate.funcEffect = 
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doPutInHand( p.getSourceCard(), p.getSourceCard().controller );
+				}
 			}
 			
 			F[ "red_cross_reverse" ] = 
@@ -301,6 +310,26 @@ package duel.cards
 				}
 			}
 			
+			//F[ "redo" ] = 
+			//function( c:Card ):void
+			//{
+				//c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
+				//c.propsT.effect.funcActivateCondition =
+				//function( p:GameplayProcess ):Boolean
+				//{
+					//if ( c.controller.grave.topCard == null ) return false;
+					//if ( !c.controller.grave.topCard.isTrap ) return false;
+					//return c.controller.grave.topCard.propsT.effect.funcActivateCondition( p );
+				//}
+				//c.propsT.effect.funcActivate =
+				//function( p:GameplayProcess ):void
+				//{
+					//if ( c.controller.grave.topCard == null ) return;
+					//if ( !c.controller.grave.topCard.isTrap ) return;
+					//c.controller.grave.topCard.propsT.effect.funcActivate( p );
+				//}
+			//}
+			
 			//F[ "taunt" ] = 
 			//function( c:Card ):void
 			//{
@@ -329,24 +358,6 @@ package duel.cards
 			//function( c:Card ):void
 			//{
 				//
-			//}
-			
-			//F[ "redo" ] = 
-			//function( c:Card ):void
-			//{
-				//c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
-				//c.propsT.effect.funcActivateCondition =
-				//function( p:GameplayProcess ):Boolean {
-					//if ( c.controller.grave.topCard == null ) return false;
-					//if ( !c.controller.grave.topCard.isTrap ) return false;
-					//return c.controller.grave.topCard.propsT.effect.funcActivateCondition( p );
-				//}
-				//c.propsT.effect.funcActivate =
-				//function( p:GameplayProcess ):void {
-					//if ( c.controller.grave.topCard == null ) return;
-					//if ( !c.controller.grave.topCard.isTrap ) return;
-					//c.controller.grave.topCard.propsT.effect.funcActivate( p );
-				//}
 			//}
 			
 			//}
@@ -1103,6 +1114,32 @@ package duel.cards
 			//}
 			
 			//{ CREATURES
+			
+			F[ "safebuffer" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.onSafeFlipFunc =
+				function():void {
+					for ( var j:int = 0; j < c.controller.fieldsC.count; j++ )
+						if ( c.controller.fieldsC.getAt( j ).topCard )
+							c.controller.fieldsC.getAt( j ).topCard.statusC.addNewBuff( true ).powerOffset
+								= c.primalData.getVarInt( 0 );
+				}
+			}
+			
+			F[ "stunbot" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.onCombatFlipFunc =
+				function():void {
+					var b:Buff = c.indexedField.opposingCreature.statusC.addNewBuff( true )
+					b.cannotAttack = true;
+					b.expiryCondition = 
+					function( p:GameplayProcess ):Boolean {
+						return p.name == GameplayProcess.TURN_END;
+					}
+				}
+			}
 			
 			F[ "tactical_joe" ] = 
 			function( c:Card ):void
@@ -4318,7 +4355,11 @@ package duel.cards
 			// PRIMAL
 			c.primalData = cpd;
 			if ( cpd.type == CardPrimalData.TYPE_TRAP_NORMAL || cpd.type == CardPrimalData.TYPE_TRAP_PERSISTENT )
+			{
 				TempDatabaseUtils.setToTrap( c );
+				c.propsT.persistent = cpd.type == CardPrimalData.TYPE_TRAP_PERSISTENT;
+				c.propsT.effect = new TrapEffect( c.propsT.persistent );
+			}
 			else
 			{
 				TempDatabaseUtils.setToCreature( c );

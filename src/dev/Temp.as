@@ -50,9 +50,8 @@ package dev
 			//"trapsaver3",
 			
 			/**  TEST  **/
-			"safebuffer",
-			"stunbot",
 			"equality",
+			"waste",
 			"red_cross_reverse",
 			"enemyhealer",
 			"taunting_dance",
@@ -155,6 +154,8 @@ package dev
 			
 			/**  DONE (CREATURES)  **/
 			
+			"safebuffer",
+			"stunbot",
 			"tactical_joe",
 			"token_summoner4",
 			"hastegiver",
