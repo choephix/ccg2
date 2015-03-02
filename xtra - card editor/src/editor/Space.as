@@ -257,10 +257,18 @@ package editor
 				if ( e.keyCode == Keyboard.P )
 				{
 					if ( g == null ) return;
-					var s:String = "";
+					var s:String;
+					
+					s = "";
 					for ( i = g.countCards - 1; i >= 0; i-- )
 						s += "\"" + g.getCardAt( i ).data.slug + "\",\n";
 					StringOutput.generate( stage, s );
+					
+					s = "";
+					for ( i = g.countCards - 1; i >= 0; i-- )
+						s += "\t\t\tF[ \"" 
+							+ g.getCardAt( i ).data.slug 
+							+ "\" ] =\n\t\t\tfunction( c:Card ):void\n\t\t\t{\n\t\t\t\t\n\t\t\t}\n\t\t\t\n";
 					Clipboard.generalClipboard.setData( ClipboardFormats.TEXT_FORMAT, s );
 				}
 				else
