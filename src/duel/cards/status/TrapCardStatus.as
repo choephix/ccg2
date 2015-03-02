@@ -34,7 +34,7 @@ package duel.cards.status
 				if ( !persistenceLink.isInPlay )
 				{
 					persistenceLink = null;
-					processes.prepend_DestroyTrap( card );
+					processes.prepend_DestroyTrap( card, null );
 					return;
 				}
 			}
@@ -66,7 +66,7 @@ package duel.cards.status
 				{
 					p.interrupt();
 					propsT.effect.watcherDeactivate.lastInterruptedProcess = p;
-					processes.prepend_DestroyTrap( card );
+					processes.prepend_DestroyTrap( card, null );
 					return;
 				}
 			}

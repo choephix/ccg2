@@ -55,9 +55,9 @@ package duel.cards.temp_database
 			game.processes.prepend_Death( c, DeathType.SPECIAL, cause );
 		}
 		
-		public static function doDestroyTrap( c:Card ):void
+		public static function doDestroyTrap( c:Card, cause:Card ):void
 		{
-			game.processes.prepend_DestroyTrap( c );
+			game.processes.prepend_DestroyTrap( c, cause );
 		}
 		
 		static public function doDraw( p:Player, count:int ):void 
@@ -184,13 +184,13 @@ package duel.cards.temp_database
 			}
 		}
 		
-		static public function doDestroyTrapsRow( p:Player ):void
+		static public function doDestroyTrapsRow( p:Player, cause:Card ):void
 		{
 			for ( var i:int = 0; i < G.FIELD_COLUMNS; i++ ) 
 			{
 				if ( p.fieldsT.getAt( i ).isEmpty )
 					continue;
-				doDestroyTrap( p.fieldsT.getAt( i ).topCard );
+				doDestroyTrap( p.fieldsT.getAt( i ).topCard, cause );
 			}
 		}
 		

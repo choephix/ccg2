@@ -39,6 +39,7 @@ package dev
 			//"trapowered2",
 			//"trapowered3",
 			
+			"eject",
 			//"sneakshot",
 			//"grandlock",
 			
@@ -50,23 +51,21 @@ package dev
 			//"trapsaver3",
 			
 			/**  TEST  **/
-			"empower",
-			"mana_decktruction",
-			"last_stand",
-			"depower",
-			"trapsaver",  
-			"last_stand",  
-			"depowering_gas",  
-			"enemyhealer",
 			"taunting_dance",
 			"taunt",
 			
 			/**  DONE (TRAPS)  **/
+			"last_stand",
+			"enemyhealer",
+			/*
+			"depowering_gas",  
+			"depower",
+			"empower",
+			"mana_decktruction",
 			"surprise_attack",
 			"red_cross_reverse",
 			"waste",
 			"equality",
-			/*
 			"megatrap",
 			"redirect_in",
 			"redirect_out",
@@ -111,6 +110,7 @@ package dev
 			
 			/**  DONE (CREATURES)  **/
 			
+			"trapsaver",  
 			"safebuffer",
 			"stunbot",
 			"tactical_joe",

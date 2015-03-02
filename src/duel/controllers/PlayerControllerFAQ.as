@@ -33,7 +33,7 @@ package duel.controllers
 			if ( c.controller.mana.current < c.cost )
 				return _( "You don't have enough mana to summon " + c.name )
 			
-			if ( c.controller != field.owner )
+			if ( c.controller != field.owner && !CONFIG::sandbox )
 				return _( "You can only summon creatures on your side of the table." );
 			
 			if ( !( field is CreatureField ) )
@@ -71,7 +71,7 @@ package duel.controllers
 			if ( c.controller.mana.current < c.cost )
 				return _( "You don't have enough mana to set " + c.name )
 			
-			if ( c.controller != field.owner )
+			if ( c.controller != field.owner && !CONFIG::sandbox )
 				return _( "You can only set traps on your side of the table." );
 			
 			if ( !( field is TrapField ) )

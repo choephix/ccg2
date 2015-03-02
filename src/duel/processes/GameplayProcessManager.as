@@ -406,7 +406,7 @@ package duel.processes
 			{
 				if ( field.topCard )
 					/// DESTROY OLD TRAP
-					prepend_DestroyTrap( field.topCard );
+					prepend_DestroyTrap( field.topCard, null );
 					
 				if ( isManual )
 					prepend_SpendMana( c.controller, c.cost );
@@ -416,7 +416,7 @@ package duel.processes
 			function onAbort( c:Card, field:TrapField ):void
 			{
 				if ( c.isInPlay )
-					prepend_DestroyTrap( c );
+					prepend_DestroyTrap( c, null );
 			}
 			
 			/// ENTER_PLAY
@@ -490,12 +490,29 @@ package duel.processes
 			}
 		}
 		
-		public function prepend_DestroyTrap( c:Card ):void
+		public function prepend_DestroyTrap( c:Card, cause:Card ):void
 		{
-			if ( !c.faceDown )
-				c.sprite.animDeactivateTrap();
+			var pro:GameplayProcess;
+
+			/// DESTROY_TRAP
+			pro = chain( pro, gen( GameplayProcess.DESTROY_TRAP, c, cause ) );
+			pro.onStart =
+			function onStart( c:Card, cause:Card ):void
+			{
+				if ( !c.faceDown )
+					c.sprite.animDeactivateTrap();
+			}
 			
-			prepend_AddToGrave( c );
+			/// DESTROY_TRAP_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.DESTROY_TRAP_COMPLETE, c, cause ) );
+			pro.onEnd =
+			function complete( c:Card, cause:Card ):void 
+			{
+				if ( c.owner != null )
+					prepend_AddToGrave( c );
+				else
+					prepend_RelinquishToken( c );
+			}
 		}
 		
 		//}

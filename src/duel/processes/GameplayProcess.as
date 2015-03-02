@@ -84,6 +84,10 @@ package duel.processes
 		static public const ACTIVATE_SPECIAL:String = "activateSpecial";
 		/// c:Card
 		static public const ACTIVATE_SPECIAL_COMPLETE:String = "activateSpecialComplete";
+		/// c:Card, cause:Card
+		static public const DESTROY_TRAP:String = "destroyTrap";
+		/// c:Card, cause:Card
+		static public const DESTROY_TRAP_COMPLETE:String = "destroyTrapComplete";
 		
 		///  c:Card
 		static public const COMBAT_FLIP:String = "combatFlip";
