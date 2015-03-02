@@ -260,6 +260,9 @@ package duel.cards.status {
 		public function removeBuff( b:Buff ):void
 		{ buffs.removeBuff( b ) }
 		
+		public function hasBuff( b:Buff ):Boolean
+		{ return buffs.hasBuff( b ) }
+		
 		public function buffsToString():String 
 		{ return buffs.isEmpty as String }
 		

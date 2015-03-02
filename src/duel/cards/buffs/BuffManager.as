@@ -127,7 +127,7 @@ package duel.cards.buffs
 		
 		public function hasBuff ( o:Buff ):Boolean
 		{
-			return _buffs.indexOf( o ) < 0;
+			return _buffs.indexOf( o ) > -1;
 		}
 		
 		public function get isEmpty():Boolean 
