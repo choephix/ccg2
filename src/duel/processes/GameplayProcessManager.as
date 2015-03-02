@@ -572,17 +572,25 @@ package duel.processes
 		{
 			var pro:GameplayProcess;
 			
-			/// ATTACK
+			/// ATTACK (step 1_
 			pro = chain( pro, gen( GameplayProcess.ATTACK, c, free ) );
 			pro.onStart =
 			function onStart( c:Card, free:Boolean ):void
 			{
 				c.sprite.animAttackPrepare();
-				
-				if ( c.indexedField.opposingCreature != null )
-					if ( c.indexedField.opposingCreature.faceDown )
-						prepend_CombatFlip( c.indexedField.opposingCreature );
 			}
+			pro.onEnd =
+			function onEnd( c:Card, free:Boolean ):void
+			{
+				if ( c.indexedField.opposingCreature == null ) return;
+				if ( !c.indexedField.opposingCreature.faceDown ) return;
+				prepend_CombatFlip( c.indexedField.opposingCreature );
+			}
+			pro.onAbort = onAbort;
+			pro.abortCheck = GameplayFAQ.cannotPerformAttack;
+			
+			/// ATTACK (step 2)
+			pro = chain( pro, gen( GameplayProcess.ATTACK, c, free ) );
 			pro.onEnd =
 			function onEnd( c:Card, free:Boolean ):void
 			{
@@ -599,14 +607,15 @@ package duel.processes
 					prepend_CreatureDamage( c.indexedField.opposingCreature, c.statusC.generateAttackDamage() );
 				}
 			}
-			pro.onAbort =
-			function abort():void
+			pro.onAbort = onAbort;
+			pro.abortCheck = GameplayFAQ.cannotPerformAttack;
+			
+			function onAbort():void
 			{
 				c.sprite.animAttackAbort();
 				completeOrAbort( c, free );
 				prependProcess( gen( GameplayProcess.ATTACK_ABORT, c, free ) );
 			}
-			pro.abortCheck = GameplayFAQ.cannotPerformAttack;
 			
 			/// ATTACK_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.ATTACK_COMPLETE, c, free ) );
