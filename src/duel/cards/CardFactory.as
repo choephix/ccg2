@@ -185,6 +185,76 @@ package duel.cards
 			
 			//{ IN TESTING
 			
+			F[ "safebuffer" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.onSafeFlipFunc =
+				function():void {
+					for ( var j:int = 0; j < c.controller.fieldsC.count; j++ )
+						if ( c.controller.fieldsC.getAt( j ).topCard )
+							c.controller.fieldsC.getAt( j ).topCard.statusC.addNewBuff( true ).powerOffset
+								= c.primalData.getVarInt( 0 );
+				}
+			}
+			
+			F[ "stunbot" ] = 
+			function( c:Card ):void
+			{
+				c.propsC.onCombatFlipFunc =
+				function():void {
+					var b:Buff = c.indexedField.opposingCreature.statusC.addNewBuff( true )
+					b.cannotAttack = true;
+					b.expiryCondition = 
+					function( p:GameplayProcess ):Boolean {
+						return p.name == GameplayProcess.TURN_END;
+					}
+				}
+			}
+			
+			//
+			
+			F[ "equality" ] = 
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "red_cross_reverse" ] = 
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "enemyhealer" ] = 
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "taunting_dance" ] = 
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "taunt" ] = 
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "empower" ] = 
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "mana_decktruction" ] = 
+			function( c:Card ):void
+			{
+				
+			}
+			
 			//}
 			
 			//{ ON HOLD
@@ -261,23 +331,23 @@ package duel.cards
 				//
 			//}
 			
-			F[ "redo" ] = 
-			function( c:Card ):void
-			{
-				c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
-				c.propsT.effect.funcActivateCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( c.controller.grave.topCard == null ) return false;
-					if ( !c.controller.grave.topCard.isTrap ) return false;
-					return c.controller.grave.topCard.propsT.effect.funcActivateCondition( p );
-				}
-				c.propsT.effect.funcActivate =
-				function( p:GameplayProcess ):void {
-					if ( c.controller.grave.topCard == null ) return;
-					if ( !c.controller.grave.topCard.isTrap ) return;
-					c.controller.grave.topCard.propsT.effect.funcActivate( p );
-				}
-			}
+			//F[ "redo" ] = 
+			//function( c:Card ):void
+			//{
+				//c.propsT.effect.watchForActivation( GameplayProcess.ATTACK );
+				//c.propsT.effect.funcActivateCondition =
+				//function( p:GameplayProcess ):Boolean {
+					//if ( c.controller.grave.topCard == null ) return false;
+					//if ( !c.controller.grave.topCard.isTrap ) return false;
+					//return c.controller.grave.topCard.propsT.effect.funcActivateCondition( p );
+				//}
+				//c.propsT.effect.funcActivate =
+				//function( p:GameplayProcess ):void {
+					//if ( c.controller.grave.topCard == null ) return;
+					//if ( !c.controller.grave.topCard.isTrap ) return;
+					//c.controller.grave.topCard.propsT.effect.funcActivate( p );
+				//}
+			//}
 			
 			//}
 			
@@ -286,6 +356,8 @@ package duel.cards
 			/// /// /// /// // /// /// /// ///
 			
 			//{ TRAP
+			
+			/* * * * /
 			
 			F[ "megatrap" ] = 
 			function( c:Card ):void
@@ -1026,9 +1098,122 @@ package duel.cards
 				}
 			}
 			
+			/*0*0*/
+			
 			//}
 			
 			//{ CREATURES
+			
+			F[ "tactical_joe" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.TURN_END );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.opposingCreatureField.isEmpty ) return false;
+					return c.controller.opponent == p.getPlayer();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doPutInHand( c, c.controller );
+				}
+			}
+			
+			F[ "token_summoner4" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.GRAVEYARD );
+				special.watch( GameplayProcess.DIE_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doSpawnTokenCreatureIfEmpty( c.history.lastIndexedField as CreatureField );
+				}
+			}
+			
+			F[ "hastegiver" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getSourceCard().controller;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					p.getSourceCard().statusC.hasSummonExhaustion = false;
+				}
+			}
+			
+			F[ "hastegiver2" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.indexedField.opposingCreature == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					p.getSourceCard().statusC.hasSummonExhaustion = false;
+				}
+			}
+			
+			F[ "lategamer" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.TURN_START );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller == p.getPlayer();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					if ( c.controller.lifePoints > c.primalData.getVarInt( 0 ) )
+						TempDatabaseUtils.doKill( c, c );
+				}
+			}
+			
+			F[ "mario" ] = 
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.ATTACK_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c != p.getAttacker() ) return false;
+					if ( GameplayFAQ.canRelocateHere( c, c.indexedField.samesideCreatureFieldToTheRight, true ) ) return true;
+					if ( GameplayFAQ.canRelocateHere( c, c.indexedField.samesideCreatureFieldToTheLeft, true ) ) return true;
+					return false;
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					if ( GameplayFAQ.canRelocateHere( c, c.indexedField.samesideCreatureFieldToTheRight, true ) )
+						TempDatabaseUtils.doForceRelocate( c, c.indexedField.samesideCreatureFieldToTheRight, true );
+					else
+					if ( GameplayFAQ.canRelocateHere( c, c.indexedField.samesideCreatureFieldToTheLeft, true ) )
+						TempDatabaseUtils.doForceRelocate( c, c.indexedField.samesideCreatureFieldToTheLeft, true );
+				}
+			}
 			
 			F[ "megasweeper" ] = 
 			function( c:Card ):void
