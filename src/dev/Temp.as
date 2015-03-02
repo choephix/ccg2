@@ -20,9 +20,9 @@ package dev
 			
 			//"spike", 
 			//"grand_powerhealer", 
-			//"emptyshell",
-			//"emptyshell",
-			//"emptyshell",
+			"emptyshell",
+			"emptyshell",
+			"emptyshell",
 			//"tempower2",
 			//"paulgrand",
 			//"paulgrand",
@@ -38,8 +38,9 @@ package dev
 			//"trapowered",
 			//"trapowered2",
 			//"trapowered3",
+			"bloodhaggler2",
 			
-			"eject",
+			//"eject",
 			//"sneakshot",
 			//"grandlock",
 			
@@ -50,14 +51,47 @@ package dev
 			//"trapsaver2",
 			//"trapsaver3",
 			
+			//harrasser1
+			//harrasser2
+			//paul1
+			//paul2
+			//paul3
+			//paulgrand
+			
 			/**  TEST  **/
-			"taunting_dance",
-			"taunt",
+			//"taunting_dance",
+			//"taunt",
+			
+			"antiflipper",
+			/**
+			"resurrecter3",
+			"blinding_rage",
+			"token_summoner",
+			"bomb2",
+			"brainleech",
+			"trapreturner",
+			"gcontract_swap",
+			"swap_ultimatum",
+			"time_bomb",
+			"i_dare_you",
+			"beyond_shield",
+			"ragnarock",
+			"apocalypta",
+			"unstable_mech",
+			"armageddon",
+			"ritual_t_f1",
+			"ritual_t_f2",
+			"ritual_c_f3",
+			"ritual_c_f1",
+			"ritual_c_f2",
+			"ritual_c_f3",
+
 			
 			/**  DONE (TRAPS)  **/
-			"last_stand",
-			"enemyhealer",
-			/*
+			
+			//"last_stand",
+			//"enemyhealer",
+			/**
 			"depowering_gas",  
 			"depower",
 			"empower",
@@ -110,6 +144,26 @@ package dev
 			
 			/**  DONE (CREATURES)  **/
 			
+			"miller",
+			"antisocial_archknight",
+			"piercing_george2",
+			"resque_zack",
+			"social_fiend",
+			"unkillable_barny",
+			"mana_beast",
+			"serious",
+			"serious2",
+			"grand__bloodrager",
+			"traprage",
+			"bloodhaggler2",
+			"timereverser",
+			"paulgrand2",
+			"shy_warrior",
+			"loneshield",
+			"the_blood_king",
+			"grand_dk",
+			"quickfeet",
+			"trapkiller0",
 			"trapsaver",  
 			"safebuffer",
 			"stunbot",

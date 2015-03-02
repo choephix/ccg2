@@ -134,114 +134,6 @@ package duel.cards.temp_database
 					
 					c.statusC.addNewBuff( true ).powerOffset = -1000;
 				
-				// // // TRIGGERED EFFECTS
-				
-				// When I am summoned
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.SUMMON_COMPLETE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c == p.getSourceCard();
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-				}
-				
-				// When I leave play
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.LEAVE_PLAY_COMPLETE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c == p.getSourceCard();
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-				}
-				
-				// When I die
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.DIE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c == p.getSourceCard();
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-				}
-				
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.GRAVEYARD );
-				special.watch( GameplayProcess.DIE_COMPLETE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c == p.getSourceCard();
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-				}
-				
-				// When I attack
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.ATTACK );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c == p.getAttacker();
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-				}
-				
-				// When opposing enemy creature is summoned
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.SUMMON_COMPLETE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c.indexedField.opposingCreature == p.getSourceCard();
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-				}
-				
-				// When your turn starts
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.TURN_START );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c.controller == p.getPlayer();
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-				}
-				
-				// 
-				var b:Buff = new Buff( true );
-				b.cannotAttack = true;
-				b.cannotRelocate = true;
-				b.expiryCondition =
-				function( p:GameplayProcess ):Boolean {
-					return p.name == GameplayProcess.TURN_END;
-				}
-				
-				c.propsC.onCombatFlipFunc =
-				function():void {
-					if ( c.indexedField.opposingCreature == null )
-						return;
-					c.indexedField.opposingCreature.statusC.addBuff( b );
-				}
-				
 				// While I am in play - GLOBAL BUFF
 				var gb:GlobalBuff = new GlobalBuff( c );
 				gb.setEffect( c.primalData.getVarInt( 0 ), null, null, null );
@@ -271,6 +163,121 @@ package duel.cards.temp_database
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
 					c.removeGlobalBuff( gb );
+				}
+				
+				// // // TRIGGERED EFFECTS
+				
+				// When I am summoned
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					
+				}
+				
+				// When I attack
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.ATTACK );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getAttacker();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					
+				}
+				
+				// When I leave play
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.LEAVE_PLAY_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					
+				}
+				
+				// When I die
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.DIE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					
+				}
+				
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.GRAVEYARD );
+				special.watch( GameplayProcess.DIE_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					
+				}
+				
+				// When opposing enemy creature is summoned
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.indexedField.opposingCreature == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+				}
+				
+				
+				// When your turn starts
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.TURN_START );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller == p.getPlayer();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					
+				}
+				
+				// 
+				var b:Buff = new Buff( true );
+				b.cannotAttack = true;
+				b.cannotRelocate = true;
+				b.expiryCondition =
+				function( p:GameplayProcess ):Boolean {
+					return p.name == GameplayProcess.TURN_END;
+				}
+				
+				c.propsC.onCombatFlipFunc =
+				function():void {
+					if ( c.indexedField.opposingCreature == null )
+						return;
+					c.indexedField.opposingCreature.statusC.addBuff( b );
 				}
 				
 			}
