@@ -46,13 +46,10 @@ package duel.otherlogic
 		
 		public function doesProcessPassCheck( p:GameplayProcess ):Boolean
 		{
-			if ( _pnAny )
-				return true;
+			if ( _pnAny || isWatched( p ) )
+				return funcCondition( p );
 			
-			if ( !isWatched( p ) )
-				return false;
-			
-			return funcCondition( p );
+			return false;
 		}
 		
 		//
