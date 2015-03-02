@@ -23,17 +23,14 @@ package duel.cards.status
 		override public function onGameProcess( p:GameplayProcess ):void
 		{
 			if ( !card.isInPlay )
+			{
+				persistenceLink = null;
 				return;
+			}
 			
 			// PERSISTENCE LINK
 			if ( persistenceLink != null )
 			{
-				if ( !card.isInPlay )
-				{
-					persistenceLink = null;
-					return;
-				}
-				
 				if ( !persistenceLink.isInPlay )
 				{
 					persistenceLink = null;
@@ -42,24 +39,32 @@ package duel.cards.status
 				}
 			}
 			
-			// UPDATE PERSITENT EFFECT
-			if ( propsT.effect.isActive )
-				propsT.effect.onUpdate( p );
+			if ( p.isComplete )
+				return;
 			
 			if ( propsT.effect.isBusy )
 				return;
 			
+			// UPDATE PERSITENT EFFECT
+			if ( propsT.effect.isActive && propsT.effect.watcherOngoing.doesProcessPassCheck( p ) )
+			{
+				propsT.effect.watcherOngoing.funcEffect( p );
+			}
+			
+			// UPDATE PERSITENT EFFECT
+			if ( propsT.effect.isActive && propsT.effect.watcherTriggered.doesProcessPassCheck( p ) )
+			{
+				p.interrupt();
+				propsT.effect.watcherTriggered.funcEffect( p );
+				return;
+			}
+			
 			// ACTIVATION / DEACTIVATION
-			if ( !propsT.effect.isActive && propsT.effect.mustActivate( p ) )
+			if ( !propsT.effect.isActive && propsT.effect.watcherActivate( p ).doesProcessPassCheck )
 			{
 				p.interrupt();
 				processes.prepend_TrapActivation( card );
-			}
-			else
-			if ( propsT.effect.isActive && propsT.effect.mustDeactivate( p ) )
-			{
-				p.interrupt();
-				processes.prepend_TrapDeactivation( card );
+				return;
 			}
 			
 		}

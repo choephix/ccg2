@@ -437,10 +437,10 @@ package duel.processes
 			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
 			var pro:GameplayProcess;
 			
-			/// ACTIVATE_TRAP
+			/// ACTIVATE_TRAP (PREPARE)
 			pro = chain( pro, gen( GameplayProcess.ACTIVATE_TRAP, c ) );
 			pro.onStart = onStart;
-			pro.onEnd = onEnd;
+			pro.onEnd = onEnd1;
 			pro.onAbort = onAbort;
 			pro.abortCheck = GameplayFAQ.isNotInPlay;
 			
@@ -451,13 +451,27 @@ package duel.processes
 				game.jugglerStrict.addFakeTime( .350 );
 				trace ( c + " interrupted process " + interruptedProcess );
 			}
-			function onEnd( c:Card ):void
+			function onEnd1( c:Card ):void
 			{
-				if ( !c.propsT.effect.funcActivateCondition( interruptedProcess ) ) return;
 				c.sprite.animFlipEffect();
-				c.propsT.effect.activate( interruptedProcess );
-				c.propsT.effect.isBusy = false;
 			}
+			
+			/// ACTIVATE_TRAP (EFFECT)
+			pro = chain( pro, gen( GameplayProcess.ACTIVATE_TRAP, c ) );
+			pro.delay = .350;
+			pro.onEnd = onEnd2;
+			pro.onAbort = onAbort;
+			pro.abortCheck = GameplayFAQ.isNotInPlay;
+			
+			function onEnd2( c:Card ):void
+			{
+				c.propsT.effect.isBusy = false;
+				if ( !c.propsT.effect.watcherActivate.funcCondition( interruptedProcess ) )
+					return;
+				c.propsT.effect.isActive = false;
+				c.propsT.effect.watcherActivate.funcEffect( interruptedProcess );
+			}
+			
 			function onAbort( c:Card ):void
 			{
 				c.propsT.effect.isBusy = false;
@@ -473,23 +487,6 @@ package duel.processes
 				if ( c.isInPlay && !c.propsT.isPersistent )
 					prepend_AddToGrave( c );
 			}
-		}
-		
-		public function prepend_TrapDeactivation( c:Card ):void
-		{
-			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
-			var pro:GameplayProcess;
-			
-			/// DEACTIVATE_TRAP
-			pro = chain( pro, gen( GameplayProcess.DEACTIVATE_TRAP, c ) );
-			pro.onEnd = 
-			function onEnd( c:Card ):void
-			{
-				c.propsT.effect.deactivate( interruptedProcess );
-			}
-			
-			/// DEACTIVATE_TRAP
-			pro = chain( pro, gen( GameplayProcess.DEACTIVATE_TRAP_COMPLETE, c ) );
 		}
 		
 		public function prepend_DestroyTrap( c:Card ):void
@@ -1024,7 +1021,10 @@ package duel.processes
 			function onStart( c:Card ):void 
 			{
 				if ( c.propsT && c.propsT.isPersistent && c.propsT.effect.isActive )
-					prepend_TrapDeactivation( c );
+				{
+					c.propsT.effect.isActive = false;
+					c.propsT.effect.funcOnDeactivate();
+				}
 			}
 			
 			pro

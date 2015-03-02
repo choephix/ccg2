@@ -20,7 +20,7 @@ package duel.otherlogic
 		
 		public function watchFor( ...names ):void
 		{ 
-			_pnCount = _pnCount.push.apply( null, names )
+			_pnCount = _pnList.push.apply( null, names )
 		}
 		
 		public function watchForAny():void
@@ -55,6 +55,14 @@ package duel.otherlogic
 			return funcCondition( p );
 		}
 		
+		//
+		public static function TRUTH( p:GameplayProcess ):Boolean 
+		{ return true }
+		public static function FALSEHOOD( p:GameplayProcess ):Boolean 
+		{ return false }
+		public static function ERROR( p:GameplayProcess ):void
+		{ CONFIG::development{ throw new UninitializedError("Undefined Function Called") } }
+		public static function NOTHING( p:GameplayProcess ):void
+		{}
 	}
-
 }
