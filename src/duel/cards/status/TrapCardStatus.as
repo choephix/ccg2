@@ -43,23 +43,23 @@ package duel.cards.status
 			}
 			
 			// UPDATE PERSITENT EFFECT
-			if ( propsT.isPersistent && propsT.effect.isActive )
-			{
-				propsT.effect.update( p );
-			}
+			if ( propsT.effect.isActive )
+				propsT.effect.onUpdate( p );
 			
 			if ( propsT.effect.isBusy )
 				return;
 			
 			// ACTIVATION / DEACTIVATION
-			if ( propsT.effect.mustInterrupt( p ) )
+			if ( !propsT.effect.isActive && propsT.effect.mustActivate( p ) )
 			{
 				p.interrupt();
-				if ( propsT.isPersistent && propsT.effect.isActive )
-					processes.prepend_DestroyTrap( card );
-				else
-					processes.prepend_TrapActivation( card );
-				return;
+				processes.prepend_TrapActivation( card );
+			}
+			else
+			if ( propsT.effect.isActive && propsT.effect.mustDeactivate( p ) )
+			{
+				p.interrupt();
+				processes.prepend_TrapDeactivation( card );
 			}
 			
 		}

@@ -7,106 +7,71 @@ package duel.otherlogic
 	 */
 	public class TrapEffect
 	{
-		/// must accept one arg of type Process and return Boolean
-		public var funcActivateCondition:Function = TRUTH;
-		/// must accept one arg of type Process and return Boolean
-		public var funcDeactivateCondition:Function = TRUTH;
+		public var watcherActivate:ProcessWatcher	= new ProcessWatcher();
+		//public var watcherDeactivate:ProcessWatcher	= new ProcessWatcher();
+		public var watcherUpdate:ProcessWatcher		= new ProcessWatcher();
 		
 		/// must accept one arg of type Process
-		public var funcActivate:Function	= NOTHING;
-		public var funcUpdate:Function		= NOTHING;
-		public var funcDeactivate:Function	= NOTHING;
+		public var funcOnLeavePlay:Function			= NOTHING;
 		
-		public var watchAllForActivation:Boolean;
-		public var watchAllForDeactivation:Boolean;
+		// . . . 
 		
 		public var isBusy:Boolean = false;
-		
-		private var _isActive:Boolean = false;
-		
-		private var _pnlistA:Vector.<String> = new <String>[];
-		private var _pncountA:int = 0;
-		
-		private var _pnlistD:Vector.<String> = new <String>[];
-		private var _pncountD:int = 0;
+		public var isActive:Boolean = false;
 		
 		private var _lastP:GameplayProcess;
 		
-		public function watchForActivation( ...names ):void
-		{ _pncountA = _pnlistA.push.apply( null, names ) }
+		// 
 		
-		public function watchForDeactivation( ...names ):void
-		{ _pncountD = _pnlistD.push.apply( null, names ) }
-		
-		protected function isWatchedA( p:GameplayProcess ):Boolean
+		public function mustActivate( p:GameplayProcess ):Boolean
 		{
-			if ( _pncountA <= 0 )
-				return false;
-				
-			var i:int = _pncountA;
-			while ( --i >= 0 ) 
-				if ( _pnlistA[i] == p.name )
-					return true;
-			
-			return false;
-		}
-		
-		protected function isWatchedD( p:GameplayProcess ):Boolean
-		{
-			if ( _pncountD <= 0 )
-				return false;
-				
-			var i:int = _pncountD;
-			while ( --i >= 0 ) 
-				if ( _pnlistD[i] == p.name )
-					return true;
-			
-			return false;
-		}
-		
-		public function mustInterrupt( p:GameplayProcess ):Boolean
-		{
+			if ( isActive ) return false;
+			if ( isBusy ) return false;
 			if ( _lastP == p ) return false;
-			
 			if ( p.isComplete ) return false;
 			
-			if ( _isActive )
-			{
-				if ( !watchAllForDeactivation && !isWatchedD( p )  ) return false;
-				if ( !funcDeactivateCondition( p ) ) return false;
-			}
-			else
-			{
-				if ( !watchAllForActivation && !isWatchedA( p )  ) return false;
-				if ( !funcActivateCondition( p ) ) return false;
-			}
+			return watcherActivate.doesProcessPassCheck( p );
 			
 			_lastP = p;
+			
 			return true;
 		}
 		
-		public function activate( p:GameplayProcess ):void
+		public function mustDeactivate( p:GameplayProcess ):Boolean
 		{
-			_isActive = true;
-			funcActivate( p );
+			if ( !isActive ) return false;
+			if ( isBusy ) return false;
+			if ( _lastP == p ) return false;
+			if ( p.isComplete ) return false;
+			
+			return watcherDeactivate.doesProcessPassCheck( p );
+			
+			_lastP = p;
+			
+			return true;
 		}
 		
-		public function update( p:GameplayProcess ):void
+		public function onActivate( p:GameplayProcess ):void
 		{
-			funcUpdate( p );
+			watcherActivate.funcEffect( p );
 		}
 		
-		public function deactivate( p:GameplayProcess ):void
+		public function onUpdate( p:GameplayProcess ):void
 		{
-			_isActive = false;
-			funcDeactivate( p );
+			if ( isBusy ) return;
+			if ( watcherUpdate.doesProcessPassCheck( p ) )
+				watcherUpdate.funcEffect( p );
 		}
 		
-		public function get isActive():Boolean 
-		{ return _isActive }
+		public function onDeactivate( p:GameplayProcess ):void
+		{
+			watcherDeactivate.funcEffect( p );
+		}
 		
-		public function get isNone():Boolean
-		{ return funcUpdate == ERROR }
+		public function onLeavePlay( p:GameplayProcess ):void
+		{
+			funcOnLeavePlay( p );
+		}
 		
 		//
 		private static function TRUTH( p:GameplayProcess ):Boolean 
@@ -117,7 +82,5 @@ package duel.otherlogic
 		{ CONFIG::development{ throw new UninitializedError("Undefined Function Called") } }
 		private static function NOTHING( p:GameplayProcess ):void
 		{}
-		
 	}
-
 }
