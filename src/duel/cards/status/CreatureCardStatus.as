@@ -48,33 +48,36 @@ package duel.cards.status {
 			
 			var i:int;
 			
-			// ONGOING SPECIALS
-			if ( propsC.specialsOngoingCount > 0 )
+			if ( !card.faceDown )
 			{
-				var oe:OngoingEffect;
-				for ( i = 0; i < propsC.specialsOngoingCount; i++ ) 
+				// ONGOING SPECIALS
+				if ( propsC.specialsOngoingCount > 0 )
 				{
-					oe = propsC.specialsOngoing[ i ];
-					oe.update( p );
-					
-					/// just in case
-					if ( p.isInterrupted )
-						return;
-				}
-			}
-			
-			// TRIGGERED SPECIALS
-			if ( propsC.specialsTriggeredCount > 0 )
-			{
-				var se:SpecialEffect;
-				for ( i = 0; i < propsC.specialsTriggeredCount; i++ ) 
-				{
-					se = propsC.specialsTriggered[ i ];
-					if ( se.isAllowedInField( card.lot.type ) && se.mustInterrupt( p ) )
+					var oe:OngoingEffect;
+					for ( i = 0; i < propsC.specialsOngoingCount; i++ ) 
 					{
-						p.interrupt();
-						processes.prepend_TriggerSpecial( card, se );
-						return;
+						oe = propsC.specialsOngoing[ i ];
+						oe.update( p );
+						
+						/// just in case
+						if ( p.isInterrupted )
+							return;
+					}
+				}
+				
+				// TRIGGERED SPECIALS
+				if ( propsC.specialsTriggeredCount > 0 )
+				{
+					var se:SpecialEffect;
+					for ( i = 0; i < propsC.specialsTriggeredCount; i++ ) 
+					{
+						se = propsC.specialsTriggered[ i ];
+						if ( se.isAllowedInField( card.lot.type ) && se.mustInterrupt( p ) )
+						{
+							p.interrupt();
+							processes.prepend_TriggerSpecial( card, se );
+							return;
+						}
 					}
 				}
 			}
