@@ -60,7 +60,7 @@ package duel.cards.status
 			}
 			
 			// ACTIVATION / DEACTIVATION
-			if ( !propsT.effect.isActive && propsT.effect.watcherActivate( p ).doesProcessPassCheck )
+			if ( !propsT.effect.isActive && propsT.effect.watcherActivate.doesProcessPassCheck( p ) )
 			{
 				p.interrupt();
 				processes.prepend_TrapActivation( card );
