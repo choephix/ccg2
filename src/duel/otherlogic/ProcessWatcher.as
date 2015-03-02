@@ -14,6 +14,8 @@ package duel.otherlogic
 		/// must accept one arg of type Process
 		public var funcEffect:Function		= NOTHING;
 		
+		public var lastInterruptedProcess:GameplayProcess;
+		
 		private var _pnList:Vector.<String> = new <String>[];
 		private var _pnCount:int = 0;
 		private var _pnAny:Boolean = false;
@@ -46,6 +48,9 @@ package duel.otherlogic
 		
 		public function doesProcessPassCheck( p:GameplayProcess ):Boolean
 		{
+			if ( p == lastInterruptedProcess )
+				return false;
+			
 			if ( _pnAny || isWatched( p ) )
 				return funcCondition( p );
 			

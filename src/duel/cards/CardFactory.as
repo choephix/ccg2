@@ -188,40 +188,200 @@ package duel.cards
 			
 			//
 			
-			F[ "red_cross_reverse" ] = 
+			F[ "depower" ] = 
 			function( c:Card ):void
 			{
-				
-			}
-			
-			F[ "enemyhealer" ] = 
-			function( c:Card ):void
-			{
-				
-			}
-			
-			F[ "taunting_dance" ] = 
-			function( c:Card ):void
-			{
-				
-			}
-			
-			F[ "taunt" ] = 
-			function( c:Card ):void
-			{
-				
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.ATTACK );
+				c.propsT.effect.watcherActivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.samesideCreature == null ) return false;
+					return c.indexedField.opposingCreature == p.getAttacker();
+				}
+				c.propsT.effect.watcherActivate.funcEffect = 
+				function( p:GameplayProcess ):void {
+					var b:Buff = c.indexedField.opposingCreature.statusC.addNewBuff( true );
+					b.powerOffset = -c.primalData.getVarInt( 0 );
+					b.expiryCondition = 
+					function( p:GameplayProcess ):Boolean {
+						return p.name == GameplayProcess.TURN_END;
+					}
+				}
 			}
 			
 			F[ "empower" ] = 
 			function( c:Card ):void
 			{
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.ATTACK );
+				c.propsT.effect.watcherActivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.samesideCreature == null ) return false;
+					return c.indexedField.opposingCreature == p.getAttacker();
+				}
+				c.propsT.effect.watcherActivate.funcEffect = 
+				function( p:GameplayProcess ):void {
+					var b:Buff = c.indexedField.samesideCreature.statusC.addNewBuff( true );
+					b.powerOffset = c.primalData.getVarInt( 0 );
+					b.expiryCondition = 
+					function( p:GameplayProcess ):Boolean {
+						return p.name == GameplayProcess.TURN_END;
+					}
+				}
+			}
+			
+			F[ "depowering_gas" ] = 
+			function( c:Card ):void
+			{
+				var target:Card;
 				
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.ATTACK );
+				c.propsT.effect.watcherActivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.indexedField.opposingCreature == p.getAttacker();
+				}
+				
+				c.propsT.effect.watcherTriggered.watchFor( GameplayProcess.ATTACK );
+				c.propsT.effect.watcherTriggered.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.indexedField.opposingCreature == p.getAttacker();
+				}
+				c.propsT.effect.watcherTriggered.funcEffect = 
+				function( p:GameplayProcess ):void {
+					target = c.indexedField.opposingCreature;
+					var b:Buff = target.statusC.addNewBuff( true )
+					b.powerOffset = -c.primalData.getVarInt( 0 );
+				}
+				
+				c.propsT.effect.watcherDeactivate.watchFor( GameplayProcess.LEAVE_INDEXED_FIELD_COMPLETE );
+				c.propsT.effect.watcherDeactivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return target == p.getSourceCard();
+				}
+				c.propsT.effect.watcherDeactivate.funcEffect = 
+				function( p:GameplayProcess ):void {
+					target = null;
+				}
 			}
 			
 			F[ "mana_decktruction" ] = 
 			function( c:Card ):void
 			{
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.TURN_START );
+				c.propsT.effect.watcherActivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getPlayer();
+				}
 				
+				c.propsT.effect.watcherTriggered.watchFor( GameplayProcess.SPEND_MANA_COMPLETE );
+				c.propsT.effect.watcherTriggered.funcEffect = 
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doDiscardFromDeck( p.getPlayer(), c.primalData.getVarInt( 0 ) );
+				}
+				
+				c.propsT.effect.watcherDeactivate.watchFor( GameplayProcess.TURN_END );
+				c.propsT.effect.watcherDeactivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getPlayer();
+				}
+			}
+			
+			F[ "last_stand" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.ATTACK );
+				c.propsT.effect.watcherActivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.samesideCreature == null ) return false;
+					return c.indexedField.opposingCreature == p.getAttacker();
+				}
+				c.propsT.effect.watcherActivate.funcEffect = 
+				function( p:GameplayProcess ):void {
+					var b:Buff = c.indexedField.samesideCreature.statusC.addNewBuff( true );
+					b.powerOffset = c.primalData.getVarInt( 0 );
+					b.expiryCondition = 
+					function( p:GameplayProcess ):Boolean {
+						return p.name == GameplayProcess.TURN_END;
+					}
+				}
+			}
+			
+			F[ "enemyhealer" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.DIRECT_DAMAGE );
+				c.propsT.effect.watcherActivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.controller == p.getPlayer();
+				}
+				
+				c.propsT.effect.watcherTriggered.watchFor( GameplayProcess.DIRECT_DAMAGE );
+				c.propsT.effect.watcherTriggered.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.controller == p.getPlayer();
+				}
+				c.propsT.effect.watcherTriggered.funcEffect = 
+				function( p:GameplayProcess ):void {
+					p.abort();
+					TempDatabaseUtils.doHeal( c.controller.opponent, p.getDamage().amount );
+				}
+				
+				c.propsT.effect.watcherDeactivate.watchFor( GameplayProcess.TURN_END );
+			}
+			
+			F[ "taunting_dance" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.TURN_START );
+				c.propsT.effect.watcherActivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.opposingCreature == null ) return false;
+					return c.controller.opponent == p.getPlayer();
+				}
+				
+				c.propsT.effect.watcherTriggered.watchFor( GameplayProcess.TURN_END );
+				c.propsT.effect.watcherTriggered.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.opposingCreature == null ) return false;
+					return c.controller.opponent == p.getPlayer();
+				}
+				c.propsT.effect.watcherTriggered.funcEffect = 
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doDealDirectDamage( c.controller.opponent, 
+						c.indexedField.opposingCreature.statusC.realPowerValue, c );
+				}
+				
+				c.propsT.effect.watcherDeactivate.watchFor( GameplayProcess.TURN_END );
+				c.propsT.effect.watcherDeactivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getPlayer();
+				}
+			}
+			
+			F[ "taunt" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.TURN_START );
+				c.propsT.effect.watcherActivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.opposingCreature == null ) return false;
+					return c.controller.opponent == p.getPlayer();
+				}
+				
+				c.propsT.effect.watcherTriggered.watchFor( GameplayProcess.TURN_END );
+				c.propsT.effect.watcherTriggered.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.opposingCreature == null ) return false;
+					return c.controller.opponent == p.getPlayer();
+				}
+				c.propsT.effect.watcherTriggered.funcEffect = 
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doForceAttack( c.indexedField.opposingCreature, true );
+				}
+				
+				c.propsT.effect.watcherDeactivate.watchFor( GameplayProcess.TURN_END );
+				c.propsT.effect.watcherDeactivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getPlayer();
+				}
 			}
 			
 			//}
@@ -327,6 +487,44 @@ package duel.cards
 			/// /// /// /// // /// /// /// ///
 			
 			//{ TRAP
+			
+			F[ "surprise_attack" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.SUMMON_COMPLETE );
+				c.propsT.effect.watcherActivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.samesideCreature == null ) return false;
+					return c.indexedField.opposingCreature == p.getSourceCard();
+				}
+				c.propsT.effect.watcherActivate.funcEffect = 
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doForceAttack( c.indexedField.samesideCreature, true );
+				}
+			}
+			
+			F[ "red_cross_reverse" ] = 
+			function( c:Card ):void
+			{
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.DIRECT_DAMAGE );
+				c.propsT.effect.watcherActivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					if ( !c.controller.opponent.isMyTurn ) return false;
+					return c.controller == p.getPlayer();
+				}
+				
+				c.propsT.effect.watcherTriggered.watchFor( GameplayProcess.DIRECT_DAMAGE );
+				c.propsT.effect.watcherTriggered.funcEffect = 
+				function( p:GameplayProcess ):void {
+					p.getDamage().type = DamageType.HEALING;
+				}
+				
+				c.propsT.effect.watcherDeactivate.watchFor( GameplayProcess.TURN_END );
+				c.propsT.effect.watcherDeactivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.controller == p.getPlayer();
+				}
+			}
 			
 			F[ "waste" ] = 
 			function( c:Card ):void

@@ -45,9 +45,6 @@ package duel.cards.status
 			if ( propsT.effect.isBusy )
 				return;
 			
-			if ( p == propsT.effect.lastInterruptedProcess )
-				return;
-			
 			if ( propsT.isPersistent && propsT.effect.isActive )
 			{
 				// ONGOING EFFECT
@@ -59,7 +56,7 @@ package duel.cards.status
 				if ( propsT.effect.watcherTriggered.doesProcessPassCheck( p ) )
 				{
 					p.interrupt();
-					propsT.effect.lastInterruptedProcess = p;
+					propsT.effect.watcherTriggered.lastInterruptedProcess = p;
 					propsT.effect.watcherTriggered.funcEffect( p );
 					card.sprite.animTrapEffect();
 					return;
@@ -68,7 +65,7 @@ package duel.cards.status
 				if ( propsT.effect.watcherDeactivate.doesProcessPassCheck( p ) )
 				{
 					p.interrupt();
-					propsT.effect.lastInterruptedProcess = p;
+					propsT.effect.watcherDeactivate.lastInterruptedProcess = p;
 					processes.prepend_DestroyTrap( card );
 					return;
 				}
@@ -80,7 +77,7 @@ package duel.cards.status
 				if ( propsT.effect.watcherActivate.doesProcessPassCheck( p ) )
 				{
 					p.interrupt();
-					propsT.effect.lastInterruptedProcess = p;
+					propsT.effect.watcherActivate.lastInterruptedProcess = p;
 					processes.prepend_TrapActivation( card );
 					return;
 				}

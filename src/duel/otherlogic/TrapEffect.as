@@ -14,7 +14,6 @@ package duel.otherlogic
 		
 		public var isBusy:Boolean = false;
 		public var isActive:Boolean = false;
-		public var lastInterruptedProcess:GameplayProcess = null;
 		
 		public function TrapEffect( persistent:Boolean ) 
 		{

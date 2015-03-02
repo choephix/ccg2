@@ -50,23 +50,26 @@ package dev
 			//"trapsaver3",
 			
 			/**  TEST  **/
-			//"red_cross_reverse",
-			//"enemyhealer",
-			//"taunting_dance",
-			//"taunt",
-			//"empower",
-			//"mana_decktruction",
-			//"last_stand",
-			//"depower",
-			//"trapsaver",  
+			"empower",
+			"mana_decktruction",
+			"last_stand",
+			"depower",
+			"trapsaver",  
+			"last_stand",  
+			"depowering_gas",  
+			"enemyhealer",
+			"taunting_dance",
+			"taunt",
 			
 			/**  DONE (TRAPS)  **/
+			"surprise_attack",
+			"red_cross_reverse",
 			"waste",
 			"equality",
+			/*
 			"megatrap",
 			"redirect_in",
 			"redirect_out",
-			///**
 			"weird_swap",
 			"eject",
 			"manadrain",
