@@ -48,7 +48,7 @@
         <key>etc1CompressionQuality</key>
         <enum type="SettingsBase::Etc1CompressionQuality">ETC1_QUALITY_LOW_PERCEPTUAL</enum>
         <key>dxtCompressionMode</key>
-        <enum type="SettingsBase::DxtCompressionMode">DXT_PERCEPTUAL</enum>
+        <enum type="SettingsBase::DxtCompressionMode">DXT_LINEAR</enum>
         <key>jxrColorFormat</key>
         <enum type="SettingsBase::JpegXrColorMode">JXR_YUV444</enum>
         <key>jxrTrimFlexBits</key>

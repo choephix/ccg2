@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>3.6.0</string>
         <key>fileName</key>
-        <string>D:/Projects - Flash/CCG2/resourrces/atlases/main-rgba.tps</string>
+        <string>D:/Projects - Flash/CCG2/resourrces/atlases/main-rgb.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -28,7 +28,7 @@
             </struct>
         </array>
         <key>allowRotation</key>
-        <true/>
+        <false/>
         <key>premultiplyAlpha</key>
         <false/>
         <key>shapeDebug</key>
@@ -38,7 +38,7 @@
         <key>dataFormat</key>
         <string>sparrow</string>
         <key>textureFileName</key>
-        <filename>../../bin/assets/main-rgba.atf</filename>
+        <filename>../../bin/assets/main-rgb.atf</filename>
         <key>flipPVR</key>
         <false/>
         <key>pvrCompressionQuality</key>
@@ -145,7 +145,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../../bin/assets/main-rgba.xml</filename>
+                <filename>../../bin/assets/main-rgb.xml</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -153,7 +153,7 @@
         <key>forceIdenticalLayout</key>
         <false/>
         <key>outputFormat</key>
-        <enum type="SettingsBase::OutputFormat">RGBA8888</enum>
+        <enum type="SettingsBase::OutputFormat">RGB888</enum>
         <key>contentProtection</key>
         <struct type="ContentProtection">
             <key>key</key>
@@ -188,7 +188,7 @@
         </struct>
         <key>fileList</key>
         <array>
-            <filename>main-rgba</filename>
+            <filename>main-rgb</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
