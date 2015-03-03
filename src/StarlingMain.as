@@ -69,8 +69,13 @@ package {
 				return; 
 			}
 			
+			App.assets.enqueue( "assets/font1.fnt" )
+			App.assets.enqueue( "assets/font2.fnt" )
+			App.assets.enqueue( "assets/font3.fnt" )
 			App.assets.enqueue( "assets/bg.jpg" )
 			App.assets.enqueue( "assets/mainbg.jpg" )
+			App.assets.enqueue( "assets/ring1.jpg" )
+			App.assets.enqueue( "assets/ring2.jpg" )
 			App.assets.enqueue( "assets/main-rgb.atf" )
 			App.assets.enqueue( "assets/main-rgb.xml" )
 			App.assets.enqueue( "assets/main-rgba.atf" )
