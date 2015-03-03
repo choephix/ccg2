@@ -74,6 +74,7 @@ package duel
 		
 		public var table:TableSprite;
 		public var gui:Gui;
+		public var errorBox:TextField;
 		
 		public var p1:Player;
 		public var p2:Player;
@@ -150,8 +151,14 @@ package duel
 			
 			// GUI AND STUFF
 			gui = new Gui();
-			//gui.visible = false;
 			addChild( gui );
+			
+			errorBox = new TextField( .3 * App.W, App.H, "", "Consolas", 21, 0xBB0011, true );
+			errorBox.x = .35 * App.W;
+			errorBox.vAlign = "top";
+			errorBox.touchable = false;
+			errorBox.batchable = false;
+			addChild( errorBox );
 			
 			p1.handSprite = new HandSprite( p1.hand );
 			p1.handSprite.maxWidth = 1000;
@@ -339,12 +346,12 @@ package duel
 			for ( var i:int = 0, iMax:int = logicComponents.length; i < iMax; i++ ) 
 				logicComponents[ i ].advanceTime( time );
 			
-			//try
+			try
 			{
 			if ( jugglerStrict.isIdle )
 				processes.advanceTime( time );
 			}
-			//catch ( e:Error ) { log( e.message ) }
+			catch ( e:Error ) { onError( e ) }
 				
 			gui.advanceTime( time );
 			p1.handSprite.advanceTime( time );
@@ -406,8 +413,12 @@ package duel
 			for ( var i:int = 0, iMax:int = logicComponents.length; i < iMax; i++ ) 
 				logicComponents[ i ].onProcessUpdateOrComplete( p );
 			
-			playerInspectProcess( currentPlayer.opponent, p );
-			playerInspectProcess( currentPlayer, p );
+			try
+			{
+				playerInspectProcess( currentPlayer.opponent, p );
+				playerInspectProcess( currentPlayer, p );
+			} catch ( e:Error )
+			{ onError( e ) }
 		}
 		
 		private function onProcessComplete( e:ProcessEvent ):void
@@ -420,8 +431,12 @@ package duel
 			for ( var i:int = 0, iMax:int = logicComponents.length; i < iMax; i++ ) 
 				logicComponents[ i ].onProcessUpdateOrComplete( e.process as GameplayProcess );
 			
-			playerInspectProcess( currentPlayer.opponent, p );
-			playerInspectProcess( currentPlayer, p );
+			try
+			{
+				playerInspectProcess( currentPlayer.opponent, p );
+				playerInspectProcess( currentPlayer, p );
+			} catch ( e:Error )
+			{ onError( e ) }
 			
 			if ( !meta.isMultiplayer && e.process.name )
 				gui.log( e.process.name + " " + e.process.args );
@@ -550,6 +565,11 @@ package duel
 			
 			Starling.juggler.remove( this );
 			Starling.juggler.tween( q, .440, { alpha: 1.0, onComplete: destroy } );
+		}
+		
+		private function onError(e:Error):void 
+		{
+			errorBox.text += e.name + " --> " + e.message + "\n";
 		}
 		
 		//
