@@ -9,7 +9,7 @@ package duel.gui {
 	public class GuiJuggler extends Juggler
 	{
 		public var speed:Number = 1.0;
-		public var maxFrameTime:Number = 1/60;
+		public var maxFrameTime:Number = 1/45;
 		
 		private var _fakeTime:Number = .0;
 		
