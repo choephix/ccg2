@@ -246,7 +246,7 @@ package duel.display.cards {
 			{
 				_isTopCard 		= card.field == null || ( card.lot is Field && card == Field( card.field ).topCard );
 				tfTitle.visible = _isTopCard;
-				tfDescr.visible = _isTopCard;
+				tfDescr.visible = _isTopCard && ( card.isInPlay || isSelected || _isFocused );
 				if ( tfAttak != null )
 					tfAttak.visible = _isTopCard;
 			}
