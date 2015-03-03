@@ -14,6 +14,6 @@ package duel {
 		public static const INIT_LP:Number = 20;
 		public static const INIT_HAND_SIZE:Number = CONFIG::sandbox?8:3;
 		
-		public static const MAX_DECK_SIZE:Number = 32;
+		public static const MAX_DECK_SIZE:Number = 48;
 	}
 }
