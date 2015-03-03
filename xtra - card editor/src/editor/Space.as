@@ -332,7 +332,15 @@ package editor
 						case 0x111111 : c.data.mark = 0x0088FF; break;
 						case 0x0088FF : c.data.mark = 0xFF4400; break;
 						case 0xFF4400 : c.data.mark = 0x000000; break;
+						default : c.data.mark = 0x000000; break;
 					}
+					c.onDataChange();
+				}
+				else
+				if ( e.keyCode == Keyboard.BACKQUOTE )
+				{
+					if ( c == null ) return;
+					c.data.mark = c.data.mark != 0xFFFFFF ? 0xFFFFFF : 0x000000;
 					c.onDataChange();
 				}
 				else
