@@ -47,44 +47,28 @@ package dev
 			/**  RE-TEST  **/
 			//"devouerer",
 			//"stunner"
-			
 			//"trapsaver2",
 			//"trapsaver3",
 			
-			//harrasser1
-			//harrasser2
-			//paul1
-			//paul2
-			//paul3
-			//paulgrand
+			//"harrasser1",
+			//"harrasser2",
+			//"paul1",
+			//"paul2",
+			//"paul3",
+			//"paulgrand",
 			
 			/**  TEST  **/
 			
-			/**
-			"resurrecter3",
-			"blinding_rage",
-			"token_summoner",
-			"bomb2",
-			"brainleech",
-			"trapreturner",
-			"time_bomb",
-			"i_dare_you",
-			"beyond_shield",
-			"ragnarock",
-			"apocalypta",
-			"unstable_mech",
-			"armageddon",
-			"gcontract_swap",
-			
 			/**  DONE (TRAPS)  **/
 			
+			/**
+			"tokens_shield",
 			"ritual_t_f1",
 			"ritual_t_f2",
 			"ritual_t_f3",
 			"swap_ultimatum",
 			"last_stand",
 			"enemyhealer",
-			/**
 			"depowering_gas",  
 			"depower",
 			"empower",
@@ -137,6 +121,15 @@ package dev
 			
 			/**  DONE (CREATURES)  **/
 			
+			"mana_thing",
+			"ace1_lvl1",
+			"ace1_lvl2",
+			"ace1_lvl3",
+			"problematic_sam",
+			"angered",
+			"angered2",
+			"angered3",
+			"dual_force_spirit",
 			"ritual_c_f1",
 			"ritual_c_f2",
 			"ritual_c_f3",

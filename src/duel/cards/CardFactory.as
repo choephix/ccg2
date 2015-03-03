@@ -191,170 +191,19 @@ package duel.cards
 			
 			//{ IN TESTING
 			
-			F[ "ritual_c_f1" ] =
-			F[ "ritual_c_f2" ] =
-			F[ "ritual_c_f3" ] =
+			F[ "tokens_shield" ] =
 			function( c:Card ):void
 			{
-				c.propsC.summonConditionManual = 
-				function( field:CreatureField ):Boolean {
-					return false;
-				}
-			}
-			
-			F[ "ritual_t_f1" ] =
-			function( c:Card ):void
-			{
-				const SUMMONEE:String = c.primalData.getVarSlug( 0 );
-				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.DIE_COMPLETE );
-				c.propsT.effect.watcherActivate.funcCondition = 
+				c.propsT.effect.watcherActivate.watchForAny();
+				c.propsT.effect.watcherActivate.funcCondition =
 				function( p:GameplayProcess ):Boolean {
-					return c.indexedField.samesideCreatureField == p.getSourceCard().history.lastIndexedField;
+					return c.controller.opponent.isMyTurn && c.controller.creatureCount == 0;
 				}
-				c.propsT.effect.watcherActivate.funcEffect = 
+				c.propsT.effect.watcherActivate.funcEffect =
 				function( p:GameplayProcess ):void {
-					var cc:Card;
-					cc = c.controller.deck.findBySlug( SUMMONEE );
-					if ( cc == null ) cc = c.controller.hand.findBySlug( SUMMONEE );
-					if ( cc == null ) return;
-					TempDatabaseUtils.doSummonFromDeckOrHand( cc, c.indexedField.samesideCreatureField );
-					cc.statusC.addNewBuff( true ).powerOffset = 2 * p.getSourceCard().statusC.basePowerValue;
+					c.controller.fieldsC.forEachField( TempDatabaseUtils.doSpawnTokenCreatureIfEmpty );
 				}
 			}
-			
-			F[ "ritual_t_f2" ] =
-			function( c:Card ):void
-			{
-				const SUMMONEE:String = c.primalData.getVarSlug( 0 );
-				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.ATTACK );
-				c.propsT.effect.watcherActivate.funcCondition = 
-				function( p:GameplayProcess ):Boolean {
-					return c.indexedField.opposingCreature == p.getAttacker();
-				}
-				c.propsT.effect.watcherActivate.funcEffect = 
-				function( p:GameplayProcess ):void {
-					var cc:Card;
-					cc = c.controller.deck.findBySlug( SUMMONEE );
-					if ( cc == null ) cc = c.controller.hand.findBySlug( SUMMONEE );
-					if ( cc == null ) return;
-					TempDatabaseUtils.doSummonFromDeckOrHand( cc, c.indexedField.samesideCreatureField );
-					
-					if ( c.indexedField.samesideCreature != null )
-					{
-						TempDatabaseUtils.doKill( c.indexedField.samesideCreature, c );
-						cc.statusC.addNewBuff( true ).powerOffset = c.indexedField.samesideCreature.statusC.realPowerValue;
-					}
-				}
-			}
-			
-			F[ "ritual_t_f3" ] =
-			function( c:Card ):void
-			{
-				const SUMMONEE:String = c.primalData.getVarSlug( 0 );
-				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.ATTACK );
-				c.propsT.effect.watcherActivate.funcCondition = 
-				function( p:GameplayProcess ):Boolean {
-					return c.indexedField.samesideCreature == null && c.indexedField.opposingCreature == p.getAttacker();
-				}
-				c.propsT.effect.watcherActivate.funcEffect = 
-				function( p:GameplayProcess ):void {
-					var cc:Card;
-					cc = c.controller.deck.findBySlug( SUMMONEE );
-					if ( cc == null ) cc = c.controller.hand.findBySlug( SUMMONEE );
-					if ( cc == null ) return;
-					TempDatabaseUtils.doSummonFromDeckOrHand( cc, c.indexedField.samesideCreatureField );
-				}
-			}
-			
-			//
-			
-			/** * * /
-			
-			F[ "resurrecter3" ] =
-			function( c:Card ):void
-			{
-				
-			}
-			
-			F[ "blinding_rage" ] =
-			function( c:Card ):void
-			{
-				
-			}
-			
-			F[ "token_summoner" ] =
-			function( c:Card ):void
-			{
-				
-			}
-			
-			F[ "bomb2" ] =
-			function( c:Card ):void
-			{
-				
-			}
-			
-			F[ "brainleech" ] =
-			function( c:Card ):void
-			{
-				
-			}
-			
-			F[ "trapreturner" ] =
-			function( c:Card ):void
-			{
-				
-			}
-			
-			F[ "time_bomb" ] =
-			function( c:Card ):void
-			{
-				
-			}
-			
-			F[ "i_dare_you" ] =
-			function( c:Card ):void
-			{
-				
-			}
-			
-			F[ "beyond_shield" ] =
-			function( c:Card ):void
-			{
-				
-			}
-			
-			F[ "ragnarock" ] =
-			function( c:Card ):void
-			{
-				
-			}
-			
-			F[ "apocalypta" ] =
-			function( c:Card ):void
-			{
-				
-			}
-			
-			F[ "unstable_mech" ] =
-			function( c:Card ):void
-			{
-				
-			}
-			
-			F[ "armageddon" ] =
-			function( c:Card ):void
-			{
-				
-			}
-			
-			F[ "gcontract_swap" ] =
-			function( c:Card ):void
-			{
-				
-			}
-			
-			/* * * */
 			
 			//}
 			
@@ -516,6 +365,103 @@ package duel.cards
 			/// /// /// /// // /// /// /// ///
 			
 			//{ TRAP
+			
+			F[ "ritual_t_f1" ] =
+			function( c:Card ):void
+			{
+				const SUMMONEE:String = c.primalData.getVarSlug( 0 );
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.DIE_COMPLETE );
+				c.propsT.effect.watcherActivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.indexedField.samesideCreatureField == p.getSourceCard().history.lastIndexedField;
+				}
+				c.propsT.effect.watcherActivate.funcEffect = 
+				function( p:GameplayProcess ):void {
+					var cc:Card;
+					cc = c.controller.deck.findBySlug( SUMMONEE );
+					if ( cc == null ) cc = c.controller.hand.findBySlug( SUMMONEE );
+					if ( cc == null ) return;
+					TempDatabaseUtils.doSummonFromDeckOrHand( cc, c.indexedField.samesideCreatureField );
+					cc.statusC.addNewBuff( true ).powerOffset = 2 * p.getSourceCard().statusC.basePowerValue;
+				}
+			}
+			
+			F[ "ritual_t_f2" ] =
+			function( c:Card ):void
+			{
+				const SUMMONEE:String = c.primalData.getVarSlug( 0 );
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.ATTACK );
+				c.propsT.effect.watcherActivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.indexedField.opposingCreature == p.getAttacker();
+				}
+				c.propsT.effect.watcherActivate.funcEffect = 
+				function( p:GameplayProcess ):void {
+					var cc:Card;
+					cc = c.controller.deck.findBySlug( SUMMONEE );
+					if ( cc == null ) cc = c.controller.hand.findBySlug( SUMMONEE );
+					if ( cc == null ) return;
+					TempDatabaseUtils.doSummonFromDeckOrHand( cc, c.indexedField.samesideCreatureField );
+					
+					if ( c.indexedField.samesideCreature != null )
+					{
+						TempDatabaseUtils.doKill( c.indexedField.samesideCreature, c );
+						cc.statusC.addNewBuff( true ).powerOffset = c.indexedField.samesideCreature.statusC.realPowerValue;
+					}
+				}
+			}
+			
+			F[ "ritual_t_f3" ] =
+			function( c:Card ):void
+			{
+				const SUMMONEE:String = c.primalData.getVarSlug( 0 );
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.ATTACK );
+				c.propsT.effect.watcherActivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.indexedField.samesideCreature == null && c.indexedField.opposingCreature == p.getAttacker();
+				}
+				c.propsT.effect.watcherActivate.funcEffect = 
+				function( p:GameplayProcess ):void {
+					var cc:Card;
+					cc = c.controller.deck.findBySlug( SUMMONEE );
+					if ( cc == null ) cc = c.controller.hand.findBySlug( SUMMONEE );
+					if ( cc == null ) return;
+					TempDatabaseUtils.doSummonFromDeckOrHand( cc, c.indexedField.samesideCreatureField );
+				}
+			}
+			
+			F[ "swap_ultimatum" ] =
+			function( c:Card ):void
+			{
+				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.TURN_START );
+				c.propsT.effect.watcherActivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.opposingCreature == null ) return false;
+					if ( c.indexedField.samesideCreature == null ) return false;
+					return c.controller.opponent == p.getPlayer();
+				}
+				
+				c.propsT.effect.watcherTriggered.watchFor( GameplayProcess.TURN_END );
+				c.propsT.effect.watcherTriggered.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.samesideCreature == null ) return false;
+					return c.controller.opponent == p.getPlayer();
+				}
+				c.propsT.effect.watcherTriggered.funcEffect = 
+				function( p:GameplayProcess ):void {
+					if ( c.indexedField.opposingCreature == null )
+						TempDatabaseUtils.doKill( c.indexedField.samesideCreature, c );
+					else
+						TempDatabaseUtils.doForceSwap( c.indexedField.samesideCreature,
+							c.indexedField.opposingCreatureField, true );
+				}
+				
+				c.propsT.effect.watcherDeactivate.watchFor( GameplayProcess.TURN_END );
+				c.propsT.effect.watcherDeactivate.funcCondition = 
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.opponent == p.getPlayer();
+				}
+			}
 			
 			F[ "enemyhealer" ] = // // PERMANENT
 			function( c:Card ):void
@@ -996,6 +942,7 @@ package duel.cards
 				c.propsT.effect.watcherActivate.funcEffect =
 				function( p:GameplayProcess ):void {
 					c.controller.fieldsC.forEachField( TempDatabaseUtils.doSpawnTokenCreatureIfEmpty );
+					c.controller.opponent.fieldsC.forEachField( TempDatabaseUtils.doSpawnTokenCreatureIfEmpty );
 				}
 			}
 			
@@ -1494,36 +1441,119 @@ package duel.cards
 			
 			//{ CREATURES
 			
-			F[ "swap_ultimatum" ] =
+			F[ "ace1_lvl2" ] =
 			function( c:Card ):void
 			{
-				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.TURN_START );
-				c.propsT.effect.watcherActivate.funcCondition = 
-				function( p:GameplayProcess ):Boolean {
-					if ( c.indexedField.opposingCreature == null ) return false;
-					if ( c.indexedField.samesideCreature == null ) return false;
-					return c.controller.opponent == p.getPlayer();
+				const BROTHER:String = c.primalData.getVarSlug( 0 );
+				c.propsC.summonConditionManual = 
+				function( field:CreatureField ):Boolean {
+					return !field.isEmpty && field.topCard.slug == BROTHER;
+				}
+				c.propsC.summonConditionAutomatic = 
+				function( field:CreatureField ):Boolean {
+					return false;
+				}
+			}
+			
+			F[ "ace1_lvl3" ] =
+			function( c:Card ):void
+			{
+				const BROTHER:String = c.primalData.getVarSlug( 0 );
+				c.propsC.summonConditionManual = 
+				function( field:CreatureField ):Boolean {
+					return !field.isEmpty && field.topCard.slug == BROTHER;
+				}
+				c.propsC.summonConditionAutomatic = 
+				function( field:CreatureField ):Boolean {
+					return false;
 				}
 				
-				c.propsT.effect.watcherTriggered.watchFor( GameplayProcess.TURN_END );
-				c.propsT.effect.watcherTriggered.funcCondition = 
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.DIE );
+				special.funcCondition =
 				function( p:GameplayProcess ):Boolean {
-					if ( c.indexedField.samesideCreature == null ) return false;
-					return c.controller.opponent == p.getPlayer();
+					return c == p.getSourceCard() && !p.getDeathIsFromCombat();
 				}
-				c.propsT.effect.watcherTriggered.funcEffect = 
+				special.funcActivate =
 				function( p:GameplayProcess ):void {
-					if ( c.indexedField.opposingCreature == null )
-						TempDatabaseUtils.doKill( c.indexedField.samesideCreature, c );
-					else
-						TempDatabaseUtils.doForceSwap( c.indexedField.samesideCreature,
-							c.indexedField.opposingCreatureField, true );
+					p.abort();
 				}
-				
-				c.propsT.effect.watcherDeactivate.watchFor( GameplayProcess.TURN_END );
-				c.propsT.effect.watcherDeactivate.funcCondition = 
-				function( p:GameplayProcess ):Boolean {
-					return c.controller.opponent == p.getPlayer();
+			}
+			
+			F[ "problematic_sam" ] =
+			function( c:Card ):void
+			{
+				c.propsC.summonConditionManual = 
+				c.propsC.summonConditionAutomatic = 
+				function( field:CreatureField ):Boolean {
+					return field.opposingCreatureField.isEmpty;
+				}
+			}
+			
+			F[ "angered" ] =
+			function( c:Card ):void
+			{
+				var buff:Buff = c.statusC.addNewBuff( false );
+				buff.isActive = 
+				function():Boolean {
+					return c.isInPlay 
+						&& !c.indexedField.opposingCreatureField.isEmpty;
+				}
+				buff.powerOffset = c.primalData.getVarInt( 0 );
+			}
+			
+			F[ "angered2" ] =
+			function( c:Card ):void
+			{
+				var buff:Buff = c.statusC.addNewBuff( false );
+				buff.isActive = 
+				function():Boolean {
+					return c.isInPlay 
+						&& !c.indexedField.opposingCreatureField.isEmpty 
+						&& c.indexedField.opposingCreature.faceDown;
+				}
+				buff.powerOffset = c.primalData.getVarInt( 0 );
+			}
+			
+			F[ "angered3" ] =
+			function( c:Card ):void
+			{
+				var buff:Buff = c.statusC.addNewBuff( false );
+				buff.isActive = 
+				function():Boolean {
+					return c.isInPlay
+						&& c.controller.creatureCount < c.controller.opponent.creatureCount;
+				}
+				buff.powerOffset = c.primalData.getVarInt( 0 );
+			}
+			
+			F[ "dual_force_spirit" ] =
+			function( c:Card ):void
+			{
+				c.statusC.addNewBuff( false ).powerOffset =
+				function( cc:Card ):int {
+					var r:int = 0;
+					if ( cc.isInPlay )
+					{
+						if ( !c.indexedField.samesideCreatureFieldToTheLeft.isEmpty )
+							r += c.indexedField.samesideCreatureToTheLeft.statusC.basePowerValue;
+						if ( !c.indexedField.samesideCreatureFieldToTheRight.isEmpty )
+							r += c.indexedField.samesideCreatureToTheRight.statusC.basePowerValue;
+					}
+					return r;
+				}
+			}
+			
+			F[ "ritual_c_f1" ] =
+			F[ "ritual_c_f2" ] =
+			F[ "ritual_c_f3" ] =
+			function( c:Card ):void
+			{
+				c.propsC.summonConditionManual = 
+				function( field:CreatureField ):Boolean {
+					return false;
 				}
 			}
 			
@@ -1644,13 +1674,14 @@ package duel.cards
 				}
 			}
 			
+			F[ "mana_thing" ] =
 			F[ "mana_beast" ] =
 			function( c:Card ):void
 			{
 				const PWR:int = c.primalData.getVarInt( 0 );
 				c.statusC.addNewBuff( false ).powerOffset =
 				function( cc:Card ):int {
-					return c.controller.mana.current * PWR;
+					return PWR * c.controller.mana.current;
 				}
 			}
 			
