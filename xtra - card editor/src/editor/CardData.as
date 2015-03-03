@@ -22,13 +22,14 @@ package editor
 		private var _prettyDescription:String = "";
 		
 		//
-		public function hasTag( txt:String):Boolean
+		public function hasTag( txt:String ):Boolean
 		{ return tags.indexOf( txt ) > -1 }
 		
 		public function hasText( txt:String):Boolean
 		{
-			if ( name.toLowerCase().search( txt ) > -1 ) return true;
-			if ( description.toLowerCase().search( txt ) > -1 ) return true;
+			if ( _slug.toLowerCase().search( txt ) > -1 ) return true;
+			if ( _name.toLowerCase().search( txt ) > -1 ) return true;
+			if ( _prettyDescription.toLowerCase().search( txt ) > -1 ) return true;
 			return false;
 		}
 		
