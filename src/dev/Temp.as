@@ -20,9 +20,9 @@ package dev
 			
 			//"spike", 
 			//"grand_powerhealer", 
-			"emptyshell",
-			"emptyshell",
-			"emptyshell",
+			//"emptyshell",
+			//"emptyshell",
+			//"emptyshell",
 			//"tempower2",
 			//"paulgrand",
 			//"paulgrand",
@@ -38,7 +38,7 @@ package dev
 			//"trapowered",
 			//"trapowered2",
 			//"trapowered3",
-			"bloodhaggler2",
+			//"bloodhaggler2",
 			
 			//"eject",
 			//"sneakshot",
@@ -59,10 +59,7 @@ package dev
 			//paulgrand
 			
 			/**  TEST  **/
-			//"taunting_dance",
-			//"taunt",
 			
-			"antiflipper",
 			/**
 			"resurrecter3",
 			"blinding_rage",
@@ -70,8 +67,6 @@ package dev
 			"bomb2",
 			"brainleech",
 			"trapreturner",
-			"gcontract_swap",
-			"swap_ultimatum",
 			"time_bomb",
 			"i_dare_you",
 			"beyond_shield",
@@ -79,18 +74,16 @@ package dev
 			"apocalypta",
 			"unstable_mech",
 			"armageddon",
-			"ritual_t_f1",
-			"ritual_t_f2",
-			"ritual_c_f3",
-			"ritual_c_f1",
-			"ritual_c_f2",
-			"ritual_c_f3",
-
+			"gcontract_swap",
 			
 			/**  DONE (TRAPS)  **/
 			
-			//"last_stand",
-			//"enemyhealer",
+			"ritual_t_f1",
+			"ritual_t_f2",
+			"ritual_t_f3",
+			"swap_ultimatum",
+			"last_stand",
+			"enemyhealer",
 			/**
 			"depowering_gas",  
 			"depower",
@@ -144,9 +137,13 @@ package dev
 			
 			/**  DONE (CREATURES)  **/
 			
+			"ritual_c_f1",
+			"ritual_c_f2",
+			"ritual_c_f3",
+			"piercing_george2",
+			"antiflipper",
 			"miller",
 			"antisocial_archknight",
-			"piercing_george2",
 			"resque_zack",
 			"social_fiend",
 			"unkillable_barny",
