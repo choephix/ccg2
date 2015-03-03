@@ -121,6 +121,18 @@ package dev
 			
 			/**  DONE (CREATURES)  **/
 			
+			"good_defender",
+			"good_offender",
+			"mana_powered_bitch",
+			"fatal_spirit",
+			"unstable_mech",
+			"antizero",
+			"power_healer",
+			"handy",
+			"linked_bro1",
+			"linked_bro2",
+			"linked_bro3",
+			"linked_bro4",
 			"mana_thing",
 			"ace1_lvl1",
 			"ace1_lvl2",

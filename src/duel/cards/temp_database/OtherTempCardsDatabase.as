@@ -116,6 +116,7 @@ package duel.cards.temp_database
 				}
 				
 				c.statusC.addNewBuff( false ).cannotAttack = true;
+				c.statusC.addNewBuff( false ).cannotRelocate = true;
 				c.statusC.addNewBuff( false ).powerOffset =
 				function( cc:Card ):int {
 					
