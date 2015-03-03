@@ -329,9 +329,9 @@ package editor
 					switch ( c.data.mark )
 					{
 						case 0x000000 : c.data.mark = 0x111111; break;
-						case 0x111111 : c.data.mark = 0x0088FF; break;
-						case 0x0088FF : c.data.mark = 0xFF4400; break;
-						case 0xFF4400 : c.data.mark = 0x000000; break;
+						case 0x111111 : c.data.mark = 0xFF4400; break;
+						case 0xFF4400 : c.data.mark = 0x0088FF; break;
+						case 0x0088FF : c.data.mark = 0x000000; break;
 						default : c.data.mark = 0x000000; break;
 					}
 					c.onDataChange();
