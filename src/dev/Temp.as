@@ -12,7 +12,12 @@ package dev
 	 */
 	public class Temp 
 	{
-		public static const DECK1:Array = [
+		public static var DECK1:Array = [ "marco", "jerry", "broodelf2", "handy", "defmove_left", "shmester", "polo", "turnend", "berserker", "token_summoner4", "jack", "trappeek", "spike", "darkassasin3", "cripple", "flappy_rooster", "saviour", "jill", "sneakshot", "vendeto", "powerhealer2", "broodelf1", "surprise_attack", "emma", "paulgrand", "emptyshell", "broodelf3", "doe1", "ritual_t_f2", "swapper2", "broodelf4", "doublemana", "badfate", "last_stand", "vendeto_grand", "ritual_c_f2", ];
+		
+		public static var DECK2:Array = [ "zag", "cheerleader1", "empower", "cheerleader2", "drawson1", "equality", "cheerleader3", "zig", "cheerleader4", "mario", "manadrain", "confusor", "turnhealer", "tempower2", "them_damn_tokens", "grandegrand", "swap_right", "ed", "deathdraw", "unkillable_barny", "move_trap_hole", "edd", "evo_g_f2", "evo_a_f2", "antigrando", "hired_mage", "freefred", "drawhater", "ritual_t_f1", "man_of_honor", "deckstructor", "force_field", "final_heal", "doe2", "eddy", "ritual_c_f1", ];
+		
+		
+		public static const DECK_TEST:Array = [
 			
 			/**  HELPERS  **/
 			"___kami___", 
@@ -393,14 +398,6 @@ package dev
 			/**  FROZEN  **/
 			//"blinding_rage",
 		];
-		
-		public static const DECK2:Array = DECK1;
-		//public static const DECK2:Array = [
-			//"marco", "polo",
-			//"zig", "zag",
-			//"banana_a", "banana_b",
-		//];
-		
 		
 		public static function getColorForCard( card:Card ):uint 
 		{
