@@ -784,7 +784,8 @@ package duel.processes
 			pro.onStart =
 			function complete( c:Card ):void 
 			{
-				c.lot.removeCard( c );
+				if ( c.lot )
+					c.lot.removeCard( c );
 				c.sprite.animFadeToNothing( true );
 			}
 		}

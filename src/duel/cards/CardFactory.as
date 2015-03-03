@@ -1258,6 +1258,7 @@ package duel.cards
 				c.propsT.effect.watcherActivate.funcCondition =
 				function( p:GameplayProcess ):Boolean {
 					if ( !c.indexedField.samesideCreatureField.isEmpty ) return false;
+					if ( c.indexedField.opposingCreature != p.getAttacker() ) return false;
 					if ( findTarget() == null ) return false;
 					return true;
 				}
@@ -3592,7 +3593,7 @@ package duel.cards
 				special.watch( GameplayProcess.ENTER_PLAY_COMPLETE );
 				special.funcCondition =
 				function( p:GameplayProcess ):Boolean {
-					return c != p.getSourceCard();
+					return c != p.getSourceCard() && p.getSourceCard().isCreature;
 				}
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
@@ -3926,30 +3927,18 @@ package duel.cards
 				function( f:CreatureField ):Boolean { return false }
 				
 				const GRAND:String = c.primalData.getVarSlug( 0 );
-				var doCheck:Boolean;
 				
-				var ongoing:OngoingEffect;
-				ongoing = c.propsC.addOngoing();
-				ongoing.funcCondition =
-				function( p:GameplayProcess ):Boolean
-				{
-					return doCheck;
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watchAll()
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c.controller.grave.findBySlug( GRAND ) == null;
 				}
-				ongoing.funcUpdate =
-				function( p:GameplayProcess ):void
-				{
-					if ( !doCheck )
-					{
-						if ( p.name == GameplayProcess.SUMMON_COMPLETE && p.getSourceCard() == c )
-							doCheck = true;
-						else
-							return;
-					}
-					if ( c.controller.grave.findBySlug( GRAND ) == null )
-					{
-						doCheck = false;
-						TempDatabaseUtils.doKill( c, c );
-					}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					TempDatabaseUtils.doKill( c, c );
 				}
 			}
 			
@@ -4696,7 +4685,7 @@ package duel.cards
 				buff.cannotAttack = true;
 				buff.isActive = 
 				function( p:GameplayProcess ):Boolean {
-					return c.indexedField.opposingCreature == null;
+					return c.isInPlay && c.indexedField.opposingCreature == null;
 				}
 			}
 			
