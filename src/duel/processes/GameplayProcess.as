@@ -44,6 +44,8 @@ package duel.processes
 		/// c:Card, field:CreatureField
 		static public const RELOCATE_COMPLETE:String = "relocateComplete";
 		/// c:Card
+		static public const PRE_ATTACK:String = "preAttack";
+		/// c:Card
 		static public const ATTACK:String = "attack";
 		/// c:Card
 		static public const ATTACK_COMPLETE:String = "attackComplete";

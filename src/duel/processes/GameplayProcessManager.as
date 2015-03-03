@@ -573,7 +573,7 @@ package duel.processes
 			var pro:GameplayProcess;
 			
 			/// ATTACK (step 1_
-			pro = chain( pro, gen( GameplayProcess.ATTACK, c, free ) );
+			pro = chain( pro, gen( GameplayProcess.PRE_ATTACK, c, free ) );
 			pro.onStart =
 			function onStart( c:Card, free:Boolean ):void
 			{
