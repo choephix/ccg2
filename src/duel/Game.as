@@ -136,6 +136,7 @@ package duel
 			
 			//{ VISUALS
 			bg = new Background( assets );
+			bg.blendMode = BlendMode.NONE;
 			addChild( bg );
 			
 			table = new TableSprite();
@@ -241,8 +242,8 @@ package duel
 			
 			//{ PREPARE GAMEPLAY
 			
-			var DECK1:Array = Temp.DECK1;
-			var DECK2:Array = Temp.DECK1;
+			var DECK1:Array = CONFIG::sandbox ? Temp.DECK_TEST : Temp.DECK1;
+			var DECK2:Array = CONFIG::sandbox ? Temp.DECK_TEST : Temp.DECK2;
 			
 			var time:Number = 0.880;
 			var i:int;

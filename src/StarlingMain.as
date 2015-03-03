@@ -115,8 +115,7 @@ package {
 			CONFIG::mobile { gameMeta.myUserName = Capabilities.cpuArchitecture+"_"+UID }
 			
 			/// MENU
-			//CONFIG::desktop
-			//{ Temp.tweenAppSize( App.WINDOW_W, App.WINDOW_H, showMenu ); return; }
+			//CONFIG::desktop { Temp.tweenAppSize( App.WINDOW_W, App.WINDOW_H, showMenu ); return; }
 			
 			App.cardsData.load( showMenu );
 		}
@@ -124,6 +123,7 @@ package {
 		private function showMenu():void {
 			
 			var bg:Image = App.assets.generateImage( "mainbg", false, false );
+			bg.blendMode = BlendMode.NONE;
 			addChild( bg );
 			
 			bg.alpha = .0;
