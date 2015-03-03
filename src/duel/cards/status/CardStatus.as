@@ -13,8 +13,15 @@ package duel.cards.status
 		public var card:Card;
 		public var props:CardProperties;
 		
+		public var publiclyKnown:Boolean = false;
+		
 		public function onGameProcess( p:GameplayProcess ):void
 		{}
+		
+		public function onLeavePlay():void
+		{
+			publiclyKnown = false;
+		}
 		
 		public function initialize():void
 		{ props = card.props }

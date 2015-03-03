@@ -1067,8 +1067,7 @@ package duel.processes
 			
 			function complete( c:Card ):void 
 			{
-				if ( c.isCreature )
-					c.statusC.onLeavePlay();
+				c.status.onLeavePlay();
 			}
 			
 			/// returns LEAVE_PLAY (the chain head)
@@ -1139,6 +1138,7 @@ package duel.processes
 			function onEnd( c:Card ):void
 			{
 				c.faceDown = false;
+				c.status.publiclyKnown = true;
 			}
 			
 			/// FLIP BACK DOWN

@@ -122,11 +122,12 @@ package duel.cards.status {
 			_skipTribute = buffs.skipTribute || game.globalBuffs.getSkipTribute( card );
 		}
 		
-		public function onLeavePlay():void
+		public override function onLeavePlay():void
 		{
 			reset();
 			buffs.removeAllWeak();
 			card.history.tribute = null;
+			super.onLeavePlay();
 		}
 		
 		public function onTurnEnd():void
