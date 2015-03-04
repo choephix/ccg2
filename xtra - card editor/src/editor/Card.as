@@ -376,6 +376,9 @@ package editor
 			tDescr.visible = value && tDescr.text != "";
 			tExtra.visible = value && tExtra.text != "";
 			tSlug.visible = value && tSlug.text != "";
+			
+			CONFIG::optimized
+			{ border.visible = value }
 		}
 	}
 }
