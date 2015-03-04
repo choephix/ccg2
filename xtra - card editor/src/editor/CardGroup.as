@@ -201,6 +201,8 @@ package editor
 		{
 			var c:Card = e.data as Card;
 			
+			_arrangementDirty = true;
+			
 			if ( !bg.getBounds( stage ).containsPoint( App.mouseXY ) )
 				return;
 			
@@ -211,7 +213,6 @@ package editor
 				{
 					var g:CardGroup = c.currentGroup;
 					g.removeCard( c, true );
-					g.arrange();
 				}
 			
 			var index:int;
@@ -233,7 +234,6 @@ package editor
 			
 			addCard( c, index, true );
 			
-			_arrangementDirty = true;
 			updateRegisteredCards();
 		}
 		
@@ -489,6 +489,9 @@ package editor
 		{
 			return cardsParent.contains( c );
 		}
+		
+		public function makeArrangementDirty():void
+		{ _arrangementDirty = true }
 		
 		private function arrange():void 
 		{
