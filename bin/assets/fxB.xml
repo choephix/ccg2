@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:ba65f6b0a0f0a0f96013446c7dba06da:fab7d1124aff662be933ff6e83e966ba:7305ddb6c10f875aeee5d6918116f334$ -->
+<TextureAtlas imagePath="fxB.atf">
+    <SubTexture name="glowB00" x="2" y="2" width="168" height="190"/>
+    <SubTexture name="glowB01" x="172" y="2" width="168" height="190"/>
+    <SubTexture name="glowB02" x="342" y="2" width="168" height="190"/>
+    <SubTexture name="glowB03" x="512" y="2" width="168" height="190"/>
+    <SubTexture name="glowB04" x="682" y="2" width="168" height="190"/>
+    <SubTexture name="glowB05" x="852" y="2" width="168" height="190"/>
+    <SubTexture name="glowB06" x="2" y="194" width="168" height="190"/>
+    <SubTexture name="glowB07" x="172" y="194" width="168" height="190"/>
+    <SubTexture name="glowB08" x="342" y="194" width="168" height="190"/>
+    <SubTexture name="glowB09" x="512" y="194" width="168" height="190"/>
+    <SubTexture name="glowB10" x="682" y="194" width="168" height="190"/>
+    <SubTexture name="glowB11" x="852" y="194" width="168" height="190"/>
+    <SubTexture name="glowB12" x="2" y="386" width="168" height="190"/>
+    <SubTexture name="glowB13" x="172" y="386" width="168" height="190"/>
+    <SubTexture name="glowB14" x="342" y="386" width="168" height="190"/>
+    <SubTexture name="glowB15" x="512" y="386" width="168" height="190"/>
+    <SubTexture name="glowB16" x="682" y="386" width="168" height="190"/>
+    <SubTexture name="glowB17" x="852" y="386" width="168" height="190"/>
+    <SubTexture name="glowB18" x="2" y="578" width="168" height="190"/>
+    <SubTexture name="glowB19" x="172" y="578" width="168" height="190"/>
+    <SubTexture name="glowB20" x="342" y="578" width="168" height="190"/>
+    <SubTexture name="glowB21" x="512" y="578" width="168" height="190"/>
+    <SubTexture name="glowB22" x="682" y="578" width="168" height="190"/>
+    <SubTexture name="glowB23" x="852" y="578" width="168" height="190"/>
+    <SubTexture name="glowB24" x="2" y="770" width="168" height="190"/>
+    <SubTexture name="glowB25" x="172" y="770" width="168" height="190"/>
+    <SubTexture name="glowB26" x="342" y="770" width="168" height="190"/>
+    <SubTexture name="glowB27" x="512" y="770" width="168" height="190"/>
+    <SubTexture name="glowB28" x="682" y="770" width="168" height="190"/>
+    <SubTexture name="glowB29" x="852" y="770" width="168" height="190"/>
+    <SubTexture name="glowB30" x="2" y="962" width="168" height="190"/>
+    <SubTexture name="glowB31" x="172" y="962" width="168" height="190"/>
+    <SubTexture name="glowB32" x="342" y="962" width="168" height="190"/>
+    <SubTexture name="glowB33" x="512" y="962" width="168" height="190"/>
+    <SubTexture name="glowB34" x="682" y="962" width="168" height="190"/>
+    <SubTexture name="glowB35" x="852" y="962" width="168" height="190"/>
+    <SubTexture name="glowB36" x="2" y="1154" width="168" height="190"/>
+    <SubTexture name="glowB37" x="2" y="1346" width="168" height="190"/>
+    <SubTexture name="glowB38" x="2" y="1538" width="168" height="190"/>
+    <SubTexture name="glowB39" x="2" y="1730" width="168" height="190"/>
+    <SubTexture name="glowB40" x="172" y="1154" width="168" height="190"/>
+    <SubTexture name="glowB41" x="172" y="1346" width="168" height="190"/>
+    <SubTexture name="glowB42" x="172" y="1538" width="168" height="190"/>
+    <SubTexture name="glowB43" x="172" y="1730" width="168" height="190"/>
+    <SubTexture name="glowB44" x="342" y="1154" width="168" height="190"/>
+    <SubTexture name="glowB45" x="512" y="1154" width="168" height="190"/>
+    <SubTexture name="glowB46" x="682" y="1154" width="168" height="190"/>
+    <SubTexture name="glowB47" x="852" y="1154" width="168" height="190"/>
+    <SubTexture name="glowB48" x="342" y="1346" width="168" height="190"/>
+    <SubTexture name="glowB49" x="342" y="1538" width="168" height="190"/>
+    <SubTexture name="glowB50" x="342" y="1730" width="168" height="190"/>
+    <SubTexture name="glowB51" x="512" y="1346" width="168" height="190"/>
+    <SubTexture name="glowB52" x="682" y="1346" width="168" height="190"/>
+    <SubTexture name="glowB53" x="852" y="1346" width="168" height="190"/>
+    <SubTexture name="glowB54" x="512" y="1538" width="168" height="190"/>
+    <SubTexture name="glowB55" x="512" y="1730" width="168" height="190"/>
+    <SubTexture name="glowB56" x="682" y="1538" width="168" height="190"/>
+    <SubTexture name="glowB57" x="852" y="1538" width="168" height="190"/>
+    <SubTexture name="glowB58" x="682" y="1730" width="168" height="190"/>
+</TextureAtlas>

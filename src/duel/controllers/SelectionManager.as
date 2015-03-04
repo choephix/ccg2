@@ -1,8 +1,10 @@
 package duel.controllers
 {
+	import chimichanga.global.utils.MathF;
 	import duel.cards.Card;
 	import duel.cards.temp_database.TempDatabaseUtils;
 	import duel.display.fields.FieldSpriteGuiState;
+	import duel.display.fx.CardGlow;
 	import duel.GameEntity;
 	import duel.gameplay.CardEvents;
 	import duel.players.Player;
@@ -18,6 +20,8 @@ package duel.controllers
 	 */
 	public class SelectionManager extends GameEntity
 	{
+		private var cardGlow:CardGlow;
+		
 		private var faq:PlayerControllerFAQ;
 		private var player:Player;
 		
@@ -39,6 +43,9 @@ package duel.controllers
 		
 		public function initialize( player:Player, faq:PlayerControllerFAQ ):void
 		{
+			this.cardGlow = new CardGlow();
+			game.juggler.add( cardGlow );
+			
 			this.player = player;
 			this.faq = faq;
 			
@@ -499,10 +506,14 @@ package duel.controllers
 					player.handSprite.selectedCard = selectedCard;
 					
 				selectedCard.sprite.isSelected = true;
+				selectedCard.sprite.addChild( cardGlow );
+				cardGlow.on = true;
 			}
 			else
 			{
+				//cardGlow.removeFromParent();
 				player.handSprite.selectedCard = null;
+				cardGlow.on = false;
 				
 				var i:int;
 				for ( i = 0; i < game.indexedFields.length; i++ ) 
