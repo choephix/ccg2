@@ -272,6 +272,12 @@ package duel.cards.status {
 		{
 			return "N/A";
 		}
+		
+		CONFIG::heavytest
+		public override function heavyTest():void
+		{
+			buffs.heavyTest();
+		}
 	}
 
 }

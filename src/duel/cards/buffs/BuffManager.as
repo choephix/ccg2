@@ -22,7 +22,7 @@ package duel.cards.buffs
 			var o:*;
 			for ( var i:int = 0; i < _numBuffs; i++ )
 			{
-				if ( !_buffs[ i ].getIsActive() ) continue;
+				if ( !_buffs[ i ].getIsActive( _card ) ) continue;
 				o = _buffs[ i ].powerOffset;
 				if ( o == null ) continue;
 				r += o is Function ? o( _card ) : int( o );
@@ -36,7 +36,7 @@ package duel.cards.buffs
 			var o:*;
 			for ( var i:int = 0; i < _numBuffs; i++ )
 			{
-				if ( !_buffs[ i ].getIsActive() ) continue;
+				if ( !_buffs[ i ].getIsActive( _card ) ) continue;
 				o = _buffs[ i ].cannotAttack;
 				if ( o == null ) continue;
 				r ||= o is Function ? o( _card ) : Boolean( o );
@@ -50,7 +50,7 @@ package duel.cards.buffs
 			var o:*;
 			for ( var i:int = 0; i < _numBuffs; i++ )
 			{
-				if ( !_buffs[ i ].getIsActive() ) continue;
+				if ( !_buffs[ i ].getIsActive(_card) ) continue;
 				o = _buffs[ i ].cannotRelocate;
 				if ( o == null ) continue;
 				r ||= o is Function ? o( _card ) : Boolean( o );
@@ -64,7 +64,7 @@ package duel.cards.buffs
 			var o:*;
 			for ( var i:int = 0; i < _numBuffs; i++ )
 			{
-				if ( !_buffs[ i ].getIsActive() ) continue;
+				if ( !_buffs[ i ].getIsActive(_card) ) continue;
 				o = _buffs[ i ].cannotBeTribute;
 				if ( o == null ) continue;
 				r ||= o is Function ? o( _card ) : Boolean( o );
@@ -78,7 +78,7 @@ package duel.cards.buffs
 			var o:*;
 			for ( var i:int = 0; i < _numBuffs; i++ )
 			{
-				if ( !_buffs[ i ].getIsActive() ) continue;
+				if ( !_buffs[ i ].getIsActive(_card) ) continue;
 				o = _buffs[ i ].skipTribute;
 				if ( o == null ) continue;
 				r ||= o is Function ? o( _card ) : Boolean( o );
@@ -105,6 +105,8 @@ package duel.cards.buffs
 		public function addBuff( o:Buff ):void 
 		{
 			_numBuffs = _buffs.push( o );
+			
+			CONFIG::heavytest { o.heavyTest( _card ) }
 		}
 		
 		public function removeBuff( o:Buff ):void
@@ -136,6 +138,13 @@ package duel.cards.buffs
 		}
 		
 		//}
+		
+		CONFIG::heavytest
+		public function heavyTest():void
+		{
+			for ( var i:int = 0; i < _numBuffs; i++ )
+				_buffs[ i ].heavyTest( _card );
+		}
 		
 	}
 

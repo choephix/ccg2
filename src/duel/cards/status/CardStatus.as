@@ -25,5 +25,9 @@ package duel.cards.status
 		
 		public function initialize():void
 		{ props = card.props }
+		
+		CONFIG::heavytest
+		public function heavyTest():void
+		{}
 	}
 }

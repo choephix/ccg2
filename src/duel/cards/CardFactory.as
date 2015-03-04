@@ -572,10 +572,10 @@ package duel.cards
 				function( p:GameplayProcess ):void {
 					var b:Buff = c.indexedField.opposingCreature.statusC.addNewBuff( true );
 					b.powerOffset = -c.primalData.getVarInt( 0 );
-					b.expiryCondition = 
-					function( p:GameplayProcess ):Boolean {
-						return p.name == GameplayProcess.TURN_END;
-					}
+					b.expiryCondition = expireBuff;
+				}
+				function expireBuff( p:GameplayProcess ):Boolean {
+					return p.name == GameplayProcess.TURN_END;
 				}
 			}
 			
@@ -592,10 +592,10 @@ package duel.cards
 				function( p:GameplayProcess ):void {
 					var b:Buff = c.indexedField.samesideCreature.statusC.addNewBuff( true );
 					b.powerOffset = c.primalData.getVarInt( 0 );
-					b.expiryCondition = 
-					function( p:GameplayProcess ):Boolean {
-						return p.name == GameplayProcess.TURN_END;
-					}
+					b.expiryCondition = expireBuff;
+				}
+				function expireBuff( p:GameplayProcess ):Boolean {
+					return p.name == GameplayProcess.TURN_END;
 				}
 			}
 			
@@ -1737,7 +1737,7 @@ package duel.cards
 			{
 				var buff:Buff = c.statusC.addNewBuff( false );
 				buff.isActive = 
-				function():Boolean {
+				function( c:Card ):Boolean {
 					return c.isInPlay 
 						&& !c.indexedField.opposingCreatureField.isEmpty;
 				}
@@ -1749,7 +1749,7 @@ package duel.cards
 			{
 				var buff:Buff = c.statusC.addNewBuff( false );
 				buff.isActive = 
-				function():Boolean {
+				function( c:Card ):Boolean {
 					return c.isInPlay 
 						&& !c.indexedField.opposingCreatureField.isEmpty 
 						&& c.indexedField.opposingCreature.faceDown;
@@ -1762,7 +1762,7 @@ package duel.cards
 			{
 				var buff:Buff = c.statusC.addNewBuff( false );
 				buff.isActive = 
-				function():Boolean {
+				function( c:Card ):Boolean {
 					return c.isInPlay
 						&& c.controller.creatureCount < c.controller.opponent.creatureCount;
 				}
@@ -2045,7 +2045,7 @@ package duel.cards
 				var buff:Buff = c.statusC.addNewBuff( false );
 				buff.cannotAttack = true;
 				buff.isActive = 
-				function():Boolean {
+				function( c:Card ):Boolean {
 					if ( !c.isInPlay ) return false;
 					if ( c.indexedField.samesideCreatureToTheLeft != null ) return true;
 					if ( c.indexedField.samesideCreatureToTheRight != null ) return true;
@@ -2634,7 +2634,7 @@ package duel.cards
 				var buff:Buff = c.statusC.addNewBuff( false );
 				buff.powerOffset = c.primalData.getVarInt( 0 );
 				buff.isActive = 
-				function():Boolean {
+				function( c:Card ):Boolean {
 					if ( !c.isInPlay ) return false;
 					if ( c.indexedField.opposingCreature == null ) return false;
 					if ( c.indexedField.opposingCreature.faceDown ) return false;
@@ -2743,7 +2743,7 @@ package duel.cards
 			function( c:Card ):void
 			{
 				c.statusC.addNewBuff( true ).powerOffset =
-				function():int {
+				function( cc:Card ):int {
 					return getTopCardBasePower( c.controller.opponent.grave );
 				}
 			}
@@ -2756,7 +2756,7 @@ package duel.cards
 				var buff:Buff = c.statusC.addNewBuff( false );
 				buff.powerOffset = c.primalData.getVarInt( 0 );
 				buff.isActive = 
-				function():Boolean {
+				function( c:Card ):Boolean {
 					return c.controller.fieldsC.findBySlug( BROTHER ) != null;
 				}
 			}
@@ -2859,7 +2859,7 @@ package duel.cards
 				var buff:Buff = c.statusC.addNewBuff( false );
 				buff.powerOffset = c.primalData.getVarInt( 0 );
 				buff.isActive = 
-				function():Boolean {
+				function( c:Card ):Boolean {
 					if ( !c.isInPlay ) return false;
 					if ( c.indexedField.samesideCreatureToTheLeft != null )
 						if ( c.indexedField.samesideCreatureToTheLeft.slug == BROTHER )
@@ -2967,7 +2967,7 @@ package duel.cards
 				
 				var buff:Buff = c.statusC.addNewBuff( false )
 				buff.isActive = 
-				function():Boolean {
+				function( c:Card ):Boolean {
 					return c.isInPlay && c.indexedField.opposingCreature == null;
 				}
 				buff.cannotAttack = true;
@@ -4014,7 +4014,7 @@ package duel.cards
 				var buff:Buff = c.statusC.addNewBuff( false )
 				buff.powerOffset = c.primalData.getVarInt( 0 );
 				buff.isActive = 
-				function():Boolean {
+				function( cc:Card ):Boolean {
 					return c.controller.fieldsC.countOccupied >= c.controller.fieldsC.count;
 				}
 			}
@@ -4258,7 +4258,7 @@ package duel.cards
 				var buff:Buff = c.statusC.addNewBuff( false );
 				buff.skipTribute = true;
 				buff.isActive =
-				function():Boolean {
+				function( cc:Card ):Boolean {
 					return c.controller.creatureCount == 0;
 				}
 			}
@@ -4269,7 +4269,7 @@ package duel.cards
 				var buff:Buff = c.statusC.addNewBuff( false );
 				buff.skipTribute = true;
 				buff.isActive =
-				function():Boolean {
+				function( cc:Card ):Boolean {
 					return c.controller.hand.cardsCount == 1;
 				}
 			}
@@ -4280,7 +4280,7 @@ package duel.cards
 				var buff:Buff = c.statusC.addNewBuff( false );
 				buff.skipTribute = true;
 				buff.isActive =
-				function():Boolean {
+				function( cc:Card ):Boolean {
 					if ( c.controller.trapCount > 0 ) return false;
 					if ( c.controller.opponent.fieldsC.countOccupied < c.controller.opponent.fieldsC.count ) return false;
 					return true;
@@ -4684,7 +4684,7 @@ package duel.cards
 				var buff:Buff = c.statusC.addNewBuff( false )
 				buff.cannotAttack = true;
 				buff.isActive = 
-				function( p:GameplayProcess ):Boolean {
+				function( c:Card ):Boolean {
 					return c.isInPlay && c.indexedField.opposingCreature == null;
 				}
 			}
@@ -4740,7 +4740,7 @@ package duel.cards
 				var buff:Buff = c.statusC.addNewBuff( false )
 				buff.powerOffset = c.primalData.getVarInt( 0 );
 				buff.isActive = 
-				function( p:GameplayProcess ):Boolean {
+				function( cc:Card ):Boolean {
 					return c.controller.lifePoints <= c.primalData.getVarInt( 1 );
 				}
 			}
@@ -5149,7 +5149,7 @@ package duel.cards
 				var buff:Buff = c.statusC.addNewBuff( false );
 				buff.powerOffset = c.primalData.getVarInt( 2 );
 				buff.isActive = 
-				function():Boolean {
+				function( cc:Card ):Boolean {
 					return c.controller.fieldsC.countCreaturesThat( checkBro ) >= 4;
 				}
 				function checkBro( c:Card ):Boolean {
@@ -5339,6 +5339,10 @@ package duel.cards
 			
 			//
 			c.initialize();
+			
+			CONFIG::heavytest
+			{ c.heavyTest() }
+			
 			return c;
 		}
 		

@@ -222,5 +222,11 @@ package duel.cards
 		{
 			return "\"" + name + "\"";
 		}
+		
+		CONFIG::heavytest
+		public function heavyTest():void
+		{
+			status.heavyTest();
+		}
 	}
 }
