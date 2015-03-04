@@ -1,10 +1,12 @@
-package duel.cards
+package duel.cards.factory
 {
 	import chimichanga.debug.logging.error;
 	import chimichanga.global.app.Platform;
 	import duel.cards.buffs.Buff;
 	import duel.cards.buffs.GlobalBuff;
 	import duel.cards.Card;
+	import duel.cards.CardFAQ;
+	import duel.cards.GameplayFAQ;
 	import duel.cards.properties.cardprops;
 	import duel.cards.temp_database.TempDatabaseUtils;
 	import duel.DamageType;

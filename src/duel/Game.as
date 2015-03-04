@@ -8,7 +8,7 @@ package duel
 	import dev.Temp;
 	import duel.cards.buffs.GlobalBuffManager;
 	import duel.cards.Card;
-	import duel.cards.CardFactory;
+	import duel.cards.factory.CardFactory;
 	import duel.controllers.PlayerAction;
 	import duel.controllers.PlayerActionType;
 	import duel.controllers.UserPlayerController;
@@ -22,7 +22,6 @@ package duel
 	import duel.network.RemoteConnectionController;
 	import duel.network.RemotePlayerActionReceiver;
 	import duel.network.RemotePlayerActionSender;
-	import duel.cards.buffs.GlobalBuff;
 	import duel.players.Player;
 	import duel.players.PlayerEvent;
 	import duel.processes.GameplayProcess;
@@ -39,7 +38,6 @@ package duel
 	import starling.core.Starling;
 	import starling.display.BlendMode;
 	import starling.display.DisplayObjectContainer;
-	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.text.TextField;
 	
