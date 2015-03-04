@@ -98,7 +98,7 @@ package duel.controllers
 		
 		public function canCreatureRelocateTo( c:Card, field:IndexedField, isManual:Boolean ):String
 		{ 
-			if ( c == null || field == null || !c.isInPlay )
+			if ( c == null || field == null || c.field == field || !c.isInPlay )
 				return err;
 			
 			if ( c.controller != field.owner )

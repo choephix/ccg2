@@ -56,6 +56,8 @@ package duel.controllers
 				return;
 			}
 			
+			if ( !active ) return;
+			
 			var c:Card = e.data as Card;
 			
 			trace( "click " + c );
@@ -84,6 +86,8 @@ package duel.controllers
 				game.gui.pMsg( "It's the enemy's turn." );
 				return;
 			}
+			
+			if ( !active ) return;
 			
 			var f:Field = e.data as Field;
 			
