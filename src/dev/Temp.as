@@ -16,7 +16,6 @@ package dev
 		
 		public static var DECK2:Array = [ "zag", "cheerleader1", "empower", "cheerleader2", "drawson1", "equality", "cheerleader3", "zig", "cheerleader4", "mario", "manadrain", "confusor", "turnhealer", "tempower2", "them_damn_tokens", "grandegrand", "swap_right", "ed", "deathdraw", "unkillable_barny", "move_trap_hole", "edd", "evo_g_f2", "evo_a_f2", "antigrando", "hired_mage", "freefred", "drawhater", "ritual_t_f1", "man_of_honor", "deckstructor", "force_field", "final_heal", "doe2", "eddy", "ritual_c_f1", ];
 		
-		
 		public static const DECK_TEST:Array = [
 			
 			/**  HELPERS  **/

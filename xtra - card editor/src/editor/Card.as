@@ -47,6 +47,10 @@ package editor
 		private var _inDrag:Boolean;
 		private var _isOnTop:Boolean;
 		
+		private var _dirty:Boolean;
+		private var _dirtiness:Number = 0.0;
+		private var _showDetail:Boolean;
+		
 		private static var helperPoint:Point = new Point();
 		
 		public function initialize( data:CardData ):void
@@ -224,10 +228,36 @@ package editor
 		
 		private function advanceTime( e:EnterFrameEvent ):void 
 		{
-			if ( !inDrag )
+			if ( !CONFIG::optimized )
 			{
-				x = lerp( x, targetX, G.DAMP2 );
-				y = lerp( y, targetY, G.DAMP3 );
+				if ( !inDrag )
+				{
+					x = lerp( x, targetX, G.DAMP2 );
+					y = lerp( y, targetY, G.DAMP3 );
+				}
+			}
+			else
+			{
+				if ( !inDrag && _dirty )
+					if ( _dirtiness > .01 )
+					{
+						x = lerp( x, targetX, G.DAMP2 );
+						y = lerp( y, targetY, G.DAMP3 );
+						_dirtiness = lerp( _dirtiness, .0, G.DAMP1 );
+					}
+					else
+					{
+						x = targetX;
+						y = targetY;
+						_dirtiness = 0.0;
+						_dirty = false;
+					}
+				
+				_showDetail = _dirtiness < .01 && ( currentGroup == null || currentGroup.scrollDirtiness < .02 );
+				tDescr.alpha = _showDetail ? lerp( tDescr.alpha, 1.0, .2 ) : 0.0;
+				tExtra.alpha = tDescr.alpha;
+				tSlug.alpha = tDescr.alpha;
+				//tTitle.alpha = tDescr.alpha;
 			}
 			
 			border.alpha = lerp( border.alpha, _focused ? .99 : .3, G.DAMP1 );
@@ -235,6 +265,15 @@ package editor
 			helperPoint.setTo( 0, 0 );
 			localToGlobal( helperPoint, helperPoint );
 			visible = helperPoint.y < stage.stageHeight && helperPoint.y > -G.CARD_H;
+		}
+		
+		public function tweenTo( x:Number, y:Number ):void 
+		{
+			if ( targetX == x && targetY == y ) return;
+			targetX = x;
+			targetY = y;
+			_dirty = true;
+			_dirtiness = 1.0;
 		}
 		
 		private function setFocused( value:Boolean ):void 

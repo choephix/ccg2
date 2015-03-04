@@ -44,8 +44,10 @@ package editor
 		private var cardsContainer:Sprite;
 		private var cardsParent:Sprite;
 		
+		public var scrollDirtiness:Number = .0;
 		private var _cardsScroll:Number = .0;
 		private var _focused:Boolean;
+		private var _arrangementDirty:Boolean;
 		
 		public var tformExpanded:CardGroupTransform;
 		public var tformContracted:CardGroupTransform;
@@ -135,6 +137,50 @@ package editor
 			setExpanded( false );
 		}
 		
+		private function advanceTime( e:EnterFrameEvent ):void 
+		{
+			if ( _arrangementDirty )
+			{
+				arrange();
+				_arrangementDirty = false;
+			}
+			
+			tformMaximized.width = App.STAGE_W;
+			tformMaximized.height = App.STAGE_H - tformMaximized.y;
+			
+			bg.alpha = lerp( bg.alpha, _focused ? .67 : .33, G.DAMP1 );
+			titleContainer.alpha = lerp( titleContainer.alpha, _focused ? 1.0 : .0, G.DAMP2 );
+			titleLabel.alpha = lerp( titleLabel.alpha, _focused ? 1.0 : .4, G.DAMP1 );
+			
+			b1.scaleX = lerp( b1.scaleX, tformCurrent == tformContracted ? .67 : 1.0, G.DAMP1 );
+			b1.scaleY = lerp( b1.scaleY, tformCurrent == tformContracted ? .67 : 1.0, G.DAMP3 );
+			b2.visible = tformCurrent != tformContracted;
+			b3.visible = tformCurrent == tformExpanded;
+			b4.visible = tformCurrent != tformContracted;
+			b5.visible = false;
+			
+			x = lerp( x, tformCurrent.x, G.DAMP3 );
+			y = lerp( y, tformCurrent.y + view.y, G.DAMP2 );
+			width  = lerp( width, tformCurrent.width, G.DAMP2 );
+			height = lerp( height, tformCurrent.height, G.DAMP1 );
+			
+			if ( scrollDirtiness > .005 )
+			{
+				scrollDirtiness = lerp ( scrollDirtiness, .0, G.DAMP1 );
+				cardsParent.y = lerp( cardsParent.y, CARD_SPACING - ( tformCurrent == tformContracted ? .0 : _cardsScroll ), G.DAMP1 );
+			}
+			else
+			{
+				scrollDirtiness = .0;
+				cardsParent.y = CARD_SPACING - ( tformCurrent == tformContracted ? .0 : _cardsScroll );
+			}
+			
+			//titleContainer.y = lerp( titleContainer.y, tformCurrent == tformContracted ? height : -TITLE_H, G.DAMP3 );
+			//titleLabel.y = titleContainer.y;
+			
+			titleLabel.text = name + ( isContracted ? "" : " (" + countCards + ")" );
+		}
+		
 		private function onCardDragStart( e:Event ):void 
 		{
 			var c:Card = e.data as Card;
@@ -148,13 +194,11 @@ package editor
 			removeCard( c, true );
 			
 			if ( Input.ctrl )
-				arrange();
+				_arrangementDirty = true;
 		}
 		
 		private function onCardDragStop( e:Event ):void 
 		{
-			arrange();
-			
 			var c:Card = e.data as Card;
 			
 			if ( !bg.getBounds( stage ).containsPoint( App.mouseXY ) )
@@ -189,37 +233,8 @@ package editor
 			
 			addCard( c, index, true );
 			
-			arrange();
+			_arrangementDirty = true;
 			updateRegisteredCards();
-		}
-		
-		private function advanceTime( e:EnterFrameEvent ):void 
-		{
-			tformMaximized.width = App.STAGE_W;
-			tformMaximized.height = App.STAGE_H - tformMaximized.y;
-			
-			bg.alpha = lerp( bg.alpha, _focused ? .67 : .33, G.DAMP1 );
-			titleContainer.alpha = lerp( titleContainer.alpha, _focused ? 1.0 : .0, G.DAMP2 );
-			titleLabel.alpha = lerp( titleLabel.alpha, _focused ? 1.0 : .4, G.DAMP1 );
-			
-			b1.scaleX = lerp( b1.scaleX, tformCurrent == tformContracted ? .67 : 1.0, G.DAMP1 );
-			b1.scaleY = lerp( b1.scaleY, tformCurrent == tformContracted ? .67 : 1.0, G.DAMP3 );
-			b2.visible = tformCurrent != tformContracted;
-			b3.visible = tformCurrent == tformExpanded;
-			b4.visible = tformCurrent != tformContracted;
-			b5.visible = false;
-			
-			x = lerp( x, tformCurrent.x, G.DAMP3 );
-			y = lerp( y, tformCurrent.y + view.y, G.DAMP2 );
-			width  = lerp( width, tformCurrent.width, G.DAMP2 );
-			height = lerp( height, tformCurrent.height, G.DAMP1 );
-			
-			cardsParent.y = lerp( cardsParent.y, CARD_SPACING - ( tformCurrent == tformContracted ? .0 : _cardsScroll ), G.DAMP1 );
-			
-			//titleContainer.y = lerp( titleContainer.y, tformCurrent == tformContracted ? height : -TITLE_H, G.DAMP3 );
-			//titleLabel.y = titleContainer.y;
-			
-			titleLabel.text = name + ( isContracted ? "" : " (" + countCards + ")" );
 		}
 		
 		private function onMouseRightClick( e:Event ):void 
@@ -302,7 +317,7 @@ package editor
 					if ( height > tformMaximized.y + tformMaximized.height - y ) height = tformMaximized.y + tformMaximized.height - y;
 					tformExpanded.width = width;
 					tformExpanded.height = height;
-					arrange();
+					_arrangementDirty = true;
 					return;
 				}
 			}
@@ -384,7 +399,7 @@ package editor
 		
 		private function onButtonResize():void
 		{
-			arrange();
+			_arrangementDirty = true;
 		}
 		
 		private function onButtonAdd():void
@@ -418,7 +433,7 @@ package editor
 			c.x = c.x - x - cardsParent.x;
 			c.y = c.y - y - cardsParent.y;
 			
-			arrange();
+			_arrangementDirty = true;
 			return c;
 		}
 		
@@ -455,13 +470,13 @@ package editor
 		{
 			cardsParent.setChildIndex( c, index );
 			updateRegisteredCards();
-			arrange();
+			_arrangementDirty = true;
 		}
 		
 		public function sortCards( f:Function ):void
 		{
 			cardsParent.sortChildren( f );
-			arrange();
+			_arrangementDirty = true;
 			updateRegisteredCards();
 		}
 		
@@ -492,8 +507,7 @@ package editor
 				if ( tformCurrent == tformContracted )
 				{
 					y = spc * ( countCards - i );
-					c.targetX = x;
-					c.targetY = y;
+					c.tweenTo( x, y );
 					
 					c.isOnTop = i == countCards - 1;
 				}
@@ -504,8 +518,7 @@ package editor
 						x = .0;
 						y += G.CARD_H + CARD_SPACING;
 					}
-					c.targetX = x;
-					c.targetY = y;
+					c.tweenTo( x, y );
 					x += G.CARD_W + CARD_SPACING; 
 					
 					c.isOnTop = true;
@@ -564,13 +577,14 @@ package editor
 			if ( value > cardsParent.height - G.CARD_H )
 				value = cardsParent.height - G.CARD_H;
 			_cardsScroll = value;
+			scrollDirtiness = 1.0;
 		}
 		
 		public function setExpanded( value:Boolean ):void 
 		{
 			setMaximized( false );
 			tformCurrent = value ? tformExpanded : tformContracted;
-			arrange();
+			_arrangementDirty = true;
 			
 			if ( !value )
 				parent.setChildIndex( this, 0 );
@@ -579,7 +593,7 @@ package editor
 		public function setMaximized( value:Boolean ):void 
 		{
 			tformCurrent = value ? tformMaximized : tformExpanded;
-			arrange();
+			_arrangementDirty = true;
 		}
 		
 		public function setName( value:String ):void
