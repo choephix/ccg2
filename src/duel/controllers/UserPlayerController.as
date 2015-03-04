@@ -125,7 +125,11 @@ package duel.controllers
 		{
 			super.onProcessUpdateOrComplete( p );
 			
-			if ( !active ) return;
+			if ( !active ) {
+				if ( selection.selectedCard )
+					selection.selectCard( null );
+				return;
+			}
 			
 			//selection.update();
 		}
