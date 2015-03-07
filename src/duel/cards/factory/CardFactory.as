@@ -79,7 +79,7 @@ package duel.cards.factory
 				}
 				/**/
 				
-				/** SPECIAL 3 * POOP TOKENS * */
+				/** SPECIAL 3 * POOP TOKENS * * /
 				special = c.propsC.addTriggered();
 				special.allowIn( CardLotType.CREATURE_FIELD );
 				special.watch( GameplayProcess.SUMMON_COMPLETE );
@@ -106,6 +106,22 @@ package duel.cards.factory
 					TempDatabaseUtils.doPutInHand( c, c.controller );
 				}
 				/**/
+				
+				/** SPECIAL 3 * DIE * */
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.SUMMON_COMPLETE );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					return c == p.getSourceCard();
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					c.statusC.hasSummonExhaustion = false;
+					TempDatabaseUtils.doKill( c, c );
+				}
+				/**/
+				
 			}
 			
 			F[ "___kami___" ] = function( c:Card ):void

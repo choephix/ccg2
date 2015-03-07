@@ -81,8 +81,8 @@ package global
 				
 				try
 				{
-					Temp.DECK1 = _data.views[ 6 ].groups[ 1 ].cards;
-					Temp.DECK2 = _data.views[ 6 ].groups[ 2 ].cards;
+					Temp.DECK2 = _data.views[ 6 ].groups[ 1 ].cards;
+					Temp.DECK1 = _data.views[ 6 ].groups[ 2 ].cards;
 					Temp.DECK1.reverse();
 					Temp.DECK2.reverse();
 				}

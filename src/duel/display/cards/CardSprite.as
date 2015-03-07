@@ -17,7 +17,9 @@ package duel.display.cards {
 	import starling.animation.Transitions;
 	import starling.display.BlendMode;
 	import starling.display.Image;
+	import starling.display.MovieClip;
 	import starling.display.Quad;
+	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
@@ -45,6 +47,7 @@ package duel.display.cards {
 		private var tfAttak:AnimatedTextField;
 		
 		///
+		private var _alpha:Number = 1.0;
 		private var __attackSprite:Quad;
 		private var __bloodSprite:Quad;
 		
@@ -59,7 +62,7 @@ package duel.display.cards {
 		
 		//
 		private var card:Card;
-		private static var helperRect:Rectangle = new Rectangle();
+		private static var helperRect:Rectangle = new Rectangle();;
 		
 		public function initialize( card:Card ):void
 		{
@@ -104,7 +107,7 @@ package duel.display.cards {
 			front.addChild( pad );
 			
 			var title:String = CONFIG::sandbox ? card.slug : card.name;
-			tfTitle = new TextField( 500, G.CARD_H, title, App.FONT1, 36, 0xFFFFFF );
+			tfTitle = new TextField( 500, 40, title, App.FONT1, 36, 0xFFFFFF );
 			tfTitle.batchable = true;
 			tfTitle.touchable = false;
 			tfTitle.hAlign = "center";
@@ -112,6 +115,7 @@ package duel.display.cards {
 			tfTitle.bold = true;
 			tfTitle.pivotX = tfTitle.width * .5;
 			tfTitle.x = G.CARD_W * .5;
+			tfTitle.y = 2;
 			tfTitle.scaleX = Math.min( 1.0, G.CARD_W / tfTitle.textBounds.width - .05 );
 			front.addChild( tfTitle );
 			
@@ -265,6 +269,7 @@ package duel.display.cards {
 			if ( front.visible )
 			{
 				front.scaleX = Math.abs( _flippedness );
+				front.alpha = _alpha;
 				updateData();
 				if ( tfAttak != null )
 					tfAttak.advanceTime( time );
@@ -273,7 +278,7 @@ package duel.display.cards {
 			if ( back.visible )
 			{
 				back.scaleX = Math.abs( _flippedness );
-				back.alpha = game.interactable ? 1.0 - _backTranslucency : 1.0;
+				back.alpha = _alpha * ( game.interactable ? 1.0 - _backTranslucency : 1.0 );
 			}
 		}
 		
@@ -413,8 +418,45 @@ package duel.display.cards {
 			
 			setAsTopChild();
 			
-			animDamage();
-			animBlink( true, 0xFF3333, 1, .120 );
+			var mc:MovieClip;
+			mc = App.assets.generateMovieClip( "card-discintegrate-A", false, true, 30 );
+			mc.scaleX =
+			mc.scaleY = 1.0 / .5;
+			mc.play();
+			mc.loop = false;
+			mc.addEventListener( Event.COMPLETE, step2 );
+			jugglerStrict.add( mc );
+			addChild( mc );
+			
+			var _this:CardSprite = this;
+			
+			function step2():void
+			{
+				mc.removeEventListener( Event.COMPLETE, step2 );
+				mc.removeFromParent( true );
+				jugglerStrict.remove( mc );
+				
+				_alpha = 0.0;
+				
+				mc = App.assets.generateMovieClip( "card-discintegrate-B", false, true, 30 );
+				mc.scaleX =
+				mc.scaleY = 1.0 / .5;
+				mc.play();
+				mc.loop = false;
+				mc.addEventListener( Event.COMPLETE, step3 );
+				jugglerStrict.add( mc );
+				addChild( mc );
+			}
+			
+			function step3():void
+			{
+				mc.removeEventListener( Event.COMPLETE, step2 );
+				mc.removeFromParent( true );
+				jugglerStrict.remove( mc );
+				
+				_alpha = 1.0;
+				_this.alpha = .0;
+			}
 		}
 		public function animDieTribute():void 
 		{
@@ -552,6 +594,11 @@ package duel.display.cards {
 		public function get isPressed():Boolean 
 		{
 			return _isPressed;
+		}
+		
+		public function get flippedness():Number 
+		{
+			return _flippedness;
 		}
 		
 		private function setIsPressed( value:Boolean ):void 
