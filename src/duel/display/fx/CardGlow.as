@@ -2,6 +2,8 @@ package duel.display.fx
 {
 	import chimichanga.common.display.Sprite;
 	import chimichanga.global.utils.MathF;
+	import duel.display.cards.CardSprite;
+	import duel.GameSprite;
 	import starling.animation.IAnimatable;
 	import starling.core.Starling;
 	import starling.display.BlendMode;
@@ -11,7 +13,7 @@ package duel.display.fx
 	 * ...
 	 * @author choephix
 	 */
-	public class CardGlow extends Sprite implements IAnimatable
+	public class CardGlow extends GameSprite implements IAnimatable
 	{
 		public var on:Boolean;
 		
@@ -31,9 +33,12 @@ package duel.display.fx
 		public function advanceTime( time:Number ):void 
 		{
 			mc.advanceTime( time );
-			mc.alpha = MathF.lerp( mc.alpha, on ? 1.0 : 0.0, .09 );
+			mc.alpha = MathF.lerp( mc.alpha, on && game.interactable ? 1.0 : 0.0, .09 );
+			
+			if ( cardSprite )
+				this.scaleX = Math.abs( cardSprite.flippedness );
 		}
 		
+		public function get cardSprite():CardSprite { return parent as CardSprite }
 	}
-
 }
