@@ -272,7 +272,7 @@ package duel
 			{
 				for ( i = 0; i < arr.length && i < G.MAX_DECK_SIZE; i++ )
 				{
-					time += CONFIG::sandbox ? .0084 : .033;
+					time += CONFIG::sandbox ? .003 : .033;
 					c = produceCard( arr[ i ] );
 					c.owner = p;
 					c.faceDown = true;
