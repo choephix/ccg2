@@ -10,6 +10,7 @@ package editor
 	import starling.display.Quad;
 	import starling.events.EnterFrameEvent;
 	import starling.events.Event;
+	import starling.events.ResizeEvent;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
@@ -120,6 +121,7 @@ package editor
 			App.input.addEventListener( InputEvents.RIGHT_CLICK, onMouseRightClick );
 			space.addEventListener( EditorEvents.CARD_DRAG_START, onCardDragStart );
 			space.addEventListener( EditorEvents.CARD_DRAG_STOP, onCardDragStop );
+			stage.addEventListener( ResizeEvent.RESIZE, onResize );
 			
 			tformContracted = new CardGroupTransform();
 			tformContracted.width = G.CARD_W + CARD_SPACING + CARD_SPACING;
@@ -134,7 +136,15 @@ package editor
 			tformCurrent = tformContracted;
 			
 			//
+			onResize();
 			setExpanded( false );
+		}
+		
+		private function onResize():void 
+		{
+			tformMaximized.width = App.STAGE_W;
+			tformMaximized.height = App.STAGE_H - tformMaximized.y;
+			_arrangementDirty = true;
 		}
 		
 		private function advanceTime( e:EnterFrameEvent ):void 
@@ -144,9 +154,6 @@ package editor
 				arrange();
 				_arrangementDirty = false;
 			}
-			
-			tformMaximized.width = App.STAGE_W;
-			tformMaximized.height = App.STAGE_H - tformMaximized.y;
 			
 			bg.alpha = lerp( bg.alpha, _focused ? .67 : .33, G.DAMP1 );
 			titleContainer.alpha = lerp( titleContainer.alpha, _focused ? 1.0 : .0, G.DAMP2 );
