@@ -375,13 +375,14 @@ package duel.cards.factory
 				c.propsT.effect.watcherActivate.watchFor( GameplayProcess.DIE_COMPLETE );
 				c.propsT.effect.watcherActivate.funcCondition = 
 				function( p:GameplayProcess ):Boolean {
+					//if ( p.getSourceCard().propsC.isGrand ) return false;
 					return c.indexedField.samesideCreatureField == p.getSourceCard().history.lastIndexedField;
 				}
 				c.propsT.effect.watcherActivate.funcEffect = 
 				function( p:GameplayProcess ):void {
 					var cc:Card;
-					cc = c.controller.deck.findBySlug( SUMMONEE );
-					if ( cc == null ) cc = c.controller.hand.findBySlug( SUMMONEE );
+					cc = c.controller.hand.findBySlug( SUMMONEE );
+					//if ( cc == null ) cc = c.controller.deck.findBySlug( SUMMONEE );
 					if ( cc == null ) return;
 					TempDatabaseUtils.doSummonFromDeckOrHand( cc, c.indexedField.samesideCreatureField );
 					cc.statusC.addNewBuff( true ).powerOffset = 2 * p.getSourceCard().statusC.basePowerValue;
@@ -400,8 +401,8 @@ package duel.cards.factory
 				c.propsT.effect.watcherActivate.funcEffect = 
 				function( p:GameplayProcess ):void {
 					var cc:Card;
-					cc = c.controller.deck.findBySlug( SUMMONEE );
-					if ( cc == null ) cc = c.controller.hand.findBySlug( SUMMONEE );
+					cc = c.controller.hand.findBySlug( SUMMONEE );
+					//if ( cc == null ) cc = c.controller.deck.findBySlug( SUMMONEE );
 					if ( cc == null ) return;
 					TempDatabaseUtils.doSummonFromDeckOrHand( cc, c.indexedField.samesideCreatureField );
 					
@@ -425,8 +426,8 @@ package duel.cards.factory
 				c.propsT.effect.watcherActivate.funcEffect = 
 				function( p:GameplayProcess ):void {
 					var cc:Card;
-					cc = c.controller.deck.findBySlug( SUMMONEE );
-					if ( cc == null ) cc = c.controller.hand.findBySlug( SUMMONEE );
+					cc = c.controller.hand.findBySlug( SUMMONEE );
+					//if ( cc == null ) cc = c.controller.deck.findBySlug( SUMMONEE );
 					if ( cc == null ) return;
 					TempDatabaseUtils.doSummonFromDeckOrHand( cc, c.indexedField.samesideCreatureField );
 				}
@@ -3388,7 +3389,7 @@ package duel.cards.factory
 				var buff:Buff = c.statusC.addNewBuff( false )
 				buff.powerOffset =
 				function( c:Card ):int {
-					return PWR_STEP * ( c.controller.creatureCount + c.controller.opponent.creatureCount );
+					return PWR_STEP * ( c.controller.creatureCount + c.controller.opponent.creatureCount - ( c.isInPlay ? 1 : 0 ) );
 				}
 			}
 			
