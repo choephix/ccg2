@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:f0ab12ef10e47f62c1021ecbebaa3589:aadf53adcefc7bf0c9f92b078a1cc653:f28c84827f9117eaa919bade0dd3ebd1$ -->
+<TextureAtlas imagePath="card-discintigrate.atf">
+    <SubTexture name="card-discintegrate-A-00" x="454" y="2" rotated="true" width="183" height="133" frameX="0" frameY="0" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-A-01" x="639" y="2" rotated="true" width="183" height="133" frameX="0" frameY="0" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-A-02" x="824" y="2" rotated="true" width="183" height="133" frameX="0" frameY="0" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-A-03" x="454" y="137" rotated="true" width="183" height="133" frameX="0" frameY="0" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-A-04" x="269" y="139" rotated="true" width="183" height="133" frameX="0" frameY="0" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-A-05" x="639" y="137" rotated="true" width="183" height="133" frameX="0" frameY="0" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-A-06" x="824" y="137" rotated="true" width="183" height="133" frameX="0" frameY="0" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-A-07" x="454" y="272" rotated="true" width="183" height="133" frameX="0" frameY="0" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-A-08" x="269" y="274" rotated="true" width="183" height="133" frameX="0" frameY="0" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-A-09" x="2" y="2" width="135" height="183"/>
+    <SubTexture name="card-discintegrate-A-10" x="2" y="187" width="135" height="183"/>
+    <SubTexture name="card-discintegrate-A-11" x="2" y="372" width="135" height="183"/>
+    <SubTexture name="card-discintegrate-A-12" x="2" y="557" width="135" height="183"/>
+    <SubTexture name="card-discintegrate-A-13" x="2" y="742" width="135" height="183"/>
+    <SubTexture name="card-discintegrate-A-14" x="269" y="2" rotated="true" width="183" height="135"/>
+    <SubTexture name="card-discintegrate-A-15" x="269" y="2" rotated="true" width="183" height="135"/>
+    <SubTexture name="card-discintegrate-A-16" x="269" y="2" rotated="true" width="183" height="135"/>
+    <SubTexture name="card-discintegrate-A-17" x="269" y="2" rotated="true" width="183" height="135"/>
+    <SubTexture name="card-discintegrate-B-00" x="639" y="272" rotated="true" width="182" height="132" frameX="0" frameY="-1" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-01" x="823" y="272" rotated="true" width="181" height="132" frameX="0" frameY="-2" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-02" x="639" y="406" rotated="true" width="181" height="132" frameX="0" frameY="-2" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-03" x="454" y="407" rotated="true" width="181" height="132" frameX="0" frameY="-2" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-04" x="269" y="409" rotated="true" width="181" height="132" frameX="0" frameY="-2" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-05" x="822" y="406" rotated="true" width="180" height="132" frameX="0" frameY="-3" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-06" x="139" y="560" width="132" height="180" frameX="0" frameY="-3" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-07" x="139" y="742" width="132" height="176" frameX="0" frameY="-7" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-08" x="273" y="543" width="132" height="171" frameX="0" frameY="-12" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-09" x="273" y="716" width="132" height="158" frameX="0" frameY="-25" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-10" x="407" y="698" width="131" height="153" frameX="-1" frameY="-30" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-11" x="407" y="543" width="132" height="153" frameX="0" frameY="-30" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-12" x="404" y="876" width="132" height="137" frameX="0" frameY="-46" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-13" x="139" y="2" rotated="true" width="127" height="132" frameX="0" frameY="-56" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-14" x="139" y="158" rotated="true" width="119" height="132" frameX="0" frameY="-64" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-15" x="139" y="292" rotated="true" width="113" height="132" frameX="0" frameY="-70" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-16" x="139" y="426" rotated="true" width="103" height="132" frameX="0" frameY="-80" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-17" x="2" y="927" width="132" height="94" frameX="0" frameY="-89" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-18" x="136" y="927" width="131" height="92" frameX="0" frameY="-91" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-19" x="269" y="920" width="131" height="79" frameX="-1" frameY="-104" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-20" x="538" y="853" rotated="true" width="73" height="130" frameX="-1" frameY="-110" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-21" x="540" y="698" rotated="true" width="69" height="130" frameX="-1" frameY="-114" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-22" x="541" y="541" rotated="true" width="62" height="129" frameX="-1" frameY="-121" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-23" x="605" y="541" rotated="true" width="44" height="129" frameX="-1" frameY="-139" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-24" x="273" y="876" width="129" height="39" frameX="-1" frameY="-144" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-25" x="538" y="985" width="129" height="30" frameX="-1" frameY="-152" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-26" x="139" y="136" width="123" height="20" frameX="-2" frameY="-162" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-27" x="1009" y="2" rotated="true" width="10" height="115" frameX="-3" frameY="-171" frameWidth="135" frameHeight="183"/>
+    <SubTexture name="card-discintegrate-B-28" x="1009" y="119" rotated="true" width="6" height="100" frameX="-19" frameY="-175" frameWidth="135" frameHeight="183"/>
+</TextureAtlas>
