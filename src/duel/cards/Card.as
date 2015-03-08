@@ -88,7 +88,7 @@ package duel.cards
 			
 			if ( isInPlay && isCreature )
 				if ( p.name == GameplayProcess.TURN_START )
-					if ( game.currentPlayer == controller )
+					//if ( game.currentPlayer == controller )
 						statusC.onTurnEnd();
 			
 			status.onGameProcess( p );

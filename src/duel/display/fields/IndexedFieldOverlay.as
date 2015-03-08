@@ -94,12 +94,12 @@ package duel.display.fields
 			if ( field is CreatureField )
 			{
 				_canAttackAlpha = 0.0;
-				if ( game.interactable && !field.isEmpty && !field.topCard.faceDown )
+				if ( game.interactable && !field.isEmpty && !field.topCard.faceDown && field.owner.isMyTurn )
 					_canAttackAlpha = field.topCard.statusC.canAttack ? 1.0 : 0.1;
 				iconCanAttack.alpha = lerp( iconCanAttack.alpha, _canAttackAlpha, .1 );
 				
 				_canRelocateAlpha = 0.0;
-				if ( game.interactable && !field.isEmpty && !field.topCard.faceDown )
+				if ( game.interactable && !field.isEmpty && !field.topCard.faceDown && field.owner.isMyTurn )
 					_canRelocateAlpha = field.topCard.statusC.canRelocate ? 1.0 : 0.1;
 				iconCanRelocate.alpha = lerp( iconCanRelocate.alpha, _canRelocateAlpha, .1 );
 				
@@ -120,12 +120,12 @@ package duel.display.fields
 			overTip.alpha = game.interactable && _showTip ? 1.0 : 0.0;
 			
 			//
-			return; //////////////////////////////////////
+			//return; //////////////////////////////////////
 			
 			if ( field.topCard )
 			{
-				aura.x = field.topCard.sprite.x - G.CARD_W * .5;
-				aura.y = field.topCard.sprite.y - G.CARD_H * .5;
+				aura.x = field.topCard.sprite.x -  x;
+				aura.y = field.topCard.sprite.y -  y;
 				aura.rotation = field.topCard.sprite.rotation;
 			}
 			else
@@ -173,7 +173,7 @@ package duel.display.fields
 					setShit( 0, "", 0 );
 					break;
 				case FieldSpriteGuiState.SELECTABLE:
-					setShit( 0xFFFFFF, "", 0 );
+					setShit( 0x0066ff, "", 0 );
 					break;
 				
 				case FieldSpriteGuiState.NORMAL_SUMMON:
@@ -190,7 +190,7 @@ package duel.display.fields
 					break;
 					
 				case FieldSpriteGuiState.SAFE_FLIP:
-					setShit( 0x9D9771, "Safe-Flip!", 0xFFFF80 );
+					setShit( 0xF3CB78, "Safe-Flip!", 0xFFFF80 );
 					break;
 				case FieldSpriteGuiState.RELOCATE_TO:
 					setShit( 0x2266DD, "Move\nHere", 0x65D2FC );

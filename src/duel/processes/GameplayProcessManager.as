@@ -1,6 +1,7 @@
 package duel.processes
 {
 	import chimichanga.debug.logging.error;
+	import dev.Temp;
 	import duel.cards.Card;
 	import duel.cards.GameplayFAQ;
 	import duel.Damage;
@@ -470,10 +471,12 @@ package duel.processes
 				if ( !c.propsT.effect.watcherActivate.funcCondition( interruptedProcess ) )
 					return;
 				c.propsT.effect.watcherActivate.funcEffect( interruptedProcess );
+				c.sprite.addEffectAnim( Temp.COLOR002 );
 			}
 			
 			function onAbort( c:Card ):void
 			{
+				c.sprite.removeEffectAnim();
 				c.propsT.effect.isActive = false;
 				c.propsT.effect.isBusy = false;
 				if ( c.isInPlay )
@@ -485,6 +488,7 @@ package duel.processes
 			pro.onEnd =
 			function onComplete( c:Card ):void
 			{
+				c.sprite.removeEffectAnim();
 				if ( c.isInPlay && !c.propsT.isPersistent )
 					prepend_AddToGrave( c );
 			}
@@ -513,56 +517,6 @@ package duel.processes
 				else
 					prepend_RelinquishToken( c );
 			}
-		}
-		
-		//}
-		//{ SPECIAL EFFECTS
-		
-		public function prepend_TriggerSpecial( c:Card, special:SpecialEffect  ):void 
-		{
-			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
-			var pro:GameplayProcess;
-			
-			/// ACTIVATE_SPECIAL
-			pro = chain( pro, gen( GameplayProcess.ACTIVATE_SPECIAL, c ) );
-			pro.delay = .200;
-			pro.abortable = true;
-			pro.abortCheck = abortCheck;
-			pro.onStart = onStart;
-			pro.onEnd = onEnd;
-			pro.onAbort = special.finishActivation;
-			
-			function onStart( c:Card ):void
-			{
-				special.startActivation();
-				c.lot.moveCardToTop( c );
-				c.sprite.animSpecialEffect();
-				
-				game.jugglerStrict.addFakeTime( .400 );
-				
-				if ( c.faceDown )
-					/// SILENT_FLIP
-					prepend_SilentFlip( c );
-				
-				trace ( c + " interrupted process " + interruptedProcess );
-			}
-			function onEnd( c:Card ):void
-			{
-				if ( !special.isAllowedInField( c.lot.type ) ) return;
-				if ( !special.meetsCondition( interruptedProcess ) ) return;
-				special.performEffect( interruptedProcess );
-			}
-			function abortCheck( c:Card ):Boolean
-			{ 
-				return !special.isAllowedInField( c.lot.type ) ||
-					!special.meetsCondition( interruptedProcess );
-			}
-			
-			/// ACTIVATE_SPECIAL_COMPLETE
-			pro = chain( pro, gen( GameplayProcess.ACTIVATE_SPECIAL_COMPLETE, c ) );
-			pro.delay = .400;
-			pro.abortable = false;
-			pro.onEnd = special.finishActivation;
 		}
 		
 		//}
@@ -738,7 +692,7 @@ package duel.processes
 			pro = chain( pro, gen( GameplayProcess.HEAL_LP_COMPLETE, p, amount ) );
 		}
 		
-		public function prepend_Death( c:Card, deathType:DeathType, cause:Card ):void 
+		public function prepend_Death( c:Card, deathType:DeathType, cause:Card, quick:Boolean = false ):void 
 		{
 			var pro:GameplayProcess;
 
@@ -759,7 +713,7 @@ package duel.processes
 				if ( deathType == DeathType.TRIBUTE )
 					c.sprite.animDieTribute();
 				else
-					c.sprite.animDieNonCombat();
+					c.sprite.animDieNonCombat( !quick );
 			}
 			pro.abortCheck = GameplayFAQ.cannotDie;
 			
@@ -826,6 +780,7 @@ package duel.processes
 			pro.onEnd =
 			function effectEnd( c:Card ):void
 			{
+				c.sprite.addEffectAnim( Temp.COLOR001 );
 				c.statusC.onCombatFlip();
 			}
 			pro.abortCheck = 
@@ -833,10 +788,20 @@ package duel.processes
 			{
 				return !c.isInPlay || !c.statusC.canDoCombatFlipEffect;
 			}
+			pro.onAbort = 
+			function effectAbort( c:Card ):void
+			{
+				c.sprite.removeEffectAnim();
+			}
 			
 			/// COMBAT_FLIP_EFFECT_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.COMBAT_FLIP_EFFECT_COMPLETE, c ) )
 			pro.delay = .500;
+			pro.onEnd =
+			function effectComplete( c:Card ):void
+			{
+				c.sprite.removeEffectAnim();
+			}
 		}
 		
 		public function prepend_SafeFlip( c:Card ):void
@@ -872,6 +837,7 @@ package duel.processes
 			pro.onEnd =
 			function effectEnd( c:Card ):void
 			{
+				c.sprite.addEffectAnim( Temp.COLOR001 );
 				c.statusC.onSafeFlip();
 			}
 			pro.abortCheck = 
@@ -879,10 +845,20 @@ package duel.processes
 			{
 				return !c.isInPlay || !c.statusC.canDoSafeFlipEffect;
 			}
+			pro.onAbort = 
+			function effectAbort( c:Card ):void
+			{
+				c.sprite.removeEffectAnim();
+			}
 			
 			/// SAFE_FLIP_EFFECT_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.SAFE_FLIP_EFFECT_COMPLETE, c ) );
 			pro.delay = .500;
+			pro.onEnd =
+			function effectComplete( c:Card ):void
+			{
+				c.sprite.removeEffectAnim();
+			}
 		}
 		
 		public function prepend_SilentFlip( c:Card, quick:Boolean = false ):void
@@ -904,6 +880,64 @@ package duel.processes
 			/// SILENT_FLIP_COMPLETE
 			pro = chain( pro, gen( GameplayProcess.SILENT_FLIP_COMPLETE, c ) );
 			pro.abortable = false;
+		}
+		
+		//}
+		//{ SPECIAL EFFECTS
+		
+		public function prepend_TriggerSpecial( c:Card, special:SpecialEffect  ):void 
+		{
+			var interruptedProcess:GameplayProcess = currentProcess as GameplayProcess;
+			var pro:GameplayProcess;
+			
+			/// ACTIVATE_SPECIAL
+			pro = chain( pro, gen( GameplayProcess.ACTIVATE_SPECIAL, c ) );
+			pro.delay = .200;
+			pro.abortable = true;
+			pro.abortCheck = abortCheck;
+			pro.onStart = onStart;
+			pro.onEnd = onEnd;
+			pro.onAbort = completeOrAbort;
+			
+			function onStart( c:Card ):void
+			{
+				special.startActivation();
+				c.lot.moveCardToTop( c );
+				c.sprite.animSpecialEffect();
+				
+				game.jugglerStrict.addFakeTime( .400 );
+				
+				if ( c.faceDown )
+					/// SILENT_FLIP
+					prepend_SilentFlip( c );
+				
+				trace ( c + " interrupted process " + interruptedProcess );
+			}
+			function onEnd( c:Card ):void
+			{
+				if ( !special.isAllowedInField( c.lot.type ) ) return;
+				if ( !special.meetsCondition( interruptedProcess ) ) return;
+				special.performEffect( interruptedProcess );
+				c.sprite.addEffectAnim( Temp.COLOR001 );
+			}
+			function abortCheck( c:Card ):Boolean
+			{ 
+				return !special.isAllowedInField( c.lot.type ) ||
+					!special.meetsCondition( interruptedProcess );
+			}
+			
+			/// ACTIVATE_SPECIAL_COMPLETE
+			pro = chain( pro, gen( GameplayProcess.ACTIVATE_SPECIAL_COMPLETE, c ) );
+			pro.delay = .400;
+			pro.abortable = false;
+			pro.onEnd = completeOrAbort;
+			
+			///
+			function completeOrAbort( c:Card ):void
+			{ 
+				c.sprite.removeEffectAnim();
+				special.finishActivation( c );
+			}
 		}
 		
 		//}

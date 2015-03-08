@@ -27,6 +27,9 @@ package duel.display.fx
 			mc.scaleY = 1.0 / .355;
 			mc.play();
 			mc.alpha = 0.0;
+			//mc.color = 0x1155BB;
+			//mc.color = 0xFFDD22;
+			//mc.color = 0xEE4499;
 			addChild( mc );
 		}
 		

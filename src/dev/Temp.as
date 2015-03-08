@@ -25,6 +25,9 @@ package dev
 			"___kami___", 
 			"___test___", 
 			
+			//"bomb",
+			//"black_hood",
+			//"dark_one",
 			//"spike", 
 			//"grand_powerhealer", 
 			//"emptyshell",
@@ -400,6 +403,9 @@ package dev
 			/**  FROZEN  **/
 			//"blinding_rage",
 		];
+		
+		static public const COLOR001:uint = 0xAAEEFF;
+		static public const COLOR002:uint = 0xFFCC33;
 		
 		public static function getColorForCard( card:Card ):uint 
 		{

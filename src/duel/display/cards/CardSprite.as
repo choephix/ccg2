@@ -48,6 +48,7 @@ package duel.display.cards {
 		
 		///
 		private var _alpha:Number = 1.0;
+		private var __effectSprite:Quad;
 		private var __attackSprite:Quad;
 		private var __bloodSprite:Quad;
 		
@@ -381,6 +382,7 @@ package duel.display.cards {
 					//transition : Transitions.EASE_OUT
 				//} );
 		}
+		
 		public function animFlipEffect():void
 		{
 			animBlink( true, 0xFF8030, 3 );
@@ -403,7 +405,7 @@ package duel.display.cards {
 		}
 		public function animDieCombat():void 
 		{
-			destroyAnimAttackSprite();
+			onDeathAnim();
 			
 			setAsTopChild();
 			
@@ -412,9 +414,9 @@ package duel.display.cards {
 			animDamage();
 			animBlink( true, 0xBB0000, 1, .360 );
 		}
-		public function animDieNonCombat():void 
+		public function animDieNonCombat( strict:Boolean ):void 
 		{
-			destroyAnimAttackSprite();
+			onDeathAnim();
 			
 			setAsTopChild();
 			
@@ -426,6 +428,7 @@ package duel.display.cards {
 			mc.loop = false;
 			mc.addEventListener( Event.COMPLETE, step2 );
 			jugglerStrict.add( mc );
+			//( strict ? jugglerStrict : juggler ).add( mc );
 			addChild( mc );
 			
 			var _this:CardSprite = this;
@@ -435,6 +438,7 @@ package duel.display.cards {
 				mc.removeEventListener( Event.COMPLETE, step2 );
 				mc.removeFromParent( true );
 				jugglerStrict.remove( mc );
+				//( strict ? jugglerStrict : juggler ).remove( mc );
 				
 				_alpha = 0.0;
 				
@@ -444,7 +448,7 @@ package duel.display.cards {
 				mc.play();
 				mc.loop = false;
 				mc.addEventListener( Event.COMPLETE, step3 );
-				jugglerStrict.add( mc );
+				( strict ? jugglerStrict : juggler ).add( mc );
 				addChild( mc );
 			}
 			
@@ -452,7 +456,7 @@ package duel.display.cards {
 			{
 				mc.removeEventListener( Event.COMPLETE, step2 );
 				mc.removeFromParent( true );
-				jugglerStrict.remove( mc );
+				( strict ? jugglerStrict : juggler ).remove( mc );
 				
 				_alpha = 1.0;
 				_this.alpha = .0;
@@ -460,13 +464,13 @@ package duel.display.cards {
 		}
 		public function animDieTribute():void 
 		{
-			destroyAnimAttackSprite();
+			onDeathAnim();
 			
 			setAsTopChild();
 			
 			tween.enabled = false;
 			
-			//
+			/** /
 			
 			//var q:Quad = assets.generateImage( "card-blink-glow-extreme" );
 			//q.alignPivot();
@@ -489,7 +493,7 @@ package duel.display.cards {
 				//onCompleteArgs : [true]
 			//} );
 			
-			//
+			/**/
 			
 			var q:Quad = assets.generateImage( "card-blink-glow-extreme" );
 			q.blendMode = BlendMode.ADD;
@@ -564,6 +568,41 @@ package duel.display.cards {
 					onCompleteArgs : [true]
 				} );
 			return q;
+		}
+		
+		public function addEffectAnim( color:uint = 0xFFFFFF ):void
+		{
+			if ( __effectSprite != null ) __effectSprite.removeFromParent( true );
+			
+			__effectSprite = assets.generateImage( "card-blink-glow" );
+			addChild( __effectSprite );
+			__effectSprite.alignPivot();
+			__effectSprite.blendMode = BlendMode.ADD;
+			__effectSprite.alpha = .1;
+			__effectSprite.color = color;
+			juggler.tween( __effectSprite, .120,
+				{ 
+					alpha : 1.0,
+					transition : Transitions.EASE_IN
+				} );
+		}
+		
+		public function removeEffectAnim():void
+		{
+			if ( __effectSprite == null ) return;
+			
+			juggler.tween( __effectSprite, .240,
+				{ 
+					alpha : .0, 
+					onComplete : __effectSprite.removeFromParent,
+					onCompleteArgs : [true]
+				} );
+		}
+		
+		public function onDeathAnim():void
+		{
+			if ( __effectSprite ) removeEffectAnim();
+			if ( __attackSprite ) destroyAnimAttackSprite();
 		}
 		
 		public function setAsTopChild():void

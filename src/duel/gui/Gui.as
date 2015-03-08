@@ -73,10 +73,10 @@ package duel.gui
 			{
 			logBox = new LogBox();
 			addChild( logBox );
-			logBox.x = 20;
-			logBox.y = 380;
-			logBox.width = 260;
-			logBox.height = 380;
+			logBox.x = App.W - 300;
+			logBox.y = 140;
+			logBox.width = 300;
+			logBox.height = 640;
 			}
 			
 			cardTip = new TipBox( 360, 540 );

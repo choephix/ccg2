@@ -79,20 +79,6 @@ package duel.cards.factory
 				}
 				/**/
 				
-				/** SPECIAL 3 * POOP TOKENS * * /
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.SUMMON_COMPLETE );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					return c == p.getSourceCard();
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					c.controller.fieldsC.forEachField( TempDatabaseUtils.doSpawnTokenCreatureIfEmpty );
-				}
-				/**/
-				
 				/** SPECIAL 4 * UNDIE * */
 				special = c.propsC.addTriggered();
 				special.allowIn( CardLotType.GRAVEYARD );
@@ -104,10 +90,11 @@ package duel.cards.factory
 				special.funcActivate =
 				function( p:GameplayProcess ):void {
 					TempDatabaseUtils.doPutInHand( c, c.controller );
+					c.controller.fieldsC.forEachField( TempDatabaseUtils.doSpawnTokenCreatureIfEmpty );
 				}
 				/**/
 				
-				/** SPECIAL 3 * DIE * */
+				/** SPECIAL 3 * DIE, POOP TOKENS * */
 				special = c.propsC.addTriggered();
 				special.allowIn( CardLotType.CREATURE_FIELD );
 				special.watch( GameplayProcess.SUMMON_COMPLETE );
@@ -1213,7 +1200,7 @@ package duel.cards.factory
 						if ( cc == c ) continue;
 						if ( cc.faceDown ) continue;
 						if ( cc.statusC.realPowerValue >= dmg ) continue;
-						TempDatabaseUtils.doKill( cc, c );
+						TempDatabaseUtils.doKill( cc, c, true );
 					}
 				}
 			}
@@ -1632,7 +1619,7 @@ package duel.cards.factory
 						if ( cc == c ) continue;
 						if ( cc.faceDown ) continue;
 						if ( cc.statusC.realPowerValue > 0 ) continue;
-						TempDatabaseUtils.doKill( cc, c );
+						TempDatabaseUtils.doKill( cc, c, true );
 					}
 				}
 			}
@@ -2044,10 +2031,12 @@ package duel.cards.factory
 			F[ "timereverser" ] =
 			function( c:Card ):void
 			{
+				c.propsC.onCombatFlipCond =
+				function():Boolean {
+					return !c.controller.grave.isEmpty;
+				}
 				c.propsC.onCombatFlipFunc =
 				function():void {
-					if ( c.controller.grave.isEmpty )
-						return;
 					TempDatabaseUtils.doPutInDeck( c.controller.grave.topCard, c.controller, false, false );
 				}
 			}
@@ -2193,6 +2182,10 @@ package duel.cards.factory
 			F[ "stunbot" ] = 
 			function( c:Card ):void
 			{
+				c.propsC.onCombatFlipCond =
+				function():Boolean {
+					return c.indexedField.opposingCreature != null;
+				}
 				c.propsC.onCombatFlipFunc =
 				function():void {
 					var b:Buff = c.indexedField.opposingCreature.statusC.addNewBuff( true )
@@ -2382,7 +2375,7 @@ package duel.cards.factory
 					{
 						if ( row.getAt( i ).topCard == null ) continue;
 						TempDatabaseUtils.doDealDirectDamage( c.controller, DMG, c );
-						TempDatabaseUtils.doKill( row.getAt( i ).topCard, c );
+						TempDatabaseUtils.doKill( row.getAt( i ).topCard, c, true );
 					}
 				}
 			}
@@ -2399,6 +2392,12 @@ package duel.cards.factory
 			F[ "swap_left" ] = 
 			function( c:Card ):void
 			{
+				c.propsC.onCombatFlipCond =
+				function():Boolean {
+					const FIELD:CreatureField = c.controller.samesideCreatureFieldAtIndex(
+						c.indexedField.index + c.primalData.getVarInt( 0 ) );
+					return FIELD != null && !FIELD.isEmpty;
+				}
 				c.propsC.onCombatFlipFunc =
 				function():void {
 					const FIELD:CreatureField = c.controller.samesideCreatureFieldAtIndex(
@@ -2618,11 +2617,15 @@ package duel.cards.factory
 			F[ "copycat" ] = 
 			function( c:Card ):void
 			{
+				c.propsC.onSafeFlipCond =
+				function():Boolean {
+					if ( c.indexedField.opposingCreature == null ) return false;
+					if ( c.indexedField.opposingCreature.faceDown ) return false;
+					if ( c.indexedField.opposingCreature.statusC.realPowerValue < 1 ) return false;
+					return true;
+				}
 				c.propsC.onSafeFlipFunc =
 				function():void {
-					if ( c.indexedField.opposingCreature == null ) return;
-					if ( c.indexedField.opposingCreature.faceDown ) return;
-					if ( c.indexedField.opposingCreature.statusC.realPowerValue < 1 ) return;
 					c.statusC.addNewBuff( true ).powerOffset = c.indexedField.opposingCreature.statusC.realPowerValue - 1;
 				}
 			}
@@ -2697,10 +2700,13 @@ package duel.cards.factory
 			F[ "trapkiller" ] = 
 			function( c:Card ):void
 			{
+				c.propsC.onSafeFlipCond =
+				function():Boolean {
+					return c.indexedField.opposingTrap != null;
+				}
 				c.propsC.onSafeFlipFunc =
 				function():void {
-					if ( c.indexedField.opposingTrap != null )
-						TempDatabaseUtils.doDestroyTrap( c.indexedField.opposingTrap, c );
+					TempDatabaseUtils.doDestroyTrap( c.indexedField.opposingTrap, c );
 				}
 			}
 			
@@ -3179,6 +3185,10 @@ package duel.cards.factory
 			F[ "nuke_virus" ] = 
 			function( c:Card ):void
 			{
+				c.propsC.onCombatFlipCond =
+				function():Boolean {
+					return c.indexedField.opposingCreature != null;
+				}
 				c.propsC.onCombatFlipFunc =
 				function():void {
 					TempDatabaseUtils.doDealDirectDamage( c.controller, 
@@ -3202,12 +3212,16 @@ package duel.cards.factory
 			function( c:Card ):void
 			{
 				const GRAND:String = c.primalData.getVarSlug( 0 );
+				c.propsC.onSafeFlipCond =
+				function():Boolean {
+					var target:Card = c.controller.hand.findBySlug( GRAND );
+					if ( target == null ) target = c.controller.deck.findBySlug( GRAND );
+					return target != null;
+				}
 				c.propsC.onSafeFlipFunc =
 				function():void {
-					var target:Card;
-					target = c.controller.hand.findBySlug( GRAND );
+					var target:Card = c.controller.hand.findBySlug( GRAND );
 					if ( target == null ) target = c.controller.deck.findBySlug( GRAND );
-					if ( target == null ) return;
 					TempDatabaseUtils.doSummonFromDeckOrHand( target, c.fieldC );
 				}
 			}
@@ -3308,9 +3322,12 @@ package duel.cards.factory
 			F[ "thieving_monkey" ] = 
 			function( c:Card ):void
 			{
+				c.propsC.onSafeFlipCond =
+				function():Boolean {
+					return !c.controller.opponent.grave.isEmpty;
+				}
 				c.propsC.onSafeFlipFunc =
 				function():void {
-					if ( c.controller.opponent.grave.isEmpty ) return;
 					TempDatabaseUtils.doPutInHand( c.controller.opponent.grave.topCard, c.controller );
 				}
 			}
@@ -3533,7 +3550,7 @@ package duel.cards.factory
 						if ( cc == c ) continue;
 						if ( cc.faceDown ) continue;
 						if ( cc.statusC.realPowerValue >= c.statusC.realPowerValue ) continue;
-						TempDatabaseUtils.doKill( cc, c );
+						TempDatabaseUtils.doKill( cc, c, true );
 					}
 				}
 			}
@@ -3564,7 +3581,7 @@ package duel.cards.factory
 						if ( cc == c ) continue;
 						if ( cc.faceDown ) continue;
 						if ( cc.statusC.realPowerValue >= c.statusC.realPowerValue ) continue;
-						TempDatabaseUtils.doKill( cc, c );
+						TempDatabaseUtils.doKill( cc, c, true );
 					}
 				}
 			}
@@ -3594,7 +3611,7 @@ package duel.cards.factory
 						cc = c.controller.fieldsC.getAt( i ).topCard;
 						if ( cc == null ) continue;
 						if ( cc == c ) continue;
-						TempDatabaseUtils.doKill( cc, c );
+						TempDatabaseUtils.doKill( cc, c, true );
 					}
 				}
 			}
@@ -4189,6 +4206,10 @@ package duel.cards.factory
 			F[ "stunner" ] = 
 			function( c:Card ):void
 			{
+				c.propsC.onCombatFlipCond =
+				function():Boolean {
+					return c.indexedField.opposingCreature != null;
+				}
 				c.propsC.onCombatFlipFunc =
 				function():void {
 					var buff:Buff = c.indexedField.opposingCreature.statusC.addNewBuff( true )
@@ -4221,26 +4242,34 @@ package duel.cards.factory
 			F[ "resurrecter2" ] = 
 			function( c:Card ):void
 			{
+				c.propsC.onCombatFlipCond =
+				function():Boolean {
+					const TARGET:Card = c.controller.opponent.grave.topCard;
+					if ( TARGET == null ) return false;
+					if ( !TARGET.isCreature ) return false;
+					if ( !TARGET.statusC.canBeSummonedOn( c.fieldC, false ) ) return false;
+					return true;
+				}
 				c.propsC.onCombatFlipFunc =
 				function():void {
-					const TARGET:Card = c.controller.opponent.grave.topCard;
-					if ( TARGET == null ) return;
-					if ( !TARGET.isCreature ) return;
-					if ( !TARGET.statusC.canBeSummonedOn( c.fieldC, false ) ) return;
-					TempDatabaseUtils.doResurrectCreature( TARGET, c.fieldC, c );
+					TempDatabaseUtils.doResurrectCreature( c.controller.opponent.grave.topCard, c.fieldC, c );
 				}
 			}
 			
 			F[ "resurrecter4" ] = 
 			function( c:Card ):void
 			{
+				c.propsC.onSafeFlipCond =
+				function():Boolean {
+					const TARGET:Card = c.controller.grave.topCard;
+					if ( TARGET == null ) return false;
+					if ( !TARGET.isCreature ) return false;
+					if ( !TARGET.statusC.canBeSummonedOn( c.fieldC, false ) ) return false;
+					return true;
+				}
 				c.propsC.onSafeFlipFunc =
 				function():void {
-					const TARGET:Card = c.controller.grave.topCard;
-					if ( TARGET == null ) return;
-					if ( !TARGET.isCreature ) return;
-					if ( !TARGET.statusC.canBeSummonedOn( c.fieldC, false ) ) return;
-					TempDatabaseUtils.doResurrectCreature( TARGET, c.fieldC, c );
+					TempDatabaseUtils.doResurrectCreature( c.controller.grave.topCard, c.fieldC, c );
 				}
 			}
 			
@@ -4397,6 +4426,10 @@ package duel.cards.factory
 			F[ "kamikaze2" ] = 
 			function( c:Card ):void
 			{
+				c.propsC.onCombatFlipCond =
+				function():Boolean {
+					return ( c.indexedField.opposingCreature != null )
+				}
 				c.propsC.onCombatFlipFunc =
 				function():void {
 					if ( c.indexedField.opposingCreature == null )
@@ -5099,17 +5132,27 @@ package duel.cards.factory
 			{
 				const BROTHER:String = c.primalData.getVarSlug( 0 );
 				
-				var f:Function =
+				var cond:Function =
+				function ():Boolean {
+					return c.controller.grave.findBySlug( BROTHER ) != null;
+				}
+				
+				var func:Function =
 				function ():void {
-					var cc:Card = c.controller.grave.findBySlug( BROTHER );
-					if ( cc != null )
-						TempDatabaseUtils.doPutInHand( cc, c.controller );
+					TempDatabaseUtils.doPutInHand( 
+						c.controller.grave.findBySlug( BROTHER ), c.controller );
 				}
 				
 				if ( c.slug == "marco" )
-					c.propsC.onSafeFlipFunc = f;
+				{
+					c.propsC.onSafeFlipCond = cond;
+					c.propsC.onSafeFlipFunc = func;
+				}
 				else
-					c.propsC.onCombatFlipFunc = f;
+				{
+					c.propsC.onCombatFlipCond = cond;
+					c.propsC.onCombatFlipFunc = func;
+				}
 			}
 			
 			F[ "zig" ] = 

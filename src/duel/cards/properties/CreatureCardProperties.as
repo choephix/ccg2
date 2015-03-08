@@ -54,9 +54,15 @@ package duel.cards.properties {
 		}
 		
 		// COMBAT FLIP
+		/// no args
 		public var onCombatFlipFunc:Function;
+		/// no args, return Booleam
+		public var onCombatFlipCond:Function;
 		
 		// SAFE FLIP
+		/// no args
 		public var onSafeFlipFunc:Function;
+		/// no args, return Booleam
+		public var onSafeFlipCond:Function;
 	}
 }

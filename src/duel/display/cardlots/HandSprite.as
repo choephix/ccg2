@@ -52,40 +52,6 @@ package duel.display.cardlots
 		
 		public function arrange():void
 		{
-			/** /
-			   if ( selectedIndex >= 0 )
-			   {
-			   const A:Array = [];
-			   var j:int = 0;
-			   var m1:int = selectedIndex;
-			   var m2:int = cardsCount - selectedIndex;
-			   var n:Number;
-			   for ( j = 0; j < cardsCount; j++ )
-			   {
-			   n = 1.0 - ( Math.abs( j - selectedIndex ) / ( j < selectedIndex ? m1 : m2 ) );
-			   A.push( n );
-			   }
-			   const A_TOTAL:Number = MathF.sum( A );
-			   }
-			/**/
-			
-			/** /
-			const POR:Number = .100;
-			var YY:Number
-			
-			if ( _active )
-			{
-				YY = App.mouseXY.y / App.WINDOW_H;
-				YY = Math.max( 0, YY - 1.0 + POR );
-				YY = YY * 1 / POR;
-				YY = 1 - YY;
-				
-				YY = App.mouseXY.y / App.WINDOW_H > 1.0 - POR ? 0.0 : 1.0;
-			}
-			else
-				YY = 1.0;
-			/**/
-			
 			var targetProps:TargetProps = new TargetProps();
 			
 			const W:Number = maxWidth - G.CARD_W;

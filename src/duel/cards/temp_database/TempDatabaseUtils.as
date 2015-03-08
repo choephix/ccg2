@@ -49,10 +49,10 @@ package duel.cards.temp_database
 		
 		// PROCESSES
 		
-		public static function doKill( c:Card, cause:Card ):void
+		public static function doKill( c:Card, cause:Card, quick:Boolean = false ):void
 		{
 			if ( c == null ) return;
-			game.processes.prepend_Death( c, DeathType.SPECIAL, cause );
+			game.processes.prepend_Death( c, DeathType.SPECIAL, cause, quick );
 		}
 		
 		public static function doDestroyTrap( c:Card, cause:Card ):void
@@ -164,7 +164,7 @@ package duel.cards.temp_database
 			{
 				if ( p.fieldsC.getAt( i ).isEmpty )
 					continue;
-				doKill( p.fieldsC.getAt( i ).topCard, cause );
+				doKill( p.fieldsC.getAt( i ).topCard, cause, true );
 			}
 		}
 		
@@ -180,7 +180,7 @@ package duel.cards.temp_database
 				if ( c.faceDown ) continue;
 				if ( c.statusC.realPowerValue >= pwrLowerThan ) continue;
 				if ( exceptions != null && exceptions.indexOf( c ) > -1 ) continue;
-				TempDatabaseUtils.doKill( c, cause );
+				TempDatabaseUtils.doKill( c, cause, true );
 			}
 		}
 		

@@ -54,7 +54,7 @@ package {
 			
 			if ( t == null ) return;
 			
-			t.getLocation( stage, App.mouseXY );
+			t.getLocation( stage, App.globalMouseLocation );
 			
 			//if ( t.phase == TouchPhase.ENDED )
 				//if ( t.tapCount == 2 ) 

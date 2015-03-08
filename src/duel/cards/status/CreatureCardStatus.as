@@ -210,14 +210,14 @@ package duel.cards.status {
 		
 		// COMBAT FLIP
 		public function get canDoCombatFlipEffect():Boolean
-		{ return propsC.onCombatFlipFunc != null; }
+		{ return propsC.onCombatFlipFunc != null && ( propsC.onCombatFlipCond == null || propsC.onCombatFlipCond() ); }
 		
 		public function onCombatFlip():void
 		{ propsC.onCombatFlipFunc() }
 		
 		// SAFE FLIP
 		public function get canDoSafeFlipEffect():Boolean
-		{ return propsC.onSafeFlipFunc != null; }
+		{ return propsC.onSafeFlipFunc != null && ( propsC.onSafeFlipCond == null || propsC.onSafeFlipCond() ); }
 		
 		public function onSafeFlip():void
 		{ propsC.onSafeFlipFunc() }
