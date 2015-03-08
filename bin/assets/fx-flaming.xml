@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:5a43e339dd6a878b5dd24755ffae1da8:f33c2507788dee7b8580badb4024073f:0bc9d917ed3c72f725c92decaccdcb1b$ -->
+<TextureAtlas imagePath="fx-flaming.atf">
+    <SubTexture name="fx-flaming-00" x="2" y="2" width="201" height="335"/>
+    <SubTexture name="fx-flaming-01" x="2" y="339" width="201" height="335"/>
+    <SubTexture name="fx-flaming-02" x="2" y="676" width="201" height="335"/>
+    <SubTexture name="fx-flaming-03" x="2" y="1013" width="201" height="335"/>
+    <SubTexture name="fx-flaming-04" x="2" y="1350" width="201" height="335"/>
+    <SubTexture name="fx-flaming-05" x="2" y="1687" width="201" height="335"/>
+    <SubTexture name="fx-flaming-06" x="205" y="2" width="201" height="335"/>
+    <SubTexture name="fx-flaming-07" x="205" y="339" width="201" height="335"/>
+    <SubTexture name="fx-flaming-08" x="205" y="676" width="201" height="335"/>
+    <SubTexture name="fx-flaming-09" x="205" y="1013" width="201" height="335"/>
+    <SubTexture name="fx-flaming-10" x="205" y="1350" width="201" height="335"/>
+    <SubTexture name="fx-flaming-11" x="205" y="1687" width="201" height="335"/>
+    <SubTexture name="fx-flaming-12" x="408" y="2" width="201" height="335"/>
+    <SubTexture name="fx-flaming-13" x="611" y="2" width="201" height="335"/>
+    <SubTexture name="fx-flaming-14" x="814" y="2" width="201" height="335"/>
+    <SubTexture name="fx-flaming-15" x="1017" y="2" width="201" height="335"/>
+    <SubTexture name="fx-flaming-16" x="1220" y="2" width="201" height="335"/>
+    <SubTexture name="fx-flaming-17" x="1423" y="2" width="201" height="335"/>
+    <SubTexture name="fx-flaming-18" x="1626" y="2" width="201" height="335"/>
+    <SubTexture name="fx-flaming-19" x="1829" y="2" width="201" height="335"/>
+    <SubTexture name="fx-flaming-20" x="408" y="339" width="201" height="335"/>
+    <SubTexture name="fx-flaming-21" x="408" y="676" width="201" height="335"/>
+    <SubTexture name="fx-flaming-22" x="408" y="1013" width="201" height="335"/>
+    <SubTexture name="fx-flaming-23" x="408" y="1350" width="201" height="335"/>
+    <SubTexture name="fx-flaming-24" x="408" y="1687" width="201" height="335"/>
+    <SubTexture name="fx-flaming-25" x="611" y="339" width="201" height="335"/>
+    <SubTexture name="fx-flaming-26" x="814" y="339" width="201" height="335"/>
+    <SubTexture name="fx-flaming-27" x="1017" y="339" width="201" height="335"/>
+    <SubTexture name="fx-flaming-28" x="1220" y="339" width="201" height="335"/>
+    <SubTexture name="fx-flaming-29" x="1423" y="339" width="201" height="335"/>
+    <SubTexture name="fx-flaming-30" x="1626" y="339" width="201" height="335"/>
+    <SubTexture name="fx-flaming-31" x="1829" y="339" width="201" height="335"/>
+    <SubTexture name="fx-flaming-32" x="611" y="676" width="201" height="335"/>
+    <SubTexture name="fx-flaming-33" x="611" y="1013" width="201" height="335"/>
+    <SubTexture name="fx-flaming-34" x="611" y="1350" width="201" height="335"/>
+    <SubTexture name="fx-flaming-35" x="611" y="1687" width="201" height="335"/>
+    <SubTexture name="fx-flaming-36" x="814" y="676" width="201" height="335"/>
+    <SubTexture name="fx-flaming-37" x="814" y="1013" width="201" height="335"/>
+    <SubTexture name="fx-flaming-38" x="814" y="1350" width="201" height="335"/>
+    <SubTexture name="fx-flaming-39" x="814" y="1687" width="201" height="335"/>
+    <SubTexture name="fx-flaming-40" x="1017" y="676" width="201" height="335"/>
+    <SubTexture name="fx-flaming-41" x="1220" y="676" width="201" height="335"/>
+    <SubTexture name="fx-flaming-42" x="1423" y="676" width="201" height="335"/>
+    <SubTexture name="fx-flaming-43" x="1626" y="676" width="201" height="335"/>
+    <SubTexture name="fx-flaming-44" x="1829" y="676" width="201" height="335"/>
+    <SubTexture name="fx-flaming-45" x="1017" y="1013" width="201" height="335"/>
+    <SubTexture name="fx-flaming-46" x="1017" y="1350" width="201" height="335"/>
+    <SubTexture name="fx-flaming-47" x="1017" y="1687" width="201" height="335"/>
+    <SubTexture name="fx-flaming-48" x="1220" y="1013" width="201" height="335"/>
+    <SubTexture name="fx-flaming-49" x="1220" y="1350" width="201" height="335"/>
+    <SubTexture name="fx-flaming-50" x="1220" y="1687" width="201" height="335"/>
+    <SubTexture name="fx-flaming-51" x="1423" y="1013" width="201" height="335"/>
+    <SubTexture name="fx-flaming-52" x="1626" y="1013" width="201" height="335"/>
+    <SubTexture name="fx-flaming-53" x="1829" y="1013" width="201" height="335"/>
+    <SubTexture name="fx-flaming-54" x="1423" y="1350" width="201" height="335"/>
+    <SubTexture name="fx-flaming-55" x="1423" y="1687" width="201" height="335"/>
+    <SubTexture name="fx-flaming-56" x="1626" y="1350" width="201" height="335"/>
+    <SubTexture name="fx-flaming-57" x="1829" y="1350" width="201" height="335"/>
+    <SubTexture name="fx-flaming-58" x="1626" y="1687" width="201" height="335"/>
+    <SubTexture name="fx-flaming-59" x="1829" y="1687" width="201" height="335"/>
+</TextureAtlas>
