@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:7d1ce59c793898d5c1e7115b375c6cf3:3f401d03da63a1f46f7053f6e220e398:c1e6c3a0187042579ef5b5ac72224b95$ -->
-<TextureAtlas imagePath="main-rgba.atf">
+<!-- $TexturePacker:SmartUpdate:605b0ea167a4f2c170877d83936a0b92:3f401d03da63a1f46f7053f6e220e398:5ce70d842d3ff0ec40c6ad58a2681b12$ -->
+<TextureAtlas imagePath="main-rgba.png">
     <SubTexture name="btn" x="284" y="258" rotated="true" width="58" height="118" frameX="-1" frameY="-1" frameWidth="120" frameHeight="60"/>
     <SubTexture name="card-aura" x="2" y="2" width="280" height="376" frameX="-10" frameY="-12" frameWidth="300" frameHeight="400"/>
     <SubTexture name="card-back" x="2" y="380" width="265" height="362" frameX="-2" frameY="-2" frameWidth="269" frameHeight="366"/>
