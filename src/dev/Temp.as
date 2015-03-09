@@ -25,9 +25,9 @@ package dev
 			"___kami___", 
 			"___test___", 
 			
-			//"bomb",
-			//"black_hood",
-			//"dark_one",
+			"bomb",
+			"black_hood",
+			"dark_one",
 			//"spike", 
 			//"grand_powerhealer", 
 			//"emptyshell",

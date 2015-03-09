@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:cf63fe821153ffac185c165fb50b520f:7abf7fe694f8554b0c98a61760cbd3bb:df88c8b8b8dcb22cd41e9a0a6ac5f0a7$ -->
+<TextureAtlas imagePath="fx-static.atf">
+    <SubTexture name="card-mist00" x="2" y="2" width="157" height="202"/>
+    <SubTexture name="card-mist01" x="161" y="2" width="157" height="202"/>
+    <SubTexture name="card-mist02" x="320" y="2" width="157" height="202"/>
+    <SubTexture name="card-mist03" x="479" y="2" width="157" height="202"/>
+    <SubTexture name="card-mist04" x="638" y="2" width="157" height="202"/>
+    <SubTexture name="card-mist05" x="797" y="2" width="157" height="202"/>
+    <SubTexture name="card-mist06" x="2" y="206" width="157" height="202"/>
+    <SubTexture name="card-mist07" x="161" y="206" width="157" height="202"/>
+    <SubTexture name="card-mist08" x="320" y="206" width="157" height="202"/>
+    <SubTexture name="card-mist09" x="479" y="206" width="157" height="202"/>
+    <SubTexture name="card-mist10" x="638" y="206" width="157" height="202"/>
+    <SubTexture name="card-mist11" x="797" y="206" width="157" height="202"/>
+    <SubTexture name="card-mist12" x="2" y="410" width="157" height="202"/>
+    <SubTexture name="card-mist13" x="161" y="410" width="157" height="202"/>
+    <SubTexture name="card-mist14" x="320" y="410" width="157" height="202"/>
+    <SubTexture name="card-mist15" x="479" y="410" width="157" height="202"/>
+    <SubTexture name="card-mist16" x="638" y="410" width="157" height="202"/>
+    <SubTexture name="card-mist17" x="797" y="410" width="157" height="202"/>
+    <SubTexture name="card-mist18" x="2" y="614" width="157" height="202"/>
+    <SubTexture name="card-mist19" x="161" y="614" width="157" height="202"/>
+    <SubTexture name="card-mist20" x="320" y="614" width="157" height="202"/>
+    <SubTexture name="card-mist21" x="479" y="614" width="157" height="202"/>
+    <SubTexture name="card-mist22" x="638" y="614" width="157" height="202"/>
+    <SubTexture name="card-mist23" x="797" y="614" width="157" height="202"/>
+    <SubTexture name="card-mist24" x="2" y="818" width="157" height="202"/>
+    <SubTexture name="card-mist25" x="161" y="818" width="157" height="202"/>
+    <SubTexture name="card-mist26" x="320" y="818" width="157" height="202"/>
+    <SubTexture name="card-mist27" x="479" y="818" width="157" height="202"/>
+    <SubTexture name="card-mist28" x="638" y="818" width="157" height="202"/>
+    <SubTexture name="card-mist29" x="797" y="818" width="157" height="202"/>
+    <SubTexture name="card-mist30" x="2" y="1022" width="157" height="202"/>
+    <SubTexture name="card-mist31" x="2" y="1226" width="157" height="202"/>
+    <SubTexture name="card-mist32" x="2" y="1430" width="157" height="202"/>
+    <SubTexture name="card-mist33" x="2" y="1634" width="157" height="202"/>
+    <SubTexture name="card-mist34" x="2" y="1838" width="157" height="202"/>
+    <SubTexture name="card-mist35" x="161" y="1022" width="157" height="202"/>
+    <SubTexture name="card-mist36" x="320" y="1022" width="157" height="202"/>
+    <SubTexture name="card-mist37" x="479" y="1022" width="157" height="202"/>
+    <SubTexture name="card-mist38" x="638" y="1022" width="157" height="202"/>
+    <SubTexture name="card-mist39" x="797" y="1022" width="157" height="202"/>
+    <SubTexture name="card-mist40" x="161" y="1226" width="157" height="202"/>
+    <SubTexture name="card-mist41" x="161" y="1430" width="157" height="202"/>
+    <SubTexture name="card-mist42" x="161" y="1634" width="157" height="202"/>
+    <SubTexture name="card-mist43" x="161" y="1838" width="157" height="202"/>
+    <SubTexture name="card-mist44" x="320" y="1226" width="157" height="202"/>
+    <SubTexture name="card-mist45" x="479" y="1226" width="157" height="202"/>
+    <SubTexture name="card-mist46" x="638" y="1226" width="157" height="202"/>
+    <SubTexture name="card-mist47" x="797" y="1226" width="157" height="202"/>
+    <SubTexture name="card-mist48" x="320" y="1430" width="157" height="202"/>
+    <SubTexture name="card-mist49" x="320" y="1634" width="157" height="202"/>
+    <SubTexture name="card-mist50" x="320" y="1838" width="157" height="202"/>
+    <SubTexture name="card-mist51" x="479" y="1430" width="157" height="202"/>
+    <SubTexture name="card-mist52" x="479" y="1634" width="157" height="202"/>
+    <SubTexture name="card-mist53" x="479" y="1838" width="157" height="202"/>
+    <SubTexture name="card-mist54" x="638" y="1430" width="157" height="202"/>
+    <SubTexture name="card-mist55" x="797" y="1430" width="157" height="202"/>
+    <SubTexture name="card-mist56" x="638" y="1634" width="157" height="202"/>
+    <SubTexture name="card-mist57" x="638" y="1838" width="157" height="202"/>
+    <SubTexture name="card-mist58" x="797" y="1634" width="157" height="202"/>
+</TextureAtlas>

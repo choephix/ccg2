@@ -4,6 +4,7 @@ package duel.controllers
 	import duel.cards.Card;
 	import duel.cards.temp_database.TempDatabaseUtils;
 	import duel.display.fields.FieldSpriteGuiState;
+	import duel.display.fx.CardFlames;
 	import duel.display.fx.CardGlow;
 	import duel.GameEntity;
 	import duel.gameplay.CardEvents;

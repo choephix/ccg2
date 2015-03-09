@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:5a43e339dd6a878b5dd24755ffae1da8:f33c2507788dee7b8580badb4024073f:0bc9d917ed3c72f725c92decaccdcb1b$ -->
+<!-- $TexturePacker:SmartUpdate:f6b9263b63ffaa7d4e8352508a1133c1:e4c1e680d505e76459c7bd9bf882b799:0bc9d917ed3c72f725c92decaccdcb1b$ -->
 <TextureAtlas imagePath="fx-flaming.atf">
     <SubTexture name="fx-flaming-00" x="2" y="2" width="201" height="335"/>
     <SubTexture name="fx-flaming-01" x="2" y="339" width="201" height="335"/>

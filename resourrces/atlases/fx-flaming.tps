@@ -6,12 +6,12 @@
         <key>texturePackerVersion</key>
         <string>3.6.0</string>
         <key>fileName</key>
-        <string>D:/Projects - Flash/CCG2/resourrces/atlases/descintegrade.tps</string>
+        <string>D:/Projects - Flash/CCG2/resourrces/atlases/fx-flaming.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
                 <key>scale</key>
-                <double>0.5</double>
+                <double>0.67</double>
                 <key>extension</key>
                 <string></string>
                 <key>spriteFilter</key>
@@ -38,7 +38,7 @@
         <key>dataFormat</key>
         <string>sparrow</string>
         <key>textureFileName</key>
-        <filename>../../bin/assets/card-discintigrate.atf</filename>
+        <filename>../../bin/assets/fx-flaming.atf</filename>
         <key>flipPVR</key>
         <false/>
         <key>pvrCompressionQuality</key>
@@ -145,7 +145,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../../bin/assets/card-discintigrate.xml</filename>
+                <filename>../../bin/assets/fx-flaming.xml</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -153,7 +153,7 @@
         <key>forceIdenticalLayout</key>
         <false/>
         <key>outputFormat</key>
-        <enum type="SettingsBase::OutputFormat">RGBA8888</enum>
+        <enum type="SettingsBase::OutputFormat">RGB888</enum>
         <key>contentProtection</key>
         <struct type="ContentProtection">
             <key>key</key>
@@ -188,7 +188,7 @@
         </struct>
         <key>fileList</key>
         <array>
-            <filename>descintegrade</filename>
+            <filename>fx-flaming</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

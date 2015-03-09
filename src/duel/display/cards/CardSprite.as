@@ -4,6 +4,7 @@ package duel.display.cards {
 	import duel.cards.Card;
 	import duel.display.animation;
 	import duel.display.cards.CardTween;
+	import duel.display.fx.CardFlames;
 	import duel.G;
 	import duel.GameSprite;
 	import duel.gui.AnimatedTextField;
@@ -33,7 +34,8 @@ package duel.display.cards {
 	public class CardSprite extends GameSprite implements IAnimatable
 	{
 		public var auraContainer:Sprite;
-		private var selectableAura:Image;
+		//private var selectableAura:CardFlames;
+		private var selectableAura:CardAura;
 		private var selectedAura:Image;
 		
 		public var tween:CardTween;
@@ -87,8 +89,8 @@ package duel.display.cards {
 			addChild( auraContainer );
 			
 			selectableAura = new CardAura( "card-aura" );
-			selectableAura.color = 0x669BEA;
-			selectableAura.blendMode = "add";
+			//selectableAura = new CardFlames();
+			//selectableAura.color = 0x669BEA;
 			selectableAura.touchable = false;
 			selectableAura.alpha = .0;
 			auraContainer.addChild( selectableAura );
@@ -262,7 +264,10 @@ package duel.display.cards {
 			selectableAura.alpha = lerp ( selectableAura.alpha, 
 				( game.interactable && isSelectable ? 1.0 : 0.0 ), .08 );
 				//game.interactable && isSelectable && ( !isSelected || !card.isInPlay );
-				
+			
+			if ( selectableAura.visible && selectableAura.alpha > .1 )
+				selectableAura.advanceTime( time );
+			
 			selectedAura.alpha = lerp ( selectedAura.alpha, 
 				( game.interactable && isSelected ? 1.0 : 0.0 ), .11 );
 			selectedAura.rotation = y > 100 ? .0 : Math.PI;
@@ -448,7 +453,8 @@ package duel.display.cards {
 				mc.play();
 				mc.loop = false;
 				mc.addEventListener( Event.COMPLETE, step3 );
-				( strict ? jugglerStrict : juggler ).add( mc );
+				jugglerStrict.add( mc );
+				//( strict ? jugglerStrict : juggler ).add( mc );
 				addChild( mc );
 			}
 			
@@ -456,7 +462,8 @@ package duel.display.cards {
 			{
 				mc.removeEventListener( Event.COMPLETE, step2 );
 				mc.removeFromParent( true );
-				( strict ? jugglerStrict : juggler ).remove( mc );
+				jugglerStrict.remove( mc );
+				//( strict ? jugglerStrict : juggler ).remove( mc );
 				
 				_alpha = 1.0;
 				_this.alpha = .0;

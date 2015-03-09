@@ -39,8 +39,6 @@ package duel.display.cards
 			_tween.reverse = true;
 			_tween.animate( "scaleX", scale + .03 );
 			_tween.animate( "scaleY", scale + .02 );
-			
-			Game.current.juggler.add( this );
 		}
 		
 		public function advanceTime( time:Number ):void 
