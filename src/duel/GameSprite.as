@@ -1,7 +1,6 @@
 package duel 
 {
 	import chimichanga.common.assets.AdvancedAssetManager;
-	import chimichanga.common.display.Sprite;
 	import duel.gui.GuiEvents;
 	import duel.gui.GuiJuggler;
 	import starling.display.DisplayObjectContainer;
@@ -9,7 +8,7 @@ package duel
 	 * ...
 	 * @author choephix
 	 */
-	public class GameSprite extends Sprite
+	public class GameSprite extends DisplayObjectContainer
 	{
 		protected function get juggler():GuiJuggler
 		{ return Game.current.juggler }

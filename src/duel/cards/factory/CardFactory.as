@@ -3484,7 +3484,7 @@ package duel.cards.factory
 				const POWER:int = c.primalData.getVarInt( 0 );
 				c.statusC.addNewBuff( false ).powerOffset =
 				function( cc:Card ):int {
-					return Number.max( 0, POWER * ( c.controller.fieldsC.countCreaturesThat( isBro ) - 1 ) );
+					return Math.max( 0, POWER * ( c.controller.fieldsC.countCreaturesThat( isBro ) - 1 ) );
 				}
 				function isBro( cc:Card ):Boolean {
 					return cc.slug.indexOf( BROTHER ) > -1;
