@@ -1,4 +1,4 @@
-package duel.display.cards
+package duel.display.fx
 {
 	import duel.Game;
 	import starling.animation.IAnimatable;
@@ -12,12 +12,12 @@ package duel.display.cards
 	 * ...
 	 * @author choephix
 	 */
-	public class CardAura extends Image implements IAnimatable
+	public class CardAura0 extends Image implements IAnimatable
 	{
 		public var scale:Number = 1.0;
 		private var _tween:Tween;
 		
-		public function CardAura( assetName:String )
+		public function CardAura0( assetName:String = "card-aura" )
 		{
 			super( App.assets.getTexture( assetName ) );
 			this.touchable = false;

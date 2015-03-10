@@ -13,10 +13,8 @@ package duel.display.fx
 	 * ...
 	 * @author choephix
 	 */
-	public class CardFlames extends GameSprite implements IAnimatable
+	public class CardFlames extends CardAura
 	{
-		public var on:Boolean = true;
-		
 		private var mc:MovieClip;
 		
 		public function CardFlames() 
@@ -30,7 +28,7 @@ package duel.display.fx
 			addChild( mc );
 		}
 		
-		public function advanceTime( time:Number ):void 
+		override public function advanceTime( time:Number ):void 
 		{
 			mc.advanceTime( time );
 			mc.alpha = MathF.lerp( mc.alpha, on && game.interactable ? 1.0 : 0.0, .29 );
@@ -38,7 +36,5 @@ package duel.display.fx
 			if ( cardSprite )
 				this.scaleX = Math.abs( cardSprite.flippedness );
 		}
-		
-		public function get cardSprite():CardSprite { return parent as CardSprite }
 	}
 }

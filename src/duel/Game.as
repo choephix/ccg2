@@ -13,6 +13,7 @@ package duel
 	import duel.controllers.PlayerActionType;
 	import duel.controllers.UserPlayerController;
 	import duel.display.cardlots.HandSprite;
+	import duel.display.fx.CardAuraManager;
 	import duel.display.TableSide;
 	import duel.display.TableSprite;
 	import duel.gameplay.CardEvents;
@@ -88,6 +89,7 @@ package duel
 		
 		public var globalBuffs:GlobalBuffManager;
 		
+		public var auras:CardAuraManager;
 		public var mouseLocation:Point = new Point();
 		
 		//
@@ -132,10 +134,14 @@ package duel
 					indexedFields.push( p.fieldsT.getAt( i ) );
 				return p;
 			}
-		
+			
 			//}
 			
 			//{ VISUALS
+			
+			auras = new CardAuraManager();
+			auras.initialize();
+			
 			bg = new Background( assets );
 			bg.blendMode = BlendMode.NONE;
 			addChild( bg );

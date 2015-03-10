@@ -4,6 +4,8 @@ package duel.display.cards {
 	import duel.cards.Card;
 	import duel.display.animation;
 	import duel.display.cards.CardTween;
+	import duel.display.fx.CardAura;
+	import duel.display.fx.CardAura0;
 	import duel.display.fx.CardFlames;
 	import duel.G;
 	import duel.GameSprite;
@@ -88,7 +90,7 @@ package duel.display.cards {
 			auraContainer.touchable = false;
 			addChild( auraContainer );
 			
-			selectableAura = new CardAura( "card-aura" );
+			selectableAura = new CardAura0( "card-aura" );
 			//selectableAura = new CardFlames();
 			//selectableAura.color = 0x669BEA;
 			selectableAura.touchable = false;

@@ -1,7 +1,7 @@
 package duel.display.fields 
 {
 	import chimichanga.debug.logging.error;
-	import duel.display.cards.CardAura;
+	import duel.display.fx.CardAura0;
 	import duel.display.FieldSpriteOverTip;
 	import duel.G;
 	import duel.GameSprite;
@@ -27,7 +27,7 @@ package duel.display.fields
 		private var _canAttackAlpha:Number = .0;
 		private var _canRelocateAlpha:Number = .0;
 		
-		private var aura:CardAura;
+		private var aura:CardAura0;
 		private var overTip:FieldSpriteOverTip;
 		private var iconLocked:Image;
 		private var iconSummonDaze:Image;
@@ -40,7 +40,7 @@ package duel.display.fields
 			
 			juggler.add( this );
 			
-			aura = new CardAura( "card-aura-field" );
+			aura = new CardAura0( "card-aura-field" );
 			aura.touchable = false;
 			aura.alpha = 0.0;
 			aura.x = x;
