@@ -4,7 +4,7 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="bin\Prjmobile.swf" />
+    <movie path="..\bin\Prjmobile.swf" />
     <movie fps="30" />
     <movie width="480" />
     <movie height="762" />
@@ -45,7 +45,7 @@
     <option loadExterns="" />
     <option staticLinkRSL="True" />
     <option additional="" />
-    <option compilerConstants="CONFIG::development,true&#xA;CONFIG::desktop,false&#xA;CONFIG::web,false&#xA;CONFIG::slowmode,false&#xA;CONFIG::quickplay,false&#xA;CONFIG::sandbox,false" />
+    <option compilerConstants="CONFIG::development,true&#xA;CONFIG::desktop,false&#xA;CONFIG::web,false&#xA;CONFIG::slowmode,false&#xA;CONFIG::quickplay,false&#xA;CONFIG::sandbox,false&#xA;CONFIG::heavytest,false" />
     <option minorVersion="" />
   </build>
   <!-- SWC Include Libraries -->

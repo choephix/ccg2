@@ -23,6 +23,9 @@ package global
 		CONFIG::desktop
 		public static const URL:String = "http://dev.thechoephix.com/ccg2/editor/read.php";
 		
+		CONFIG::mobile
+		public static const URL:String = "http://dev.thechoephix.com/ccg2/editor/read.php";
+		
 		CONFIG::web
 		public static const URL:String = "cards.txt";
 		
