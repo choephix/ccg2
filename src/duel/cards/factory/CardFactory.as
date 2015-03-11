@@ -196,6 +196,192 @@ package duel.cards.factory
 			
 			//{ IN TESTING
 			
+			F[ "spynet" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "bloodlink" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "draw_deckstruction" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "traplock" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "rowlock" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "super_empower" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "empower2" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "empower3" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "compensation" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "mass_depower" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "blindrage" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "assist" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "summon2move" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "time_bomb" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "hypnoshield" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "handstruction" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "i_dare_you" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "bomb2" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "trapreturner" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "apocalypta" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "ragnarock" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "armageddon" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "beyond_shield" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "fately_summons" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "retrap" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "resurrecter5" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "handy_jimmy" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "zombyra" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "bloodcopy_2" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "bloodcopy_1" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
+			F[ "bloodthirter" ] =
+			function( c:Card ):void
+			{
+				
+			}
+			
 			//}
 			
 			//{ ON HOLD
@@ -1803,27 +1989,6 @@ package duel.cards.factory
 				}
 			}
 			
-			F[ "piercing_george2" ] =
-			function( c:Card ):void
-			{
-				var special:SpecialEffect;
-				special = c.propsC.addTriggered();
-				special.allowIn( CardLotType.CREATURE_FIELD );
-				special.watch( GameplayProcess.ATTACK );
-				special.funcCondition =
-				function( p:GameplayProcess ):Boolean {
-					if ( c.indexedField.opposingCreature == null ) return false;
-					if ( c.indexedField.opposingCreature.statusC.realPowerValue
-						>= c.statusC.realPowerValue ) return false;
-					return isInvolvedInBattle( c, p );
-				}
-				special.funcActivate =
-				function( p:GameplayProcess ):void {
-					const DMG:int = c.statusC.realPowerValue - c.indexedField.opposingCreature.statusC.realPowerValue;
-					TempDatabaseUtils.doDealDirectDamage( c.controller.opponent, DMG, c );
-				}
-			}
-			
 			F[ "antiflipper" ] =
 			function( c:Card ):void
 			{
@@ -2551,7 +2716,6 @@ package duel.cards.factory
 				}
 			}
 			
-			
 			F[ "token_pooper" ] = 
 			function( c:Card ):void
 			{
@@ -2956,6 +3120,7 @@ package duel.cards.factory
 				}
 			}
 			
+			F[ "piercing_gemma" ] =
 			F[ "piercing_george" ] = 
 			function( c:Card ):void
 			{
@@ -2976,6 +3141,27 @@ package duel.cards.factory
 					const PLR:Player = c.statusC.realPowerValue < c.indexedField.opposingCreature.statusC.realPowerValue ?
 									c.controller : c.controller.opponent;
 					TempDatabaseUtils.doDealDirectDamage( PLR, DMG, c );
+				}
+			}
+			
+			F[ "piercing_george2" ] =
+			function( c:Card ):void
+			{
+				var special:SpecialEffect;
+				special = c.propsC.addTriggered();
+				special.allowIn( CardLotType.CREATURE_FIELD );
+				special.watch( GameplayProcess.ATTACK );
+				special.funcCondition =
+				function( p:GameplayProcess ):Boolean {
+					if ( c.indexedField.opposingCreature == null ) return false;
+					if ( c.indexedField.opposingCreature.statusC.realPowerValue
+						>= c.statusC.realPowerValue ) return false;
+					return isInvolvedInBattle( c, p );
+				}
+				special.funcActivate =
+				function( p:GameplayProcess ):void {
+					const DMG:int = c.statusC.realPowerValue - c.indexedField.opposingCreature.statusC.realPowerValue;
+					TempDatabaseUtils.doDealDirectDamage( c.controller.opponent, DMG, c );
 				}
 			}
 			
