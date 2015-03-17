@@ -14,6 +14,8 @@ package duel.otherlogic
 		/// must accept one arg of type Process
 		public var funcActivate:Function = ERROR;
 		
+		public var allowEverywhere:Boolean = false;
+		
 		private var _isInProgress:Boolean;
 		
 		private var _ftypes:Vector.<CardLotType> = new <CardLotType>[];
@@ -42,6 +44,7 @@ package duel.otherlogic
 		
 		public function isAllowedInField( fieldType:CardLotType ):Boolean
 		{
+			if ( allowEverywhere ) return true;
 			if ( _ftcount <= 0 ) return false;
 			if ( _ftcount == 1 ) return _ftypes[0] == fieldType;
 			var i:int = _ftcount;

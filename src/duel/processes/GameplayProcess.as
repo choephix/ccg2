@@ -6,6 +6,7 @@ package duel.processes
 	import duel.players.Player;
 	import duel.table.CreatureField;
 	import duel.table.IndexedField;
+	import duel.table.TrapField;
 	
 	use namespace gameprocessgetter;
 	
@@ -273,6 +274,16 @@ package duel.processes
 			
 			CONFIG::development
 			{ throw new ArgumentError( "What to do... getSummonedField..." ); }
+			return null;
+		}
+		
+		public function getTrapField():TrapField
+		{
+			if ( args.length > 1 && args[ 1 ] is TrapField ) 
+				return TrapField( args[ 1 ] );
+			
+			CONFIG::development
+			{ throw new ArgumentError( "What to do... getTrapField..." ); }
 			return null;
 		}
 		
