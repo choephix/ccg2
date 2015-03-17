@@ -147,6 +147,9 @@
 		
 		private function onStageResize( e:Event = null ):void {
 			
+			if ( viewRect.width < 100 ) return;
+			if ( viewRect.height < 100 ) return;
+			
 			if ( starling ) {
 				viewRect.width = stage.stageWidth;
 				viewRect.height = stage.stageHeight;
