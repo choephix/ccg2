@@ -2,6 +2,7 @@ package duel.display.cards {
 	import chimichanga.common.display.Sprite;
 	import dev.Temp;
 	import duel.cards.Card;
+	import duel.cards.CardListBase;
 	import duel.display.animation;
 	import duel.display.cards.CardTween;
 	import duel.display.fx.CardAura;
@@ -37,7 +38,7 @@ package duel.display.cards {
 	{
 		public var auraContainer:Sprite;
 		//private var selectableAura:CardFlames;
-		private var selectableAura:CardAura;
+		private var selectableAura:CardAura0;
 		private var selectedAura:Image;
 		
 		public var tween:CardTween;
@@ -300,6 +301,20 @@ package duel.display.cards {
 				}
 			}
 			//flatten();
+		}
+		
+		public function onLotEntered( lot:CardListBase ):void 
+		{
+			//if ( lot is Hand )
+			//{
+				//if ( selectableAura == null )
+					//selectableAura = game.auras.setToSelectable( this );
+			//}
+			//else
+			//{
+				//if ( selectableAura != null )
+					//selectableAura
+			//}
 		}
 		
 		// publicS

@@ -12,17 +12,19 @@ package duel.display.fx
 	 * ...
 	 * @author choephix
 	 */
-	public class CardAura0 extends Image implements IAnimatable
+	public class CardAura0 extends CardAura
 	{
 		public var scale:Number = 1.0;
 		private var _tween:Tween;
+		private var img:Image;
 		
 		public function CardAura0( assetName:String = "card-aura" )
 		{
-			super( App.assets.getTexture( assetName ) );
+			img = App.assets.generateImage( assetName, false, true );
+			addChild( img );
+			
 			this.touchable = false;
-			this.blendMode = BlendMode.ADD;
-			alignPivot();
+			//this.blendMode = BlendMode.ADD;
 			
 			addEventListener( Event.ADDED_TO_STAGE, onAddedToStage )
 		}
@@ -41,11 +43,15 @@ package duel.display.fx
 			_tween.animate( "scaleY", scale + .02 );
 		}
 		
-		public function advanceTime( time:Number ):void 
+		override public function advanceTime( time:Number ):void 
 		{
+			super.advanceTime( time );
 			visible = alpha > .03;
 			if ( !visible ) return;
 			_tween.advanceTime( time );
 		}
+		
+		public function get color():uint { return img.color }
+		public function set color(value:uint):void { img.color = value }
 	}
 }

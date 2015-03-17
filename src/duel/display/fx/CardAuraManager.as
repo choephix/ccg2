@@ -57,7 +57,7 @@ package duel.display.fx
 				}
 			if ( aura == null )
 			{
-				aura = new CardFlames();
+				aura = new CardAura0();
 				_selectable.push( aura );
 			}
 			return addAuraTo( aura, card );

@@ -169,6 +169,7 @@ package duel.cards
 			if ( _lot != null )
 				_controller = _lot.owner;
 			game.cardEvents.dispatchEventWith( CardEvents.ENTER_LOT, this, _lot );
+			 sprite.onLotEntered( _lot );
 		}
 		
 		public function get lot():CardListBase 

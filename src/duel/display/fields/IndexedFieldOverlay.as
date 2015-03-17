@@ -41,6 +41,7 @@ package duel.display.fields
 			juggler.add( this );
 			
 			aura = new CardAura0( "card-aura-field" );
+			aura.blendMode = "add";
 			aura.touchable = false;
 			aura.alpha = 0.0;
 			aura.x = x;
