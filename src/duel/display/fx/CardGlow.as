@@ -21,18 +21,20 @@ package duel.display.fx
 		
 		public function CardGlow() 
 		{
+			//mc  = App.assets.generateMovieClip( "card-mist", false, true, 30 );
+			//mc.blendMode = BlendMode.ADD;
+			//mc.scaleX =
+			//mc.scaleY = 1.0 / .449;
+			//mc.play();
+			//mc.alpha = 0.0;
+			//addChild( mc );
+			
 			mc  = App.assets.generateMovieClip( "glowB", false, true, 30 );
-			mc  = App.assets.generateMovieClip( "card-mist", false, true, 30 );
 			mc.blendMode = BlendMode.ADD;
 			mc.scaleX =
-			mc.scaleY = 1.0 / .449;
-			//mc.scaleX =
-			//mc.scaleY = 1.0 / .355;
+			mc.scaleY = 1.0 / .355;
 			mc.play();
 			mc.alpha = 0.0;
-			//mc.color = 0x1155BB;
-			//mc.color = 0xFFDD22;
-			//mc.color = 0xEE4499;
 			addChild( mc );
 		}
 		
