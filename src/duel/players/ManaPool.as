@@ -1,5 +1,6 @@
 package duel.players 
 {
+	import duel.G;
 	import duel.GameEntity;
 	
 	/**
@@ -8,9 +9,9 @@ package duel.players
 	 */
 	public class ManaPool extends GameEntity 
 	{
-		private var _capMax:int		= 4;
+		private var _capMax:int		= G.MAX_MANA;
 		private var _capMin:int		= 0;
-		private var _cap:int		= CONFIG::sandbox?4:1; //TODO return to 1
+		private var _cap:int		= CONFIG::sandbox?_capMax:1; //TODO return to 1
 		private var _current:int	= _cap;
 		
 		public function increase( amount:int ):void

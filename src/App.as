@@ -52,7 +52,7 @@ package {
 		public static var initialized:Boolean;
 		public static var assets:AdvancedAssetManager;
 		public static var cardsData:CardsDataLoader;
-		public static var globalMouseLocation:Point = new Point();
+		public static var globalPointerLocation:Point = new Point();
 		
 		public static function initialize( root:StarlingMain ):void {
 			

@@ -168,19 +168,17 @@ package duel
 			addChild( errorBox );
 			
 			p1.handSprite = new HandSprite( p1.hand );
-			p1.handSprite.maxWidth = 1200;
-			p1.handSprite.x = - p1.handSprite.maxWidth * 0.5;
+			//p1.handSprite.maxWidth = 1200;
+			p1.handSprite.x = App.W - table.x;
 			p1.handSprite.y = App.H - table.y;
 			p1.handSprite.cardsParent = table.cardsParentTop;
-			p1.handSprite.x += 550;
 			
 			p2.handSprite = new HandSprite( p2.hand );
-			p2.handSprite.maxWidth = 1150;
-			p2.handSprite.x = - p2.handSprite.maxWidth * 0.5;
+			//p2.handSprite.maxWidth = 1150;
+			p2.handSprite.x = App.W - table.x;
 			p2.handSprite.y = -table.y;
 			p2.handSprite.cardsParent = table.cardsParentTop;
 			p2.handSprite.topSide = true;
-			p2.handSprite.x += 550;
 			//}
 			
 			if ( !meta.isMultiplayer )
@@ -317,6 +315,9 @@ package duel
 				remote = null;
 			}
 			
+			p1.handSprite.destroy();
+			p2.handSprite.destroy();
+			
 			globalBuffs.destroy();
 			globalBuffs = null;
 			
@@ -343,8 +344,8 @@ package duel
 			
 			frameNum++;
 			
-			mouseLocation.x = App.globalMouseLocation.x * scaleX;
-			mouseLocation.y = App.globalMouseLocation.y * scaleY;
+			mouseLocation.x = App.globalPointerLocation.x * scaleX;
+			mouseLocation.y = App.globalPointerLocation.y * scaleY;
 			
 			jugglerStrict.advanceTime( time );
 			jugglerGui.advanceTime( time );

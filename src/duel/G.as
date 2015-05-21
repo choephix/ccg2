@@ -12,7 +12,9 @@ package duel {
 		public static const FIELD_COLUMNS:Number = 4;
 		
 		public static const INIT_LP:Number = 20;
-		public static const INIT_HAND_SIZE:Number = CONFIG::sandbox?8:2;
+		public static const INIT_HAND_SIZE:Number = CONFIG::sandbox?2:2;
+		
+		public static const MAX_MANA:Number = 9;
 		
 		public static const MAX_DECK_SIZE:Number = 48;
 	}

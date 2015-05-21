@@ -24,6 +24,8 @@ package dev
 	import starling.display.DisplayObject;
 	import starling.errors.MissingContextError;
 	import starling.events.Event;
+	import starling.textures.Texture;
+	import starling.textures.TextureSmoothing;
 	import starling.utils.VertexData;
 	
 	/** A Quad represents a rectangle with a uniform color or a color gradient.
@@ -46,6 +48,9 @@ package dev
 	{
 		private static const PROGRAM_NAME:String = "aura";
 		
+        private var mTexture:Texture;
+        private var mSmoothing:String;
+		
 		/** The raw vertex data of the quad. */
 		private var mVertexData:VertexData;
 		private var mVertexBuffer:VertexBuffer3D;
@@ -64,55 +69,70 @@ package dev
 		/** Creates a quad with a certain size and color. The last parameter controls if the
 		 *  alpha value should be premultiplied into the color values on rendering, which can
 		 *  influence blending output. You can use the default value in most cases.  */
-		public function AuraModel()
-		{
-			const W:Number = 15;
-			const H:Number = 20;
-			const S:Number = 10;
-			
-			mVertexData = new VertexData( 12, false );
-			mVertexData.setPosition( 0, S * ( 3 ), S * ( 3 ) );
-			mVertexData.setPosition( 1, S * ( 0 ), S * ( 2 ) );
-			mVertexData.setPosition( 2, S * ( 2 ), S * ( 0 ) );
-			mVertexData.setPosition( 3, S * ( W - 3 ), S * ( 3 ) );
-			mVertexData.setPosition( 4, S * ( W - 2 ), S * ( 0 ) );
-			mVertexData.setPosition( 5, S * ( W ), S * ( 2 ) );
-			mVertexData.setPosition( 6, S * ( W - 3 ), S * ( H - 3 ) );
-			mVertexData.setPosition( 7, S * ( W ), S * ( H - 2 ) );
-			mVertexData.setPosition( 8, S * ( W - 2 ), S * ( H ) );
-			mVertexData.setPosition( 9, S * ( 3 ), S * ( H - 3 ) );
-			mVertexData.setPosition( 10, S * ( 2 ), S * ( H ) );
-			mVertexData.setPosition( 11, S * ( 0 ), S * ( H - 2 ) );
-			
-			mVertexData.setUniformColor( 0xFFFF00 );
-			
-			// create indices that span up the triangles
-			
-			mIndexData = new <uint>[];
-			mIndexData.push( 0, 1, 2 );
-			mIndexData.push( 2, 4, 0 );
-			mIndexData.push( 4, 3, 0 );
-			mIndexData.push( 3, 4, 5 );
-			mIndexData.push( 5, 7, 3 );
-			mIndexData.push( 7, 6, 3 );
-			mIndexData.push( 6, 7, 8 );
-			mIndexData.push( 8, 10, 6 );
-			mIndexData.push( 10, 9, 6 );
-			mIndexData.push( 9, 10, 11 );
-			mIndexData.push( 11, 1, 9 );
-			mIndexData.push( 1, 0, 9 );
-			//mIndexData.push( 0, 3, 9 );
-			//mIndexData.push( 6, 9, 3 );
-			
-			mNumTriangles = int( mIndexData.length / 3 );
-			
-			onVertexDataChanged();
-			registerPrograms();
-			createBuffers();
-			
-			// handle lost context
-			Starling.current.addEventListener( Event.CONTEXT3D_CREATE, onContextCreated );
-		}
+		public function AuraModel(texture:Texture)
+        {
+            if (texture)
+            {
+                mTexture = texture;
+                mSmoothing = TextureSmoothing.BILINEAR;
+				
+				const W:Number = 15;
+				const H:Number = 20;
+				const S:Number = 10;
+				
+				mVertexData = new VertexData( 12, false );
+				mVertexData.setPosition( 0, S * ( 3 ), S * ( 3 ) );
+				mVertexData.setPosition( 1, S * ( 0 ), S * ( 2 ) );
+				mVertexData.setPosition( 2, S * ( 2 ), S * ( 0 ) );
+				mVertexData.setPosition( 3, S * ( W - 3 ), S * ( 3 ) );
+				mVertexData.setPosition( 4, S * ( W - 2 ), S * ( 0 ) );
+				mVertexData.setPosition( 5, S * ( W ), S * ( 2 ) );
+				mVertexData.setPosition( 6, S * ( W - 3 ), S * ( H - 3 ) );
+				mVertexData.setPosition( 7, S * ( W ), S * ( H - 2 ) );
+				mVertexData.setPosition( 8, S * ( W - 2 ), S * ( H ) );
+				mVertexData.setPosition( 9, S * ( 3 ), S * ( H - 3 ) );
+				mVertexData.setPosition( 10, S * ( 2 ), S * ( H ) );
+				mVertexData.setPosition( 11, S * ( 0 ), S * ( H - 2 ) );
+				
+				mVertexData.setUniformColor( 0xFFFF00 );
+				
+                mVertexData.setTexCoords(0, 0.0, 0.0);
+                mVertexData.setTexCoords(1, 1.0, 0.0);
+                mVertexData.setTexCoords(2, 0.0, 1.0);
+                mVertexData.setTexCoords(3, 1.0, 1.0);
+				
+				// create indices that span up the triangles
+				
+				mIndexData = new <uint>[];
+				mIndexData.push( 0, 1, 2 );
+				mIndexData.push( 2, 4, 0 );
+				mIndexData.push( 4, 3, 0 );
+				mIndexData.push( 3, 4, 5 );
+				mIndexData.push( 5, 7, 3 );
+				mIndexData.push( 7, 6, 3 );
+				mIndexData.push( 6, 7, 8 );
+				mIndexData.push( 8, 10, 6 );
+				mIndexData.push( 10, 9, 6 );
+				mIndexData.push( 9, 10, 11 );
+				mIndexData.push( 11, 1, 9 );
+				mIndexData.push( 1, 0, 9 );
+				//mIndexData.push( 0, 3, 9 );
+				//mIndexData.push( 6, 9, 3 );
+				
+				mNumTriangles = int( mIndexData.length / 3 );
+				
+				onVertexDataChanged();
+				registerPrograms();
+				createBuffers();
+				
+				// handle lost context
+				Starling.current.addEventListener( Event.CONTEXT3D_CREATE, onContextCreated );
+            }
+            else
+            {
+                throw new ArgumentError("Texture cannot be null");
+            }
+        }
 		
 		/** Disposes all resources of the display object. */
 		public override function dispose():void
@@ -149,7 +169,7 @@ package dev
 			// vc4 -> alpha
 			
 			var vertexProgramCode:String = "m44 op, va0, vc0 \n" + // 4x4 matrix transform to output space
-				"mul v0, va1, vc4 \n"; // multiply color with alpha and pass it to fragment shader
+											"mul v0, va1, vc4 \n"; // multiply color with alpha and pass it to fragment shader
 			
 			var fragmentProgramCode:String = "mov oc, v0"; // just forward incoming color
 			
