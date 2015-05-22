@@ -97,36 +97,19 @@ package duel.display.cardlots
 			
 			// UPDATE FOCUS
 			
-			if ( list.cardsCount < 1 )
+			var fail:Boolean = false;
+			
+			fail ||= list.cardsCount < 1;
+			fail ||= _pointerXY.y > yLimClose;
+			fail ||= _pointerXY.x < PADDING_X;
+			fail ||= _pointerXY.x > PADDING_X + maxWidth;
+			fail ||= _pointerXY.x > PADDING_X + list.cardsCount * _cardSpacing + G.CARD_W;
+			
+			if ( fail )
 			{
 				setFocusedCard( null );
-				return;
 			}
-			
-			if ( _pointerXY.y > yLimClose )
-			{
-				setFocusedCard( null );
-				return;
-			}
-			
-			if ( _pointerXY.x < PADDING_X )
-			{
-				setFocusedCard( null );
-				return;
-			}
-			
-			if ( _pointerXY.x > PADDING_X + list.cardsCount * _cardSpacing )
-			{
-				setFocusedCard( null );
-				return;
-			}
-			
-			if ( _pointerXY.x > PADDING_X + list.cardsCount * _cardSpacing )
-			{
-				setFocusedCard( null );
-				return;
-			}
-			
+			else	
 			{
 				var n:Number;
 				n = _pointerXY.x - PADDING_X;
