@@ -8,11 +8,11 @@
     <movie fps="30" />
     <movie width="800" />
     <movie height="600" />
-    <movie version="14" />
+    <movie version="16" />
     <movie minorVersion="0" />
     <movie platform="AIR" />
     <movie background="#FFFFFF" />
-    <movie preferredSDK="Apache Flex 4.13.0 FP15.0 AIR15.0 en_US;4.13.0;" />
+    <movie preferredSDK="Apache Flex 4.14.1 FP19.0 AIR19.0 en_US;4.14.1;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
@@ -46,7 +46,7 @@
     <option loadExterns="" />
     <option staticLinkRSL="True" />
     <option additional="" />
-    <option compilerConstants="CONFIG::development,true&#xA;CONFIG::desktop,true&#xA;CONFIG::web,false&#xA;CONFIG::slowmode,false&#xA;CONFIG::quickplay,true&#xA;CONFIG::sandbox,true&#xA;CONFIG::heavytest,false" />
+    <option compilerConstants="CONFIG::development,true&#xA;CONFIG::desktop,true&#xA;CONFIG::web,false&#xA;CONFIG::slowmode,false&#xA;CONFIG::quickplay,false&#xA;CONFIG::sandbox,false&#xA;CONFIG::heavytest,false" />
     <option minorVersion="" />
   </build>
   <!-- SWC Include Libraries -->
