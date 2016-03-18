@@ -500,7 +500,7 @@ package duel.cards.temp_database
 				c.descr = "On opp. summon and no own cr. - kill summoned creature";
 			},
 			/* * */
-			function ( c:Card ):void ///	..C		Caller of the Dead
+			function( c:Card ):void ///	..C		Caller of the Dead
 			{
 				c.name = "Caller of the Dead";
 				
