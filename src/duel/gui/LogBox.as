@@ -26,9 +26,12 @@ package duel.gui
 			quad.alpha = .6;
 			addChild( quad );
 			
-			t = new TextField( 1, 1, "", "Consolas", fontSize, 0x0099CC, false );
-			t.hAlign = "left";
-			t.vAlign = "top";
+			t = new TextField( 1, 1, "" );
+			t.format.font = "Consolas";
+			t.format.size = fontSize;
+			t.format.color = 0x0099CC;
+			t.format.horizontalAlign = "left";
+			t.format.verticalAlign = "top";
 			t.touchable = false;
 			addChild( t );
 			

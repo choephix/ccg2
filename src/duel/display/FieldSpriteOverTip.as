@@ -24,8 +24,8 @@ package duel.display
 			super();
 			
 			btn = new Button( assets.getTexture( "btn" ), "" );
-			btn.fontColor = color;
-			btn.fontBold = true;
+			btn.textFormat.color = color;
+			btn.textFormat.bold = true;
 			btn.alignPivot();
 			btn.touchable = false;
 			addChild( btn );
@@ -33,12 +33,12 @@ package duel.display
 		
 		public function get color():uint 
 		{
-			return btn.fontColor;
+			return btn.textFormat.color;
 		}
 		
 		public function set color(value:uint):void 
 		{
-			btn.fontColor = value;
+			btn.textFormat.color = value;
 		}
 		
 		public function get text():String 

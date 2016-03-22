@@ -11,6 +11,8 @@ package screens.deckbuilder
 	{
 		public var bg:Quad;
 		
+		
+		
 		public function ScreenDeckbuilder() 
 		{
 			bg = new Quad( 1000, 1000, 0x162534 );

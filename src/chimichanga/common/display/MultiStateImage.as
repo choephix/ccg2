@@ -20,7 +20,7 @@ package chimichanga.common.display {
 		private var _texturesLen:int;
 		private var _currentState:int = 0;
 		private var _defaultState:int = 0;
-		private var _delayedCall:IAnimatable;
+		private var _delayedCallID:uint;
 		
 		/// Expects a list of arguments of type Texture, or a single argument of type Vector.<Texture>
 		public function MultiStateImage( ...tex ) 
@@ -79,15 +79,12 @@ package chimichanga.common.display {
 		{
 			clearDelayedCall();
 			setCurrentState( state );
-			_delayedCall = _juggler.delayCall( setCurrentState, time, _defaultState );
+			_delayedCallID = _juggler.delayCall( setCurrentState, time, _defaultState );
 		}
 		
 		private function clearDelayedCall():void 
 		{
-			if ( _delayedCall == null ) 
-				return;
-			_juggler.remove( _delayedCall );
-			_delayedCall = null;
+			_juggler.removeByID( _delayedCallID );
 		}
 		
 		//

@@ -160,11 +160,15 @@ package duel
 			gui = new Gui();
 			addChild( gui );
 			
-			errorBox = new TextField( .3 * App.W, App.H, "", "Consolas", 21, 0xBB0011, true );
-			errorBox.x = .35 * App.W;
-			errorBox.vAlign = "top";
+			errorBox = new TextField( .3 * App.W, App.H, "" );
+			errorBox.format.font = "Consolas";
+			errorBox.format.size = 21;
+			errorBox.format.color = 0xBB0011;
+			errorBox.format.bold = true;
+			errorBox.format.verticalAlign = "top";
 			errorBox.touchable = false;
 			errorBox.batchable = false;
+			errorBox.x = .35 * App.W;
 			addChild( errorBox );
 			
 			p1.handSprite = new HandSprite( p1.hand );
@@ -597,7 +601,11 @@ package duel
 			o.touchable = false;
 			addChild( o );
 			
-			var t:TextField = new TextField( 500, 100, text, "Impact", 36, color, false );
+			var t:TextField = new TextField( 500, 100, text );
+			t.format.font = "Impact";
+			t.format.size = 36;
+			t.format.color = color;
+			t.format.bold = false;
 			t.alignPivot();
 			
 			var q:Quad = new Quad( t.textBounds.width, t.textBounds.height, 0x0 );

@@ -23,7 +23,11 @@ package duel.gui
 		
 		public function AnimatedTextField( width:int, height:int, text:String, fontName:String = "Verdana", fontSize:Number = 12, color:uint = 0, bold:Boolean = false )
 		{
-			super( width, height, text, fontName, fontSize, color, bold );
+			super( width, height, text );
+			format.font = fontName;
+			format.size = fontSize;
+			format.color = color;
+			format.bold = bold;
 			rawText = text;
 			update();
 			

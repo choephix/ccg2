@@ -472,7 +472,11 @@ class TipBox extends GameSprite
 		q.alpha = .0;
 		addChild( q );
 		
-		t = new TextField( G.CARD_W, 32, "?", "Calibri", 24, 0xFFFFFF, true );
+		t = new TextField( G.CARD_W, 32, "?" );
+		t.format.font = "Calibri";
+		t.format.size = 24;
+		t.format.color = 0xFFFFFF;
+		t.format.bold = true;
 		t.alignPivot();
 		t.autoScale = true;
 		addChild( t );
@@ -503,12 +507,12 @@ class TipBox extends GameSprite
 	
 	public function get textColor():uint
 	{
-		return t.color;
+		return t.format.color;
 	}
 	
 	public function set textColor( value:uint ):void
 	{
-		t.color = value;
+		t.format.color = value;
 	}
 	
 	public function get text():String

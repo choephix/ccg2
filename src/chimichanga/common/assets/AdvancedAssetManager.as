@@ -1,6 +1,5 @@
 package chimichanga.common.assets 
 {
-	import chimichanga.common.display.MultiStateDisplayObject;
 	import chimichanga.common.display.MultiStateImage;
 	import flash.system.Capabilities;
 	import starling.animation.Juggler;
@@ -170,29 +169,6 @@ package chimichanga.common.assets
 				getTextureAtlas( atlas ).getTextures( prefix, sHelperVectorTextures );
 			clip = generateMovieClipFromTextures( sHelperVectorTextures, touchable, centerPivots, framerate, juggler, play, prefix );
 			sHelperVectorTextures.length = 0;
-			return clip;
-		}
-		
-		public function generateMultiStateMovieClip( states:*, touchable:Boolean = false, centerPivots:Boolean = false, framerate:Number = 30, juggler:Juggler = null, autorewind:Boolean=true, atlas:String = null ):MultiStateDisplayObject 
-		{
-			var clip:MultiStateDisplayObject;
-			clip = new MultiStateDisplayObject( juggler );
-			if ( states is Array || states is Vector.<*> ) 
-			{
-				for each ( var s:* in states )
-				{
-					if ( s is DisplayObject ) 
-						clip.addState( s as DisplayObject );
-					else if ( s is String )
-						clip.addState( generateMovieClip( s as String, touchable, centerPivots, framerate, null, false, atlas ) );
-				}
-			}
-			clip.autoplay = true;
-			clip.autorewind = autorewind;
-			clip.touchable = touchable;
-			clip.useHandCursor = touchable;
-			if ( centerPivots )
-				clip.alignPivot();
 			return clip;
 		}
 		

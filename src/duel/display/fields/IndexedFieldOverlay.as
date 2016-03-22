@@ -46,7 +46,7 @@ package duel.display.fields
 			aura.alpha = 0.0;
 			aura.x = x;
 			aura.y = y;
-			aura.scale = _z;
+			aura.scale_ = _z;
 			addChild( aura );
 			
 			iconSummonDaze = assets.generateImage( "exhaustClock", false, true );

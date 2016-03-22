@@ -23,9 +23,13 @@ package duel.gui
 			q.alpha = .70;
 			addChild( q );
 			
-			t = new TextField( q.width, q.height, "?", "Calibri", 32, 0x0, true );
-			t.alignPivot();
+			t = new TextField( q.width, q.height, "?" );
+			t.format.font = "Calibri";
+			t.format.size = 32;
+			t.format.color = 0x0;
+			t.format.bold = true;
 			t.autoScale = true;
+			t.alignPivot();
 			addChild( t );
 			
 			alpha = .0;
@@ -48,12 +52,12 @@ package duel.gui
 		
 		public function get textColor():uint
 		{
-			return t.color;
+			return t.format.color;
 		}
 		
 		public function set textColor( value:uint ):void
 		{
-			t.color = value;
+			t.format.color = value;
 		}
 		
 		public function get text():String

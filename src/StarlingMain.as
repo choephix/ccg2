@@ -85,9 +85,11 @@ package {
 		
 		private function startLoadingAssets():void {
 			
-			loadingText = new TextField(
-				stage.stageWidth, stage.stageHeight,
-				"...", "Arial Black", 80, 0x304050, true );
+			loadingText = new TextField( stage.stageWidth, stage.stageHeight, ":c]" );
+			loadingText.format.font = "Arial Black";
+			loadingText.format.size = 80;
+			loadingText.format.color = 0x304050;
+			loadingText.format.bold = true;
 			addChild( loadingText );
 			
 			App.assets.initialize( onLoadingAppProgress, onLoadingAppComplete );
@@ -147,9 +149,9 @@ package {
 				
 				var b1:Button = new Button( App.assets.getTexture( "btn" ), "LOCAL" );
 				b1.alignPivot();
-				b1.fontSize = 30;
-				b1.fontName = "Impact";
-				b1.fontColor = 0x999999;
+				b1.textFormat.size = 30;
+				b1.textFormat.font = "Impact";
+				b1.textFormat.color = 0x999999;
 				b1.addEventListener( Event.TRIGGERED, startSingle );
 				menuContainer.addChild( b1 );
 				
@@ -158,9 +160,9 @@ package {
 				
 				var b2:Button = new Button( App.assets.getTexture( "btn" ), "REMOTE" );
 				b2.alignPivot();
-				b2.fontSize = 30;
-				b2.fontName = "Impact";
-				b2.fontColor = 0x999999;
+				b1.textFormat.size = 30;
+				b1.textFormat.font = "Impact";
+				b1.textFormat.color = 0x999999;
 				b2.addEventListener( Event.TRIGGERED, showLobby );
 				menuContainer.addChild( b2 );
 				

@@ -14,7 +14,7 @@ package duel.display.fx
 	 */
 	public class CardAura0 extends CardAura
 	{
-		public var scale:Number = 1.0;
+		public var scale_:Number = 1.0;
 		private var _tween:Tween;
 		private var img:Image;
 		
@@ -33,14 +33,14 @@ package duel.display.fx
 		{
 			removeEventListener( Event.ADDED_TO_STAGE, onAddedToStage );
 			
-			scaleX = scale;
-			scaleY = scale;
+			scaleX = scale_;
+			scaleY = scale_;
 			
 			_tween = new Tween( this, .500, Transitions.EASE_IN );
 			_tween.repeatCount = 0;
 			_tween.reverse = true;
-			_tween.animate( "scaleX", scale + .03 );
-			_tween.animate( "scaleY", scale + .02 );
+			_tween.animate( "scaleX", scale_ + .03 );
+			_tween.animate( "scaleY", scale_ + .02 );
 		}
 		
 		override public function advanceTime( time:Number ):void 

@@ -44,9 +44,9 @@ package duel.gui
 			t1.x = INSET;
 			t1.width = App.W - INSET * 2.0;
 			t1.height = App.H;
-			t1.color = 0xFFEE22;
-			t1.hAlign = "left";
-			t1.vAlign = "bottom";
+			t1.format.color = 0xFFEE22;
+			t1.format.horizontalAlign = "left";
+			t1.format.verticalAlign = "bottom";
 			t1.touchable = false;
 			
 			t2 = new AnimatedTextField( 0, 0, "", "Impact", 55 );
@@ -54,15 +54,19 @@ package duel.gui
 			t2.x = INSET;
 			t2.width = App.W - INSET * 2.0;
 			t2.height = App.H;
-			t2.color = 0xFFEE22;
-			t2.hAlign = "left";
-			t2.vAlign = "top";
+			t2.format.color = 0xFFEE22;
+			t2.format.horizontalAlign = "left";
+			t2.format.verticalAlign = "top";
 			t2.touchable = false;
 			
-			tcenter = new TextField( 960, 50, "", "Calibri", 36, 0x2277EE, true );
+			tcenter = new TextField( 960, 50, "" ); 
 			addChild( tcenter );
-			tcenter.hAlign = "center";
-			tcenter.vAlign = "center";
+			tcenter.format.font = "Calibri";
+			tcenter.format.size = 36;
+			tcenter.format.color = 0x2277EE;
+			tcenter.format.bold = true;
+			tcenter.format.horizontalAlign = "center";
+			tcenter.format.verticalAlign = "center";
 			tcenter.autoScale = true;
 			tcenter.touchable = false;
 			tcenter.alignPivot();
@@ -94,8 +98,8 @@ package duel.gui
 			function addButton( name:String, color:uint, func:Function ):Button
 			{
 				var btn:Button = new Button( assets.getTexture( "btn" ), name );
-				btn.fontColor = color;
-				btn.fontBold = true;
+				btn.textFormat.color = color;
+				btn.textFormat.bold = true;
 				btn.x = 0;
 				btn.y = buttonsContainer.height + 10;
 				btn.addEventListener( Event.TRIGGERED, func );
@@ -178,7 +182,7 @@ package duel.gui
 						+ "\n" + manaText( p.mana )
 						+ "   LP: " + AnimatedTextField.DEFAULT_MARKER 
 			t.targetValue = p.lifePoints;
-			t.color = p.color;
+			t.format.color = p.color;
 			t.alpha = p == game.currentPlayer ? 1.0 : 0.3;
 		}
 		

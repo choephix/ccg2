@@ -32,10 +32,10 @@ package duel.gui {
 			return objects.length <= 0 && _fakeTime < Number.MIN_VALUE;
 		}
 		
-		public function xtween(target:Object, time:Number, properties:Object):IAnimatable 
+		public function xtween( target:Object, time:Number, properties:Object ):uint 
 		{
 			super.removeTweens( target );
-			return super.tween(target, time, properties);
+			return super.tween( target, time, properties );
 		}
 		
 		public function addFakeTime( time:Number ):void

@@ -65,7 +65,6 @@
 			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			
 			Starling.multitouchEnabled = true; // useful on mobile devices
-			Starling.handleLostContext = !Platform.isIOS(); // not necessary on iOS. Saves a lot of memory!
 			
 			stage.addEventListener( Event.ACTIVATE, activate );
 			stage.addEventListener( Event.DEACTIVATE, deactivate );

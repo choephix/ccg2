@@ -113,19 +113,25 @@ package duel.display.cards {
 			front.addChild( pad );
 			
 			var title:String = CONFIG::sandbox ? card.slug : card.name;
-			tfTitle = new TextField( 500, 40, title, App.FONT1, 36, 0xFFFFFF );
+			tfTitle = new TextField( 500, 40, title ); 
+			tfTitle.format.font = App.FONT1;
+			tfTitle.format.size = 36;
+			tfTitle.format.color = 0xFFFFFF;
+			tfTitle.format.bold = true;
+			tfTitle.format.horizontalAlign = "center";
+			tfTitle.format.verticalAlign = "top";
 			tfTitle.batchable = true;
 			tfTitle.touchable = false;
-			tfTitle.hAlign = "center";
-			tfTitle.vAlign = "top";
-			tfTitle.bold = true;
 			tfTitle.pivotX = tfTitle.width * .5;
 			tfTitle.x = G.CARD_W * .5;
 			tfTitle.y = 2;
 			tfTitle.scaleX = Math.min( 1.0, G.CARD_W / tfTitle.textBounds.width - .05 );
 			front.addChild( tfTitle );
 			
-			tfDescr = new TextField( G.CARD_W, G.CARD_H, "", App.FONT2, 20, 0xFFFFFF );
+			tfDescr = new TextField( G.CARD_W, G.CARD_H, "" );
+			tfDescr.format.font = App.FONT2;
+			tfDescr.format.size = 20;
+			tfDescr.format.color = 0xFFFFFF;
 			tfDescr.batchable = true;
 			tfDescr.touchable = false;
 			tfDescr.autoScale = true;
@@ -133,8 +139,8 @@ package duel.display.cards {
 			
 			if ( card.isCreature )
 			{
-				tfDescr.hAlign = "center";
-				tfDescr.vAlign = "center";
+				tfDescr.format.horizontalAlign = "center";
+				tfDescr.format.verticalAlign = "center";
 				tfDescr.text = card.description == null ? "" : card.description;
 				tfDescr.x = xx( .37 );
 				tfDescr.y = yy( .50 );
@@ -147,8 +153,8 @@ package duel.display.cards {
 								App.FONT3, 90, 0xFFFFFF );
 				tfAttak.batchable = true;
 				tfAttak.touchable = false;
-				tfAttak.hAlign = "center";
-				tfAttak.vAlign = "center";
+				tfAttak.format.horizontalAlign = "center";
+				tfAttak.format.verticalAlign = "center";
 				tfAttak.currentValue = card.statusC.realPowerValue;
 				front.addChild( tfAttak );
 				tfAttak.x = .21 * G.CARD_W;

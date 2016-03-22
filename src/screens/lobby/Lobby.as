@@ -105,7 +105,7 @@ package screens.lobby
 		private function addButton( name:String, call:Function, clr:uint ):Button 
 		{
 			var b:Button = new Button( App.assets.getTexture('btn'), name );
-			b.fontColor = clr;
+			b.textFormat.color = clr;
 			//b.scaleX = 2.0;
 			//b.scaleY = 1.5;
 			b.x = -.5 * b.width;
