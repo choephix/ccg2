@@ -4,6 +4,7 @@ package duel
 	import chimichanga.common.display.Sprite;
 	import chimichanga.debug.logging.error;
 	import com.reyco1.multiuser.data.UserObject;
+	import data.decks.DeckBean;
 	import dev.ProcessManagementInspector;
 	import dev.Temp;
 	import duel.cards.buffs.GlobalBuffManager;
@@ -41,6 +42,7 @@ package duel
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Quad;
 	import starling.text.TextField;
+	import text.FakeData;
 	
 	use namespace gameprocessing;
 	
@@ -258,8 +260,8 @@ package duel
 			
 			//{ PREPARE GAMEPLAY
 			
-			var DECK1:Array = CONFIG::sandbox ? Temp.DECK_TEST : Temp.DECK1;
-			var DECK2:Array = CONFIG::sandbox ? Temp.DECK_TEST : Temp.DECK2;
+			var DECK1:DeckBean = DeckBean.fromJson( CONFIG::sandbox ? FakeData.DECK_DEMO_1 : FakeData.DECK_TEST_1 );
+			var DECK2:DeckBean = DeckBean.fromJson( CONFIG::sandbox ? FakeData.DECK_DEMO_1 : FakeData.DECK_TEST_2 );
 			
 			var time:Number = 0.880;
 			var i:int;
@@ -279,12 +281,12 @@ package duel
 				p1.mana.raiseCap();
 			}
 			
-			function populatePlayerDeck( p:Player, arr:Array ):void
+			function populatePlayerDeck( p:Player, deck:DeckBean ):void
 			{
-				for ( i = 0; i < arr.length && i < G.MAX_DECK_SIZE; i++ )
+				for ( i = 0; i < deck.cards.length && i < G.MAX_DECK_SIZE; i++ )
 				{
 					time += CONFIG::sandbox ? .003 : .033;
-					c = produceCard( arr[ i ] );
+					c = produceCard( deck.cards[ i ] );
 					c.owner = p;
 					c.faceDown = true;
 					jugglerStrict.delayCall( p.deck.addCard, time, c, true );
