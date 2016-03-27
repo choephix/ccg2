@@ -274,9 +274,7 @@ package
 			}
 			
 			if (e.keyCode == Keyboard.CAPS_LOCK)
-			{
 				Game.GODMODE = !Game.GODMODE;
-			}
 			
 			if (g == null || !g.interactable)
 				return;
