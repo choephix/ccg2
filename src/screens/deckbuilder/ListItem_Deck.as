@@ -2,26 +2,39 @@ package screens.deckbuilder
 {
 	import chimichanga.common.display.Sprite;
 	import data.decks.DeckBean;
+	import starling.display.Button;
 	import starling.display.Quad;
+	import starling.events.Event;
 	import starling.text.TextField;
 	
-	public class ListItem_Deck extends Sprite 
+	public class ListItem_Deck extends Button 
 	{
-		private var bg:Quad;
-		private var tf:;
+		private var callback_OnSelected:Function;
+		private var callArgs_OnSelected:Array;
 		
-		public function ListItem_Deck() 
+		private var bg:Quad;
+		private var tf:TextField;
+		
+		public function ListItem_Deck( callback_OnSelected:Function, callArgs_OnSelected:Array ) 
 		{
-			bg = new Quad( 800, 60, 0x9999CC );
-			addChild( bg );
+			super( App.assets.getTexture("btn"), "?" );
 			
-			tf = new TextField( 800, 69, "", "Calibri", 12, 0x335577, true );
-			addChild( tf );
+			this.callback_OnSelected = callback_OnSelected;
+			this.callArgs_OnSelected = callArgs_OnSelected;
+			
+			textFormat.color = 0xAaBbCc;
+			
+			addEventListener( Event.TRIGGERED, onTriggered );
+		}
+		
+		private function onTriggered( e:Event ):void 
+		{
+			callback_OnSelected.apply( null, callArgs_OnSelected );
 		}
 		
 		public function commitData( o:DeckBean ):void
 		{
-			tf.text = o.name;
+			text = o.name + " (" + o.cards.length + ")";
 		}
 	}
 }

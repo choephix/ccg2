@@ -1,9 +1,6 @@
 package text 
 {
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Terms 
 	{
 		

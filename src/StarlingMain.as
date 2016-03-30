@@ -1,6 +1,7 @@
 package
 {
 	import chimichanga.common.display.Sprite;
+	import data.decks.DeckBean;
 	import dev.AuraModel;
 	import dev.Temp;
 	import duel.controllers.PlayerAction;
@@ -10,6 +11,9 @@ package
 	import duel.GameMeta;
 	import flash.system.Capabilities;
 	import flash.ui.Keyboard;
+	import global.StaticVariables;
+	import screens.common.Dialog_ChooseDeck;
+	import screens.deckbuilder.ScreenDeckbuilder;
 	import screens.lobby.Lobby;
 	import screens.mainmenu.Screen_MainMenu;
 	import starling.core.Starling;
@@ -22,6 +26,7 @@ package
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.text.TextField;
+	import text.FakeData;
 	
 	CONFIG::air
 	{
@@ -154,13 +159,13 @@ package
 		
 		private function showMenu():void
 		{
-			if (menuContainer == null)
+			if ( menuContainer == null )
 			{
 				menuContainer = new Screen_MainMenu();
 				menuContainer.callback_StartSingle = startSingle;
 				menuContainer.callback_ShowLobby = showLobby;
 				menuContainer.initialize();
-				addChild(menuContainer);
+				addChild( menuContainer );
 			}
 			else
 			{
@@ -177,31 +182,53 @@ package
 		
 		private function showLobby():void
 		{
-			trace("Opening Lobby");
+			var scrDecks:ScreenDeckbuilder;
+			scrDecks = new ScreenDeckbuilder();
+			addChild( scrDecks );
+			
+			return;
+			
+			trace( "Opening Lobby" );
+			
 			lobby = new Lobby();
 			lobby.readyCallback = startMulti;
-			addChild(lobby);
-			lobby.initialize(gameMeta);
+			addChild( lobby );
+			lobby.initialize( gameMeta );
 		}
 		
 		private function startSingle():void
 		{
 			gameMeta.isMultiplayer = false;
-			startGame(gameMeta);
+			
+			hideMenu();
+			
+			Dialog_ChooseDeck.popOut( stage, onDeckChosen_1, "Player #1,\nPlease choose your deck" );
+			
+			function onDeckChosen_1( deck:DeckBean ):void
+			{ 
+				gameMeta.deck1 = deck;
+				Dialog_ChooseDeck.popOut( stage, onDeckChosen_2, "Player #2,\nPlease choose your deck" );
+			}
+			
+			function onDeckChosen_2( deck:DeckBean ):void
+			{
+				gameMeta.deck2 = deck;
+				startGame( gameMeta );
+			}
 		}
 		
-		private function startMulti(room:String, enemy:String):void
+		private function startMulti( room:String, enemy:String ):void
 		{
 			trace("Starting remote game", room, enemy);
 			
 			gameMeta.isMultiplayer = true;
 			gameMeta.roomName = room;
-			startGame(gameMeta);
+			startGame( gameMeta );
 		}
 		
-		private function startGame(meta:GameMeta):void
+		private function startGame( meta:GameMeta ):void
 		{
-			if (lobby)
+			if ( lobby )
 			{
 				lobby.close();
 				lobby = null;
@@ -209,10 +236,11 @@ package
 			
 			hideMenu();
 			
-			trace("Will start new game");
+			trace( "Will start new game" );
+			
 			g = new Game();
-			addChild(g);
-			g.addEventListener(GameEvents.DESTROY, onGameDestroyed);
+			addChild( g );
+			g.addEventListener( GameEvents.DESTROY, onGameDestroyed );
 			g.meta = meta;
 			g.initialize();
 		}

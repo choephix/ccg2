@@ -35,6 +35,7 @@ package duel
 	import duel.table.TrapField;
 	import flash.geom.Point;
 	import global.CardPrimalData;
+	import global.StaticVariables;
 	import starling.animation.IAnimatable;
 	import starling.animation.Transitions;
 	import starling.core.Starling;
@@ -260,8 +261,8 @@ package duel
 			
 			//{ PREPARE GAMEPLAY
 			
-			var DECK1:DeckBean = DeckBean.fromJson( CONFIG::sandbox ? FakeData.DECK_DEMO_1 : FakeData.DECK_TEST_1 );
-			var DECK2:DeckBean = DeckBean.fromJson( CONFIG::sandbox ? FakeData.DECK_DEMO_1 : FakeData.DECK_TEST_2 );
+			var DECK1:DeckBean = meta.deck1;
+			var DECK2:DeckBean = meta.deck2;
 			
 			var time:Number = 0.880;
 			var i:int;

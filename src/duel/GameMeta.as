@@ -1,5 +1,6 @@
 package duel 
 {
+	import data.decks.DeckBean;
 	/**
 	 * ...
 	 * @author choephix
@@ -11,5 +12,8 @@ package duel
 		
 		public var myUserName:String;
 		public var myUserColor:uint;
+		
+		public var deck1:DeckBean;
+		public var deck2:DeckBean;
 	}
 }
