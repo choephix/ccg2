@@ -253,7 +253,8 @@ package
 			showMenu();
 		}
 		
-		CONFIG::development private function onkey(e:KeyboardEvent):void
+		CONFIG::development
+		private function onkey(e:KeyboardEvent):void
 		{
 			if (e.keyCode == Keyboard.ESCAPE)
 			{

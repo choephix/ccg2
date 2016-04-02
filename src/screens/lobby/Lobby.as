@@ -293,6 +293,7 @@ class E {
 	static public const JOIN:String = "join";
 }
 
+import data.decks.DeckBean;
 import starling.display.Button;
 
 class UserDetails {
@@ -303,6 +304,8 @@ class UserDetails {
 	public var room:String = null;
 	
 	public var button:Button = null;
+	
+	public var deck:DeckBean = null;
 	
 	public function UserDetails( color:uint, logtime:Number )
 	{
@@ -321,6 +324,9 @@ class UserDetails {
 			isHost = data.isHost;
 		if ( data.room != undefined )
 			room = data.room;
+			
+		if ( data.deck != undefined )
+			deck = data.deck;
 			
 		return this;
 	}
