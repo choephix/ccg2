@@ -1,6 +1,7 @@
 package duel.gui
 {
 	import chimichanga.common.display.Sprite;
+	import dev.Debug;
 	import duel.cards.Card;
 	import duel.controllers.PlayerAction;
 	import duel.controllers.PlayerActionType;
@@ -167,6 +168,12 @@ package duel.gui
 			buttonsContainer.visible =
 				game.state.isOngoing &&
 				( !game.meta.isMultiplayer || game.currentPlayer == game.p1 );
+			
+			CONFIG::development {
+				CONFIG::sandbox {
+					tcenter.text = Debug.debugString;
+				}
+			}
 		}
 		
 		public function updateData():void

@@ -1,6 +1,8 @@
 package duel.display.cardlots
 {
 	import adobe.utils.CustomActions;
+	import chimichanga.global.utils.MathF;
+	import dev.Debug;
 	import duel.cards.Card;
 	import duel.display.cards.CardSprite;
 	import duel.G;
@@ -30,7 +32,11 @@ package duel.display.cardlots
 		public var xLimOpen:Number = 1000;
 		public var xLimClose:Number = App.W - 500;
 		
+		private var _animationDirty:Number = 0.0;
+		
 		private var _pointerXY:Point = new Point();
+		private var _cardPointerX:Number = NaN;
+		private var _cardPointerUpness:Number = NaN;
 		
 		private var _sideSign:Number = 1.0;
 		
@@ -67,6 +73,11 @@ package duel.display.cardlots
 		
 		override public function advanceTime( time:Number ):void
 		{
+			if ( _animationDirty > 0.0 )
+			{
+				_animationDirty -= time;
+				arrange();
+			}
 		}
 		
 		// EVENT HANDLERS
@@ -84,6 +95,8 @@ package duel.display.cardlots
 			_pointerXY.y -= this.y + game.table.y;
 			_pointerXY.x *= -1.0;
 			_pointerXY.y *= -_sideSign;
+			
+			_cardPointerX = NaN;
 			
 			// OPEN / CLOSE
 			
@@ -111,21 +124,23 @@ package duel.display.cardlots
 			}
 			else	
 			{
-				var n:Number;
-				n = _pointerXY.x - PADDING_X;
-				n = n + ( _cardSpacing - G.CARD_W ) * .5;
-				//n = n - G.CARD_W * .5 * ( _pointerXY.x / _cardSpacing );
-				n = n / _cardSpacing;
+				_cardPointerX = ( _pointerXY.x - PADDING_X ) / maxWidth;
+				_cardPointerX = _cardPointerX * ( list.cardsCount + 1 ) - 1.0;
 				
-				//if ( !topSide ) trace( n );
+				if ( _cardPointerX < 0.0 ) _cardPointerX = 0.0;
+				if ( _cardPointerX >= list.cardsCount ) _cardPointerX = list.cardsCount - 1.0;
 				
-				var i:int = n;
+				_cardPointerUpness = _cardPointerX - int(_cardPointerX+.5);
+				//_cardPointerUpness = 2.0 * Math.abs( _cardPointerUpness );
+				_cardPointerUpness = 2.0 * _cardPointerUpness;
 				
-				if ( i < 0 ) i = 0;
-				if ( i >= list.cardsCount ) i = list.cardsCount - 1;
+				Debug.debugString = "cpX: " + _cardPointerX.toFixed(3);
+				Debug.debugString += " up: " + _cardPointerUpness.toFixed(3);
 				
-				setFocusedCard( list.getCardAt( i ) );
+				setFocusedCard( list.getCardAt( int(_cardPointerX) ) );
 			}
+			
+			raiseAnimationDirtyFlag();
 		}
 		
 		private function setOpen( value:Boolean ):void 
@@ -135,7 +150,7 @@ package duel.display.cardlots
 			_isOpen = value;
 			_focusedCard = null;
 			
-			arrange();
+			raiseAnimationDirtyFlag();
 		}
 		
 		private function setFocusedCard( c:Card ):void 
@@ -144,37 +159,144 @@ package duel.display.cardlots
 				return;
 				
 			_focusedCard = c;
-			arrange();
+			raiseAnimationDirtyFlag();
 		}
 		
 		private function onCardClick(e:Event):void 
 		{
-			arrange();
+			raiseAnimationDirtyFlag();
 		}
 		
 		private function onCardFocus(e:Event):void 
 		{
-			arrange();
+			raiseAnimationDirtyFlag();
 		}
 		
 		private function onCardUnfocus(e:Event):void 
 		{
-			arrange();
+			raiseAnimationDirtyFlag();
 		}
 		
 		override protected function onCardAdded( e:Event ):void
 		{
 			super.onCardAdded( e );
-			arrange();
+			raiseAnimationDirtyFlag();
 		}
 		
 		override protected function onCardRemoved( e:Event ):void
 		{
 			super.onCardRemoved( e );
-			arrange();
+			raiseAnimationDirtyFlag();
 		}
 		
 		public function arrange():void
+		{
+			if ( cardsParent == null )
+				return;
+			
+			var targetProps:TargetProps = new TargetProps();
+			
+			const X:Number = this.x - PADDING_X - G.CARD_W * .5;
+			//const Y:Number = this.y - _sideSign * G.CARD_H * .5;
+			const Y:Number = this.y;
+			const NUM_CARDS:int = list.cardsCount;
+			
+			var o:CardSprite;
+			var i:int = NUM_CARDS;
+			
+			if ( _isOpen )
+				_cardSpacing = ( maxWidth - G.CARD_W ) / ( NUM_CARDS - 1 );
+			else
+				_cardSpacing = 40.0;
+			
+			if ( _cardSpacing > MAX_CARD_SPACING )
+				_cardSpacing = MAX_CARD_SPACING;
+				
+			const FOCUSED_CARD_INDEX:int = list.indexOfCard( _focusedCard );
+			const POW:Number = .125;
+			
+			while ( --i >= 0 )
+			{
+				o = list.getCardAt( i ).sprite;
+				
+				var upness:Number;
+				
+				upness = 0.0;
+				if ( FOCUSED_CARD_INDEX >= 0 )
+				{
+					if ( i == FOCUSED_CARD_INDEX )
+					{
+						upness = Math.pow( Math.abs( _cardPointerUpness ), POW );
+					}
+					else if ( i == FOCUSED_CARD_INDEX - 1 )
+					{
+						upness = _cardPointerUpness > 0.0 ? ( 1.0 - Math.pow( _cardPointerUpness, POW ) ) : 0.0;
+					}
+					else if ( i == FOCUSED_CARD_INDEX + 1 )
+					{
+						upness = _cardPointerUpness < 0.0 ? ( 1.0 - Math.pow( -_cardPointerUpness, POW ) ) : 0.0;
+						//upness = 1.0 - Math.pow( _cardPointerUpness, .05 );
+						//upness = 1.0 - _cardPointerUpness;
+					}
+				}
+				
+				/// Rotation
+				
+				if ( _isOpen )
+				{
+					targetProps.rotation = ( NUM_CARDS * .5 - i - .5 ) * ( .05 + NUM_CARDS * .0125 / NUM_CARDS );
+				}
+				else
+				{
+					targetProps.rotation = ( NUM_CARDS * .5 - i - .5 ) * ( .02 + NUM_CARDS * .0025 / NUM_CARDS );
+				}
+				//targetProps.rotation = 0;
+				
+				/// X
+				
+				if ( _focusedCard == null  )
+				{
+					targetProps.x = X - i * _cardSpacing;
+				}
+				else
+				{
+					targetProps.x = 
+						( FOCUSED_CARD_INDEX <= i ) ? 
+						( X - i * _cardSpacing ) - ( G.CARD_W * .5 * ( 1.0 - i / NUM_CARDS ) ) : 
+						( X - i * _cardSpacing ) + ( G.CARD_W * .5 * ( i / NUM_CARDS ) ) ;
+				}
+				
+				/// Y
+				
+				if ( _isOpen )
+				{
+					targetProps.y = Y;
+					targetProps.y = MathF.lerp( calcY_Unfocused(), calcY_Focused(), upness );
+					//targetProps.rotation = MathF.lerp( targetProps.rotation, 0.0, upness );
+					
+					if ( i == FOCUSED_CARD_INDEX )
+						targetProps.rotation = 0.0;
+					
+					function calcY_Focused():Number { return targetProps.y - _sideSign * G.CARD_H * .55; }
+					function calcY_Unfocused():Number { return targetProps.y + _sideSign * Math.abs( targetProps.rotation ) * 2000 / NUM_CARDS; }
+				}
+				else
+				{
+					targetProps.y = this.y 
+						+ _sideSign * G.CARD_H * .4
+						+ _sideSign * Math.abs( targetProps.rotation ) * 400 / NUM_CARDS;
+				}
+				
+				///
+				if ( !cardsParent.contains( o ) )
+					cardsParent.addChild( o );
+				
+				///
+				o.tween.to( targetProps.x, targetProps.y, targetProps.rotation, targetProps.scale );
+			}
+		}
+		
+		public function arrange_SIMPLE():void
 		{
 			if ( cardsParent == null )
 				return;
@@ -201,7 +323,8 @@ package duel.display.cardlots
 			{
 				o = list.getCardAt( i ).sprite;
 				
-				/// Y
+				/// Rotation
+				
 				if ( _isOpen )
 				{
 					targetProps.rotation = ( NUM_CARDS * .5 - i - .5 ) * ( .05 + NUM_CARDS * .0125 / NUM_CARDS );
@@ -242,7 +365,7 @@ package duel.display.cardlots
 				else
 				{
 					targetProps.y = this.y 
-						+ _sideSign * G.CARD_H * .4;
+						+ _sideSign * G.CARD_H * .4
 						+ _sideSign * Math.abs( targetProps.rotation ) * 400 / NUM_CARDS;
 				}
 				
@@ -252,6 +375,11 @@ package duel.display.cardlots
 				///
 				o.tween.to( targetProps.x, targetProps.y, targetProps.rotation, targetProps.scale );
 			}
+		}
+		
+		public function raiseAnimationDirtyFlag():void
+		{
+			_animationDirty = 1.0;
 		}
 		
 		
@@ -268,7 +396,7 @@ package duel.display.cardlots
 		{
 			if ( _active == value ) return;
 			_active = value;
-			arrange();
+			raiseAnimationDirtyFlag();
 		}
 		
 		public function get selectedCard():Card 
@@ -281,7 +409,7 @@ package duel.display.cardlots
 		{
 			//if ( _selectedCard == value ) return;
 			//_selectedCard = value;
-			arrange();
+			raiseAnimationDirtyFlag();
 		}
 		
 		public function get topSide():Boolean 
@@ -293,7 +421,6 @@ package duel.display.cardlots
 		{
 			_sideSign = value ? -1.0 : 1.0;
 		}
-		
 		
 		/** * /
 		
