@@ -113,8 +113,8 @@ package duel
 			
 			globalBuffs = new GlobalBuffManager();
 			logicComponents = new Vector.<GameUpdatable>();
-			cards = new Vector.<Card>();
 			indexedFields = new Vector.<IndexedField>();
+			cards = new Vector.<Card>();
 			
 			guiEvents = new GuiEvents();
 			cardEvents = new CardEvents();

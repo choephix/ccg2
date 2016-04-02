@@ -115,7 +115,7 @@ package screens.lobby
 			return b;
 		}
 		
-		protected function onConnected(user:UserObject):void					
+		protected function onConnected( user:UserObject ):void					
 		{
 			log( "I'm connected"
 				+ "\n" + "username: " + user.name
@@ -175,7 +175,7 @@ package screens.lobby
 		
 		protected function sendMyUserObject( data:Object ):void			
 		{
-			log("sendMyUserObject: " + data ); 
+			log( "sendMyUserObject: " + data ); 
 			connection.sendObject( data );			
 		}
 		
@@ -201,7 +201,7 @@ package screens.lobby
 						onUserJoinMe( user );
 					break;
 				case E.UNDEFINED:
-					error( "received message of type UNDEFINED" );
+					error( "Received message of type UNDEFINED" );
 					break;
 			}
 		}
@@ -238,7 +238,6 @@ package screens.lobby
 		
 		private function becomeHost():void 
 		{
-			
 			myUser.details.isHost = true;
 			UserDetails( myUser.details ).button.enabled = false;
 			
@@ -290,8 +289,8 @@ package screens.lobby
 
 class E {
 	static public const BECOME_HOST:String = "becomeHost";
-	static public const JOIN:String = "join";
 	static public const UNDEFINED:String = "undefined";
+	static public const JOIN:String = "join";
 }
 
 import starling.display.Button;

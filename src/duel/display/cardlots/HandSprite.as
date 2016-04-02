@@ -22,7 +22,7 @@ package duel.display.cardlots
 		public static const PADDING_X:Number 	= 50;
 		public static const H_ACTIVE:Number 	= 30;
 		public static const H_INACTIVE:Number 	= 200;
-		public static const H_FOCUSED:Number 	= 50;
+		public static const H_FOCUSED:Number 	= 120;
 		public static const MAX_CARD_SPACING:Number = G.CARD_W + 10.0;
 		
 		public var yLimOpen:Number = App.H * .1;
@@ -114,6 +114,7 @@ package duel.display.cardlots
 				var n:Number;
 				n = _pointerXY.x - PADDING_X;
 				n = n + ( _cardSpacing - G.CARD_W ) * .5;
+				//n = n - G.CARD_W * .5 * ( _pointerXY.x / _cardSpacing );
 				n = n / _cardSpacing;
 				
 				//if ( !topSide ) trace( n );
@@ -212,7 +213,19 @@ package duel.display.cardlots
 				//targetProps.rotation = 0;
 				
 				/// X
-				targetProps.x = X - i * _cardSpacing;
+				
+				if ( _focusedCard == null  )
+				{
+					targetProps.x = X - i * _cardSpacing;
+				}
+				else
+				{
+					var iFocused:int = list.indexOfCard( _focusedCard );
+					targetProps.x = 
+						( iFocused <= i ) ? 
+						( X - i * _cardSpacing ) - ( G.CARD_W * .5 * ( 1.0 - i / NUM_CARDS ) ) : 
+						( X - i * _cardSpacing ) + ( G.CARD_W * .5 * ( i / NUM_CARDS ) ) ;
+				}
 				
 				/// Y
 				
@@ -221,7 +234,7 @@ package duel.display.cardlots
 					targetProps.y = Y;
 					if ( _focusedCard != null && o == _focusedCard.sprite )
 					{
-						targetProps.y -= _sideSign * G.CARD_H;
+						targetProps.y -= _sideSign * G.CARD_H * .50;
 						targetProps.rotation = .0;
 					}
 					targetProps.y += _sideSign * Math.abs( targetProps.rotation ) * 2000 / NUM_CARDS;
