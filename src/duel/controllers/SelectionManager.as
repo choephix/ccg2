@@ -13,6 +13,7 @@ package duel.controllers
 	import duel.table.Field;
 	import duel.table.IndexedField;
 	import duel.table.TrapField;
+	import global.StaticVariables;
 	import starling.events.Event;
 	
 	/**
@@ -498,6 +499,7 @@ package duel.controllers
 			
 			/// /// /// /// ///
 			selectedCard = card
+			StaticVariables.selectedCard = card;
 			/// /// /// /// ///
 			
 			/// NEW SELECTION

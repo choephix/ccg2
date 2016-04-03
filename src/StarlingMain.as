@@ -184,11 +184,10 @@ package
 		
 		private function showLobby():void
 		{
-			var scrDecks:ScreenDeckbuilder;
-			scrDecks = new ScreenDeckbuilder();
-			addChild( scrDecks );
-			
-			return;
+			//var scrDecks:ScreenDeckbuilder;
+			//scrDecks = new ScreenDeckbuilder();
+			//addChild( scrDecks );
+			//return;
 			
 			trace( "Opening Lobby" );
 			
