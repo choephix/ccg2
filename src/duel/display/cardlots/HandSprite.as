@@ -36,7 +36,6 @@ package duel.display.cardlots
 		
 		private var _pointerXY:Point = new Point();
 		private var _cardPointerX:Number = NaN;
-		private var _cardPointerUpness:Number = NaN;
 		
 		private var _sideSign:Number = 1.0;
 		
@@ -130,12 +129,7 @@ package duel.display.cardlots
 				if ( _cardPointerX < 0.0 ) _cardPointerX = 0.0;
 				if ( _cardPointerX >= list.cardsCount ) _cardPointerX = list.cardsCount - 1.0;
 				
-				_cardPointerUpness = _cardPointerX - int(_cardPointerX+.5);
-				//_cardPointerUpness = 2.0 * Math.abs( _cardPointerUpness );
-				_cardPointerUpness = 2.0 * _cardPointerUpness;
-				
 				Debug.debugString = "cpX: " + _cardPointerX.toFixed(3);
-				Debug.debugString += " up: " + _cardPointerUpness.toFixed(3);
 				
 				setFocusedCard( list.getCardAt( int(_cardPointerX) ) );
 			}
@@ -220,6 +214,7 @@ package duel.display.cardlots
 				o = list.getCardAt( i ).sprite;
 				
 				var upness:Number;
+				var upness2:Number;
 				
 				upness = 0.0;
 				if ( FOCUSED_CARD_INDEX >= 0 )
@@ -228,6 +223,7 @@ package duel.display.cardlots
 					upness = 1.0 - Math.abs( upness ) / 2.0;
 					upness = ( upness - 0.50 ) / .50;
 					upness = Number.max( 0.0, upness );
+					upness2 = curveNormal( upness, 9.0 );
 					upness = curveNormal( upness, 5.0 );
 					//o.setTitle( upness.toFixed( 3 ) );
 				}
@@ -254,7 +250,7 @@ package duel.display.cardlots
 				{
 					const xLeftOrFocused:Number = ( X - i * _cardSpacing ) - ( G.CARD_W * .5 * ( 1.0 - i / NUM_CARDS ) );
 					const xRight:Number = ( X - i * _cardSpacing ) + ( G.CARD_W * .5 * ( i / NUM_CARDS ) );
-					const ratio:Number = ( FOCUSED_CARD_INDEX < i ) ? 1.0 : upness;
+					const ratio:Number = ( FOCUSED_CARD_INDEX < i ) ? 1.0 : upness2;
 					
 					targetProps.x = MathF.lerp( xRight, xLeftOrFocused, ratio );
 				}
@@ -263,12 +259,9 @@ package duel.display.cardlots
 				
 				if ( _isOpen )
 				{
-					targetProps.y = Y;
 					targetProps.y = MathF.lerp( calcY_Unfocused(), calcY_Focused(), upness );
-					//targetProps.rotation = MathF.lerp( targetProps.rotation, 0.0, upness );
-					
-					function calcY_Focused():Number { return targetProps.y - _sideSign * G.CARD_H * .55; }
-					function calcY_Unfocused():Number { return targetProps.y + _sideSign * Math.abs( targetProps.rotation ) * 2000 / NUM_CARDS; }
+					function calcY_Focused():Number { return Y - _sideSign * G.CARD_H * .55; }
+					function calcY_Unfocused():Number { return Y + _sideSign * Math.abs( targetProps.rotation ) * 2000 / NUM_CARDS; }
 				}
 				else
 				{
