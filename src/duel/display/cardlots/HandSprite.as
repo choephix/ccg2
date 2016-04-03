@@ -125,7 +125,7 @@ package duel.display.cardlots
 			else	
 			{
 				_cardPointerX = ( _pointerXY.x - PADDING_X ) / maxWidth;
-				_cardPointerX = _cardPointerX * ( list.cardsCount + 1 ) - 1.0;
+				_cardPointerX = _cardPointerX * ( list.cardsCount + 1 ) - 1.5;
 				
 				if ( _cardPointerX < 0.0 ) _cardPointerX = 0.0;
 				if ( _cardPointerX >= list.cardsCount ) _cardPointerX = list.cardsCount - 1.0;
@@ -224,20 +224,12 @@ package duel.display.cardlots
 				upness = 0.0;
 				if ( FOCUSED_CARD_INDEX >= 0 )
 				{
-					if ( i == FOCUSED_CARD_INDEX )
-					{
-						upness = Math.pow( Math.abs( _cardPointerUpness ), POW );
-					}
-					else if ( i == FOCUSED_CARD_INDEX - 1 )
-					{
-						upness = _cardPointerUpness > 0.0 ? ( 1.0 - Math.pow( _cardPointerUpness, POW ) ) : 0.0;
-					}
-					else if ( i == FOCUSED_CARD_INDEX + 1 )
-					{
-						upness = _cardPointerUpness < 0.0 ? ( 1.0 - Math.pow( -_cardPointerUpness, POW ) ) : 0.0;
-						//upness = 1.0 - Math.pow( _cardPointerUpness, .05 );
-						//upness = 1.0 - _cardPointerUpness;
-					}
+					upness = _cardPointerX - i;
+					upness = 1.0 - Math.abs( upness ) / 2.0;
+					upness = ( upness - 0.50 ) / .50;
+					upness = Number.max( 0.0, upness );
+					upness = curveNormal( upness, 5.0 );
+					//o.setTitle( upness.toFixed( 3 ) );
 				}
 				
 				/// Rotation
@@ -250,7 +242,7 @@ package duel.display.cardlots
 				{
 					targetProps.rotation = ( NUM_CARDS * .5 - i - .5 ) * ( .02 + NUM_CARDS * .0025 / NUM_CARDS );
 				}
-				//targetProps.rotation = 0;
+				targetProps.rotation = MathF.lerp( targetProps.rotation, 0.0, upness );
 				
 				/// X
 				
@@ -260,10 +252,11 @@ package duel.display.cardlots
 				}
 				else
 				{
-					targetProps.x = 
-						( FOCUSED_CARD_INDEX <= i ) ? 
-						( X - i * _cardSpacing ) - ( G.CARD_W * .5 * ( 1.0 - i / NUM_CARDS ) ) : 
-						( X - i * _cardSpacing ) + ( G.CARD_W * .5 * ( i / NUM_CARDS ) ) ;
+					const xLeftOrFocused:Number = ( X - i * _cardSpacing ) - ( G.CARD_W * .5 * ( 1.0 - i / NUM_CARDS ) );
+					const xRight:Number = ( X - i * _cardSpacing ) + ( G.CARD_W * .5 * ( i / NUM_CARDS ) );
+					const ratio:Number = ( FOCUSED_CARD_INDEX < i ) ? 1.0 : upness;
+					
+					targetProps.x = MathF.lerp( xRight, xLeftOrFocused, ratio );
 				}
 				
 				/// Y
@@ -273,9 +266,6 @@ package duel.display.cardlots
 					targetProps.y = Y;
 					targetProps.y = MathF.lerp( calcY_Unfocused(), calcY_Focused(), upness );
 					//targetProps.rotation = MathF.lerp( targetProps.rotation, 0.0, upness );
-					
-					if ( i == FOCUSED_CARD_INDEX )
-						targetProps.rotation = 0.0;
 					
 					function calcY_Focused():Number { return targetProps.y - _sideSign * G.CARD_H * .55; }
 					function calcY_Unfocused():Number { return targetProps.y + _sideSign * Math.abs( targetProps.rotation ) * 2000 / NUM_CARDS; }
@@ -293,6 +283,9 @@ package duel.display.cardlots
 				
 				///
 				o.tween.to( targetProps.x, targetProps.y, targetProps.rotation, targetProps.scale );
+				
+				function curveNormal( frac:Number, pow:Number ):Number 
+				{ return frac < 0.5 ? ( 0.5 * Math.pow( 2.0 * frac, pow ) ) : ( 1.0 + 0.5 * Math.pow( 2.0 * frac - 2.0, pow ) ) }
 			}
 		}
 		

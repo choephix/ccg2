@@ -677,5 +677,11 @@ package duel.display.cards {
 		}
 		
 		//
+		
+		CONFIG::development
+		public function setTitle( value:String ):void
+		{
+			tfTitle.text = value;
+		}
 	}
 }
