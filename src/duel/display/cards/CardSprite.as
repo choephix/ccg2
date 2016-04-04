@@ -68,7 +68,7 @@ package duel.display.cards {
 		
 		//
 		private var card:Card;
-		private static var helperRect:Rectangle = new Rectangle();;
+		private static var helperRect:Rectangle = new Rectangle();
 		
 		public function initialize( card:Card ):void
 		{

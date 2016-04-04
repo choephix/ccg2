@@ -30,7 +30,7 @@ package duel.display.cardlots
 		
 		public var yLimOpen:Number = App.H * .1;
 		public var yLimClose:Number = App.H * .4;
-		public var xLimOpen:Number = 1000;
+		public var xLimOpen:Number = 600;
 		public var xLimClose:Number = App.W - 500;
 		
 		private var _animationDirty:Number = 0.0;
@@ -41,6 +41,7 @@ package duel.display.cardlots
 		private var _sideSign:Number = 1.0;
 		
 		private var _cardSpacing:Number = .0;
+		private var _cardsOffsetX:Number = .0;
 		
 		private var _isOpen:Boolean = false;
 		
@@ -130,13 +131,8 @@ package duel.display.cardlots
 				if ( _cardPointerX < 0.0 ) _cardPointerX = 0.0;
 				if ( _cardPointerX >= list.cardsCount ) _cardPointerX = list.cardsCount - 1.0;
 				
-				if ( selectedCard )
-				Debug.debugString = selectedCard.slug;
-				
 				setFocusedCard( list.getCardAt( int(_cardPointerX) ) );
 			}
-			
-			Debug.debugString = "cpX: " + _cardPointerX.toFixed(3) + " pXY: " + _pointerXY.toString();
 			
 			raiseAnimationDirtyFlag();
 		}
@@ -205,15 +201,27 @@ package duel.display.cardlots
 			var o:CardSprite;
 			var i:int = NUM_CARDS;
 			
-			if ( UNFOLDED )
-				_cardSpacing = MathF.lerp( 1.0, 0.8, TIMIDNESS ) * ( maxWidth - G.CARD_W ) / ( NUM_CARDS - 1 );
-			else
-				_cardSpacing = active ? MathF.lerp( 35.0, 45.0, Math.pow( 1.0 - _pointerXY.y / App.H, 2.5 ) ) : 30.0;
-				
-			const X_OFFSET:Number = -Number.max( 0.0, _cardPointerX ) * MathF.lerp( 0.0, 0.2, TIMIDNESS ) * ( maxWidth - G.CARD_W ) / ( NUM_CARDS - 1 );
-			
-			if ( _cardSpacing > MAX_CARD_SPACING )
-				_cardSpacing = MAX_CARD_SPACING;
+			_cardsOffsetX = 0.0;
+			_cardSpacing = 30.0;
+					
+			if ( active || CONFIG::development )
+			//if ( active )
+			{
+				if ( UNFOLDED )
+				{
+					_cardSpacing = MathF.lerp( 1.0, 0.8, TIMIDNESS ) * ( maxWidth - G.CARD_W ) / ( NUM_CARDS - 1 );
+					_cardsOffsetX = -Number.max( 0.0, _cardPointerX ) * MathF.lerp( 0.0, 0.2, TIMIDNESS ) * ( maxWidth - G.CARD_W ) / ( NUM_CARDS - 1 ) -120;
+					if ( isNaN( _cardsOffsetX ) )
+						_cardsOffsetX = 0.0;
+				}
+				else
+				{
+					_cardSpacing = MathF.lerp( 35.0, 45.0, Math.pow( 1.0 - _pointerXY.y / App.H, 2.5 ) );
+				}
+					
+				if ( _cardSpacing > MAX_CARD_SPACING )
+					_cardSpacing = MAX_CARD_SPACING;
+			}
 				
 			while ( --i >= 0 )
 			{
@@ -238,7 +246,7 @@ package duel.display.cardlots
 					{
 						upness = _cardPointerX - i;
 						upness = 1.0 - Math.abs( upness ) / 2.0;
-						upness = ( upness - 0.50 ) / .50;
+						upness = ( upness - 0.50 ) / 0.50;
 						upness = Number.max( 0.0, upness );
 						upness2 = curveNormal( upness, 9.0 );
 						upness = curveNormal( upness, 5.0 );
@@ -254,21 +262,21 @@ package duel.display.cardlots
 					}
 					else
 					{
-						targetProps.rotation = ( NUM_CARDS * .5 - i - .5 ) * ( .02 + NUM_CARDS * .0025 / NUM_CARDS );
+						targetProps.rotation = _sideSign * ( NUM_CARDS * .5 - i - .5 ) * ( .02 + NUM_CARDS * .0025 / NUM_CARDS );
 					}
 					
 					/// X
 					
 					if ( _focusedCard == null || !UNFOLDED )
 					{
-						targetProps.x = X - i * _cardSpacing;
+						targetProps.x = _cardsOffsetX + X - ( i * _cardSpacing );
 					}
 					else
 					{
 						const xLeftOrFocused:Number = ( X - i * _cardSpacing ) - ( G.CARD_W * .5 * ( 1.0 - i / NUM_CARDS ) );
 						const xRight:Number = ( X - i * _cardSpacing ) + ( G.CARD_W * .5 * ( i / NUM_CARDS ) );
 						const ratio:Number = ( FOCUSED_CARD_INDEX < i ) ? 1.0 : upness2;
-						targetProps.x = MathF.lerp( xRight, xLeftOrFocused, ratio ) + X_OFFSET;
+						targetProps.x = MathF.lerp( xRight, xLeftOrFocused, ratio ) + _cardsOffsetX;
 					}
 					
 					/// Y
@@ -285,7 +293,7 @@ package duel.display.cardlots
 					{
 						const TINY_OFFSET:Number = -( active && selectedCard == null ? ( _sideSign * Math.pow( 1.0 - _pointerXY.y / App.H, 2.5 ) * 40 ) : 0.0 )
 						targetProps.y = this.y 
-							+ _sideSign * G.CARD_H * .4
+							+ _sideSign * G.CARD_H * .4 
 							+ _sideSign * Math.abs( targetProps.rotation ) * 400 / NUM_CARDS
 							+ TINY_OFFSET;
 					}

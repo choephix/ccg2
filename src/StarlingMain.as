@@ -100,8 +100,8 @@ package
 			loadingText = new TextField(stage.stageWidth, stage.stageHeight, ":c]");
 			loadingText.format.font = "Arial Black";
 			loadingText.format.size = 80;
-			loadingText.format.color = 0x304050;
 			loadingText.format.bold = true;
+			loadingText.format.color = 0x304050;
 			addChild(loadingText);
 			
 			App.assets.initialize(onLoadingAppProgress, onLoadingAppComplete);

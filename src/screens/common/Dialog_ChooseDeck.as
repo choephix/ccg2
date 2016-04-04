@@ -5,9 +5,13 @@ package screens.common
 	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.Stage;
+	
+	CONFIG::desktop
+	{
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
+	}
 	import global.CardPrimalData;
 	import screens.deckbuilder.ListItem_Deck;
 	import starling.display.Quad;
