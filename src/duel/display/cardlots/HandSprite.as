@@ -222,7 +222,10 @@ package duel.display.cardlots
 				if ( _cardSpacing > MAX_CARD_SPACING )
 					_cardSpacing = MAX_CARD_SPACING;
 			}
-				
+					
+			var upness:Number;
+			var upnezz:Number;
+
 			while ( --i >= 0 )
 			{
 				o = list.getCardAt( i ).sprite;
@@ -238,17 +241,16 @@ package duel.display.cardlots
 				{
 					targetProps.scale = 1.00;
 					
-					var upness:Number;
-					var upness2:Number;
-					
 					upness = 0.0;
+					upnezz = 0.0;
+					
 					if ( FOCUSED_CARD_INDEX >= 0 )
 					{
 						upness = _cardPointerX - i;
 						upness = 1.0 - Math.abs( upness ) / 2.0;
 						upness = ( upness - 0.50 ) / 0.50;
 						upness = Number.max( 0.0, upness );
-						upness2 = curveNormal( upness, 9.0 );
+						upnezz = curveNormal( upness, 9.0 );
 						upness = curveNormal( upness, 5.0 );
 						//o.setTitle( upness.toFixed( 3 ) );
 					}
@@ -275,7 +277,7 @@ package duel.display.cardlots
 					{
 						const xLeftOrFocused:Number = ( X - i * _cardSpacing ) - ( G.CARD_W * .5 * ( 1.0 - i / NUM_CARDS ) );
 						const xRight:Number = ( X - i * _cardSpacing ) + ( G.CARD_W * .5 * ( i / NUM_CARDS ) );
-						const ratio:Number = ( FOCUSED_CARD_INDEX < i ) ? 1.0 : upness2;
+						const ratio:Number = ( FOCUSED_CARD_INDEX < i ) ? 1.0 : upnezz;
 						targetProps.x = MathF.lerp( xRight, xLeftOrFocused, ratio ) + _cardsOffsetX;
 					}
 					

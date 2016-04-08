@@ -171,7 +171,7 @@ package duel.gui
 			
 			CONFIG::development {
 				CONFIG::sandbox {
-					tcenter.text = Debug.debugString;
+					tcenter.text = Debug.publicArray.toString();
 				}
 			}
 		}

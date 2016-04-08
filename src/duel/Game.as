@@ -435,7 +435,8 @@ package duel
 			{
 				playerInspectProcess( currentPlayer.opponent, p );
 				playerInspectProcess( currentPlayer, p );
-			} catch ( e:Error )
+			}
+			catch ( e:Error )
 			{ onError( e ) }
 		}
 		
@@ -453,7 +454,8 @@ package duel
 			{
 				playerInspectProcess( currentPlayer.opponent, p );
 				playerInspectProcess( currentPlayer, p );
-			} catch ( e:Error )
+			} 
+			catch ( e:Error )
 			{ onError( e ) }
 			
 			if ( !meta.isMultiplayer && e.process.name )

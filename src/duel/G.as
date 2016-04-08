@@ -1,8 +1,4 @@
 package duel {
-	/**
-	 * ...
-	 * @author choephix
-	 */
 	public class G 
 	{
 		public static const CARD_W:Number = 245;
@@ -13,7 +9,7 @@ package duel {
 		
 		public static const INIT_LP:Number = 20;		// 20 
 		public static const INIT_HAND_SIZE:Number = CONFIG::sandbox?7:2;	//  2
-		public static const MAX_MANA:Number = 4; 		//  4
+		public static const MAX_MANA:Number = 3; 		//  4
 		public static const MAX_DECK_SIZE:Number = 48;	// 48
 	}
 }

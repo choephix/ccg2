@@ -69,9 +69,6 @@ package
 			if (t == null) return;
 			
 			t.getLocation(stage, App.globalPointerLocation);
-			//if ( t.phase == TouchPhase.ENDED )
-			//if ( t.tapCount == 2 ) 
-			//App.toggleFullScreen();
 		}
 		
 		private function enqueueAssets():void
