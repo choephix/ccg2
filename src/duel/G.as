@@ -3,7 +3,7 @@ package duel {
 	{
 		public static const SANDBOX:Object = 
 		{
-			HAND : 7,
+			HAND : 8,
 			MANA : 8
 		}
 		

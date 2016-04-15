@@ -38,7 +38,7 @@ package dev
 		}
 		
 		
-		public static function markArea( container:DisplayObjectContainer, x1:Number, y1:Number, x2:Number, y2:Number, color:uint = 0xCCFF00, time:Number = NaN ):Quad
+		public static function markArea( container:DisplayObjectContainer, x1:Number, y1:Number, x2:Number, y2:Number, color:uint = 0xCCFF00, alpha:Number = 1.0, time:Number = NaN ):Quad
 		{
 			var q:Quad;
 			if ( x1 < x2 )
@@ -53,6 +53,7 @@ package dev
 				q.x = x2;
 				q.y = y2;
 			}
+			q.alpha = alpha;
 			container.addChild( q );
 			
 			if ( !isNaN( time ) )
