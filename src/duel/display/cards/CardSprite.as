@@ -29,7 +29,6 @@ package duel.display.cards {
 	import starling.events.TouchPhase;
 	import starling.text.TextField;
 	
-	use namespace public;
 	/**
 	 * ...
 	 * @author choephix

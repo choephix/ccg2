@@ -32,10 +32,10 @@ package dev
 			bg.alpha = .5;
 			addChild( bg );
 			
-			tf = new TextField( W, H, "", "Lucida Console", 10, 0x22BBFF, true );
-			tf.hAlign = "left";
-			tf.vAlign = "top";
-			addChild( tf );
+			//tf = new TextField( W, H, "", "Lucida Console", 10, 0x22BBFF, true );
+			//tf.hAlign = "left";
+			//tf.vAlign = "top";
+			//addChild( tf );
 			
 			this.touchable = false;
 		}
@@ -44,14 +44,14 @@ package dev
 		
 		public function advanceTime(time:Number):void 
 		{
-			tf.text = manager.toString();
+			//tf.text = manager.toString();
 			
 			visible = tf.text != "";
 			
 			if ( !visible ) return;
 			
-			tf.x = PADDING_X;
-			tf.y = PADDING_Y;
+			//tf.x = PADDING_X;
+			//tf.y = PADDING_Y;
 			
 			bg.x = .0;
 			bg.y = .0;

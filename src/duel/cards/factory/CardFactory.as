@@ -4942,7 +4942,7 @@ package duel.cards.factory
 			function( c:Card ):void
 			{
 				const BROTHER:String = c.primalData.getVarSlug( 0 );
-				const FDELTA:String = c.primalData.getVarInt( 1 );
+				const FDELTA:int = c.primalData.getVarInt( 1 );
 				
 				var special:SpecialEffect;
 				special = c.propsC.addTriggered();

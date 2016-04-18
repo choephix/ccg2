@@ -2,6 +2,7 @@ package duel.processes
 {
 	import duel.cards.Card;
 	import duel.Damage;
+	import duel.DamageType;
 	import duel.gameplay.DeathType;
 	import duel.players.Player;
 	import duel.table.CreatureField;
@@ -314,7 +315,8 @@ package duel.processes
 			
 			CONFIG::development
 			{ throw new ArgumentError( "What to do... getDamage..." ); }
-			return -1;
+			
+			return new Damage( 0, DamageType.SPECIAL, getSourceCard() );
 		}
 		
 		public function getDeathIsFromCombat():Boolean
@@ -334,7 +336,8 @@ package duel.processes
 			
 			CONFIG::development
 			{ throw new ArgumentError( "What to do... getDeathCauser..." ); }
-			return false;
+			
+			return null;
 		}
 		
 		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //
