@@ -147,6 +147,24 @@ package global
 			}
 		}
 		
+		public function getList( filterCallback:Function = null ):Vector.<CardPrimalData> 
+		{
+			if ( filterCallback == null ) 
+				return _cards;
+				
+			var list:Vector.<CardPrimalData> = new Vector.<CardPrimalData>();
+			var card:CardPrimalData;
+			
+			for ( var i:int = 0; i < _numCards; i++ )
+			{
+				card = list[ i ];
+				if ( filterCallback( card ) )
+					list.push( card );
+			}
+			
+			return list;
+		}
+		
 		public function findBySlug( slug:String ):CardPrimalData
 		{
 			for ( var i:int = 0; i < _numCards; i++ ) 

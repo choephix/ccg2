@@ -237,6 +237,8 @@ package duel.display.cardlots
 									( _spanWidth - G.CARD_W ) * ( i / ( NUM_CARDS - 1 ) );
 					
 					o.tween.to( __targetProps.x, __targetProps.y, __targetProps.rotation, __targetProps.scale );
+					
+					o.isDescriptionDefinitelyVisible = upness > 0.125;
 				}
 			}
 			

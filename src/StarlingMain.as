@@ -146,6 +146,9 @@ package
 		{
 			CONFIG::quickplay
 			{
+				showDeckBuilder();
+				return;
+				
 				gameMeta.deck1 = DeckBean.fromJson( FakeData.DECK_TEST_1 );
 				gameMeta.deck2 = DeckBean.fromJson( FakeData.DECK_TEST_2 );
 				startGame(gameMeta);
@@ -163,6 +166,7 @@ package
 				menuContainer = new Screen_MainMenu();
 				menuContainer.callback_StartSingle = startSingle;
 				menuContainer.callback_ShowLobby = showLobby;
+				menuContainer.callback_DeckBuilder = showDeckBuilder;
 				menuContainer.initialize();
 				addChild( menuContainer );
 			}
@@ -179,13 +183,18 @@ package
 			menuContainer.visible = false;
 		}
 		
+		private function showDeckBuilder():void
+		{
+			trace( "Opening DeckBuilder" );
+			
+			var scrDecks:ScreenDeckbuilder;
+			scrDecks = new ScreenDeckbuilder();
+			addChild( scrDecks );
+		}
+		
+		
 		private function showLobby():void
 		{
-			//var scrDecks:ScreenDeckbuilder;
-			//scrDecks = new ScreenDeckbuilder();
-			//addChild( scrDecks );
-			//return;
-			
 			trace( "Opening Lobby" );
 			
 			lobby = new Lobby();

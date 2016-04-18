@@ -29,10 +29,6 @@ package duel.display.cards {
 	import starling.events.TouchPhase;
 	import starling.text.TextField;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
 	public class CardSprite extends GameSprite implements IAnimatable
 	{
 		public var auraContainer:Sprite;
@@ -64,6 +60,7 @@ package duel.display.cards {
 		public var _isPressed:Boolean = false;
 		public var isSelectable:Boolean = false;
 		public var isSelected:Boolean = false;
+		public var isDescriptionDefinitelyVisible:Boolean = false;
 		
 		//
 		private var card:Card;
@@ -261,7 +258,7 @@ package duel.display.cards {
 			{
 				_isTopCard 		= card.field == null || ( card.lot is Field && card == Field( card.field ).topCard );
 				tfTitle.visible = _isTopCard;
-				tfDescr.visible = _isTopCard && ( card.isInPlay || isSelected || _isFocused );
+				tfDescr.visible = _isTopCard && ( card.isInPlay || isSelected || isDescriptionDefinitelyVisible );
 				if ( tfAttak != null )
 					tfAttak.visible = _isTopCard;
 			}
@@ -659,6 +656,7 @@ package duel.display.cards {
 			game.guiEvents.dispatchEventWith( value ? GuiEvents.CARD_FOCUS : GuiEvents.CARD_UNFOCUS, false, card );
 			Mouse.cursor = value && ( isSelectable || isSelected ) ? MouseCursor.BUTTON : MouseCursor.AUTO;
 		}
+		
 		public function get isPressed():Boolean 
 		{
 			return _isPressed;
