@@ -14,6 +14,7 @@ package duel.display.cardlots
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
+	import starling.utils.MeshSubset;
 	
 	/**
 	 * ...
@@ -26,7 +27,7 @@ package duel.display.cardlots
 		public static const H_ACTIVE:Number = 30;
 		public static const H_INACTIVE:Number = 200;
 		public static const H_FOCUSED:Number = 120;
-		public static const MAX_CARD_SPACING:Number = G.CARD_W + 10.0;
+		public static const MAX_CARD_SPACING:Number = G.CARD_W * 0.9;
 		
 		public var yLimOpen:Number = App.H * .1;
 		public var yLimClose:Number = App.H * .4;
@@ -167,6 +168,7 @@ package duel.display.cardlots
 		override protected function onCardAdded(e:Event):void
 		{
 			super.onCardAdded(e);
+			cardsParent.addChild( Card(e.data).sprite );
 			raiseAnimationDirtyFlag();
 		}
 		
@@ -177,7 +179,7 @@ package duel.display.cardlots
 		}
 		
 		private var _paddingRight:Number = 500;
-		private var _spanWidth:Number = 800;
+		private var _maxAreaWidth:Number = 1000;
 		private var _pointerXY:Point = new Point();
 		
 		private var __targetProps:TargetProps = new TargetProps();
@@ -189,60 +191,73 @@ package duel.display.cardlots
 			
 			const NUM_CARDS:int = list.cardsCount;
 			
-			if (NUM_CARDS < 1)
+			if ( NUM_CARDS < 1 )
 				return;
+				
+			const X_FIX:Number = 0.33 * G.CARD_W;
+			const FRAC_CARDS:Number = NUM_CARDS == 1 ? 0.0 : 1.0 / ( NUM_CARDS - 1 );
 			
-			Debug.markArea( 
-				cardsParent, x - _spanWidth - _paddingRight, 0.0, 
-				x - _paddingRight, _sideSign * 20.0, _hand.owner.color, 0.0 );
+			const POINT_Y:Number = Math.pow( Math.min( 1.0, Math.max( 0.0, ( _pointerXY.y - .025 * G.CARD_H ) / ( App.H * 0.5 - .025 * G.CARD_H ) ) ), 0.4 );
 			
 			var o:CardSprite;
 			var i:int = NUM_CARDS;
+			var fracPointer:Number = 0.0;
+			var fracIndex:Number = 0.0;
 			var upness:Number = 0.0;
 			
-			var fracIndex:Number = 0.0;
-			var fracPointer:Number = 0.0;
+			var areaWidth:Number = Math.min( _maxAreaWidth, G.CARD_W * ( 0.25 + NUM_CARDS * 0.75 ) );
+			var areaRight:Number = _paddingRight;
+			var areaLeft:Number  = areaRight + areaWidth;
 			
-			fracPointer = ( _pointerXY.x - _paddingRight - .5 * G.CARD_W ) / ( _spanWidth - G.CARD_W );
-			fracPointer = Math.min( 1.0, Math.max( 0.0, fracPointer ) );
+			var pWidth:Number = Math.max( areaWidth - G.CARD_W, 1.0 );
+			var pRight:Number = areaRight + G.CARD_W * 0.5;
+			var pLeft:Number  = areaLeft  - G.CARD_W * 0.5;
 			
-			if ( NUM_CARDS == 1 )
+			fracPointer = ( _pointerXY.x - pRight ) / pWidth;
+			fracPointer =
+					Math.min( 1.0 + FRAC_CARDS, Math.max( -FRAC_CARDS, fracPointer ) );
+			
+			var luft:Number = - 0.75 * G.CARD_W * Math.pow( areaWidth / _maxAreaWidth, 2.5 );
+			//var luft:Number = 0.0;
+			var spanWidth:Number = Math.max( areaWidth - G.CARD_W - luft, 1.0 );
+			var spanRight:Number = areaRight + G.CARD_W * 0.5 + luft * fracPointer;
+			var spanLeft:Number  = spanRight + spanWidth;
+			
+			Debug.markArea( cardsParent, x - areaLeft, _sideSign * 40.0, x - areaRight + 1.0, _sideSign * 47.0, _hand.owner.color, 0.3, 0.0 );
+			Debug.markArea( cardsParent, x - pLeft,    _sideSign * 41.0, x - pRight + 1.0,    _sideSign * 42.0, _hand.owner.color, 1.0, 0.0 );
+			Debug.markArea( cardsParent, x - spanLeft, _sideSign * 44.0, x - spanRight + 1.0, _sideSign * 46.0, _hand.owner.color, 1.0, 0.0 );
+			Debug.markArea( cardsParent, x - spanLeft - 0.5 * G.CARD_W, _sideSign * 44.0, x - spanRight + 0.5 * G.CARD_W, _sideSign * 46.0, _hand.owner.color, 0.3, 0.0 );
+			
+			__targetProps.x = spanLeft;
+			
+			while ( --i >= 0 )
 			{
-				__targetProps.y = _sideSign * App.H * 0.5;
-				__targetProps.x = x - _paddingRight - .5 * G.CARD_W;
+				fracIndex = i * FRAC_CARDS;
 				
-				list.getCardAt( 0 ).sprite.
-					tween.to( __targetProps.x, __targetProps.y,
-						__targetProps.rotation, __targetProps.scale );
-			}
-			else
-			{
-				while ( --i >= 0 )
-				{
-					fracIndex = i / ( NUM_CARDS - 1 );
-					o = list.getCardAt( i ).sprite;
-					
-					upness = Math.abs( i - fracPointer * ( NUM_CARDS - 1 ) );
-					upness = 1.0 - Math.min( 1.0, upness );
-					//upness = frac_LinearToSine( upness, 5.0 );
-					
-					//if ( isNaN( upness ) ) { upness = 0.0; o.setTitle( "NaN" ); }
-					//else o.setTitle( upness.toFixed(2) );
-					
-					//o.setTitle( upness.toFixed(2) + frac_LinearToSine( upness, 5.0 ) );
-					
-					__targetProps.y = _sideSign * App.H * 0.5 - 
-									MathF.lerp( 0.0, G.CARD_H * 0.5, upness );
-					__targetProps.x = x - _paddingRight - .5 * G.CARD_W -
-									( _spanWidth - G.CARD_W ) * ( i / ( NUM_CARDS - 1 ) );
-					
-					o.tween.to( __targetProps.x, __targetProps.y, __targetProps.rotation, __targetProps.scale );
-					
-					o.isDescriptionDefinitelyVisible = upness > 0.125;
-				}
+				if ( i < NUM_CARDS-1 ) 
+					__targetProps.x -= MathF.lerp(
+										spanWidth * FRAC_CARDS,
+										G.CARD_W + 4.0,
+										upness );
+									
+				upness = Math.abs( i - fracPointer * ( NUM_CARDS - 1 ) );
+				upness = 1.0 - Math.min( 1.0, upness );
+				upness = frac_LinearToSine( upness, 7.0 );
+				
+				__targetProps.rotation = MathF.lerp( 0.000, 0.100, POINT_Y ) * ( fracPointer - fracIndex - 0.10 );
+				
+				__targetProps.y = _sideSign * ( 
+									  App.H * 0.5
+									- MathF.lerp( 0.0, G.CARD_H * 0.5, upness )
+									+ Math.abs( __targetProps.rotation ) * 640
+									);
+				
+				//list.getCardAt( i ).sprite.setTitle( "" );
+				//list.getCardAt( i ).sprite.alpha = 0.5;
+				list.getCardAt( i ).sprite.tween.to( x - __targetProps.x, __targetProps.y, __targetProps.rotation, __targetProps.scale );
 			}
 			
-			if (this._hand.owner == game.currentPlayer)
+			if ( this._hand.owner == game.currentPlayer )
 			{
 				Debug.publicArray[0] = _pointerXY;
 				Debug.publicArray[1] = fracPointer.toFixed(2);
@@ -253,7 +268,8 @@ package duel.display.cardlots
 		{
 			if ( frac <= 0.0 ) return 0.0;
 			if ( frac >= 1.0 ) return 1.0;
-			return 0.5 - 0.5 * Math.pow( Math.sin( Math.PI * ( 0.5 + frac ) ), .2 );
+			var n:Number = Math.sin( Math.PI * (1.5 + frac) );
+			return 0.5 + 0.5 * ( n > 0 ? Math.pow( n, 1/pow ) : -Math.pow( -n, 1/pow ) );
 		}
 		
 		public function arrangeeeee():void

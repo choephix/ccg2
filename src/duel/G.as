@@ -3,8 +3,8 @@ package duel {
 	{
 		public static const SANDBOX:Object = 
 		{
-			HAND : 8,
-			MANA : 8
+			HAND : 3,
+			MANA : 18
 		}
 		
 		public static const CARD_W:Number = 245;
