@@ -188,13 +188,18 @@ package duel.display.cardlots
 		{
 			if (cardsParent == null)
 				return;
+				
+			if ( !_isOpen )
+			{
+				arrange_Closed();
+				return;
+			}
 			
 			const NUM_CARDS:int = list.cardsCount;
 			
 			if ( NUM_CARDS < 1 )
 				return;
 				
-			const X_FIX:Number = 0.33 * G.CARD_W;
 			const FRAC_CARDS:Number = NUM_CARDS == 1 ? 0.0 : 1.0 / ( NUM_CARDS - 1 );
 			
 			const POINT_Y:Number = Math.pow( Math.min( 1.0, Math.max( 0.0, ( _pointerXY.y - .025 * G.CARD_H ) / ( App.H * 0.5 - .025 * G.CARD_H ) ) ), 0.4 );
@@ -234,23 +239,35 @@ package duel.display.cardlots
 			{
 				fracIndex = i * FRAC_CARDS;
 				
-				if ( i < NUM_CARDS-1 ) 
-					__targetProps.x -= MathF.lerp(
-										spanWidth * FRAC_CARDS,
-										G.CARD_W + 4.0,
-										upness );
-									
-				upness = Math.abs( i - fracPointer * ( NUM_CARDS - 1 ) );
-				upness = 1.0 - Math.min( 1.0, upness );
-				upness = frac_LinearToSine( upness, 7.0 );
-				
-				__targetProps.rotation = MathF.lerp( 0.000, 0.100, POINT_Y ) * ( fracPointer - fracIndex - 0.10 );
-				
-				__targetProps.y = _sideSign * ( 
-									  App.H * 0.5
-									- MathF.lerp( 0.0, G.CARD_H * 0.5, upness )
-									+ Math.abs( __targetProps.rotation ) * 640
-									);
+				if ( _isOpen )
+				{
+					if ( i < NUM_CARDS-1 ) 
+						__targetProps.x -= MathF.lerp(
+											spanWidth * FRAC_CARDS,
+											G.CARD_W + 4.0, upness );
+										
+					upness = Math.abs( i - fracPointer * ( NUM_CARDS - 1 ) );
+					upness = 1.0 - Math.min( 1.0, upness );
+					upness = frac_LinearToSine( upness, 7.0 );
+					
+					__targetProps.rotation = MathF.lerp( 0.025, 0.100, POINT_Y ) * ( fracPointer - fracIndex - 0.10 );
+					
+					__targetProps.y = _sideSign * ( 
+										  App.H * 0.5
+										- MathF.lerp( 0.0, G.CARD_H * 0.5, upness )
+										+ Math.abs( __targetProps.rotation ) * MathF.lerp( 480, 960, POINT_Y )
+										);
+				}
+				else
+				{
+					__targetProps.rotation = MathF.lerp( 0.067, 0.125, POINT_Y ) * ( 0.5 - fracIndex );
+					__targetProps.x = spanRight + fracIndex * spanWidth;
+					__targetProps.y = _sideSign * ( 
+										  App.H * 0.5
+										+ G.CARD_H * 0.33
+										+ Math.abs( __targetProps.rotation ) * 640
+										);
+				}
 				
 				//list.getCardAt( i ).sprite.setTitle( "" );
 				//list.getCardAt( i ).sprite.alpha = 0.5;
@@ -261,6 +278,58 @@ package duel.display.cardlots
 			{
 				Debug.publicArray[0] = _pointerXY;
 				Debug.publicArray[1] = fracPointer.toFixed(2);
+			}
+		}
+		
+		public function arrange_Closed():void
+		{
+			const NUM_CARDS:int = list.cardsCount;
+			
+			if ( NUM_CARDS < 1 )
+				return;
+				
+			const FRAC_CARDS:Number = NUM_CARDS == 1 ? 0.0 : 1.0 / ( NUM_CARDS - 1 );
+			const POINT_Y:Number = Math.pow( Math.min( 1.0, Math.max( 0.0, ( _pointerXY.y - .025 * G.CARD_H ) / ( App.H * 0.5 - .025 * G.CARD_H ) ) ), 0.4 );
+			
+			var o:CardSprite;
+			var i:int = NUM_CARDS;
+			var fracIndex:Number = 0.0;
+			
+			var areaWidth:Number = Math.min( 1500.0, G.CARD_W * Math.pow( NUM_CARDS, 0.35 ) );
+			var areaRight:Number = 100.0;
+			var areaLeft:Number  = areaRight + areaWidth;
+			
+			var spanWidth:Number = Math.max( areaWidth - G.CARD_W, 1.0 );
+			var spanRight:Number = areaRight + G.CARD_W * 0.5;
+			var spanLeft:Number  = spanRight + spanWidth;
+			
+			Debug.markArea( cardsParent, x - areaLeft, _sideSign * 40.0, x - areaRight + 1.0, _sideSign * 47.0, _hand.owner.color, 0.3, 0.0 );
+			Debug.markArea( cardsParent, x - spanLeft, _sideSign * 44.0, x - spanRight + 1.0, _sideSign * 46.0, _hand.owner.color, 1.0, 0.0 );
+			Debug.markArea( cardsParent, x - spanLeft - 0.5 * G.CARD_W, _sideSign * 44.0, 
+										 x - spanRight + 0.5 * G.CARD_W, _sideSign * 46.0, _hand.owner.color, 0.3, 0.0 );
+			
+			__targetProps.x = spanLeft;
+			
+			while ( --i >= 0 )
+			{
+				fracIndex = i * FRAC_CARDS;
+				
+				__targetProps.rotation = MathF.lerp( 0.05, 0.20, Math.pow( 1.0 - POINT_Y, 0.125 ) ) * ( 0.5 - fracIndex );
+				__targetProps.x = spanRight + fracIndex * spanWidth;
+				__targetProps.y = _sideSign * ( 
+									  App.H * 0.5
+									+ MathF.lerp( G.CARD_H * 0.25, G.CARD_H * 0.45, POINT_Y )
+									+ Math.abs( __targetProps.rotation ) * 320
+									);
+				
+				//list.getCardAt( i ).sprite.setTitle( "" );
+				//list.getCardAt( i ).sprite.alpha = 0.5;
+				list.getCardAt( i ).sprite.tween.to( x - __targetProps.x, __targetProps.y, __targetProps.rotation, __targetProps.scale );
+			}
+			
+			if ( this._hand.owner == game.currentPlayer )
+			{
+				Debug.publicArray[0] = _pointerXY;
 			}
 		}
 		

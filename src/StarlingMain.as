@@ -146,8 +146,8 @@ package
 		{
 			CONFIG::quickplay
 			{
-				showDeckBuilder();
-				return;
+				//showDeckBuilder();
+				//return;
 				
 				gameMeta.deck1 = DeckBean.fromJson( FakeData.DECK_TEST_1 );
 				gameMeta.deck2 = DeckBean.fromJson( FakeData.DECK_TEST_2 );
