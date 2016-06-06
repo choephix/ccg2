@@ -60,10 +60,10 @@ package duel.display.cards
 			if ( !isNaN( scale ) )
 				this.scale = scale;
 			
+			_zJumpMax = zJump * .1;
+			
 			this.dirtyness = 1.0;
 			this.enabled = true;
-			
-			_zJumpMax = zJump * .1;
 		}
 		
 		/** Returns interlpolated value between two other. **/
