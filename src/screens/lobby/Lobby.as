@@ -21,10 +21,7 @@ package screens.lobby
 	import flash.filesystem.File;
 	}
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Lobby extends Sprite 
 	{
 		private const SERVER_ADDRESS:String	= "rtmfp://p2p.rtmfp.net/dd445b2af11141d2f0638908-3a1ceb27480a";

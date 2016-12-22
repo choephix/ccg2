@@ -1,4 +1,5 @@
-package duel.cards.properties {
+package duel.cards.properties
+{
 	import duel.cards.buffs.GlobalBuff;
 	import duel.Damage;
 	import duel.DamageType;
@@ -7,10 +8,7 @@ package duel.cards.properties {
 	import duel.cards.properties.cardprops;
 	
 	use namespace cardprops;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class CreatureCardProperties extends CardProperties 
 	{
 		public var isGrand:Boolean = false;

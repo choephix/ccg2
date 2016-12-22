@@ -3,10 +3,7 @@ package duel.cards.history
 	import duel.cards.Card;
 	import duel.cards.CardListBase;
 	import duel.table.IndexedField;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class CardHistory 
 	{
 		public var tribute:Card;

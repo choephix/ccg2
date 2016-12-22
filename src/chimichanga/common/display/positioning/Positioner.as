@@ -3,10 +3,7 @@ package chimichanga.common.display.positioning {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import starling.display.DisplayObject;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Positioner 
 	{
 		private var mBounds:Rectangle;

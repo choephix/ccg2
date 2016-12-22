@@ -4,10 +4,7 @@ package duel.display.cardlots
 	import duel.display.cards.CardSprite;
 	import starling.animation.Transitions;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class DeckStackSprite extends StackSprite
 	{
 		public function DeckStackSprite( list:CardListBase ) { super( list ) }

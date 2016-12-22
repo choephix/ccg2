@@ -1,10 +1,7 @@
 package global 
 {
 	import chimichanga.debug.logging.error;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class CardPrimalData 
 	{
 		public static const FACTION_SCIENCE:int = 0;

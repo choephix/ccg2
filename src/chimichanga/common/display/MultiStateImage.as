@@ -6,10 +6,7 @@ package chimichanga.common.display {
 	import starling.events.Event;
 	import starling.textures.Texture;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	
 	/// Dispatched just before a state is changed. Passes the new state as event.data (don't forget to type-cast it as int).
 	[Event(name="change", type="starling.events.Event")] 

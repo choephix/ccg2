@@ -3,10 +3,7 @@ package duel.table {
 	import duel.cards.CardListBase;
 	import duel.display.FieldSprite;
 	import duel.table.CardLotType;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Field extends CardListBase 
 	{
 		public var sprite:FieldSprite;

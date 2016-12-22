@@ -9,10 +9,7 @@ package duel.display.fx
 	import starling.display.BlendMode;
 	import starling.display.MovieClip;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class CardFlames extends CardAura
 	{
 		private var mc:MovieClip;

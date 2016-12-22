@@ -9,10 +9,7 @@ package duel.display.fx
 	import starling.display.BlendMode;
 	import starling.display.MovieClip;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class CardGlow extends GameSprite implements IAnimatable
 	{
 		public var on:Boolean;

@@ -11,10 +11,7 @@ package duel.processes
 	
 	use namespace gameprocessgetter;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class GameplayProcess extends Process 
 	{
 		/// p:Player

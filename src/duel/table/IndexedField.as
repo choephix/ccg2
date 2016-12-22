@@ -1,10 +1,7 @@
 package duel.table 
 {
 	import duel.cards.Card;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class IndexedField extends Field 
 	{
 		

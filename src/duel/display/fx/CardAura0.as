@@ -8,10 +8,7 @@ package duel.display.fx
 	import starling.display.Image;
 	import starling.events.Event;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class CardAura0 extends CardAura
 	{
 		public var scale_:Number = 1.0;

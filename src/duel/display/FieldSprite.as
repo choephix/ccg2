@@ -18,10 +18,7 @@ package duel.display {
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class FieldSprite extends GameSprite implements IAnimatable
 	{
 		public var cardsContainer:StackSprite;

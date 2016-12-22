@@ -1,10 +1,7 @@
 package  
 {
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public final class Version 
 	{
 		

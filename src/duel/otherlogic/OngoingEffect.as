@@ -1,10 +1,7 @@
 package duel.otherlogic 
 {
 	import duel.processes.GameplayProcess;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class OngoingEffect 
 	{
 		/// must accept one arg of type Process and return Boolean

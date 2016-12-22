@@ -6,10 +6,7 @@ package duel.gui
 	import starling.core.Starling;
 	import starling.text.TextField;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class AnimatedTextField extends TextField implements IAnimatable
 	{
 		public static const DEFAULT_MARKER:String = "%%VALUE%%";

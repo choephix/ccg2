@@ -12,10 +12,7 @@ package duel.cards.temp_database
 	
 	use namespace gameprocessgetter;
 	use namespace cardprops;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	
 	public class TempCardsDatabase 
 	{

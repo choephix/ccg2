@@ -14,10 +14,7 @@ package global
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
 	}
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class CardsDataLoader 
 	{
 		CONFIG::desktop

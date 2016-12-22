@@ -1,9 +1,6 @@
 package duel.controllers 
 {
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class PlayerAction 
 	{
 		private var _type:String;

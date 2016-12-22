@@ -1,9 +1,6 @@
 package duel.display.fields 
 {
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class FieldSpriteGuiState 
 	{
 		public static const NONE:FieldSpriteGuiState			= new FieldSpriteGuiState();

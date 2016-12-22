@@ -2,10 +2,7 @@ package duel.processes
 {
 	import starling.events.Event;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class ProcessEvent extends Event 
 	{
 		static public const CURRENT_PROCESS:String = "process";

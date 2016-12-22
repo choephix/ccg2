@@ -3,10 +3,7 @@ package duel.otherlogic
 	import duel.cards.Card;
 	import duel.processes.GameplayProcess;
 	import duel.table.CardLotType;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class SpecialEffect 
 	{
 		/// must accept one arg of type Process and return Boolean

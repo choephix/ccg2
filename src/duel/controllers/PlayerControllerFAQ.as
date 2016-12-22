@@ -8,10 +8,7 @@ package duel.controllers
 	import duel.table.Field;
 	import duel.table.IndexedField;
 	import duel.table.TrapField;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class PlayerControllerFAQ extends GameEntity
 	{
 		static private var err:String = "There was an error";

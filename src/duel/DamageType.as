@@ -1,9 +1,6 @@
 package duel 
 {
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class DamageType 
 	{
 		public static const COMBAT:DamageType = new DamageType();

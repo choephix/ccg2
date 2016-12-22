@@ -2,10 +2,7 @@ package spatula
 {
 	import chimichanga.common.misc.Color;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class AdvancedColors
 	{
 		

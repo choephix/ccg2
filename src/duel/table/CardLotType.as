@@ -1,9 +1,6 @@
 package duel.table 
 {
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class CardLotType 
 	{
 		public static const CREATURE_FIELD:CardLotType	= new CardLotType();

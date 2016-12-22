@@ -5,10 +5,7 @@ package duel.gui
 	import starling.events.TouchEvent;
 	import starling.text.TextField;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class LogBox extends Sprite 
 	{
 		private var quad:Quad;

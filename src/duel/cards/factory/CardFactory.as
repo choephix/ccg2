@@ -27,10 +27,7 @@ package duel.cards.factory
 	
 	use namespace cardprops;
 	use namespace gameprocessgetter;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class CardFactory
 	{
 		static private var uid:uint = 0;

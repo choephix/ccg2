@@ -4,10 +4,7 @@ package chimichanga.global.utils
 	import starling.errors.AbstractClassError;
 	import starling.events.Event;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class MovieClips
 	{
 		

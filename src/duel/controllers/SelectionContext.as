@@ -1,9 +1,6 @@
 package duel.controllers 
 {
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class SelectionContext 
 	{
 		public var name:String = "unnamed";

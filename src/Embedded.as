@@ -1,9 +1,6 @@
 package  
 {
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Embedded 
 	{
 		

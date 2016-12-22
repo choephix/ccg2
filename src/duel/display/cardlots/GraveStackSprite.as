@@ -5,10 +5,7 @@ package duel.display.cardlots
 	import duel.display.cards.CardSprite;
 	import starling.animation.Transitions;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class GraveStackSprite extends StackSprite
 	{
 		public function GraveStackSprite( list:CardListBase ) { super( list ) }

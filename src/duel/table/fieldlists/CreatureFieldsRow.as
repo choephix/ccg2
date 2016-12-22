@@ -2,10 +2,7 @@ package duel.table.fieldlists
 {
 	import duel.cards.Card;
 	import duel.table.CreatureField;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class CreatureFieldsRow 
 	{
 		private var _list:Vector.<CreatureField> = new Vector.<CreatureField>();

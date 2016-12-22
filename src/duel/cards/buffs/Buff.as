@@ -2,10 +2,7 @@ package duel.cards.buffs
 {
 	import duel.cards.Card;
 	import duel.processes.GameplayProcess;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Buff 
 	{
 		/// c:Card

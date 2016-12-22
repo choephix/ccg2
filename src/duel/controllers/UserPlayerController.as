@@ -13,10 +13,7 @@ package duel.controllers
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class UserPlayerController extends GameUpdatable
 	{
 		public var selection:SelectionManager;

@@ -16,10 +16,7 @@ package duel.controllers
 	import global.StaticVariables;
 	import starling.events.Event;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class SelectionManager extends GameEntity
 	{
 		private var cardGlow:CardGlow;

@@ -4,10 +4,7 @@ package duel.cards.status
 	import duel.cards.properties.CardProperties;
 	import duel.GameEntity;
 	import duel.processes.GameplayProcess;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class CardStatus extends GameEntity
 	{
 		public var card:Card;

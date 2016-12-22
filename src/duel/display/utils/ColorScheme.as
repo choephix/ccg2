@@ -2,10 +2,7 @@ package duel.display.utils
 {
 	import chimichanga.common.misc.Color;
 	import chimichanga.global.utils.Colors;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class ColorScheme 
 	{
 		

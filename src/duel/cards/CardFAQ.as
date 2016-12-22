@@ -1,9 +1,6 @@
 package duel.cards 
 {
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class CardFAQ 
 	{
 		private var me:Card;

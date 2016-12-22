@@ -1,9 +1,6 @@
 package duel.gameplay 
 {
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class DeathType 
 	{
 		static public const COMBAT:DeathType	= new DeathType();

@@ -6,10 +6,7 @@ package dev
 	import starling.core.Starling;
 	
 	use namespace cardprops;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Temp 
 	{
 		public static var DECK1:Array = [ "marco", "jerry", "broodelf2", "handy", "defmove_left", "shmester", "polo", "turnend", "berserker", "token_summoner4", "jack", "trappeek", "spike", "darkassasin3", "cripple", "flappy_rooster", "saviour", "jill", "sneakshot", "vendeto", "powerhealer2", "broodelf1", "surprise_attack", "emma", "paulgrand", "emptyshell", "broodelf3", "doe1", "ritual_t_f2", "swapper2", "broodelf4", "doublemana", "badfate", "last_stand", "vendeto_grand", "ritual_c_f2", ];

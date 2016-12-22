@@ -1,10 +1,7 @@
 package duel.players 
 {
 	import starling.events.Event;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class PlayerEvent extends Event 
 	{
 		static public const ACTION:String = "action";

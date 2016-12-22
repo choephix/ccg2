@@ -5,10 +5,7 @@ package duel.gui
 	import starling.display.Quad;
 	import starling.text.TextField;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class TipBox extends GameSprite implements IAnimatable
 	{
 		private var q:Quad;

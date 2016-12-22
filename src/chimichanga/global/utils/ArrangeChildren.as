@@ -2,10 +2,7 @@ package chimichanga.global.utils
 {
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class ArrangeChildren 
 	{
 		public static function verticallyOnePerLine( parent:DisplayObjectContainer, spacing:Number = 0.0, vAlign:String="top" ):void

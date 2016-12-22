@@ -5,10 +5,7 @@ package duel.gameplay
 	
 	[Event( name="leaveLot",type="duel.gameplay.CardEvents" )]
 	[Event( name="enterLot",type="duel.gameplay.CardEvents" )]
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class CardEvents
 	{
 		static public const LEAVE_LOT:String = "leaveLot";

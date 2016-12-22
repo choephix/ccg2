@@ -2,10 +2,7 @@ package dev
 {
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Quad;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Shit 
 	{
 		

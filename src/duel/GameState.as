@@ -1,9 +1,6 @@
 package duel 
 {
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class GameState 
 	{
 		public static const WAITING:GameState	= new GameState();

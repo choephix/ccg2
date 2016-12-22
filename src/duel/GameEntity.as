@@ -3,10 +3,7 @@ package duel
 	import chimichanga.common.assets.AdvancedAssetManager;
 	import duel.gui.GuiJuggler;
 	import duel.processes.GameplayProcessManager;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class GameEntity 
 	{
 		protected function get juggler():GuiJuggler { return Game.current.juggler }

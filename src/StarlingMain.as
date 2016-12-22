@@ -33,10 +33,6 @@ package
 		import flash.filesystem.File;
 	}
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
 	public class StarlingMain extends Sprite
 	{
 		private var g:Game;
@@ -68,7 +64,7 @@ package
 			
 			if (t == null) return;
 			
-			t.getLocation(stage, App.globalPointerLocation);
+			t.getLocation( stage, App.globalPointerLocation );
 		}
 		
 		private function enqueueAssets():void

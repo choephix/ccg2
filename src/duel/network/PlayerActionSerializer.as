@@ -9,10 +9,7 @@ package duel.network
 	import duel.players.Player;
 	import duel.table.CreatureField;
 	import duel.table.TrapField;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class PlayerActionSerializer
 	{
 		private static var a:PlayerAction = new PlayerAction();

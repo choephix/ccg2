@@ -14,10 +14,7 @@ package duel.gui
 	import starling.events.Event;
 	import starling.text.TextField;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Gui extends GameSprite
 	{
 		private var tcenter:TextField;

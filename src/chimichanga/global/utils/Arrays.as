@@ -2,10 +2,7 @@ package chimichanga.global.utils
 {
 	import starling.errors.AbstractClassError;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Arrays
 	{
 		

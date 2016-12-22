@@ -6,10 +6,7 @@ package duel.gui
 	[Event( name="fieldClick",type="duel.gui.GuiEvents" )]
 	[Event( name="cardFocus",type="duel.gui.GuiEvents" )]
 	[Event( name="cardUnfocus",type="duel.gui.GuiEvents" )]
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class GuiEvents extends EventDispatcher
 	{
 		

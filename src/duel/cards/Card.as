@@ -22,10 +22,7 @@ package duel.cards
 	import duel.table.TrapField;
 	import global.CardPrimalData;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Card extends GameEntity
 	{
 		// PERSISTENT

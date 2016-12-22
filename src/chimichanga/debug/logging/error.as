@@ -1,10 +1,7 @@
 package chimichanga.debug.logging
 {
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	
 	public function error( msg:Object, caller:Object = null ):void
 	{

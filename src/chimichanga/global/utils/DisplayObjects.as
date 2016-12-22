@@ -4,10 +4,7 @@ package chimichanga.global.utils
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.errors.AbstractClassError;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class DisplayObjects 
 	{
 		

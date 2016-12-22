@@ -48,10 +48,7 @@ package duel
 	use namespace gameprocessing;
 	
 	[Event( name="destroy",type="duel.GameEvents" )]
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Game extends DisplayObjectContainer implements IAnimatable
 	{
 		public static var current:Game;

@@ -5,10 +5,7 @@ package duel.cards.temp_database
 	import duel.processes.gameprocessgetter;
 	
 	use namespace cardprops;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class TokenCards 
 	{
 		

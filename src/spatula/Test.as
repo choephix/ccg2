@@ -10,10 +10,7 @@ package spatula {
 	import starling.core.Starling;
 	import starling.display.Quad;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Test {
 		
 		public static function test() {

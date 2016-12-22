@@ -18,10 +18,7 @@ package duel.processes
 	
 	use namespace animation;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class GameplayProcessManager extends ProcessManager
 	{
 		//{ TURN LOGIC

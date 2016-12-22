@@ -1,10 +1,7 @@
 package chimichanga.common.math
 {
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Vector2D
 	{
 		public static const ZERO:Vector2D	= new Vector2D( 0.0, 0.0, true );

@@ -1,9 +1,6 @@
 package duel 
 {
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class GameEvents 
 	{
 		// REST

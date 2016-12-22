@@ -16,10 +16,7 @@ package duel.display.cardlots
 	import starling.events.TouchEvent;
 	import starling.utils.MeshSubset;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class HandSprite extends CardsContainer
 	{
 		public static const W_MAX:Number = 500;

@@ -8,10 +8,7 @@ package duel.display.cardlots
 	import starling.display.DisplayObjectContainer;
 	import starling.events.Event;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class CardsContainer extends GameEntity implements IAnimatable
 	{
 		public var cardsParent:DisplayObjectContainer;

@@ -4,10 +4,7 @@ package dev
 	import duel.processes.GameplayProcessManager;
 	import duel.processes.ProcessEvent;
 	import duel.processes.ProcessManager;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	
 	public class ProcessTester 
 	{

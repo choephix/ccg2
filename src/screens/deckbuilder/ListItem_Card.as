@@ -4,10 +4,7 @@ package screens.deckbuilder
 	import duel.G;
 	import starling.display.Quad;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class ListItem_Card extends Sprite 
 	{
 		

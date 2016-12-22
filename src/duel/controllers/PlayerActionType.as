@@ -1,9 +1,6 @@
 package duel.controllers 
 {
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class PlayerActionType 
 	{
 		// MANA ACTIONS

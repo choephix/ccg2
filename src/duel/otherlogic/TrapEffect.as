@@ -1,10 +1,7 @@
 package duel.otherlogic 
 {
 	import duel.processes.GameplayProcess;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class TrapEffect
 	{
 		public var watcherActivate:ProcessWatcher;

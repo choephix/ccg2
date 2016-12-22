@@ -6,10 +6,7 @@ package duel.cards.status
 	import duel.processes.gameprocessing;
 	
 	use namespace gameprocessing;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class TrapCardStatus extends CardStatus 
 	{
 		public var persistenceLink:Card = null;

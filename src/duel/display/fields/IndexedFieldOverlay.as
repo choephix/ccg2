@@ -11,10 +11,7 @@ package duel.display.fields
 	import starling.animation.Transitions;
 	import starling.display.Image;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class IndexedFieldOverlay extends GameSprite implements IAnimatable
 	{
 		private var field:IndexedField;

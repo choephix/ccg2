@@ -2,10 +2,7 @@ package duel.gui {
 	import starling.animation.IAnimatable;
 	import starling.animation.Juggler;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class GuiJuggler extends Juggler
 	{
 		public var speed:Number = 1.0;

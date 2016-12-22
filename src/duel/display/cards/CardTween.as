@@ -2,10 +2,7 @@ package duel.display.cards
 {
 	import duel.display.cards.CardSprite;
 	import starling.animation.IAnimatable;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class CardTween implements IAnimatable
 	{
 		public var alpha:Number = 1.0;

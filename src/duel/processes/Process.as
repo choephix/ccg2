@@ -2,10 +2,7 @@ package duel.processes
 {
 	import chimichanga.debug.logging.error;
 	import duel.Game;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Process
 	{
 		private static var UID:uint = 0;

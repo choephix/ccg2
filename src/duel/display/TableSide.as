@@ -8,10 +8,7 @@ package duel.display {
 	import duel.players.Player;
 	import duel.table.Field;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class TableSide extends GameEntity
 	{
 		public function TableSide( player:Player, tableSprite:TableSprite, flip:Boolean )

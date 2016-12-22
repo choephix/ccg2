@@ -3,10 +3,7 @@ package duel.display
 	import chimichanga.common.display.Sprite;
 	import duel.GameSprite;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class TableSprite extends GameSprite 
 	{
 		public var surface:Sprite;

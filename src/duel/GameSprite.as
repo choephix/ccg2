@@ -4,10 +4,7 @@ package duel
 	import duel.gui.GuiEvents;
 	import duel.gui.GuiJuggler;
 	import starling.display.DisplayObjectContainer;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class GameSprite extends DisplayObjectContainer
 	{
 		protected function get juggler():GuiJuggler

@@ -8,10 +8,7 @@ package duel.cards {
 	[Event( name = "added", type = "starling.events.Event" )]
 	[Event( name = "removed", type = "starling.events.Event" )]
 	[Event( name = "change", type = "starling.events.Event" )]
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class CardListBase extends EventDispatcher
 	{
 		public var owner:Player;

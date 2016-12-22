@@ -1,10 +1,7 @@
 package duel.table.fieldlists 
 {
 	import duel.table.TrapField;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class TrapFieldsRow 
 	{
 		private var _list:Vector.<TrapField> = new Vector.<TrapField>();

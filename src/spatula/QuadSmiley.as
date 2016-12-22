@@ -4,10 +4,7 @@ package spatula
 	import starling.display.Quad;
 	import starling.events.Event;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class QuadSmiley extends DisplayObjectContainer
 	{
 		

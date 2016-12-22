@@ -11,10 +11,7 @@ package chimichanga.debug.graphs
 	import starling.utils.HAlign;
 	import starling.utils.VAlign;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Graph extends DisplayObjectContainer
 	{
 		

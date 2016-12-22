@@ -3,10 +3,7 @@ package chimichanga.global.utils
 	import chimichanga.common.misc.Color;
 	import starling.errors.AbstractClassError;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Colors
 	{
 		

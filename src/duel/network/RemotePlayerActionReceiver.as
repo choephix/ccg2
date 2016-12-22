@@ -2,10 +2,7 @@ package duel.network
 {
 	import duel.GameUpdatable;
 	import duel.players.Player;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class RemotePlayerActionReceiver extends GameUpdatable
 	{
 		private static const COOLDOWN:Number =  .200; // 1.0 .1

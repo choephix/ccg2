@@ -1,10 +1,7 @@
 package chimichanga.common.misc
 {
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Color
 	{
 		

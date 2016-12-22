@@ -15,10 +15,7 @@ package duel.cards.status {
 	
 	use namespace cardprops;
 	use namespace gameprocessing;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class CreatureCardStatus extends CardStatus
 	{
 		public var actionsRelocate:int = 0;

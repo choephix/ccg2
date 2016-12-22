@@ -1,10 +1,7 @@
 package duel 
 {
 	import duel.cards.Card;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Damage 
 	{
 		public var type:DamageType;

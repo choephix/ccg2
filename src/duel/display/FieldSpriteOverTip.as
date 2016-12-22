@@ -6,10 +6,7 @@ package duel.display
 	import starling.display.Quad;
 	import starling.text.TextField;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class FieldSpriteOverTip extends GameSprite 
 	{
 		private const Q_PADDING:Number = 4;

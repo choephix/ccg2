@@ -10,10 +10,7 @@ package duel
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Background extends Sprite implements IAnimatable
 	{
 		public var onClickedCallback:Function;

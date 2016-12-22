@@ -10,10 +10,7 @@ package {
 	import flash.display.NativeWindow;
 	import flash.display.NativeWindowDisplayState;
 	}
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class App {
 		
 		public static const FONT1:String = "font1_0";

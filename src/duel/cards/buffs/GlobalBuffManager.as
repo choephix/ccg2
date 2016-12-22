@@ -1,10 +1,7 @@
 package duel.cards.buffs 
 {
 	import duel.cards.Card;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class GlobalBuffManager 
 	{
 		public var _buffs:Vector.<GlobalBuff> = new Vector.<GlobalBuff>();

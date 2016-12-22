@@ -1,9 +1,6 @@
 package temp {
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class RoughTrigonometryLUT {
 		
 		private var steps:uint;

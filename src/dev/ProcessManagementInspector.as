@@ -7,10 +7,7 @@ package dev
 	import starling.display.Quad;
 	import starling.text.TextField;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class ProcessManagementInspector extends Sprite implements IAnimatable
 	{
 		private var manager:ProcessManager;

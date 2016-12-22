@@ -13,10 +13,7 @@ package duel.players {
 	import duel.table.Hand;
 	import duel.table.TrapField;
 	import starling.events.EventDispatcher;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Player extends EventDispatcher
 	{
 		public var opponent:Player;

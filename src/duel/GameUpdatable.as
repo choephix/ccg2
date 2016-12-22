@@ -2,10 +2,7 @@ package duel
 {
 	import duel.processes.GameplayProcess;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class GameUpdatable extends GameEntity
 	{
 		private var _initialized:Boolean;

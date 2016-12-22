@@ -1,10 +1,7 @@
 package chimichanga.common.math
 {
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class LineSegment
 	{
 		private var a:Vector2D;

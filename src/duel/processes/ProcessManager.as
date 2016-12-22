@@ -12,10 +12,7 @@ package duel.processes
 	[Event( name = "processAborted", type = "duel.processes.ProcessEvent" )]
 	/// When a process has progressed
 	[Event( name="process",type="duel.processes.ProcessEvent" )]
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class ProcessManager extends EventDispatcher implements IAnimatable
 	{
 		public var queue:Vector.<Process>;

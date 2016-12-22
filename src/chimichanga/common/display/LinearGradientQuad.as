@@ -2,10 +2,7 @@ package chimichanga.common.display
 {
 	import starling.display.Quad;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class LinearGradientQuad extends Quad
 	{
 		

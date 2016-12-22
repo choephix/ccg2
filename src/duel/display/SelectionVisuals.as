@@ -1,10 +1,7 @@
 package duel.display 
 {
 	import duel.GameEntity;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class SelectionVisuals extends GameEntity
 	{
 		

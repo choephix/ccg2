@@ -14,10 +14,7 @@ package chimichanga.common.assets
 	import flash.filesystem.File;
 	}
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class AdvancedAssetManager extends AssetManager 
 	{
 		private var mAssetsReady:Boolean = false;

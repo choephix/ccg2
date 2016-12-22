@@ -10,10 +10,7 @@ package duel.display.cardlots
 	import starling.display.DisplayObjectContainer;
 	import starling.events.Event;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class StackSprite extends CardsContainer
 	{
 		public var cardSpacing:Number = 10;

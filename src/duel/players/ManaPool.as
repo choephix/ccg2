@@ -3,10 +3,7 @@ package duel.players
 	import duel.G;
 	import duel.GameEntity;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class ManaPool extends GameEntity 
 	{
 		private var _capMax:int		= G.MAX_MANA;

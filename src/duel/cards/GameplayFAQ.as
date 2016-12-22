@@ -5,10 +5,7 @@ package duel.cards
 	import duel.table.CreatureField;
 	import duel.table.Hand;
 	import duel.table.TrapField;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class GameplayFAQ 
 	{
 		

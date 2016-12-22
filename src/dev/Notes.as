@@ -1,9 +1,6 @@
 package dev 
 {
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Notes 
 	{
 		

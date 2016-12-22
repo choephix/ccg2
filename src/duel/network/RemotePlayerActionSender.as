@@ -5,10 +5,7 @@ package duel.network
 	import duel.GameUpdatable;
 	import duel.players.Player;
 	import duel.players.PlayerEvent;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class RemotePlayerActionSender extends GameUpdatable
 	{
 		private var player:Player;

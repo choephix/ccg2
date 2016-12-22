@@ -2,10 +2,7 @@ package chimichanga.global.app
 {
 	import flash.system.Capabilities;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Platform
 	{
 		

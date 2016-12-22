@@ -19,10 +19,7 @@ package duel.cards.temp_database
 	
 	use namespace gameprocessing;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class TempDatabaseUtils 
 	{
 		public static function setToCreature( c:Card ):void

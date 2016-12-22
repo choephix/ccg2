@@ -4,10 +4,7 @@ package screens.lobby
 	import duel.GameMeta;
 	import starling.display.Quad;
 	
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Lobby2 extends Sprite 
 	{
 		/// Must expect tweo args: roomName:String, opponentName:String
