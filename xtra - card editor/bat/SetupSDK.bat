@@ -1,8 +1,8 @@
 :user_configuration
 
 :: Path to Flex SDK
-::set FLEX_SDK=C:\flex_sdk
-set FLEX_SDK=D:\SDKs\AIRSDK
+::set FLEX_SDK=D:\SDKs\AIRSDK
+set FLEX_SDK=C:\SDKs\Air 23.0
 
 
 :validation

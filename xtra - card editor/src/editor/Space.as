@@ -177,7 +177,7 @@ package editor
 		{
 			var d:CardData = c.data.clone( nextCardID++ );
 			
-			var c:Card = new Card();
+			c = new Card();
 			c.initialize( d );
 			addChild( c );
 			cards.push( c );

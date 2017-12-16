@@ -6,15 +6,15 @@ package editor
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
-	/**
-	 * ...
-	 * @author choephix
-	 */
+	
 	public class Remote 
 	{
 		private var loader:URLLoader;
 		private var _busy:Boolean;
 		private var onComplete:Function;
+		
+		//private function get urlLoad():String { return G.URL_BASE + G.URL_LOAD }
+		private function get urlLoad():String { return "cards.txt" }
 		
 		public function Remote() 
 		{
@@ -43,7 +43,7 @@ package editor
 			_busy = true;
 			this.onComplete = onComplete;
 			
-			var request:URLRequest = new URLRequest( G.URL_BASE + G.URL_LOAD );
+			var request:URLRequest = new URLRequest( urlLoad );
 			loader.load( request );
 		}
 		

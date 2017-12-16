@@ -13,24 +13,24 @@ package duel.cards {
 	{
 		public var owner:Player;
 		
-		protected const _list:Vector.<Card> = new Vector.<Card>();
-		protected var _count:int;
+		protected const mCards:Vector.<Card> = new Vector.<Card>();
+		protected var mCount:int;
 		protected var _type:CardLotType = CardLotType.UNKNOWN;
 		
 		// GETTERS
 		public function getCardAt( index:int ):Card
 		{
-			return _list[ index ];
+			return mCards[ index ];
 		}
 		
 		public function getFirstCard():Card
 		{
-			return _list[ 0 ];
+			return mCards[ 0 ];
 		}
 		
 		public function getLastCard():Card
 		{
-			return _list[ _count - 1 ];
+			return mCards[ mCount - 1 ];
 		}
 		
 		// FIND
@@ -38,9 +38,9 @@ package duel.cards {
 		/// Returns the first card found with the specified UID
 		public function findByUid( uid:int ):Card
 		{
-			for ( var i:int = 0; i < _count; i++ ) 
-				if ( uid == _list[ i ].uid )
-					return _list[ i ];
+			for ( var i:int = 0; i < mCount; i++ ) 
+				if ( uid == mCards[ i ].uid )
+					return mCards[ i ];
 			return null;
 		}
 		
@@ -50,38 +50,38 @@ package duel.cards {
 			var i:int;
 			if ( exact )
 			{
-				for ( i = 0; i < _count; i++ ) 
-					if ( slug == _list[ i ].slug )
-						return _list[ i ];
+				for ( i = 0; i < mCount; i++ ) 
+					if ( slug == mCards[ i ].slug )
+						return mCards[ i ];
 			}
 			else
 			{
-				for ( i = 0; i < _count; i++ ) 
-					if ( _list[ i ].slug.indexOf( slug ) == 0 )
-						return _list[ i ];
+				for ( i = 0; i < mCount; i++ ) 
+					if ( mCards[ i ].slug.indexOf( slug ) == 0 )
+						return mCards[ i ];
 			}
 			return null;
 		}
 		
 		public function findFirstCard( f:Function ):Card
 		{
-			for ( var i:int = 0; i < _count; i++ )
-				if ( f( _list[ i ] ) )
-					return _list[ i ];
+			for ( var i:int = 0; i < mCount; i++ )
+				if ( f( mCards[ i ] ) )
+					return mCards[ i ];
 			return null;
 		}
 		
 		////
 		public function indexOfCard( searchElement:Card, fromIndex:int = 0 ):int
 		{
-			return _list.indexOf( searchElement, fromIndex );
+			return mCards.indexOf( searchElement, fromIndex );
 		}
 		
 		public function forEachCard( f:Function ):void
 		{
-			for ( var i:int = 0; i < _count; i++ )
+			for ( var i:int = 0; i < mCount; i++ )
 			{
-				f( _list[ i ] );
+				f( mCards[ i ] );
 			}
 		}
 		
@@ -89,15 +89,15 @@ package duel.cards {
 		public function countCardsThat( f:Function ):int
 		{
 			var r:int = 0;
-			for ( var i:int = 0; i < _count; i++ )
-				if ( f( _list[ i ] ) )
+			for ( var i:int = 0; i < mCount; i++ )
+				if ( f( mCards[ i ] ) )
 					r++;
 			return r;
 		}
 		
 		public function containsCard( card:Card ):Boolean
 		{
-			return _list.indexOf( card ) >= 0;
+			return mCards.indexOf( card ) >= 0;
 		}
 		
 		////
@@ -108,12 +108,12 @@ package duel.cards {
 				card.lot.removeCard( card );
 			card.lot = this;
 			
-			_count++;
+			mCount++;
 			
 			if ( toBottom )
-				_list.push( card );
+				mCards.push( card );
 			else
-				_list.unshift( card );
+				mCards.unshift( card );
 			
 			onCardAdded( card );
 			
@@ -124,8 +124,8 @@ package duel.cards {
 		{
 			card.lot = null;
 			
-			_count--;
-			_list.splice( _list.indexOf( card ), 1 );
+			mCount--;
+			mCards.splice( mCards.indexOf( card ), 1 );
 			
 			onCardRemoved( card );
 			
@@ -136,13 +136,13 @@ package duel.cards {
 		
 		public function reverseCards():void
 		{
-			_list.reverse();
+			mCards.reverse();
 			onCardsReorder();
 		}
 		
 		public function sortCards( compareFunction:Function ):void
 		{
-			_list.sort( compareFunction );
+			mCards.sort( compareFunction );
 			onCardsReorder();
 		}
 		
@@ -161,12 +161,12 @@ package duel.cards {
 			
 			var _nu:Vector.<Card> = new Vector.<Card>();
 			var i:int;
-			while ( _list.length > 0 )
-				_nu.push( _list.pop() );
+			while ( mCards.length > 0 )
+				_nu.push( mCards.pop() );
 			while ( _nu.length > 0 )
 			{
 				i = Math.random() * ( _nu.length - 1 );
-				_list[ Math.random() * ( _list.length - 1 ) ] = _nu[ i ];
+				mCards[ Math.random() * ( mCards.length - 1 ) ] = _nu[ i ];
 				_nu.splice( i, 1 );
 			}
 			
@@ -177,24 +177,24 @@ package duel.cards {
 		
 		public function moveCardToTop(c:Card):void 
 		{
-			_list.splice( _list.indexOf( c ), 1 );
-			_list.unshift( c );
+			mCards.splice( mCards.indexOf( c ), 1 );
+			mCards.unshift( c );
 			onCardsReorder();
 		}
 		
 		public function moveCardToBottom(c:Card):void 
 		{
-			_list.splice( _list.indexOf( c ), 1 );
-			_list.push( c );
+			mCards.splice( mCards.indexOf( c ), 1 );
+			mCards.push( c );
 			onCardsReorder();
 		}
 		
 		//// GETTIES 'N SETTIES
 		public function get cardsCount():int
-		{ return _count }
+		{ return mCount }
 		
 		public function get isEmpty():Boolean
-		{ return _count == 0 }
+		{ return mCount == 0 }
 		
 		public function get type():CardLotType
 		{ return _type }
@@ -210,6 +210,6 @@ package duel.cards {
 		{ dispatchEventWith( Event.CHANGE ) }
 		
 		// REST
-		public function toString():String { return _list.join( "," ); }
+		public function toString():String { return mCards.join( "," ); }
 	}
 }

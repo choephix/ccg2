@@ -11,7 +11,6 @@ package duel.processes
 	
 	use namespace gameprocessgetter;
 	
-	
 	public class GameplayProcess extends Process 
 	{
 		/// p:Player
@@ -368,5 +367,4 @@ package duel.processes
 		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //
 		
 	}
-
 }

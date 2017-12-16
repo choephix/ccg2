@@ -56,8 +56,8 @@ package {
 		
 		public static var remote:Remote = new Remote();
 		
-		public static function initialize( root:StarlingMain ):void {
-			
+		public static function initialize( root:StarlingMain ):void
+		{
 			App.root = root;
 			stage = root.stage;
 			assets = new AdvancedAssetManager();
